@@ -86,25 +86,26 @@ a UNIX-based system for the directory structure, commands, etc. If you use Windo
 adapt most of those.
 ```
 
-You can download the latest build from our Google Cloud Storage (GCS) bucket (correctly setting the
-`$SYSTEM` variable):
+### Install via script {#nix-install}
+
+To download and install `walrus` to your `"$HOME"/.local/bin` directory, run one of the following
+commands in your terminal then follow on-screen instructions. See [Windows
+instructions](#windows-install) if you are on Windows.
 
 ```sh
-SYSTEM= # set this to your system: ubuntu-x86_64, ubuntu-x86_64-generic, macos-x86_64, macos-arm64, windows-x86_64.exe
-curl https://storage.googleapis.com/mysten-walrus-binaries/walrus-mainnet-latest-$SYSTEM -o walrus
-chmod +x walrus
+# Run a first-time install.
+curl -sSf https://raw.githubusercontent.com/MystenLabs/walrus/refs/heads/main/scripts/walrus-install.sh | sh
+
+# Update an existing installation (overwrites prior version of walrus).
+curl -sSf https://raw.githubusercontent.com/MystenLabs/walrus/refs/heads/main/scripts/walrus-install.sh | sh -s -- -f
 ```
 
-On Ubuntu, you should generally use the `ubuntu-x86_64` version. However, this is incompatible with
-old hardware and certain virtualized environments (throwing an "Illegal instruction (core dumped)"
-error); in these cases you can use the `ubuntu-x86_64-generic` version.
+Make sure that the `"$HOME"/.local/bin` directory is in your `$PATH`.
 
-To be able to run it simply as `walrus`, move the binary to any directory included in your `$PATH`
-environment variable. Standard locations are `/usr/local/bin/`, `$HOME/bin/`, or
-`$HOME/.local/bin/`.
+Once this is done, you should be able to run Walrus by using the `walrus` command in your terminal.
 
-Once this is done, you should be able to simply type `walrus` in your terminal. For example you can
-get usage instructions (see [the next chapter](./interacting.md) for further details):
+You can see usage instructions as follows (see [the next chapter](./interacting.md) for further
+details):
 
 ```terminal
 $ walrus --help
@@ -122,6 +123,19 @@ Our latest Walrus binaries are also available on Walrus itself, namely on
 Note that due to DoS protection, it may not be possible to download the binaries with `curl` or
 `wget`.
 ```
+
+### Install on Windows {#windows-install}
+
+To download `walrus` to your Microsoft Windows computer, run the following in a PowerShell.
+
+```PowerShell
+(New-Object System.Net.WebClient).DownloadFile(
+  "https://storage.googleapis.com/mysten-walrus-binaries/walrus-testnet-latest-windows-x86_64.exe",
+  "walrus.exe"
+)
+```
+
+From there, you'll need to place `walrus.exe` somewhere in your `PATH`.
 
 ### Previous versions (optional)
 
@@ -145,12 +159,33 @@ information, see the [developer guide](../dev-guide/sui-struct.md#system-and-sta
 These need to be configured in a file `~/.config/walrus/client_config.yaml`. Additionally, a
 `subsidies` object can be specified, which will subsidize storage bought with the client.
 
-The Walrus Mainnet uses the following objects:
+You can access Testnet and Mainnet via the following configuration. Note that this example Walrus
+CLI configuration refers to the standard location for Sui configuration
+(`"~/.sui/sui_config/client.yaml"`).
 
 ```yaml
-system_object: 0x2134d52768ea07e8c43570ef975eb3e4c27a39fa6396bef985b5abc58d03ddd2
-staking_object: 0x10b9d30c28448939ce6c4d6c6e0ffce4a7f8a4ada8248bdad09ef8b70e4a3904
-subsidies_object: 0xb606eb177899edc2130c93bf65985af7ec959a2755dc126c953755e59324209e
+contexts:
+  mainnet:
+    system_object: 0x2134d52768ea07e8c43570ef975eb3e4c27a39fa6396bef985b5abc58d03ddd2
+    staking_object: 0x10b9d30c28448939ce6c4d6c6e0ffce4a7f8a4ada8248bdad09ef8b70e4a3904
+    subsidies_object: 0xb606eb177899edc2130c93bf65985af7ec959a2755dc126c953755e59324209e
+    exchange_objects: []
+    wallet_config:
+      path: ~/.sui/sui_config/client.yaml
+      active_env: mainnet
+  testnet:
+    system_object: 0x98ebc47370603fe81d9e15491b2f1443d619d1dab720d586e429ed233e1255c1
+    staking_object: 0x20266a17b4f1a216727f3eef5772f8d486a9e3b5e319af80a5b75809c035561d
+    exchange_objects:
+      - 0x59ab926eb0d94d0d6d6139f11094ea7861914ad2ecffc7411529c60019133997
+      - 0x89127f53890840ab6c52fca96b4a5cf853d7de52318d236807ad733f976eef7b
+      - 0x9f9b4f113862e8b1a3591d7955fadd7c52ecc07cf24be9e3492ce56eb8087805
+      - 0xb60118f86ecb38ec79e74586f1bb184939640911ee1d63a84138d080632ee28a
+    subsidies_object: 0x4b23c353c35a4dde72fe862399ebe59423933d3c2c0a3f2733b9f74cb3b4933d
+    wallet_config:
+      path: ~/.sui/sui_config/client.yaml
+      active_env: testnet
+default_context: mainnet
 ```
 
 <!-- markdownlint-disable code-fence-style -->
