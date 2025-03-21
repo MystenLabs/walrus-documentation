@@ -10,6 +10,11 @@ portals:
 
 Currently, only a server-side portal is served at <https://walrus.site>.
 
+```admonish warning
+We are sunsetting the testnet portal! From now on, you can only access the mainnet portal
+at <https://walrus.site>.
+```
+
 ```admonish note title="Hosting of the service worker"
 The service-worker portal is no longer hosted, but you can still run it locally. Its code is
 available in the `walrus-sites` repository. For more information, see
@@ -17,7 +22,7 @@ available in the `walrus-sites` repository. For more information, see
 ```
 
 ```admonish danger title="Walrus Sites stable branch"
-The stable branch of Walrus Sites is `testnet`.
+The stable branch of Walrus Sites is `mainnet`.
 ```
 
 ## Running a local portal
@@ -35,7 +40,7 @@ cd walrus-sites
 Make sure you are on the stable branch:
 
 ``` sh
-git checkout testnet
+git checkout mainnet
 ```
 
 Next, we will see how to configure the portal so it can support the functionality that
@@ -139,12 +144,12 @@ the domain name. e.g. `example.com` has a length of 11.
 - `SENTRY_TRACES_SAMPLE_RATE`: If you enable Sentry error tracking, provide the sample rate for
 traces.
 
--`SITE_PACKAGE`: The Walrus Site package id. Depending on the network you are using, you will
+- `SITE_PACKAGE`: The Walrus Site package id. Depending on the network you are using, you will
 have to specify the correct package id.
 
--`SUINS_CLIENT_NETWORK`: The network of the SuiNS client.
+- `SUINS_CLIENT_NETWORK`: The network of the SuiNS client.
 
--`B36_DOMAIN_RESOLUTION_SUPPORT`: Define if b36 domain resolution is supported. Otherwise the
+- `B36_DOMAIN_RESOLUTION_SUPPORT`: Define if b36 domain resolution is supported. Otherwise the
 site will not be served.
 
 #### Constants
