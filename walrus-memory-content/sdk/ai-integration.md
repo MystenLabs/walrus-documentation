@@ -1,5 +1,5 @@
 ---
-title: "AI Integration"
+title: "@ai-sdk Integration"
 ---
 
 MemWal includes an AI SDK integration for applications that already use model middleware.
@@ -8,7 +8,7 @@ MemWal includes an AI SDK integration for applications that already use model mi
 
 ```ts
 import { generateText } from "ai";
-import { withMemWal } from "@cmdoss/memwal/ai";
+import { withMemWal } from "@mysten/memwal/ai";
 import { openai } from "@ai-sdk/openai";
 
 const model = withMemWal(openai("gpt-4o"), {
