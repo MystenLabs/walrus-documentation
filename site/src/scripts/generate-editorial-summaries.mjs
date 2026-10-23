@@ -10,8 +10,9 @@
  * editorial-summaries workflow opens. A release with no content beyond the
  * Full Log link gets the fixed maintenance-release text, with no model call.
  *
- * Run: node src/scripts/generate-editorial-summaries.mjs --missing <path> [options]
- *   --missing <path>   JSON from check-editorial-coverage.js --json (required)
+ * Run: node src/scripts/generate-editorial-summaries.mjs [options]
+ *   --missing <path>   JSON from check-editorial-coverage.js --json; without it
+ *                      the checker runs first (needs GITHUB_TOKEN)
  *   --max <n>          draft at most <n> releases this run, newest first
  *   --skeleton         write the TODO skeleton instead of calling the model
  *   --model <id>       model to draft with (default: claude-opus-5-5)
@@ -22,7 +23,9 @@
  */
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -44,8 +47,19 @@ function parseArgs(argv) {
     else if (a === "--skeleton") args.skeleton = true;
     else throw new Error(`Unknown argument: ${a}`);
   }
-  if (!args.missing) throw new Error("--missing <path> is required");
   return args;
+}
+
+// Without --missing, run the coverage checker first and read its output.
+function findMissing(args) {
+  if (args.missing) return args.missing;
+  const out = path.join(os.tmpdir(), "editorial-missing.json");
+  const checker = path.join(here, "check-editorial-coverage.js");
+  const result = spawnSync(process.execPath, [checker, "--limit", "50", "--json", out], {
+    stdio: "inherit",
+  });
+  if (result.status !== 0) throw new Error("check-editorial-coverage.js failed");
+  return out;
 }
 
 // ── House format ───────────────────────────────────────────────────
@@ -121,9 +135,13 @@ const MAINTENANCE_SUMMARY =
 
 // ── Drafting ───────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You write the editorial summary for one software release on the Walrus documentation site's release notes page. The reader is a developer or storage node operator deciding whether the release matters to them.
+const SYSTEM_PROMPT = `You write the editorial summary for one software release on the Walrus
+documentation site's release notes page. The reader is a developer or storage node operator
+deciding whether the release matters to them.
 
-Write from the release body you are given. Do not add facts that are not in it, do not speculate about motivation, and do not mention pull request numbers, commit hashes, or links; the page lists the linked changes separately below your summary.
+Write from the release body you are given. Do not add facts that are not in it, do not speculate
+about motivation, and do not mention pull request numbers, commit hashes, or links; the page lists
+the linked changes separately below your summary.
 
 Style, from the Sui Documentation Style Guide:
 - US English, present tense, active voice, second person where a reader is addressed.
@@ -139,7 +157,9 @@ Return exactly this shape and nothing else:
 DESCRIPTION: <one sentence, at most 160 characters, stating the main change>
 
 SUMMARY:
-<one or two short paragraphs, 40 to 120 words in total, covering the developer- or operator-facing changes in order of importance; say explicitly when no operator action is required if the body says so>`;
+<one or two short paragraphs, 40 to 120 words in total, covering the developer- or
+operator-facing changes in order of importance; say explicitly when no operator action is
+required if the body says so>`;
 
 function userPrompt(entry) {
   const parts = [
@@ -152,8 +172,14 @@ function userPrompt(entry) {
     "",
     entry.body.trim(),
   ];
-  if (entry.pairedBody && entry.pairedBody.trim() && entry.pairedBody.trim() !== entry.body.trim()) {
-    parts.push("", `Release body of the paired ${entry.pairedNetwork} release of the same version:`, "", entry.pairedBody.trim());
+  const paired = (entry.pairedBody || "").trim();
+  if (paired && paired !== entry.body.trim()) {
+    parts.push(
+      "",
+      `Release body of the paired ${entry.pairedNetwork} release of the same version:`,
+      "",
+      paired,
+    );
   }
   return parts.join("\n");
 }
@@ -202,7 +228,7 @@ function skeletonDraft(entry) {
 
 async function main() {
   const args = parseArgs(process.argv);
-  const { missing } = JSON.parse(fs.readFileSync(args.missing, "utf8"));
+  const { missing } = JSON.parse(fs.readFileSync(findMissing(args), "utf8"));
   fs.mkdirSync(EDITORIAL_DIR, { recursive: true });
 
   // Newest first, so a capped run covers what readers see at the top of the page.
@@ -257,7 +283,8 @@ async function main() {
     console.log(`  ✓ ${entry.editorialFile} (${how})`);
   }
 
-  console.log(`\nWrote ${written.length} editorial summar${written.length === 1 ? "y" : "ies"}.`);
+  const noun = written.length === 1 ? "summary" : "summaries";
+  console.log(`\nWrote ${written.length} editorial ${noun}.`);
   if (skipped.length > 0) {
     console.log(`Skipped ${skipped.length}; they stay uncovered until the next run:`);
     for (const { entry, reason } of skipped) {
