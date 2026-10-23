@@ -1,0 +1,7 @@
+{
+  "walrus": {
+    "repo": "MystenLabs/walrus",
+    "ref": "mainnet-v1.58.1",
+    "note": "Source files embedded through <ImportContent> are fetched from this ref. The update-upstream-content workflow bumps it to the latest mainnet release."
+  }
+}

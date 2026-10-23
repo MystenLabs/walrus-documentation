@@ -1,0 +1,97 @@
+# Copyright (c) Walrus Foundation
+# SPDX-License-Identifier: Apache-2.0
+#
+# Everything the site shows from other repositories is tracked here and only
+# changes through a pull request, so a push elsewhere can neither break a build
+# nor put unreviewed pages on docs.wal.app. This workflow is the one place that
+# content is refreshed: it regenerates the tracked files and bumps the pinned
+# walrus ref, then opens a pull request with the diff when there is one.
+#
+#   site/src/data/skills.json            from MystenLabs/walrus-skills (gen:skills)
+#   content/release-notes*.mdx           from GitHub releases of walrus, MemWal,
+#   site/src/data/changelog.json         and walrus-sites (gen:release-notes)
+#   site/upstream.json                   the walrus ref that <ImportContent>
+#                                        embeds are fetched from (gen:import)
+#
+# A pull request opened with the default GITHUB_TOKEN does not trigger the
+# Build docs or Lint workflows. Vercel still builds a preview for it, and the
+# checks run once a maintainer pushes to the branch or closes and reopens the
+# pull request. Use a PAT or GitHub App token in `token` to change that.
+
+name: Update upstream content
+
+on:
+  schedule:
+    - cron: "14 3 * * *" # daily 03:14 UTC
+  workflow_dispatch:
+  repository_dispatch:
+    types: [upstream-content-updated]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # pin@v6.0.9
+        with:
+          version: 9
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # pin@v7.0.0
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: site/pnpm-lock.yaml
+      - name: Install dependencies
+        run: cd site && pnpm install --frozen-lockfile
+
+      - name: Pin the walrus ref to the latest mainnet release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest="$(gh api 'repos/MystenLabs/walrus/releases?per_page=30' \
+            --jq '[.[] | select(.prerelease | not) | select(.draft | not) | .tag_name | select(startswith("mainnet-"))][0]')"
+          test -n "$latest"
+          node -e '
+            const fs = require("fs");
+            const p = "site/upstream.json";
+            const u = JSON.parse(fs.readFileSync(p, "utf8"));
+            if (u.walrus.ref !== process.argv[1]) {
+              console.log(`walrus: ${u.walrus.ref} -> ${process.argv[1]}`);
+              u.walrus.ref = process.argv[1];
+              fs.writeFileSync(p, JSON.stringify(u, null, 2) + "\n");
+            } else {
+              console.log(`walrus: ${u.walrus.ref} is current`);
+            }
+          ' "$latest"
+
+      - name: Regenerate skills and release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd site && pnpm run gen:upstream
+
+      - name: Check that the embedded sources resolve at the pinned ref
+        run: cd site && pnpm run gen:import
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # pin@v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update upstream content"
+          title: "chore: update upstream content"
+          body: |
+            Scheduled refresh of the content this site shows from other repositories.
+
+            - `site/src/data/skills.json` from MystenLabs/walrus-skills
+            - `content/release-notes*.mdx` and `site/src/data/changelog.json` from GitHub releases
+            - `site/upstream.json` pinned to the latest walrus mainnet release
+
+            Review the rendered diff, not the upstream commits: the pages in this
+            pull request are exactly what docs.wal.app will serve once it merges.
+          branch: "ci/update-upstream-content"
+          base: "main"
+          delete-branch: true
