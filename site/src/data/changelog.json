@@ -1,15 +1,5 @@
 [
   {
-    "id": "memwal-memwal-python@0.2.0",
-    "date": "2026-10-23T10:31:32Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.2.0",
-    "description": "Release memwal Python SDK v0.2.0",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.0",
-    "changes": []
-  },
-  {
     "id": "walrus-testnet-v1.59.0",
     "date": "2026-10-21T17:20:39Z",
     "category": "walrus",
@@ -83,109 +73,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.15",
-    "date": "2026-10-21T08:08:36Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.15",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.15",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.9",
-    "date": "2026-10-21T07:50:31Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.9",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.9",
-    "changes": [
-      {
-        "text": "`rememberBulk` and `rememberBulkAsync` send an idempotency key derived from the batch (a 30-minute bucket plus each item's namespace and text). A retry inside that window returns the same jobs instead of storing the batch again. An explicit `idempotencyKey` still wins.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1080"
-      },
-      {
-        "text": "`withMemWal` does not recall or auto-save on a tool-execution step. A later tool step reuses the recall cached for that user message. Auto-save still runs only on a user turn.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1079"
-      },
-      {
-        "text": "`flush()` raises when a background auto-save failed, and `onSaveError` runs. The chat turn itself still does not fail.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1117"
-      },
-      {
-        "text": "`waitForRememberJob` and `waitForRememberJobs` do not sleep past the deadline. If the budget runs out during the sleep, they make one more status read.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1081"
-      },
-      {
-        "text": "`remember`, `rememberAsync`, and `rememberAndWait` reject a non-string text argument with `TypeError` before signing. An object used to be sent as `text` and the relayer answered 422.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1058"
-      },
-      {
-        "text": "`MemWalMock.rememberBulkAsync` rejects an empty or non-array batch with the same error as `MemWal`.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1146"
-      },
-      {
-        "text": "`MemWalMock` honors `idempotencyKey`. A retry of the same text and namespace returns the original job, a different payload throws, and `forget` / `clear` release the key so the text can be written again.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1147"
-      },
-      {
-        "text": "`MemWalMock.recall({ sort: \"recent\" })` orders a bounded semantic window (5× `limit`, at least `limit`, at most 50) by write time before truncating. Relevance order is unchanged.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1124"
-      },
-      {
-        "text": "Positional `recall(query, options, namespace)` uses that namespace when `options.namespace` is omitted, on both `MemWal` and `MemWalMock`. An explicit `options.namespace` still wins.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1038"
-      },
-      {
-        "text": "`remember(text, { idempotencyKey })` and `rememberAndWait(text, { timeoutMs }, { idempotencyKey })` treat a plain object in the namespace slot as options. A third options argument is merged, and its fields win. That call used to send the object as the namespace, or drop the third argument and mint a second blob. An explicit string namespace still wins.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1142"
-      },
-      {
-        "text": "`getRememberStatus(\"\")` returns `not_found` without a request, and `waitForRememberJob(\"\")` fails immediately with status 404. `GET /api/remember/` is not a route; the empty 404 body used to throw `SyntaxError`, and the wait treated that as transient until timeout.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1087"
-      },
-      {
-        "text": "`rememberBulkAsync` rejects more than 20 items before signing, matching the relayer's `MAX_BULK_ITEMS`.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1104"
-      },
-      {
-        "text": "Remember-job status reads (`getRememberStatus`, `waitForRememberJob`, `getRememberBulkStatus`) no longer attach `x-seal-session`. Status is metadata and does not decrypt.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1135"
-      },
-      {
-        "text": "Bulk status includes each job's `namespace`. `waitForRememberJobs(jobIds)` uses that value when the caller did not pass one, instead of the client default. A caller-supplied namespace still wins.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1136"
-      },
-      {
-        "text": "`getPublicKeyHex()` and any request after `destroy()` throw, including a read already in flight. `getPublicKeyHex()` used to resolve to the zeroed key, or to the well-known key of the wiped seed, and `remember()` still sent `GET /version` before noticing the client was destroyed.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1090"
-      },
-      {
-        "text": "`normalizeServerUrl` no longer warns about plaintext HTTP for IPv6 loopback. `URL.hostname` keeps the brackets on `[::1]`, so the `::1` exemption never matched `http://[::1]:8000`.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1128"
-      },
-      {
-        "text": "`remember`, `rememberBulk`, `analyze`, and `embed` reject whitespace-only text immediately, with the same messages the relayer returns. A blank body used to be accepted and then sit until the client timed out.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1129"
-      },
-      {
-        "text": "A 401 `AUTH_REJECTED` now says a wallet address is not a MemWal account ID. The relayer still returns one 401 for every credential failure, so the message names the mix-up instead of revealing which check failed.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/1132"
-      }
-    ]
-  },
-  {
-    "id": "memwal-memwal-python@0.1.12",
-    "date": "2026-10-21T07:50:26Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.12",
-    "description": "Release memwal Python SDK v0.1.12",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.12",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.58.1",
     "date": "2026-10-14T17:13:34Z",
     "category": "walrus",
@@ -201,16 +88,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.7",
-    "date": "2026-10-02T04:18:09Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory SDK v0.0.7",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.7",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.57.0",
     "date": "2026-09-30T18:02:56Z",
     "category": "walrus",
@@ -218,41 +95,6 @@
     "description": null,
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.57.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.14",
-    "date": "2026-09-22T12:25:58Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.14",
-    "description": "Unreleased. The plugin's launcher installs `@mysten-incubation/memwal-mcp@0.0.14-dev.0`, named by `mcpPackageVersion` in `plugin/plugin.json`, until `0.0.14` is on npm; drop that key in that release.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.14",
-    "changes": [
-      {
-        "text": "The cold-start tool list no longer advertises a tool the relayer may not serve. The bridge ships on npm and updates itself while a relayer ships per environment, so 0.0.14-dev.0 dialled prod and staging still on 0.0.13: cold start named `memwal_remember_status`, which neither registers, and the pending-write wording sent the agent to go call it — one live run spent 90.67s there before erroring. Cold start is now a floor rather than a forecast (`BASELINE_RELAYER_TOOLS`): it carries only what the oldest supported relayer serves and its descriptions name nothing outside it, while newer tools still reach the client a beat later on the relayer's own `tools/list`. Initialize `instructions` use the same floor (they used to name `memwal_remember_status` before any `tools/list`). And a call for a tool outside that floor — including during the cold-start window, before any upstream `tools/list` has been seen — is now answered locally and at once — naming the tools that do exist and saying plainly that nothing ran — instead of being forwarded into a wait that only ends at the orphan deadline.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/928"
-      }
-    ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.8",
-    "date": "2026-09-22T12:25:37Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.8",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.8",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.11",
-    "date": "2026-09-22T12:25:29Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.11",
-    "description": "Release memwal Python SDK v0.1.11",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.11",
     "changes": []
   },
   {
@@ -273,104 +115,6 @@
     "description": null,
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.56.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.13",
-    "date": "2026-09-15T08:47:47Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.13",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.13",
-    "changes": [
-      {
-        "text": "Unrecognised options now warn on stderr and in the structured log (`cli.unrecognised_arg`) instead of being dropped in silence, so a typo'd `--namesapce work` no longer writes to the default namespace with nothing to say it had. The warning names the option key only, keeping a mistyped value-taking flag (`--tokenn=hunter2`) from putting the secret on stderr, and it warns rather than exits so an option from a newer config cannot brick the server.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/630"
-      },
-      {
-        "text": "`--help` now lists the network presets (`--prod`, `--dev`, `--staging`, `--local`) with the relayer and web URLs each resolves to, rendered from the preset table rather than retyped so a new preset cannot ship undocumented the way `--prod` did. The `--label` default is corrected to \"MCP Client\", which is what the code actually falls back to.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/630"
-      },
-      {
-        "text": "`memwal_health` reports `relayer=<url>`, naming the origin this process dialled, so a client bound to the wrong network finds out there instead of by noticing its memories are missing. The URL is captured when the call is sent rather than when the reply lands, so a reconnect mid-flight cannot label the answer with a relayer it did not come from.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/630"
-      },
-      {
-        "text": "Keep reading stdin after an in-session `memwal_login`. The auth-required stub hands off to the bridge by pausing stdin, and a stream paused that way does not resume when a new `data` listener attaches, so the bridge served only the request replayed from the hand-off and then went deaf. Signing in appeared to work, the retry succeeded, and every call after it hung until the client timed it out.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/633"
-      },
-      {
-        "text": "Confirm a completed sign-in instead of only writing it to the log file. The failure path already reported itself twice (a notification and a notice on the next tool call) while success reported nothing, so a user who approved in the browser could not tell whether credentials had landed, the bridge had adopted them, or a retry was worth trying. Success now sends the matching notification and prefixes a one-shot banner naming the account, the delegate, and the resolved credentials path onto the next tool result.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/633"
-      },
-      {
-        "text": "Stop the `memwal_login` prompt claiming you are already signed in when you are not. The bridge assumed it only ever runs with credentials on disk, but `memwal_logout` deletes them and login is intercepted before the signed-out guard, so a login after a logout in the same session announced that a stored delegate key would be replaced, reading as though the logout had not taken. Both prompts now read the credentials file instead of assuming the mode.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/633"
-      },
-      {
-        "text": "Write the credentials file by creating a new `0600` file and renaming it into place, instead of writing the delegate private key to the existing path and tightening the permission afterwards. `writeFileSync`'s `mode` only applies when it creates the file, so a `credentials.json` left world-readable by anything outside the CLI (a manual `chmod`, a restored backup, another tool) received the new key under the old permission until the following `chmod` landed. The CLI now writes the backup it takes when signing in as a different account the same way; that backup holds the same plaintext key, and the CLI previously created it under the process umask. On Windows, where `rename` cannot replace a destination another process holds open and POSIX mode bits are not enforced at all, the CLI retries briefly and then writes in place rather than failing the sign-in.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/520"
-      }
-    ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.7",
-    "date": "2026-09-15T08:47:32Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.7",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.7",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.10",
-    "date": "2026-09-15T08:47:25Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.10",
-    "description": "Release memwal Python SDK v0.1.10",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.10",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.6",
-    "date": "2026-09-09T01:20:04Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.6",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.6",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.12",
-    "date": "2026-09-09T01:19:45Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.12",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.12",
-    "changes": [
-      {
-        "text": "Optional `maxDistance` on `memwal_recall`: cosine-distance cutoff (low = similar, must be >= 0). Hits with `distance >= maxDistance` are dropped. Result lines now include both `score` (`1 − cosine distance`) and `distance`.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/373"
-      },
-      {
-        "text": "Resolve the credential directory on every access instead of freezing it at module load, and let `MEMWAL_CREDS_DIR` override it. The login test sandboxed the home directory with `HOME` alone, which `os.homedir()` ignores on Windows, so running the package's test suite there wrote fixture credentials over the developer's real `~/.memwal/credentials.json` and destroyed the delegate key stored in it.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/705"
-      }
-    ]
-  },
-  {
-    "id": "memwal-memwal-python@0.1.9",
-    "date": "2026-09-09T01:19:37Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.9",
-    "description": "Release memwal Python SDK v0.1.9",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.9",
     "changes": []
   },
   {
@@ -404,89 +148,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/memwal@0.1.5",
-    "date": "2026-08-26T12:59:20Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.5",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.8",
-    "date": "2026-08-26T12:59:19Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.8",
-    "description": "Release memwal Python SDK v0.1.8",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.8",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.11",
-    "date": "2026-08-24T07:56:29Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.11",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.11",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.4",
-    "date": "2026-08-24T07:56:12Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.4",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.4",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.10",
-    "date": "2026-08-20T09:21:38Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.10",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.10",
-    "changes": [
-      {
-        "text": "Answer orphaned tool calls whose upstream response never arrives with a retryable error instead of hanging indefinitely. The bridge now tracks in-flight request start times and sweeps expired calls through a per-request deadline (`MEMWAL_MCP_CALL_TIMEOUT_MS`, default 240s), reuses the existing late-reply drop so an expired call cannot get a second response, and enriches reconnect logs with pending request IDs and methods.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/690"
-      },
-      {
-        "text": "Inject the configured default namespace (`--namespace` / `MEMWAL_NAMESPACE`) into `memwal_remember_bulk` calls that omit one, so bulk facts land in the project namespace instead of the relayer fallback `default`.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/667"
-      },
-      {
-        "text": "Send proactive-usage instructions in the MCP `initialize` handshake, so the model knows when to save and recall without being asked. Clients moved to lazy tool loading, which keeps tool descriptions out of the model's context until a tool is explicitly loaded; the guidance lived only in those descriptions, so the model stopped using memory on its own and would offer its built-in memory or deny the tool existed. `instructions` travels with `initialize`, before any `tools/list`, so lazy loading cannot strip it.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/681"
-      }
-    ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.6",
-    "date": "2026-08-20T09:21:19Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory SDK v0.0.6",
-    "description": "and `serverUrl` as required in `configSchema`, so OpenClaw rejected the config entry the",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.6",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.3",
-    "date": "2026-08-20T09:21:13Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.3",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.3",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.54.0",
     "date": "2026-08-19T19:20:43Z",
     "category": "walrus",
@@ -506,66 +167,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.8",
-    "date": "2026-08-14T17:02:24Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.8",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.8",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.7",
-    "date": "2026-08-14T08:13:59Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.7",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.7",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.7",
-    "date": "2026-08-14T08:13:53Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.7",
-    "description": "Release memwal Python SDK v0.1.7",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.7",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.2",
-    "date": "2026-08-14T08:13:41Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.2",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.2",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.1",
-    "date": "2026-08-07T07:15:09Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.1",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.1",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.6",
-    "date": "2026-08-07T07:14:58Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.6",
-    "description": "Release memwal Python SDK v0.1.6",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.6",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.53.0",
     "date": "2026-08-05T17:52:16Z",
     "category": "walrus",
@@ -573,36 +174,6 @@
     "description": null,
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.53.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.1.0",
-    "date": "2026-07-31T13:57:21Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory TypeScript SDK v0.1.0",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.6",
-    "date": "2026-07-31T13:57:14Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory MCP v0.0.6",
-    "description": null,
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.6",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.5",
-    "date": "2026-07-31T13:57:09Z",
-    "category": "walrus-memory",
-    "title": "Walrus Memory python v0.1.5",
-    "description": "Release memwal Python SDK v0.1.5",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.5",
     "changes": []
   },
   {
@@ -712,36 +283,6 @@
     "changes": []
   },
   {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.5",
-    "date": "2026-06-15T13:01:45Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Fixes a workspace dependency that broke npm installs outside the monorepo and switches the release\nworkflow to pnpm publish.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.5",
-    "date": "2026-06-12T06:43:44Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Adds the automatic memory plugin for Claude Code, Codex, Cursor, and Antigravity, along with new\n`memwal_remember_bulk` and `memwal_health` tools and proactive memory behavior. Also fixes the\nplugin bundle so it ships `.mcp.json` correctly.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.4",
-    "date": "2026-06-05T09:09:44Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Fixes HTTPS dashboard sign-in callbacks and credential reload after login so tools work without\nrestarting the MCP client.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.4",
-    "changes": []
-  },
-  {
     "id": "sites-mainnet-v2.10.0",
     "date": "2026-06-04T15:35:28Z",
     "category": "walrus-sites",
@@ -761,76 +302,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.3",
-    "date": "2026-06-04T12:48:54Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Rebrands package metadata from MemWal to Walrus Memory throughout the MCP server.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.3",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.4",
-    "date": "2026-06-02T12:13:52Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Adds temporal anchoring through `occurredAt` to the `memory_store` tool. The auto-capture hook now\npasses the current timestamp, and the SDK is bumped for the new `AnalyzeOptions`.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.4",
-    "changes": [
-      {
-        "text": "Wire temporal anchoring through the agent-side memory tools.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/218"
-      }
-    ]
-  },
-  {
-    "id": "memwal-memwal-python@0.1.4",
-    "date": "2026-06-02T12:13:47Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.4",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.4",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.7",
-    "date": "2026-06-02T12:13:47Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.7",
-    "description": "Adds an optional `occurredAt` parameter to `analyze()` for temporal anchoring of extracted facts.\nRelative date references are now resolved into absolute dates.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.7",
-    "changes": [
-      {
-        "text": "Add optional `occurredAt` to `analyze()` and `analyzeAndWait()` for temporal anchoring of extracted facts.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/218"
-      }
-    ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.6",
-    "date": "2026-05-28T10:21:04Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.6",
-    "description": "Adds `RecallParams` for object-style recall calls and deprecates the positional recall overload.\nAlso documents `restore()` response fields.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.6",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.3",
-    "date": "2026-05-28T10:20:50Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.3",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.3",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.49.1",
     "date": "2026-05-27T18:04:30Z",
     "category": "walrus",
@@ -838,46 +309,6 @@
     "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.49.1",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.3",
-    "date": "2026-05-25T04:50:20Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Rebrands from MemWal to Walrus Memory across the OpenClaw memory plugin.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.3",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.2",
-    "date": "2026-05-25T04:50:16Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Adds relayer compatibility checks and rebrands from MemWal to Walrus Memory across the MCP server\npackage.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.2",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.5",
-    "date": "2026-05-25T04:50:10Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Adds relayer compatibility checks, `RecallOptions` for `topK`/`namespace`/`maxDistance` filtering,\nand prefers Sui gRPC for SEAL sessions. This release also rebrands from MemWal to Walrus Memory.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.2",
-    "date": "2026-05-25T04:49:56Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.2",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.2",
     "changes": []
   },
   {
@@ -900,36 +331,6 @@
     ]
   },
   {
-    "id": "memwal-memwal-python@0.1.0",
-    "date": "2026-05-21T08:16:26Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.0",
-    "description": "Initial release of the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.4",
-    "date": "2026-05-15T03:25:43Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Adds `getRememberStatus` for polling async job state and `SealServerConfig` for manual SEAL\nconfiguration. Manual mode validates API key pairs.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.4",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.1",
-    "date": "2026-05-15T03:25:42Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.1",
-    "description": "Initial release of the MCP server with stdio transport, browser wallet login, and inline session\ntools. Includes memory tools for remember, recall, analyze, and restore.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.1",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.48.1",
     "date": "2026-05-13T17:23:09Z",
     "category": "walrus",
@@ -937,16 +338,6 @@
     "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.48.1",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.3",
-    "date": "2026-05-08T02:50:06Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Updates `remember()` for the async relayer flow and introduces `rememberAsync`,\n`waitForRememberJob`, `rememberAndWait`, and bulk remember helpers. Also adds async analysis with\n`analyzeAndWait`.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.3",
     "changes": []
   },
   {
@@ -975,26 +366,6 @@
         "url": "https://github.com/MystenLabs/walrus-sites/pull/707"
       }
     ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.2",
-    "date": "2026-04-30T04:04:07Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Initial release of the OpenClaw memory plugin with automatic recall and capture hooks, session\nsummary, CLI commands, and LLM tools.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.2",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.2",
-    "date": "2026-04-30T03:23:32Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Adds per-request nonce signing to block replay attacks and replaces delegate key transport with\nephemeral SEAL sessions. SDK versions that do not include a nonce are rejected with HTTP 426.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.2",
-    "changes": []
   },
   {
     "id": "walrus-mainnet-v1.47.1",
