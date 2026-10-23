@@ -21,7 +21,11 @@ pnpm start     # local dev server with hot reload
 ```
 
 Set `GITHUB_TOKEN` to avoid API rate limits; the build reads GitHub releases and
-the `walrus-skills` repository. The sidebars for Oyster and Walrus Memory are
+the `walrus-skills` repository. Release summaries in `editorial/` are drafted in batches by the `Editorial summaries`
+workflow and reviewed in its pull request; edit them there or by hand, in the
+house format the existing files use.
+
+The sidebars for Oyster and Walrus Memory are
 tracked files; regenerate them with `pnpm gen:oyster-sidebar` and
 `pnpm gen:memory-sidebar` after adding pages.
 

@@ -1,0 +1,90 @@
+# Copyright (c) Walrus Foundation
+# SPDX-License-Identifier: Apache-2.0
+#
+# Twice a month, drafts an editorial summary for every walrus, Walrus Memory,
+# and walrus-sites release that has none in editorial/, regenerates the
+# release notes pages from them, and opens one pull request with the batch
+# for review. This replaces the per-release tracking issues the former
+# editorial-coverage workflow opened.
+#
+# Releases with content in their GitHub body are summarized by Claude in the
+# house format; releases with no content get the fixed maintenance-release
+# text. Review the pull request as you would any docs PR: the rendered
+# release notes pages in it are what docs.wal.app serves after the merge.
+#
+# Needs the ANTHROPIC_API_KEY repository secret. A pull request opened with
+# the default GITHUB_TOKEN does not trigger the Build docs or Lint workflows;
+# Vercel still builds a preview, and the checks run on the next push to the
+# branch or on close and reopen.
+
+name: Editorial summaries
+
+on:
+  schedule:
+    - cron: "0 14 1,15 * *" # 1st and 15th of the month, 14:00 UTC
+  workflow_dispatch:
+    inputs:
+      max:
+        description: "Draft at most this many releases (newest first); empty for all"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # pin@v6.0.9
+        with:
+          version: 9
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # pin@v7.0.0
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: site/pnpm-lock.yaml
+      - name: Install dependencies
+        run: cd site && pnpm install --frozen-lockfile
+
+      - name: Find releases without an editorial summary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd site && node src/scripts/check-editorial-coverage.js --limit 50 --json "$RUNNER_TEMP/missing.json"
+
+      - name: Draft the summaries
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd site
+          max="${{ github.event.inputs.max }}"
+          node src/scripts/generate-editorial-summaries.mjs --missing "$RUNNER_TEMP/missing.json" ${max:+--max "$max"}
+
+      - name: Regenerate the release notes pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd site && pnpm run gen:release-notes
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # pin@v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: editorial summaries for recent releases"
+          title: "docs: editorial summaries for recent releases"
+          body: |
+            Drafted editorial summaries for releases that had none in `editorial/`, and
+            the release notes pages regenerated from them.
+
+            Review the summaries under `editorial/` as you would any docs page: they were
+            drafted from the GitHub release bodies, and the rendered pages under
+            `content/release-notes/` in this pull request are what docs.wal.app serves
+            after the merge. The run summary on the workflow page lists which releases
+            were drafted and which were skipped.
+          branch: "editorial/release-summaries"
+          base: "main"
+          delete-branch: true
+          labels: documentation
