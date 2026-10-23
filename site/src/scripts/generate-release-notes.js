@@ -49,7 +49,7 @@ function fetchJSON(urlPath) {
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode === 200) {
-          resolve(JSON.parse(data));
+          resolve(JSON.parse(data.replace(/\r\n?/g, "\n")));
         } else {
           reject(
             new Error(

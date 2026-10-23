@@ -1,5 +1,182 @@
 [
   {
+    "id": "walrus-testnet-v1.59.0",
+    "date": "2026-10-21T17:20:39Z",
+    "category": "walrus",
+    "title": "Walrus v1.59.0",
+    "description": null,
+    "badge": "Testnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.59.0",
+    "changes": [
+      {
+        "text": "adds the `blob_info_snapshot.certify` config flag (default `false`), a new RocksDB column family `blob_info_snapshot_publication` (created automatically on the first start), and metrics under `blob_info_snapshot_*` for serialize, encode, and certify durations and errors, publications found uncertified, and the epoch of the latest certified snapshot. Enabling `certify` requires the version-4 system contract; on an older contract the node's attestations fail and are counted, and nothing else changes. No operator action is required by default.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3814"
+      },
+      {
+        "text": "encoding the blob info snapshot at the epoch boundary no longer holds the snapshot's full erasure-coded expansion in memory; peak memory for that step drops from about 5.5 times the snapshot size to about 1.7 times.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3758"
+      },
+      {
+        "text": "The `WALRUS_GRPC_MIGRATION_LEVEL` environment variable is no longer read; the node always uses Sui gRPC. You can remove it from your environment.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3855"
+      },
+      {
+        "text": "Nodes configured for the public testnet now attest their blob info snapshot on chain at each epoch boundary by default (`blob_info_snapshot.certify` defaults to `true` on testnet). Set `blob_info_snapshot: {certify: false}` in the node config to opt out. The default on mainnet and other networks is unchanged.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3863"
+      },
+      {
+        "text": "The `WALRUS_GRPC_MIGRATION_LEVEL` environment variable is no longer read; the client always uses Sui gRPC. You can remove it from your environment.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3855"
+      }
+    ]
+  },
+  {
+    "id": "sites-mainnet-v2.12.2",
+    "date": "2026-10-21T13:50:02Z",
+    "category": "walrus-sites",
+    "title": "Walrus Sites v2.12.2",
+    "description": "Follow-up to v2.12.1: the portal Docker images move to a current Bun base image (`oven/bun:1.4.3`, Debian 13) so the server-portal image can be built again; the previous base image reached end of life and broke the v2.12.1 image build. The site-builder is unchanged from v2.12.1 (Walrus `testnet-v1.58.1`, Sui `testnet-v1.81.0`). No Move contract changes.\n\n> ℹ️ Known limitation: `--dry-run` cost estimation still uses the Sui JSON-RPC `dev_inspect` API, which public Sui fullnodes no longer serve. Regular `deploy`, `publish` and `update` are unaffected; a gRPC-based estimate will ship in a follow-up.",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.12.2",
+    "changes": [
+      {
+        "text": "server-portal: Move Docker images to `oven/bun:1.4.3` (Debian 13) so `apt` works again in the image build",
+        "url": "https://github.com/MystenLabs/walrus-sites/pull/735"
+      },
+      {
+        "text": "Bump version to 2.12.2",
+        "url": "https://github.com/MystenLabs/walrus-sites/pull/736"
+      }
+    ]
+  },
+  {
+    "id": "sites-mainnet-v2.12.1",
+    "date": "2026-10-21T12:00:17Z",
+    "category": "walrus-sites",
+    "title": "Walrus Sites v2.12.1",
+    "description": "Dependency catch-up release. The site-builder now builds against Walrus `testnet-v1.58.1` and Sui `testnet-v1.81.0` (previously `testnet-v1.51.2` / `testnet-v1.74.0`) on Rust 1.96. No portal or Move contract changes.\n\n> ℹ️ Known limitation: `--dry-run` cost estimation still uses the Sui JSON-RPC `dev_inspect` API, which public Sui fullnodes no longer serve. Regular `deploy`, `publish` and `update` are unaffected; a gRPC-based estimate will ship in a follow-up.",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.12.1",
+    "changes": [
+      {
+        "text": "site-builder: Bump Sui to `testnet-v1.81.0`, Walrus to `testnet-v1.58.1`, Rust toolchain to 1.96",
+        "url": "https://github.com/MystenLabs/walrus-sites/pull/733"
+      },
+      {
+        "text": "site-builder: Initialize typed-store DB metrics once in the integration-test harness to fix a startup race",
+        "url": "https://github.com/MystenLabs/walrus-sites/pull/733"
+      },
+      {
+        "text": "Bump version to 2.12.1",
+        "url": "https://github.com/MystenLabs/walrus-sites/pull/734"
+      }
+    ]
+  },
+  {
+    "id": "walrus-mainnet-v1.58.1",
+    "date": "2026-10-14T17:13:34Z",
+    "category": "walrus",
+    "title": "Walrus v1.58.1",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.58.1",
+    "changes": [
+      {
+        "text": "adds the `blob_info_snapshot.certify` config flag (default `false`), a new RocksDB column family `blob_info_snapshot_publication` (created automatically on the first start), and `blob_info_snapshot_*` metrics. No operator action is required.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3835"
+      }
+    ]
+  },
+  {
+    "id": "walrus-mainnet-v1.57.0",
+    "date": "2026-09-30T18:02:56Z",
+    "category": "walrus",
+    "title": "Walrus v1.57.0",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.57.0",
+    "changes": []
+  },
+  {
+    "id": "walrus-testnet-v1.56.1",
+    "date": "2026-09-17T06:44:36Z",
+    "category": "walrus",
+    "title": "Walrus v1.56.1",
+    "description": null,
+    "badge": "Testnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.56.1",
+    "changes": []
+  },
+  {
+    "id": "walrus-mainnet-v1.56.0",
+    "date": "2026-09-16T17:31:26Z",
+    "category": "walrus",
+    "title": "Walrus v1.56.0",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.56.0",
+    "changes": []
+  },
+  {
+    "id": "walrus-mainnet-v1.55.2",
+    "date": "2026-09-02T17:34:39Z",
+    "category": "walrus",
+    "title": "Walrus v1.55.2",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.55.2",
+    "changes": [
+      {
+        "text": "Adds a `node_recovery_baseline_invalidations_total` metric counting sync-and-recovery info publications that invalidate the node-recovery baseline and supersede in-flight node-recovery runs.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3643"
+      }
+    ]
+  },
+  {
+    "id": "walrus-testnet-v1.55.1",
+    "date": "2026-08-28T05:23:21Z",
+    "category": "walrus",
+    "title": "Walrus v1.55.1",
+    "description": null,
+    "badge": "Testnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.55.1",
+    "changes": [
+      {
+        "text": "Adds a `node_recovery_baseline_invalidations_total` metric counting sync-and-recovery info publications that invalidate the node-recovery baseline and supersede in-flight node-recovery runs.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3643"
+      }
+    ]
+  },
+  {
+    "id": "walrus-mainnet-v1.54.0",
+    "date": "2026-08-19T19:20:43Z",
+    "category": "walrus",
+    "title": "Walrus v1.54.0",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.54.0",
+    "changes": [
+      {
+        "text": "Requests for quilt patches of expired or nonexistent quilts now return 404 `BLOB_NOT_FOUND` within about a second, instead of 503 `BLOB_UNAVAILABLE` after a 10-20 second fan-out.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3604"
+      },
+      {
+        "text": "`walrus read-quilt` fails immediately with \"the blob ID does not exist\" for expired or never-certified quilts, instead of timing out against the storage nodes.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3604"
+      }
+    ]
+  },
+  {
+    "id": "walrus-mainnet-v1.53.0",
+    "date": "2026-08-05T17:52:16Z",
+    "category": "walrus",
+    "title": "Walrus v1.53.0",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.53.0",
+    "changes": []
+  },
+  {
     "id": "walrus-mainnet-v1.52.1",
     "date": "2026-07-22T17:24:03Z",
     "category": "walrus",
@@ -106,36 +283,6 @@
     "changes": []
   },
   {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.5",
-    "date": "2026-06-15T13:01:45Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Fixes a workspace dependency that broke npm installs outside the monorepo and switches the release\nworkflow to pnpm publish.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/oc-memwal%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.5",
-    "date": "2026-06-12T06:43:44Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Adds the automatic memory plugin for Claude Code, Codex, Cursor, and Antigravity, along with new\n`memwal_remember_bulk` and `memwal_health` tools and proactive memory behavior. Also fixes the\nplugin bundle so it ships `.mcp.json` correctly.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal-mcp%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.4",
-    "date": "2026-06-05T09:09:44Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Fixes HTTPS dashboard sign-in callbacks and credential reload after login so tools work without\nrestarting the MCP client.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal-mcp%400.0.4",
-    "changes": []
-  },
-  {
     "id": "sites-mainnet-v2.10.0",
     "date": "2026-06-04T15:35:28Z",
     "category": "walrus-sites",
@@ -155,76 +302,6 @@
     ]
   },
   {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.3",
-    "date": "2026-06-04T12:48:54Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Rebrands package metadata from MemWal to Walrus Memory throughout the MCP server.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal-mcp%400.0.3",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.4",
-    "date": "2026-06-02T12:13:52Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Adds temporal anchoring through `occurredAt` to the `memory_store` tool. The auto-capture hook now\npasses the current timestamp, and the SDK is bumped for the new `AnalyzeOptions`.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/oc-memwal%400.0.4",
-    "changes": [
-      {
-        "text": "Wire temporal anchoring through the agent-side memory tools.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/218"
-      }
-    ]
-  },
-  {
-    "id": "memwal-memwal-python@0.1.4",
-    "date": "2026-06-02T12:13:47Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.4",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/memwal-python%400.1.4",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.7",
-    "date": "2026-06-02T12:13:47Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.7",
-    "description": "Adds an optional `occurredAt` parameter to `analyze()` for temporal anchoring of extracted facts.\nRelative date references are now resolved into absolute dates.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.7",
-    "changes": [
-      {
-        "text": "Add optional `occurredAt` to `analyze()` and `analyzeAndWait()` for temporal anchoring of extracted facts.",
-        "url": "https://github.com/MystenLabs/MemWal/pull/218"
-      }
-    ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.6",
-    "date": "2026-05-28T10:21:04Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.6",
-    "description": "Adds `RecallParams` for object-style recall calls and deprecates the positional recall overload.\nAlso documents `restore()` response fields.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.6",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.3",
-    "date": "2026-05-28T10:20:50Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.3",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/memwal-python%400.1.3",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.49.1",
     "date": "2026-05-27T18:04:30Z",
     "category": "walrus",
@@ -232,46 +309,6 @@
     "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.49.1",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.3",
-    "date": "2026-05-25T04:50:20Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Rebrands from MemWal to Walrus Memory across the OpenClaw memory plugin.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/oc-memwal%400.0.3",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.2",
-    "date": "2026-05-25T04:50:16Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Adds relayer compatibility checks and rebrands from MemWal to Walrus Memory across the MCP server\npackage.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal-mcp%400.0.2",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.5",
-    "date": "2026-05-25T04:50:10Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.5",
-    "description": "Adds relayer compatibility checks, `RecallOptions` for `topK`/`namespace`/`maxDistance` filtering,\nand prefers Sui gRPC for SEAL sessions. This release also rebrands from MemWal to Walrus Memory.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.5",
-    "changes": []
-  },
-  {
-    "id": "memwal-memwal-python@0.1.2",
-    "date": "2026-05-25T04:49:56Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.2",
-    "description": "A patch release for the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/memwal-python%400.1.2",
     "changes": []
   },
   {
@@ -294,36 +331,6 @@
     ]
   },
   {
-    "id": "memwal-memwal-python@0.1.0",
-    "date": "2026-05-21T08:16:26Z",
-    "category": "walrus-memory",
-    "title": "Package v0.1.0",
-    "description": "Initial release of the Walrus Memory Python SDK.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/memwal-python%400.1.0",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.4",
-    "date": "2026-05-15T03:25:43Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.4",
-    "description": "Adds `getRememberStatus` for polling async job state and `SealServerConfig` for manual SEAL\nconfiguration. Manual mode validates API key pairs.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.4",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.1",
-    "date": "2026-05-15T03:25:42Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.1",
-    "description": "Initial release of the MCP server with stdio transport, browser wallet login, and inline session\ntools. Includes memory tools for remember, recall, analyze, and restore.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal-mcp%400.0.1",
-    "changes": []
-  },
-  {
     "id": "walrus-mainnet-v1.48.1",
     "date": "2026-05-13T17:23:09Z",
     "category": "walrus",
@@ -331,16 +338,6 @@
     "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.48.1",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.3",
-    "date": "2026-05-08T02:50:06Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.3",
-    "description": "Updates `remember()` for the async relayer flow and introduces `rememberAsync`,\n`waitForRememberJob`, `rememberAndWait`, and bulk remember helpers. Also adds async analysis with\n`analyzeAndWait`.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.3",
     "changes": []
   },
   {
@@ -369,26 +366,6 @@
         "url": "https://github.com/MystenLabs/walrus-sites/pull/707"
       }
     ]
-  },
-  {
-    "id": "memwal-@mysten-incubation/oc-memwal@0.0.2",
-    "date": "2026-04-30T04:04:07Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Initial release of the OpenClaw memory plugin with automatic recall and capture hooks, session\nsummary, CLI commands, and LLM tools.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/oc-memwal%400.0.2",
-    "changes": []
-  },
-  {
-    "id": "memwal-@mysten-incubation/memwal@0.0.2",
-    "date": "2026-04-30T03:23:32Z",
-    "category": "walrus-memory",
-    "title": "Package v0.0.2",
-    "description": "Adds per-request nonce signing to block replay attacks and replaces delegate key transport with\nephemeral SEAL sessions. SDK versions that do not include a nonce are rejected with HTTP 426.",
-    "badge": null,
-    "githubUrl": "https://github.com/MystenLabs/MemWal/releases/tag/%40mysten-incubation/memwal%400.0.2",
-    "changes": []
   },
   {
     "id": "walrus-mainnet-v1.47.1",

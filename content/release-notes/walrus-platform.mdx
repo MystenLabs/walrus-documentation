@@ -8,18 +8,85 @@ questions:
   - Where can I find Walrus release history?
   - What breaking changes should I be aware of?
 answer: Release notes for the Walrus decentralized storage platform.
-keywords:
-  - walrus
-  - release notes
-  - changelog
-  - storage node
-  - aggregator
-  - publisher
-  - daemon
-  - blob
-  - CLI
-  - mainnet
-  - testnet
+---
+
+### Walrus v1.59.0
+
+`Testnet` | October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.59.0)
+
+#### Changes
+
+- [adds the `blob_info_snapshot.certify` config flag (default `false`), a new RocksDB column family `blob_info_snapshot_publication` (created automatically on the first start), and metrics under `blob_info_snapshot_*` for serialize, encode, and certify durations and errors, publications found uncertified, and the epoch of the latest certified snapshot. Enabling `certify` requires the version-4 system contract; on an older contract the node's attestations fail and are counted, and nothing else changes. No operator action is required by default.](https://github.com/MystenLabs/walrus/pull/3814)
+- [encoding the blob info snapshot at the epoch boundary no longer holds the snapshot's full erasure-coded expansion in memory; peak memory for that step drops from about 5.5 times the snapshot size to about 1.7 times.](https://github.com/MystenLabs/walrus/pull/3758)
+- [The `WALRUS_GRPC_MIGRATION_LEVEL` environment variable is no longer read; the node always uses Sui gRPC. You can remove it from your environment.](https://github.com/MystenLabs/walrus/pull/3855)
+- [Nodes configured for the public testnet now attest their blob info snapshot on chain at each epoch boundary by default (`blob_info_snapshot.certify` defaults to `true` on testnet). Set `blob_info_snapshot: {certify: false}` in the node config to opt out. The default on mainnet and other networks is unchanged.](https://github.com/MystenLabs/walrus/pull/3863)
+- [The `WALRUS_GRPC_MIGRATION_LEVEL` environment variable is no longer read; the client always uses Sui gRPC. You can remove it from your environment.](https://github.com/MystenLabs/walrus/pull/3855)
+
+---
+
+### Walrus v1.58.1
+
+`Mainnet` | October 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.58.1)
+
+#### Changes
+
+- [adds the `blob_info_snapshot.certify` config flag (default `false`), a new RocksDB column family `blob_info_snapshot_publication` (created automatically on the first start), and `blob_info_snapshot_*` metrics. No operator action is required.](https://github.com/MystenLabs/walrus/pull/3835)
+
+---
+
+### Walrus v1.57.0
+
+`Mainnet` | September 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.57.0)
+
+---
+
+### Walrus v1.56.1
+
+`Testnet` | September 17, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.56.1)
+
+---
+
+### Walrus v1.56.0
+
+`Mainnet` | September 16, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.56.0)
+
+---
+
+### Walrus v1.55.2
+
+`Mainnet` | September 2, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.55.2)
+
+#### Changes
+
+- [Adds a `node_recovery_baseline_invalidations_total` metric counting sync-and-recovery info publications that invalidate the node-recovery baseline and supersede in-flight node-recovery runs.](https://github.com/MystenLabs/walrus/pull/3643)
+
+---
+
+### Walrus v1.55.1
+
+`Testnet` | August 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.55.1)
+
+#### Changes
+
+- [Adds a `node_recovery_baseline_invalidations_total` metric counting sync-and-recovery info publications that invalidate the node-recovery baseline and supersede in-flight node-recovery runs.](https://github.com/MystenLabs/walrus/pull/3643)
+
+---
+
+### Walrus v1.54.0
+
+`Mainnet` | August 19, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.54.0)
+
+#### Changes
+
+- [Requests for quilt patches of expired or nonexistent quilts now return 404 `BLOB_NOT_FOUND` within about a second, instead of 503 `BLOB_UNAVAILABLE` after a 10-20 second fan-out.](https://github.com/MystenLabs/walrus/pull/3604)
+- [`walrus read-quilt` fails immediately with "the blob ID does not exist" for expired or never-certified quilts, instead of timing out against the storage nodes.](https://github.com/MystenLabs/walrus/pull/3604)
+
+---
+
+### Walrus v1.53.0
+
+`Mainnet` | August 5, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.53.0)
+
 ---
 
 ### Walrus v1.52.1
