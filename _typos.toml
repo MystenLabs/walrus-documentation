@@ -1,9 +1,17 @@
 [default.extend-identifiers]
 bimap = "bimap"
+certifi = "certifi"
+
+[default.extend-words]
+# Accepted spelling, used in the Walrus Memory docs.
+unparseable = "unparseable"
 
 [files]
 extend-exclude = [
   "*.svg",
+  # Generated from GitHub release bodies, which are quoted verbatim.
+  "content/release-notes/",
+  "site/src/data/changelog.json",
   "site/src/plugins/askcookbook/index.js",
   "site/src/scripts/audit-docs.mjs",
   "site/src/scripts/backfill-questions.mjs",

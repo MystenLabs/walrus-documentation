@@ -49,7 +49,7 @@ function fetchJSON(urlPath) {
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode === 200) {
-          resolve(JSON.parse(data));
+          resolve(JSON.parse(data.replace(/\r\n?/g, "\n")));
         } else if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
           // A renamed repository answers 301 with the new location.
           const next = new URL(res.headers.location);
