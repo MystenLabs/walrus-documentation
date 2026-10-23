@@ -1,0 +1,45 @@
+name: Build docs
+
+# Vercel deploys production from main and previews from pull requests through
+# its Git integration. This workflow only verifies that the site builds:
+# onBrokenLinks is set to throw, so a link to a page that does not exist fails
+# this job.
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+concurrency: docs-build-${{ github.ref }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # pin@v6.0.9
+        with:
+          version: 9
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # pin@v7.0.0
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: site/pnpm-lock.yaml
+      - name: Install dependencies
+        run: cd site && pnpm install --frozen-lockfile
+      - name: Build site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd site && pnpm run build

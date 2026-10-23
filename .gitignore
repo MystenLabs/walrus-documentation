@@ -1,0 +1,10 @@
+# Fetched external docs (legacy; content is now committed under oyster-content/
+# and walrus-memory-content/)
+site/.cache-oyster/
+site/.cache-walrus-memory/
+
+.DS_Store
+*.log
+venv/
+**/tmp
+out/

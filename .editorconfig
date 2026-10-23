@@ -1,0 +1,38 @@
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 100
+trim_trailing_whitespace = true
+
+# Some markdown files are additionally checked using markdownlint.
+[*.md]
+indent_size = unset
+max_line_length = 150
+
+[**/*.mdx]
+indent_size = unset
+max_line_length = unset
+trim_trailing_whitespace = unset
+
+[{*.css,*.html,*.json,*.sh,*.toml,*.yml,*.yaml,*.mjs,*.ts,*.tsx,*.js,*.jq}]
+indent_size = 2
+max_line_length = 150
+
+# Ignore paths
+[{.git/**/*,**/*.lock,site/pnpm-lock.yaml,**/Move.toml,LICENSE,.editorconfig,venv/**/*,site/src/components/ImportContent/utils.js,site/static/glossary.json,site/static/llms.txt,site/static/llms-full.txt,site/static/walrus-memory/llms.txt,site/static/walrus-memory/llms-full.txt,site/static/oyster/**/*,site/static/diagrams/*.html,site/src/data/changelog.json,site/sidebarsOyster.js,oyster-content/**/*,walrus-memory-content/**/*}]
+charset = unset
+end_of_line = unset
+indent_size = unset
+indent_style = unset
+insert_final_newline = unset
+max_line_length = unset
+trim_trailing_whitespace = unset
