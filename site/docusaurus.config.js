@@ -278,7 +278,7 @@ const config = {
       docs: {
         path: "../content",
         sidebarPath: "./sidebars.js",
-        editUrl: "https://github.com/MystenLabs/walrus/tree/main/docs/site/",
+        editUrl: "https://github.com/MystenLabs/walrus-docs/tree/main/site/",
         remarkPlugins: [
           [remarkGlossary, { glossaryFile: "static/glossary.json" }],
           remarkMath,
