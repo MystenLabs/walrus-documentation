@@ -9,7 +9,7 @@
         "gen:yaml": "node src/scripts/copy-yaml-files.js",
         "gen:release-notes": "node src/scripts/generate-release-notes.js",
         "check:editorial": "node src/scripts/check-editorial-coverage.js",
-        "prestart": "npm run gen:skills&&npm run gen:import&&npm run gen:yaml&&npm run gen:release-notes",
+        "prestart": "npm run gen:import&&npm run gen:yaml",
         "start": "docusaurus start",
         "prebuild": "npm run prestart",
         "build:prep": "node src/shared/js/inline-imports.js && node src/scripts/copy-markdown-files.js && npm run gen:llms",
@@ -29,7 +29,8 @@
         "gen:oyster-sidebar": "node src/scripts/generate-oyster-sidebar.js",
         "gen:memory-sidebar": "node src/scripts/generate-walrus-memory-sidebar.js",
         "gen:llms:oyster": "node src/scripts/generate-llmstxt.mjs --only-prefix oyster --output static/oyster/llms.txt",
-        "gen:editorial": "node src/scripts/check-editorial-coverage.js --limit 50 --json /tmp/missing.json && node src/scripts/generate-editorial-summaries.mjs --missing /tmp/missing.json"
+        "gen:editorial": "node src/scripts/check-editorial-coverage.js --limit 50 --json /tmp/missing.json && node src/scripts/generate-editorial-summaries.mjs --missing /tmp/missing.json",
+        "gen:upstream": "npm run gen:skills&&npm run gen:release-notes"
     },
     "dependencies": {
         "@cookbookdev/docsbot": "^4.25.15",

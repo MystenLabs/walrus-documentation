@@ -23,8 +23,9 @@ pnpm build
 pnpm serve     # preview the production build locally
 ```
 
-Requires Node.js 18+ and pnpm. Set `GITHUB_TOKEN` to avoid GitHub API rate
-limits: the build reads release notes and skill descriptions from GitHub.
+Requires Node.js 18+ and pnpm. The build has no GitHub API dependency: the
+only network access is fetching a few embedded source files from the walrus
+repository at the ref pinned in `site/upstream.json`.
 
 ## Directory structure
 
@@ -95,10 +96,12 @@ Reusable content fragments live in `content/snippets/`. Import them into pages w
 `<ImportContent source="..." mode="code" />` embeds a file at build time.
 Sources under `examples/` resolve from this repository. Sources under
 `setup/`, `crates/`, and `scripts/` are fetched from
-[MystenLabs/walrus](https://github.com/MystenLabs/walrus) at the ref in
-`WALRUS_SOURCE_REF` (default `main`), so the docs show the canonical copy of
-client configuration and crate config examples. A source that resolves nowhere
-fails the build.
+[MystenLabs/walrus](https://github.com/MystenLabs/walrus) at the ref pinned in
+`site/upstream.json`, so the docs show the canonical copy of client
+configuration and crate config examples and a build is reproducible. The
+`Update upstream content` workflow bumps the pin to the latest mainnet release
+through a pull request. `WALRUS_SOURCE_REF` overrides it locally. A source that
+resolves nowhere fails the build.
 
 ## Release notes editorial summaries
 
@@ -113,12 +116,26 @@ in `site/` does the same locally; it needs `GITHUB_TOKEN` and `ANTHROPIC_API_KEY
 
 The full build runs these steps in sequence:
 
-1. **`prestart` / `prebuild`** — Generates skills data from
-   [MystenLabs/walrus-skills](https://github.com/MystenLabs/walrus-skills),
-   resolves embedded source files, copies YAML files, and generates release notes
-   from `editorial/` source files and GitHub releases.
+1. **`prestart` / `prebuild`** — Resolves embedded source files and copies YAML
+   files.
 2. **`build:prep`** — Inlines imports, copies markdown files, and generates `llms.txt` / `llms-full.txt` for each doc set.
 3. **`docusaurus build`** — Compiles the Docusaurus site.
+
+## Content from other repositories
+
+Everything the site shows from other repositories is tracked in this one and
+changes only through a pull request, so a push elsewhere can neither break a
+build nor publish unreviewed pages:
+
+- The Oyster and Walrus Memory docs are source here, under `oyster-content/`
+  and `walrus-memory-content/`.
+- `site/src/data/skills.json` (from
+  [MystenLabs/walrus-skills](https://github.com/MystenLabs/walrus-skills)),
+  the release notes pages and `site/src/data/changelog.json` (from GitHub
+  releases), and the walrus ref in `site/upstream.json` are refreshed by the
+  `Update upstream content` workflow, which runs daily and opens a pull request
+  when anything changed. Run `pnpm gen:upstream` in `site/` to refresh them by
+  hand; it needs `GITHUB_TOKEN`.
 
 ## Redirects and custom headers
 
