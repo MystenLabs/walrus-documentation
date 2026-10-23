@@ -6,7 +6,7 @@ description: >-
 keywords:
   - OpenClaw
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - quick start
   - installation
   - plugin setup
@@ -26,7 +26,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I install the Walrus Memory plugin for OpenClaw?
-  - How do I configure the MemWal OpenClaw plugin with my delegate key?
+  - How do I configure the Walrus Memory OpenClaw plugin with my delegate key?
   - How do I verify that the OpenClaw memory plugin is working?
 answer: >-
   Install the Walrus Memory OpenClaw plugin with openclaw plugins install @mysten-incubation/oc-memwal. Configure it in ~/.openclaw/openclaw.json with your delegate key (via MEMWAL_PRIVATE_KEY env var), account ID, and relayer URL. Restart the gateway and verify by running openclaw memwal stats, then test the memory loop by storing a fact in one conversation and recalling it in another.
@@ -34,25 +34,28 @@ answer: >-
 
 Get the plugin running and test the memory loop in a few minutes.
 
-## Prerequisites
+<div className="outlined-tabs">
 
-- [OpenClaw](https://openclaw.ai) `>=2026.3.11` installed and running
+<Tabs>
+<TabItem value="prereq" label="Prerequisites">
 
-You'll also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory — the steps below will guide you through getting these.
+- [x] [OpenClaw](https://openclaw.ai) `>=2026.3.11` installed and running
 
-## Installation
+</TabItem>
+</Tabs>
 
-<Steps>
-  <Step>
-    ### Install the plugin
+</div>
+
+You also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory, the steps below guides you through getting these.
+
+
+### Install the plugin
 
     ```bash
     openclaw plugins install @mysten-incubation/oc-memwal
     ```
-  </Step>
 
-  <Step>
-    ### Get your Walrus Memory credentials
+  ### Get your Walrus Memory credentials
 
     The plugin needs three values to connect to Walrus Memory:
 
@@ -62,22 +65,20 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
     | **Account ID** | Your MemWalAccount object ID on Sui (`0x...`) |
     | **Relayer URL** | The Walrus Memory relayer endpoint that handles search, storage, and encryption |
 
-    The easiest way to get your delegate key and account ID is through the [Walrus Memory dashboard](https://memory.walrus.xyz). See the [main Quick Start](/getting-started/quick-start) for detailed setup instructions.
+    The easiest way to get your delegate key and account ID is through the [Walrus Memory dashboard](https://memory.walrus.xyz). See the [main Quick Start](/walrus-memory/getting-started/quick-start) for detailed setup instructions.
 
     For the relayer URL, use a managed endpoint or deploy your own:
 
     | Environment | Relayer URL |
     |-------------|-------------|
-    | **Production** (mainnet) | `https://relayer.memory.walrus.xyz` |
-    | **Staging** (testnet) | `https://relayer-staging.memory.walrus.xyz` |
+    | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
+    | **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
 
-    <Info>
-    These managed relayer endpoints are provided as a public good by Walrus Foundation.
-    </Info>
-  </Step>
+    :::info
+These managed relayer endpoints are provided as a public good by Walrus Foundation.
+:::
 
-  <Step>
-    ### Set your delegate key
+  ### Set your delegate key
 
     Store your delegate key as an environment variable so it's never hardcoded in config files:
 
@@ -85,10 +86,8 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
     # Add to your shell profile (.zshrc, .bashrc, etc.)
     export MEMWAL_PRIVATE_KEY="your-64-char-hex-key"
     ```
-  </Step>
 
-  <Step>
-    ### Configure OpenClaw
+  ### Configure OpenClaw
 
     Add the plugin config to `~/.openclaw/openclaw.json`:
 
@@ -113,8 +112,8 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
     }
     ```
 
-    <Warning>
-    The config key is **`memory-memwal`**, the plugin's manifest id, not the npm
+    :::warning
+The config key is **`memory-memwal`**, the plugin's manifest id, not the npm
     package name `oc-memwal`. The installer reports this as
     `using manifest id as the config key`. Using `oc-memwal` leaves the plugin
     unbound, and it never loads.
@@ -122,10 +121,12 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
     `hooks.allowConversationAccess` is equally load-bearing. Without it, OpenClaw
     logs `typed hook "agent_end" blocked` at startup and **auto-capture silently
     never runs**, even though the gateway reports the plugin as connected.
-    </Warning>
+:::
 
-    <Accordion title="Optional settings">
-      You can add these to the `config` block to tune behavior. The defaults work well for most setups.
+    <details>
+<summary>Optional settings</summary>
+
+You can add these to the `config` block to tune behavior. The defaults work well for most setups.
 
       | Option | Default | Description |
       |--------|---------|-------------|
@@ -136,11 +137,10 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
       | `captureMaxMessages` | `10` | How many recent messages to analyze for facts |
       | `defaultNamespace` | `"default"` | Memory scope for the main agent |
       | `requestTimeoutMs` | `10000` | Deadline in ms for each relayer call. Raise it for a slow self-hosted relayer |
-    </Accordion>
-  </Step>
 
-  <Step>
-    ### Start OpenClaw
+</details>
+
+  ### Start OpenClaw
 
     ```bash
     openclaw gateway stop && openclaw gateway
@@ -153,20 +153,19 @@ You'll also need a **delegate key**, **account ID**, and **relayer URL** from Wa
     memory-memwal: connected (status: ok, version: ...)
     ```
 
-    <Tip>
-    If you see `health check failed`, check that your relayer URL is reachable and your `MEMWAL_PRIVATE_KEY` env var is set.
-    </Tip>
-  </Step>
-</Steps>
+    :::tip
+If you see `health check failed`, check that your relayer URL is reachable and your `MEMWAL_PRIVATE_KEY` env var is set.
+:::
 
-## Verify
 
 ### Check connectivity
 
 Run the stats command to confirm the plugin is connected:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
+
 ```bash
-openclaw memwal stats
+$ openclaw memwal stats
 ```
 
 This shows the relayer status, your key (masked), account ID, active namespace, and whether auto-recall/capture are enabled.
@@ -175,40 +174,52 @@ This shows the relayer status, your key (masked), account ID, active namespace, 
 
 The core value of the plugin is the automatic recall/capture cycle. Test it end-to-end:
 
-**1. Store a fact** — start a conversation and share something memorable:
+**1. Store a fact**, start a conversation and share something memorable:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
 
 ```
 You: I prefer TypeScript over JavaScript for backend work
 Bot: (responds normally)
 ```
 
-Check logs — you should see:
+Check logs, you should see:
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
+
 ```
 memory-memwal: auto-captured 1 facts (agent: main, namespace: default)
 ```
 
-**2. Recall it** — in a **new conversation**, ask about it:
+**2. Recall it**, in a **new conversation**, ask about it:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
 
 ```
 You: What programming languages do I like?
 ```
 
-Check logs — you should see:
+Check logs, you should see:
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
+
 ```
 memory-memwal: auto-recall injected 1 memories (agent: main, namespace: default)
 ```
 
-**3. Search from terminal** — confirm the memory exists via CLI:
+**3. Search from terminal**, confirm the memory exists through CLI:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
 
 ```bash
-openclaw memwal search "programming"
+$ openclaw memwal search "programming"
 ```
 
 If all three steps work, the plugin is fully operational.
 
 ### Enable LLM tools (optional)
 
-By default, the plugin works entirely through hooks — the LLM doesn't know about memory tools. To give the LLM explicit control, add tools to your agent profile:
+By default, the plugin works entirely through hooks, the LLM doesn't know about memory tools. To give the LLM explicit control, add tools to your agent profile:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
 
 ```json
 {
@@ -218,9 +229,9 @@ By default, the plugin works entirely through hooks — the LLM doesn't know abo
 }
 ```
 
-Then the LLM can call `memory_search` and `memory_store` on its own when it decides to. This is a power-user feature — hooks handle the common case automatically.
+Then the LLM can call `memory_search` and `memory_store` on its own when it decides to. This is a power-user feature, hooks handle the common case automatically.
 
 ## Next steps
 
-- [How It Works](/openclaw/how-it-works) — understand the architecture, message flow, and hook mechanics
-- [Reference](/openclaw/reference) — detailed breakdown of hooks, tools, CLI, and configuration
+- [How It Works](/walrus-memory/openclaw/how-it-works), understand the architecture, message flow, and hook mechanics
+- [Reference](/walrus-memory/openclaw/reference), detailed breakdown of hooks, tools, CLI, and configuration

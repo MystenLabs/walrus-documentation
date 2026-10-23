@@ -5,7 +5,7 @@ description: >-
   including table schemas, indexes, and similarity search for recall queries.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - indexer
   - PostgreSQL
   - pgvector
@@ -26,8 +26,8 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "What database tables does the Walrus Memory indexer use?"
-  - "How does MemWal perform similarity search with pgvector?"
-  - "How does the MemWal indexer sync onchain data to PostgreSQL?"
+  - "How does Walrus Memory perform similarity search with pgvector?"
+  - "How does the Walrus Memory indexer sync onchain data to PostgreSQL?"
 answer: >-
   The indexer syncs account data into PostgreSQL so the relayer can resolve ownership
   without hitting the blockchain. Key tables include vector_entries (stores embeddings
@@ -41,11 +41,10 @@ The indexer syncs account data into PostgreSQL so the relayer can resolve owners
 
 Both the relayer and the indexer connect to the same PostgreSQL instance (with the `pgvector` extension enabled). Migrations run automatically on boot.
 
-## Tables
 
 ### `vector_entries`
 
-The primary search table — stores vector embeddings linked to encrypted Walrus blobs.
+The primary search table, stores vector embeddings linked to encrypted Walrus blobs.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -57,14 +56,14 @@ The primary search table — stores vector embeddings linked to encrypted Walrus
 | `created_at` | `TIMESTAMPTZ` | Insertion timestamp |
 
 **Indexes:**
-- `idx_vector_entries_owner` — B-tree on `owner`
-- `idx_vector_entries_blob_id` — B-tree on `blob_id`
-- `idx_vector_entries_owner_ns` — composite B-tree on `(owner, namespace)` for scoped queries
-- `idx_vector_entries_embedding` — HNSW on `embedding` using `vector_cosine_ops` for fast similarity search
+- `idx_vector_entries_owner`, B-tree on `owner`
+- `idx_vector_entries_blob_id`, B-tree on `blob_id`
+- `idx_vector_entries_owner_ns`, composite B-tree on `(owner, namespace)` for scoped queries
+- `idx_vector_entries_embedding`, HNSW on `embedding` using `vector_cosine_ops` for fast similarity search
 
 ### `delegate_key_cache`
 
-Auth optimization — caches the mapping from delegate public key to account, so the relayer doesn't need to scan the onchain registry on every request.
+Auth optimization, caches the mapping from delegate public key to account, so the relayer doesn't need to scan the onchain registry on every request.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -77,7 +76,7 @@ The cache is populated lazily during auth. If a cached entry becomes stale (key 
 
 ### `accounts`
 
-Populated by the indexer — maps owner addresses to their MemWalAccount object IDs.
+Populated by the indexer, maps owner addresses to their MemWalAccount object IDs.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -91,18 +90,20 @@ Tracks the indexer's cursor position so it can resume from where it left off aft
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `key` | `TEXT` (PK) | State key (e.g., `"event_cursor"`) |
+| `key` | `TEXT` (PK) | State key (for example, , `"event_cursor"`) |
 | `value` | `TEXT` | JSON-serialized cursor (`txDigest` + `eventSeq`) |
 
-## How It Helps
+## How it helps
 
-- **Constant-time account lookup** — the relayer checks `delegate_key_cache` and `accounts` instead of scanning the onchain registry
-- **Resumable event polling** — the indexer stores its cursor in `indexer_state`, so it picks up where it left off after restarts without re-processing old events
-- **Reactive cleanup** — when Walrus returns 404 for an expired blob during recall, the relayer deletes the corresponding `vector_entries` rows automatically
+- **Constant-time account lookup**, the relayer checks `delegate_key_cache` and `accounts` instead of scanning the onchain registry
+- **Resumable event polling**, the indexer stores its cursor in `indexer_state`, so it picks up where it left off after restarts without re-processing old events
+- **Reactive cleanup**, when Walrus returns 404 for an expired blob during recall, the relayer deletes the corresponding `vector_entries` rows automatically
 
-## Similarity Search
+## Similarity search
 
 Recall queries use pgvector's cosine distance operator (`<=>`) against the HNSW index:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/indexer/database-sync.md" target="_blank" className="code-source-link">Source: indexer/database-sync.md</a>
 
 ```sql
 SELECT blob_id, (embedding <=> $1)::float8 AS distance

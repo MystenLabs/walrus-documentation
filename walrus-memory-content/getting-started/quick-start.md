@@ -5,7 +5,7 @@ description: >-
   generating credentials to configuring the client and storing and recalling your first memory.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - quick start
   - TypeScript SDK
   - installation
@@ -26,135 +26,138 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I get started with Walrus Memory?
-  - How do I install the MemWal TypeScript SDK?
-  - How do I store and recall my first memory with MemWal?
+  - How do I install the Walrus Memory TypeScript SDK?
+  - How do I store and recall my first memory with Walrus Memory?
 answer: >-
   To get started with Walrus Memory, install the @mysten-incubation/memwal TypeScript SDK,
   generate an account ID and delegate key from the Walrus Memory Playground, choose a relayer
   endpoint, configure the SDK client, and call remember/recall to store and retrieve memories.
 ---
 
+<AgentPrompt
+  prompt="Run `curl -sL https://memory.walrus.xyz/skills/setup` and use the returned instructions to set up Walrus Memory in this AI client."
+/>
+
 The fastest way to get Walrus Memory running is through the TypeScript SDK.
 
-## Prerequisites
+<div className="outlined-tabs">
 
-- [Node.js](https://nodejs.org/) v22.23.4+ (or v24.22.1+ / v26.12.1+) or [Bun](https://bun.sh/) v1+
+<Tabs>
+<TabItem value="prereq" label="Prerequisites">
 
-## Quick start
+- [x] [Node.js](https://nodejs.org/) v22.23.4+ (or v24.22.1+ / v26.12.1+) or [Bun](https://bun.sh/) v1+
 
-<Steps>
-  <Step>
-    ### Install the SDK
+</TabItem>
+</Tabs>
 
-    <Tabs>
-      <Tab title="pnpm">
+</div>
+
+
+### Install the SDK
+
+    <Tabs groupId="pkg-manager">
+      <TabItem value="pnpm" label="pnpm">
         ```bash
         pnpm add @mysten-incubation/memwal
         ```
-      </Tab>
-      <Tab title="npm">
+      </TabItem>
+      <TabItem value="npm" label="npm">
         ```bash
         npm install @mysten-incubation/memwal
         ```
-      </Tab>
-      <Tab title="yarn">
+      </TabItem>
+      <TabItem value="yarn" label="yarn">
         ```bash
         yarn add @mysten-incubation/memwal
         ```
-      </Tab>
-      <Tab title="bun">
+      </TabItem>
+      <TabItem value="bun" label="bun">
         ```bash
         bun add @mysten-incubation/memwal
         ```
-      </Tab>
+      </TabItem>
     </Tabs>
 
     **Optional packages**
 
     For AI middleware with [Vercel AI SDK](https://sdk.vercel.ai/) (`@mysten-incubation/memwal/ai`):
 
-    <Tabs>
-      <Tab title="pnpm">
+    <Tabs groupId="pkg-manager">
+      <TabItem value="pnpm" label="pnpm">
         ```bash
         pnpm add ai
         ```
-      </Tab>
-      <Tab title="npm">
+      </TabItem>
+      <TabItem value="npm" label="npm">
         ```bash
         npm install ai
         ```
-      </Tab>
-      <Tab title="yarn">
+      </TabItem>
+      <TabItem value="yarn" label="yarn">
         ```bash
         yarn add ai
         ```
-      </Tab>
-      <Tab title="bun">
+      </TabItem>
+      <TabItem value="bun" label="bun">
         ```bash
         bun add ai
         ```
-      </Tab>
+      </TabItem>
     </Tabs>
 
-    For the [manual client flow](/getting-started/choose-your-path) (`@mysten-incubation/memwal/manual`):
+    For the [manual client flow](/walrus-memory/getting-started/choose-your-path) (`@mysten-incubation/memwal/manual`):
 
-    <Tabs>
-      <Tab title="pnpm">
+    <Tabs groupId="pkg-manager">
+      <TabItem value="pnpm" label="pnpm">
         ```bash
         pnpm add @mysten/sui @mysten/seal @mysten/walrus
         ```
-      </Tab>
-      <Tab title="npm">
+      </TabItem>
+      <TabItem value="npm" label="npm">
         ```bash
         npm install @mysten/sui @mysten/seal @mysten/walrus
         ```
-      </Tab>
-      <Tab title="yarn">
+      </TabItem>
+      <TabItem value="yarn" label="yarn">
         ```bash
         yarn add @mysten/sui @mysten/seal @mysten/walrus
         ```
-      </Tab>
-      <Tab title="bun">
+      </TabItem>
+      <TabItem value="bun" label="bun">
         ```bash
         bun add @mysten/sui @mysten/seal @mysten/walrus
         ```
-      </Tab>
+      </TabItem>
     </Tabs>
-  </Step>
 
-  <Step>
-    ### Generate your account ID and delegate key
+  ### Generate your account ID and delegate key
 
     Create a Walrus Memory account ID and delegate private key for your SDK client using one of the hosted endpoints below.
 
-    <Note>
-    The following endpoints are provided as a public good by Walrus Foundation.
-    </Note>
+    :::note
+The following endpoints are provided as a public good by Walrus Foundation.
+:::
 
     | **App** | **URL** |
     | --- | --- |
     | **Walrus Memory Playground** | [memory.walrus.xyz](https://memory.walrus.xyz) |
 
-    For the contract-based setup flow, see [Delegate Key Management](/contract/delegate-key-management) and [Walrus Memory smart contract](/contract/overview).
-  </Step>
+    For the contract-based setup flow, see [Delegate Key Management](/walrus-memory/contract/delegate-key-management) and [Walrus Memory smart contract](/walrus-memory/contract/overview).
 
-  <Step>
-    ### Choose a relayer
+  ### Choose a relayer
 
-    Use a hosted relayer, or deploy your own [self-hosted relayer](/relayer/self-hosting) with access to a wallet funded with WAL and SUI:
+    Use a hosted relayer, or deploy your own [self-hosted relayer](/walrus-memory/relayer/self-hosting) with access to a wallet funded with WAL and SUI:
 
-    <Note>
-    Following endpoints are provided as public good by Walrus Foundation.
-    </Note>
+    :::note
+Following endpoints are provided as public good by Walrus Foundation.
+:::
 
     | **Network** | **Relayer URL** |
     | --- | --- |
-    | **Production** (mainnet) | `https://relayer.memory.walrus.xyz` |
-    | **Staging** (testnet) | `https://relayer-staging.memory.walrus.xyz` |
-  </Step>
+    | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
+    | **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
 
-  <Step>
-    ### Configure the SDK
+  ### Configure the SDK
 
     Set up the SDK with your delegate key, account ID, and relayer URL:
 
@@ -170,23 +173,19 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
     });
     ```
 
-    <Warning>
-    Use the `accountId` **you** generated in the previous step. Recall is scoped per **account + namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
-    </Warning>
-  </Step>
+    :::warning
+Use the `accountId` **you** generated in the previous step. Recall is scoped per **account + namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
+:::
 
-  <Step>
-    ### Verify your connection
+  ### Verify your connection
 
     Run a health check to confirm everything is working:
 
     ```ts
     await memwal.health();
     ```
-  </Step>
 
-  <Step>
-    ### Store and recall your first memory
+  ### Store and recall your first memory
 
     ```ts
     const job = await memwal.remember("User prefers dark mode and works in TypeScript.");
@@ -197,7 +196,5 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
     ```
 
     You're up and running.
-  </Step>
-</Steps>
 
 If Walrus Memory is useful to you, [a star on the GitHub repo ⭐](https://github.com/MystenLabs/MemWal) helps others find it.

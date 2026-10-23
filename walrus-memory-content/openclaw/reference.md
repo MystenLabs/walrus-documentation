@@ -6,7 +6,7 @@ description: >-
 keywords:
   - OpenClaw
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - reference
   - hooks
   - CLI
@@ -36,9 +36,9 @@ Complete reference for every plugin capability.
 
 ## Hooks
 
-Hooks are the primary mechanism — they run automatically on every conversation turn without any configuration beyond enabling the plugin.
+Hooks are the primary mechanism, they run automatically on every conversation turn without any configuration beyond enabling the plugin.
 
-### Auto-Recall
+### Auto-recall
 
 **Hook:** `before_prompt_build`
 
@@ -48,11 +48,13 @@ Searches Walrus Memory for memories relevant to the user's prompt and injects th
 |---------|---------|-------------|
 | `autoRecall` | `true` | Enable/disable auto-recall |
 | `maxRecallResults` | `5` | Max memories to inject per turn |
-| `minRelevance` | `0.3` | Minimum relevance score (0-1) — lower means more permissive |
+| `minRelevance` | `0.3` | Minimum relevance score (0-1), lower means more permissive |
 
 **What gets injected:**
 
 Memories are wrapped in `<memwal-memories>` tags with a security header:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
 
 ```
 <memwal-memories>
@@ -67,11 +69,11 @@ All memory text is HTML-escaped to prevent prompt injection. The LLM sees this a
 
 The hook also appends a short note that memory tools are pinned to the calling agent. The plugin enforces that pin. A model-supplied namespace is not what selects the memory space.
 
-### Auto-Capture
+### Auto-capture
 
 **Hook:** `agent_end`
 
-Extracts facts from the conversation after each turn and stores them via Walrus Memory's `analyze()` endpoint.
+Extracts facts from the conversation after each turn and stores them through Walrus Memory's `analyze()` endpoint.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -83,14 +85,14 @@ Extracts facts from the conversation after each turn and stores them via Walrus 
 Not every message is worth sending to the server. The filter rejects:
 
 - Messages shorter than 30 characters
-- Filler responses ("ok", "thanks", "sure", "yeah", etc.)
+- Filler responses ("ok", "thanks", "sure", "yeah", and so on. )
 - XML/system content (likely injected context)
 - Emoji-heavy messages (> 3 emoji)
 - Prompt injection attempts
 
 And accepts immediately if trigger patterns match:
 
-- Memory keywords ("remember", "prefer", "decided", "will use")
+- Memory keywords ("remember", "prefer", "decided", "uses")
 - Personal statements ("I like", "my ... is", "I work")
 - Contact info (phone numbers, email addresses)
 
@@ -100,7 +102,7 @@ Messages that pass the filter are sent to the Walrus Memory server, where a serv
 
 Two LLM-callable tools for explicit memory operations. Both require `tools.allow` configuration.
 
-### memory_search
+### Memory_search
 
 Semantic search across the agent's memory space.
 
@@ -111,13 +113,15 @@ Semantic search across the agent's memory space.
 | `namespace` | string | No | Calling agent, or its legacy namespace. Omit to use the agent's namespace. |
 
 **Behavior:**
-- Searches Walrus Memory via `recall()` with the query text
+- Searches Walrus Memory through `recall()` with the query text
 - Pins the search to the calling agent's namespace. Any other namespace is rejected, except that agent's legacy namespace.
 - Filters out prompt injection attempts from results
 - HTML-escapes result text before returning to the LLM
 - Returns ranked results with relevance percentages
 
 **Example response to the LLM:**
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
+
 ```
 Found 2 memories:
 
@@ -125,9 +129,9 @@ Found 2 memories:
 2. User's team uses Next.js for frontend (72% relevance)
 ```
 
-### memory_store
+### Memory_store
 
-Save information via server-side fact extraction.
+Save information through server-side fact extraction.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -138,10 +142,12 @@ Save information via server-side fact extraction.
 - Pins the write to the calling agent's namespace. Any other namespace is rejected, except that agent's legacy namespace.
 - Rejects prompt injection patterns before sending to server
 - Rejects text shorter than 3 characters
-- Uses `analyze()` for intelligent fact extraction — the server LLM breaks the text into individual facts
+- Uses `analyze()` for intelligent fact extraction, the server LLM breaks the text into individual facts
 - Returns the number of facts stored and a preview
 
 **Example response to the LLM:**
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
+
 ```
 Stored 2 facts: User prefers dark mode; User works in TypeScript
 ```
@@ -149,6 +155,8 @@ Stored 2 facts: User prefers dark mode; User works in TypeScript
 ### Enabling tools
 
 Add to your OpenClaw agent profile:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
 
 ```json
 {
@@ -158,22 +166,24 @@ Add to your OpenClaw agent profile:
 }
 ```
 
-<Note>
-Tools are optional. Hooks handle the common case — memories are recalled and captured automatically. Tools give the LLM additional control when it explicitly needs it.
-</Note>
+:::note
+Tools are optional. Hooks handle the common case, memories are recalled and captured automatically. Tools give the LLM additional control when it explicitly needs it.
+:::
 
 ## CLI
 
 Terminal commands for debugging and inspection. They talk to the relayer directly, so they work whether or not the gateway is running.
 
-### search
+### Search
 
 Search memories with JSON output:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
+
 ```bash
-openclaw memwal search "programming preferences"
-openclaw memwal search "tech stack" --limit 10
-openclaw memwal search "research notes" --agent researcher
+$ openclaw memwal search "programming preferences"
+$ openclaw memwal search "tech stack" --limit 10
+$ openclaw memwal search "research notes" --agent researcher
 ```
 
 | Flag | Description |
@@ -181,18 +191,20 @@ openclaw memwal search "research notes" --agent researcher
 | `--limit <n>` | Max results (default: 5) |
 | `--agent <name>` | Search a specific agent's namespace |
 
-### stats
+### Stats
 
 Show server health and plugin configuration:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/reference.md" target="_blank" className="code-source-link">Source: openclaw/reference.md</a>
+
 ```bash
-openclaw memwal stats
-openclaw memwal stats --agent researcher
+$ openclaw memwal stats
+$ openclaw memwal stats --agent researcher
 ```
 
 Output includes server status, version, key (masked), account ID, active namespace, and auto-recall/capture toggles.
 
-## Multi-Agent Isolation
+## Multi-agent isolation
 
 Each OpenClaw agent gets its own memory namespace derived from the session key. The main agent uses `defaultNamespace` (default: `"default"`), other agents use their name as the namespace.
 
@@ -202,13 +214,13 @@ Each OpenClaw agent gets its own memory namespace derived from the session key. 
 | Researcher | `agent:researcher:uuid-456` | `researcher` |
 | Coder | `agent:coder:uuid-789` | `coder` |
 
-All recall, capture, and tool operations are scoped to the current namespace by the plugin and server. This is an organization boundary, not an on-chain authorization boundary.
+All recall, capture, and tool operations are scoped to the current namespace by the plugin and server. This is an organization boundary, not an onchain authorization boundary.
 
-Every delegate key is authorized for the whole MemWal account. Separate delegate keys improve key custody and attribution, but cryptographic isolation requires separate MemWal accounts.
+Every delegate key is authorized for the whole Walrus Memory account. Separate delegate keys improve key custody and attribution, but cryptographic isolation requires separate Walrus Memory accounts.
 
-## Prompt Injection Protection
+## Prompt injection protection
 
-Stored memories are a prompt injection vector — a malicious memory could manipulate the agent. The plugin protects at multiple layers:
+Stored memories are a prompt injection vector, a malicious memory could manipulate the agent. The plugin protects at multiple layers:
 
 | Layer | Protection | Applied where |
 |-------|-----------|---------------|
@@ -224,15 +236,15 @@ Injection patterns detected:
 - Fake XML tags (`<system>`, `<assistant>`, `<developer>`)
 - Tool invocation attempts (`run/execute/call tool/command`)
 
-## Configuration Reference
+## Configuration reference
 
 Full list of config options for `openclaw.json`:
 
 | Option | Type | Default | Required | Description |
 |--------|------|---------|----------|-------------|
-| `privateKey` | string | — | Yes | Ed25519 private key (hex). Supports `${ENV_VAR}`. |
-| `accountId` | string | — | Yes | MemWalAccount object ID on Sui (`0x...`) |
-| `serverUrl` | string | — | Yes | Walrus Memory server URL |
+| `privateKey` | string | | Yes | Ed25519 private key (hex). Supports `${ENV_VAR}`. |
+| `accountId` | string | | Yes | MemWalAccount object ID on Sui (`0x...`) |
+| `serverUrl` | string | | Yes | Walrus Memory server URL |
 | `defaultNamespace` | string | `"default"` | No | Memory scope for the main agent |
 | `autoRecall` | boolean | `true` | No | Inject relevant memories before each turn |
 | `autoCapture` | boolean | `true` | No | Extract and store facts after each turn |
@@ -241,7 +253,6 @@ Full list of config options for `openclaw.json`:
 | `captureMaxMessages` | number | `10` | No | Recent messages window for capture |
 | `requestTimeoutMs` | number | `10000` | No | Per-request deadline (ms) for every relayer call, 1000–60000 |
 
-## Troubleshooting
 
 ### Plugin not loading
 
@@ -269,6 +280,6 @@ Full list of config options for `openclaw.json`:
 
 ### Tools not visible to the LLM
 
-- Plugin tools require explicit allowlisting via `tools.allow`
+- Plugin tools require explicit allowlisting through `tools.allow`
 - Add `["memory_search", "memory_store"]` to your agent profile
-- Hooks work without this — tools are an opt-in feature
+- Hooks work without this, tools are an opt-in feature

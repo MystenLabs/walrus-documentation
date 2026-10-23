@@ -1,10 +1,10 @@
 ---
 title: Self-Hosting
 description: >-
-  Guide to self-hosting the Walrus Memory relayer, covering environment variables, database setup, horizontal scaling, and Seal key server configuration for running your own dedicated MemWal backend.
+  Guide to self-hosting the Walrus Memory relayer, covering environment variables, database setup, horizontal scaling, and Seal key server configuration for running your own dedicated Walrus Memory backend.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - self-hosting
   - relayer deployment
   - environment variables
@@ -25,7 +25,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "How do I self-host the Walrus Memory relayer?"
-  - "What environment variables are required for a self-hosted MemWal relayer?"
+  - "What environment variables are required for a self-hosted Walrus Memory relayer?"
   - "How do I configure Seal key servers for a self-hosted Walrus Memory deployment?"
 answer: >-
   Self-hosting the Walrus Memory relayer involves running the Rust relayer with its TypeScript sidecar, pointed at a PostgreSQL database with pgvector. Required environment variables include DATABASE_URL, MEMWAL_PACKAGE_ID, MEMWAL_REGISTRY_ID, a server Sui private key, and SIDECAR_AUTH_TOKEN. You scale horizontally by sharing the same database, Redis cluster, and key pool across multiple instances behind a load balancer.
@@ -35,7 +35,7 @@ Self-hosting means running your own relayer, either pointing at an existing Walr
 
 The managed relayer provided by Walrus Foundation is a reference implementation. You can also build your own implementation that fits the same API surface with custom logic. The sections below cover running the reference implementation as your own self-hosted relayer.
 
-If you want the default relayer-handled SDK flow while reducing trust in the host operator, see the [TEE Deployment Pattern](/relayer/nautilus-tee).
+If you want the default relayer-handled SDK flow while reducing trust in the host operator, see the [TEE Deployment Pattern](/walrus-memory/relayer/nautilus-tee).
 
 ## Who self-hosts and when
 
@@ -80,24 +80,30 @@ The Rust relayer starts the TypeScript sidecar as a child process on boot. They 
 
 If you do not already have PostgreSQL + pgvector running, start it with:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
+
 ```bash
-docker compose -f services/server/docker-compose.yml up -d postgres
+$ docker compose -f services/server/docker-compose.yml up -d postgres
 ```
 
 Then run the relayer:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
+
 ```bash
-cp services/server/.env.example services/server/.env
-cd services/server/scripts
-npm ci
-cd ..
-cargo run
+$ cp services/server/.env.example services/server/.env
+$ cd services/server/scripts
+$ npm ci
+$ cd ..
+$ cargo run
 ```
 
 Then check:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
+
 ```bash
-curl http://localhost:8000/health
+$ curl http://localhost:8000/health
 ```
 
 ## Environment variables
@@ -145,9 +151,11 @@ By default, the relayer enforces rate limits and storage quotas through Redis to
 - `SERVER_SUI_PRIVATE_KEYS` is a comma-separated key pool for parallel Walrus uploads
 - If both are set, the key pool takes priority for uploads
 
-### Sui RPC transport (gRPC)
+### Sui RPC Transport (gRPC)
 
 By default the relayer talks to Sui over JSON-RPC. Ahead of the **Sui JSON-RPC sunset in July 2026**, you can opt into gRPC using `SUI_GRPC_URL`. Set it to a Sui gRPC fullnode URL to route the relayer's Sui calls through gRPC. Leaving it empty keeps the existing JSON-RPC behavior, so setting it is opt-in and backward compatible.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
 ```env
 # Opt the write path into gRPC (testnet example)
@@ -156,15 +164,17 @@ SUI_GRPC_URL=https://fullnode.testnet.sui.io
 
 This one variable switches both paths. The write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path both move to gRPC. When `SUI_GRPC_URL` is set, the query and restore path uses gRPC `listOwnedObjects` and `getDynamicField`; when it is unset, that path falls back to the JSON-RPC `getOwnedObjects`, `getDynamicFieldObject`, and transaction-block queries. `SUI_RPC_URL` configures that JSON-RPC fallback client.
 
-<Note>
+:::note
 `SUI_GRPC_URL` must point at a gRPC endpoint. The relayer parses the URL at startup and exits if the URL is malformed. A well-formed URL that points at a host that does not serve gRPC passes startup, because the client connects lazily, and the failure surfaces on the first gRPC call. Verify the endpoint before you deploy.
-</Note>
+:::
 
 ## Package contract IDs
 
 Use the IDs that match your target network.
 
-### Staging (Testnet)
+### Staging (testnet)
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
 ```env
 SUI_NETWORK=testnet
@@ -173,7 +183,9 @@ MEMWAL_REGISTRY_ID=0x736aef9906798fca4460490ccdf8e8502ef170122dc26ecae32111b78c6
 
 ```
 
-### Production (Mainnet)
+### Production (mainnet)
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
 ```env
 SUI_NETWORK=mainnet
@@ -183,6 +195,8 @@ MEMWAL_REGISTRY_ID=0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9c
 
 If neither `SEAL_SERVER_CONFIGS` nor `SEAL_KEY_SERVERS` is set, the sidecar uses built-in defaults for the selected `SUI_NETWORK`. On `testnet`, the default remains Mysten's original independent key server pair so existing encrypted memories remain decryptable:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
+
 ```env
 SEAL_KEY_SERVERS=0x73d05d62c18d9374e3ea529e8e0ed6161da1a141a94d3f76ae3fe4e99356db75,0xf5d14a81a982144ae441cd7d64b09027f116a468bd36e7eca494f750591623c8
 ```
@@ -191,11 +205,15 @@ On `mainnet`, the default remains the legacy independent key server pair until M
 
 Use `SEAL_SERVER_CONFIGS` to opt into a committee key server. Committee entries require an `aggregatorUrl`, for example:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
+
 ```env
 SEAL_SERVER_CONFIGS=[{"objectId":"0x...","weight":1,"aggregatorUrl":"https://seal-aggregator.example.com"}]
 ```
 
 Mysten's official Testnet committee aggregator is:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
 ```env
 SEAL_SERVER_CONFIGS=[{"objectId":"0xb012378c9f3799fb5b1a7083da74a4069e3c3f1c93de0b27212a5799ce1e1e98","weight":1,"aggregatorUrl":"https://seal-aggregator-testnet.mystenlabs.com"}]
@@ -203,15 +221,15 @@ SEAL_SERVER_CONFIGS=[{"objectId":"0xb012378c9f3799fb5b1a7083da74a4069e3c3f1c93de
 
 Although that committee is 3-of-5 internally, Seal exposes it to the SDK as one logical server config. The aggregator handles the internal committee threshold, so leave `SEAL_THRESHOLD` unset or set it to `1` when using this committee config. Because it uses a different key server object, do not switch an existing deployment to it until older data has been migrated or re-encrypted.
 
-<Warning>
+:::warning
 Changing Seal key server defaults only affects new encryption. If a deployment has already encrypted memories with the Testnet independent key servers, keep those servers as the default or pin them with `SEAL_KEY_SERVERS` until you migrate or re-encrypt the data. Otherwise, recall and restore for older blobs might fail to decrypt.
-</Warning>
+:::
 
 Use the official key server configuration where possible.
 
-<Note>
+:::note
 `VITE_MEMWAL_PACKAGE_ID` and `VITE_MEMWAL_REGISTRY_ID` are frontend env vars for the app or playground, not for the relayer.
-</Note>
+:::
 
 ## Database setup
 
@@ -222,7 +240,7 @@ The relayer requires PostgreSQL with the `pgvector` extension. The relayer runs 
 - `accounts`: The indexer populates this table (account to owner mapping).
 - `indexer_state`: Indexer cursor tracking.
 
-See [Database Sync](/indexer/database-sync) for the full schema.
+See [Database Sync](/walrus-memory/indexer/database-sync) for the full schema.
 
 ## Operational notes
 
@@ -232,4 +250,4 @@ See [Database Sync](/indexer/database-sync) for the full schema.
 - `/health` is the basic service check, `/metrics` exposes Prometheus metrics, and API routes live under `/api/*`.
 - The indexer records which owner has an account. Delegate-key authentication does not scan `AccountRegistry`; a cold key needs `x-account-id` or `MEMWAL_ACCOUNT_ID`.
 - Without `OPENAI_API_KEY`, the server uses deterministic mock embeddings (hash-based), useful for local testing but not production.
-- Use `LOG_FORMAT=json` in production and see [Observability](/relayer/observability) for dashboards and alerts.
+- Use `LOG_FORMAT=json` in production and see [Observability](/walrus-memory/relayer/observability) for dashboards and alerts.

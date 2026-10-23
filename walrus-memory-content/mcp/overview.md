@@ -6,7 +6,7 @@ description: >-
 keywords:
   - MCP
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - plugin
   - automatic memory
   - agent memory
@@ -25,24 +25,28 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - What is the MemWal MCP server and how does it work?
-  - What is the difference between the MemWal plugin and MCP-only installation?
-  - Which MCP clients support the MemWal automatic memory plugin?
+  - What is the Walrus Memory MCP server and how does it work?
+  - What is the difference between the Walrus Memory plugin and MCP-only installation?
+  - Which MCP clients support the Walrus Memory automatic memory plugin?
 answer: >-
-  The MemWal MCP server exposes portable Walrus Memory as Model Context Protocol tools so AI agents can save and recall memories on their own. It can be installed as a plugin (with lifecycle hooks for automatic memory) on Claude Code, Codex, Cursor, and Antigravity, or as an MCP-only server on any MCP-aware client. Available tools include memwal_remember, memwal_recall, memwal_analyze, memwal_restore, memwal_health, memwal_login, and memwal_logout.
+  The Walrus Memory MCP server exposes portable Walrus Memory as Model Context Protocol tools so AI agents can save and recall memories on their own. It can be installed as a plugin (with lifecycle hooks for automatic memory) on Claude Code, Codex, Cursor, and Antigravity, or as an MCP-only server on any MCP-aware client. Available tools include memwal_remember, memwal_recall, memwal_analyze, memwal_restore, memwal_health, memwal_login, and memwal_logout.
 ---
 
-The **MemWal MCP server** exposes your portable Walrus Memory as Model Context Protocol tools, so an AI agent can decide when to save and recall memories on its own. It works with any MCP-aware client, and on **Claude Code**, **Codex**, **Cursor**, and **Antigravity** it can be installed as a **plugin** that adds automatic memory through lifecycle hooks.
+<AgentPrompt
+  prompt="Add the Walrus Memory MCP server to this client. On Claude Code run `claude mcp add --scope user memwal -- npx -y @mysten-incubation/memwal-mcp`; on other clients add the equivalent mcp.json entry. Then ask the agent to run memwal_login to sign in."
+/>
 
-If you already have local memory, standing context, or session history, [import those facts](/guides/import-existing-memory) so the account starts with what you have.
+The **Walrus Memory MCP server** exposes your portable Walrus Memory as Model Context Protocol tools, so an AI agent can decide when to save and recall memories on its own. It works with any MCP-aware client, and on **Claude Code**, **Codex**, **Cursor**, and **Antigravity** it can be installed as a **plugin** that adds automatic memory through lifecycle hooks.
 
-## MCP vs Plugin
+If you already have local memory, standing context, or session history, [import those facts](/walrus-memory/guides/import-existing-memory) so the account starts with what you have.
 
-There are two ways to use MemWal. The difference is whether you also get the **lifecycle hooks**:
+## MCP Vs plugin
+
+There are two ways to use Walrus Memory. The difference is whether you also get the **lifecycle hooks**:
 
 | Component | **Plugin** | **MCP-only** |
 |---|:-:|:-:|
-| MemWal MCP: memory tools (`memwal_remember`, `memwal_recall`, …) | ✓ | ✓ |
+| Walrus Memory MCP: memory tools (`memwal_remember`, `memwal_recall`, …) | ✓ | ✓ |
 | Lifecycle hooks: automatic recall/save reminders | ✓ | ✗ |
 
 - **Plugin** bundles the MCP server **and** lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and when to save without being asked. Available on **Claude Code**, **Codex**, **Antigravity**, and **Cursor**.
@@ -50,22 +54,24 @@ There are two ways to use MemWal. The difference is whether you also get the **l
 
 Saving **without being asked is on once you agree to it**: `memwal-mcp login`
 asks the question in your terminal the first time, and on a fresh install
-nothing is saved unprompted until you answer. Saved memories are permanent —
-Walrus is immutable storage — which is why the question comes first. Change the
+nothing is saved unprompted until you answer. Saved memories are permanent, 
+Walrus is immutable storage, which is why the question comes first. Change the
 answer any time with `memwal-mcp auto-save on|off` (or `MEMWAL_AUTO_SAVE` in
 your client's `env` block). Recall, and anything you explicitly ask to be
-remembered, work either way. Credentials — passwords, API keys, tokens, private keys, seed
-phrases, authorization headers, and URLs with an embedded `user:password` — are
+remembered, work either way. Credentials, passwords, API keys, tokens, private keys, seed
+phrases, authorization headers, and URLs with an embedded `user:password`, are
 excluded in both modes and stripped before a memory is written, because Walrus
 storage is append-only and a stored secret cannot be deleted.
 
-<Note>
-Prefer the plugin wherever you can install it. It is the tested path for reliable automatic save and recall, and it needs no extra instructions from you. On MCP-only clients, paste the client's instruction block (see [Claude Desktop](/mcp/claude-desktop#add-memory-instructions)) to get closer to the same behavior.
-</Note>
+:::note
+Prefer the plugin wherever you can install it. It is the tested path for reliable automatic save and recall, and it needs no extra instructions from you. On MCP-only clients, paste the client's instruction block (see [Claude Desktop](/walrus-memory/mcp/claude-desktop#add-memory-instructions)) to get closer to the same behavior.
+:::
 
 ## Fastest path: let your agent set it up
 
 Paste this into the AI client you want to connect:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/overview.md" target="_blank" className="code-source-link">Source: mcp/overview.md</a>
 
 ```text
 Run `curl -sL https://memory.walrus.xyz/skills/setup` and use the returned
@@ -82,29 +88,29 @@ What the user actually does differs per client. Pick your row:
 
 | Client | Automatic memory (hooks) | What you do |
 |---|:-:|---|
-| [Claude Code](/mcp/claude-code) | ✓ Plugin | Code tab: use the [Claude Code plugin setup](/mcp/claude-code) with the explicit HTTPS marketplace URL; regular Claude Desktop/web chat: use the [OAuth connector](/mcp/claude-connector) |
-| [Codex](/mcp/codex) | ✓ Plugin | `codex plugin marketplace add MystenLabs/MemWal`, then `codex plugin add memwal@memwal-plugins`, then trust the hooks through `/hooks` |
-| [Antigravity](/mcp/antigravity) | ✓ Plugin | `npx degit MystenLabs/MemWal/packages/mcp/plugin ~/.gemini/config/plugins/memwal` |
-| [Cursor](/mcp/cursor) | ✓ Plugin | `npx -y degit MystenLabs/MemWal/packages/mcp/plugin ~/.cursor/plugins/local/memwal` |
-| [Claude Desktop](/mcp/claude-desktop) | ✗ MCP-only | Regular chat: use the [OAuth connector](/mcp/claude-connector); local MCP is optional. The Code tab uses [Claude Code](/mcp/claude-code). |
-| [OpenCode](/mcp/opencode) | ✗ MCP-only | Edit the OpenCode MCP config |
-| ChatGPT desktop app | ✓ Plugin | Ships Codex, so follow [Codex](/mcp/codex) |
+| [Claude Code](/walrus-memory/mcp/claude-code) | ✓ Plugin | Code tab: use the [Claude Code plugin setup](/walrus-memory/mcp/claude-code) with the explicit HTTPS marketplace URL; regular Claude Desktop/web chat: use the [OAuth connector](/walrus-memory/mcp/claude-connector) |
+| [Codex](/walrus-memory/mcp/codex) | ✓ Plugin | `codex plugin marketplace add MystenLabs/MemWal`, then `codex plugin add memwal@memwal-plugins`, then trust the hooks through `/hooks` |
+| [Antigravity](/walrus-memory/mcp/antigravity) | ✓ Plugin | `npx degit MystenLabs/MemWal/packages/mcp/plugin ~/.gemini/config/plugins/memwal` |
+| [Cursor](/walrus-memory/mcp/cursor) | ✓ Plugin | `npx -y degit MystenLabs/MemWal/packages/mcp/plugin ~/.cursor/plugins/local/memwal` |
+| [Claude Desktop](/walrus-memory/mcp/claude-desktop) | ✗ MCP-only | Regular chat: use the [OAuth connector](/walrus-memory/mcp/claude-connector); local MCP is optional. The Code tab uses [Claude Code](/walrus-memory/mcp/claude-code). |
+| [OpenCode](/walrus-memory/mcp/opencode) | ✗ MCP-only | Edit the OpenCode MCP config |
+| ChatGPT desktop app | ✓ Plugin | Ships Codex, so follow [Codex](/walrus-memory/mcp/codex) |
 | ChatGPT web (Connectors) | ✗ Not supported | n/a |
 
 On the plugin rows, that command is the whole setup. The plugin's hooks carry the memory
 instructions, so you do not need to add routing text to `CLAUDE.md`, `AGENTS.md`, or a
 system prompt yourself.
 
-<Note>
+:::note
 **"ChatGPT" means two different things here.** The macOS **ChatGPT desktop app** ships
 Codex (`/Applications/ChatGPT.app/Contents/Resources/codex`) and reads the same
-`~/.codex/config.toml`, so the [Codex](/mcp/codex) plugin install works there unchanged.
+`~/.codex/config.toml`, so the [Codex](/walrus-memory/mcp/codex) plugin install works there unchanged.
 
-**ChatGPT web connectors are not supported.** MemWal's remote
-[Streamable HTTP transport](/mcp/reference#transports) needs two custom headers, but the
+**ChatGPT web connectors are not supported.** Walrus Memory's remote
+[Streamable HTTP transport](/walrus-memory/mcp/reference#transports) needs two custom headers, but the
 Connectors UI exposes only a single bearer field and cannot supply the required
 `x-memwal-account-id` header.
-</Note>
+:::
 
 ## Available tools
 
@@ -121,11 +127,13 @@ Connectors UI exposes only a single bearer field and cannot supply the required
 
 `memwal_recall` prints both `score = 1 - cosine distance` (higher = more similar) and the raw `distance` (lower = more similar), which is the wire and SDK field. Its optional `maxDistance` cutoff is expressed in `distance`, not `score`.
 
-See [Reference](/mcp/reference) for full parameters, CLI flags, and transports.
+See [Reference](/walrus-memory/mcp/reference) for full parameters, CLI flags, and transports.
 
 ## How it works
 
-The npm package (`@mysten-incubation/memwal-mcp`) runs locally next to your MCP client and bridges every memory tool call to the Walrus Memory relayer, which handles embeddings, SEAL encryption, and Walrus storage.
+The npm package (`@mysten-incubation/memwal-mcp`) runs locally next to your MCP client and bridges every memory tool call to the Walrus Memory relayer, which handles embeddings, Seal encryption, and Walrus storage.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/overview.md" target="_blank" className="code-source-link">Source: mcp/overview.md</a>
 
 ```mermaid
 flowchart TD
@@ -143,33 +151,33 @@ flowchart TD
 - **Local vs remote tools:** the package handles `memwal_login` / `memwal_logout` locally (they never reach the relayer) and forwards all memory tools (`memwal_remember`, `memwal_recall`, …) to the relayer over an authenticated session.
 - **Logout** deletes only the local credential file. To fully revoke access, also remove the delegate key from the dashboard.
 
-See [Reference](/mcp/reference) for the credential file contents, transports (stdio vs HTTP), and runtime safety details.
+See [Reference](/walrus-memory/mcp/reference) for the credential file contents, transports (stdio vs HTTP), and runtime safety details.
 
 ## Client-specific setup
 
-<CardGroup cols={2}>
-  <Card title="Claude Code" icon="robot" href="/mcp/claude-code">
+<Cards>
+  <Card title="Claude Code" href="/walrus-memory/mcp/claude-code">
     Plugin (automatic memory) or MCP-only
   </Card>
-  <Card title="Codex" icon="terminal" href="/mcp/codex">
+  <Card title="Codex" href="/walrus-memory/mcp/codex">
     Plugin (automatic memory) or MCP-only
   </Card>
-  <Card title="Cursor" icon="arrow-pointer" href="/mcp/cursor">
+  <Card title="Cursor" href="/walrus-memory/mcp/cursor">
     Plugin or MCP-only
   </Card>
-  <Card title="Claude Desktop" icon="desktop" href="/mcp/claude-desktop">
+  <Card title="Claude Desktop" href="/walrus-memory/mcp/claude-desktop">
     MCP-only
   </Card>
-  <Card title="Antigravity" icon="rocket" href="/mcp/antigravity">
+  <Card title="Antigravity" href="/walrus-memory/mcp/antigravity">
     Plugin or MCP-only
   </Card>
-  <Card title="OpenCode" icon="code" href="/mcp/opencode">
+  <Card title="OpenCode" href="/walrus-memory/mcp/opencode">
     MCP-only
   </Card>
-  <Card title="Reference" icon="book" href="/mcp/reference">
+  <Card title="Reference" href="/walrus-memory/mcp/reference">
     Tools, CLI flags, transports, self-hosting
   </Card>
-</CardGroup>
+</Cards>
 
 ## Verify your setup
 

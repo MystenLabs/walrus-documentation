@@ -1,16 +1,16 @@
 ---
 title: "Walrus Memory"
 description: >-
-  The recommended default MemWal client where the relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing. Covers core methods like remember, recall, analyze, and restore.
+  The recommended default Walrus Memory client where the relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing. Covers core methods like remember, recall, analyze, and restore.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - remember
   - recall
   - analyze
   - restore
 goal:
-  description: Call remember(), recall(), analyze(), and restore() on the default MemWal client and understand the parameters and return values for each operation.
+  description: Call remember(), recall(), analyze(), and restore() on the default Walrus Memory client and understand the parameters and return values for each operation.
   requires:
     - has_frontmatter:
         - title
@@ -25,20 +25,22 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I use the default Walrus Memory client?
-  - What methods does the MemWal client provide?
+  - What methods does the Walrus Memory client provide?
   - How does remember and recall work in Walrus Memory?
 answer: >-
-  The default MemWal client is the recommended entry point where the relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing. It provides remember() for storing memories, recall() for semantic search, analyze() for fact extraction, and restore() for rebuilding missing index entries.
+  The default Walrus Memory client is the recommended entry point where the relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing. It provides remember() for storing memories, recall() for semantic search, analyze() for fact extraction, and restore() for rebuilding missing index entries.
 ---
 
-The recommended default client. The relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing.
+The recommended default client. The relayer handles embeddings, Seal encryption, Walrus upload, and vector indexing.
 
-## How It Works
+## How it works
 
 1. The SDK signs each request with your delegate key
 2. The relayer verifies delegate access
 3. `remember` returns an accepted job while the relayer encrypts, uploads, and indexes in the background
 4. `recall` searches by Memory Space and returns decrypted matches
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
 
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";
@@ -51,7 +53,9 @@ const memwal = MemWal.create({
 });
 ```
 
-## Core Methods
+## Core methods
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
 
 ```ts
 // Store a memory
@@ -76,11 +80,13 @@ await memwal.health();
 Rebuild missing indexed entries for one namespace. Incremental, namespace-scoped, and meant to
 repair PostgreSQL vector state from Walrus-backed memory.
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
+
 ```ts
 const result = await memwal.restore("chatbot-prod", 10);
 ```
 
-## Lower-Level Methods
+## Lower-level methods
 
 Use these when you already have a vector or encrypted payload:
 

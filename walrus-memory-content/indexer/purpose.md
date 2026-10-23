@@ -5,7 +5,7 @@ description: >-
   by syncing account data to PostgreSQL, and the auth resolution priority flow.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - indexer
   - purpose
   - auth resolution
@@ -26,8 +26,8 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "Why does Walrus Memory need an indexer?"
-  - "How does the MemWal relayer resolve delegate key ownership?"
-  - "How do I configure and run the MemWal indexer?"
+  - "How does the Walrus Memory relayer resolve delegate key ownership?"
+  - "How do I configure and run the Walrus Memory indexer?"
 answer: >-
   The indexer listens to Sui events and records which owner has an account.
   Delegate-key authentication does not scan AccountRegistry. A cold key needs
@@ -36,11 +36,11 @@ answer: >-
 
 The indexer keeps the backend in sync with onchain state so the relayer can resolve accounts quickly.
 
-## Why It Exists
+## Why it exists
 
 Delegate-key authentication does not walk `AccountRegistry`. A cold key is verified against the signed `x-account-id`, or against `MEMWAL_ACCOUNT_ID` when that env is set. The indexer is what fills the `accounts` table the existence check and owner-token lookup read.
 
-## How It Works
+## How it works
 
 The indexer is a standalone Rust service (`services/indexer`) that:
 
@@ -50,12 +50,12 @@ The indexer is a standalone Rust service (`services/indexer`) that:
 4. Inserts `account_id → owner` mappings into the `accounts` table
 5. Stores its event cursor in `indexer_state` so it can resume after restarts
 
-## Auth Resolution Flow
+## Auth resolution flow
 
 When the relayer receives a signed request, it resolves the delegate key's account in this order:
 
-1. **PostgreSQL cache** (`delegate_key_cache`) — populated after a successful resolution
-2. **Signed `x-account-id`**, or **`MEMWAL_ACCOUNT_ID`** when the header is absent — one account object, not a registry walk
+1. **PostgreSQL cache** (`delegate_key_cache`), populated after a successful resolution
+2. **Signed `x-account-id`**, or **`MEMWAL_ACCOUNT_ID`** when the header is absent, one account object, not a registry walk
 3. Otherwise **`401`**. A cold key with no account id is not looked up onchain
 
 After a successful resolution, the mapping is cached in `delegate_key_cache`. The indexed `accounts` table is not part of this chain.
@@ -66,16 +66,18 @@ The indexer reads these environment variables:
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `DATABASE_URL` | Yes | — | PostgreSQL connection string |
-| `MEMWAL_PACKAGE_ID` | Yes | — | Walrus Memory contract package ID to filter events |
+| `DATABASE_URL` | Yes | | PostgreSQL connection string |
+| `MEMWAL_PACKAGE_ID` | Yes | | Walrus Memory contract package ID to filter events |
 | `SUI_RPC_URL` | No | Mainnet fullnode | Sui RPC endpoint |
 | `POLL_INTERVAL_SECS` | No | `5` | Seconds between event poll cycles |
 
 ## Running
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/indexer/purpose.md" target="_blank" className="code-source-link">Source: indexer/purpose.md</a>
+
 ```bash
-cd services/indexer
-cargo run
+$ cd services/indexer
+$ cargo run
 ```
 
-The indexer is recommended for production but optional for development — the relayer can fall back to onchain resolution without it.
+The indexer is recommended for production but optional for development, the relayer can fall back to onchain resolution without it.

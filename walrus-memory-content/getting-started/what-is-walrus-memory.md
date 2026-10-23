@@ -1,4 +1,5 @@
 ---
+slug: /
 title: What is Walrus Memory?
 description: >-
   Walrus Memory enables AI agents to operate reliably across apps and sessions without losing context.
@@ -6,7 +7,7 @@ description: >-
   and coordinate using data they can trust.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - AI agent memory
   - portable memory
   - verifiable memory
@@ -28,9 +29,9 @@ goal:
 questions:
   - What is Walrus Memory?
   - How does Walrus Memory help AI agents retain context across sessions?
-  - What are the core features of MemWal?
+  - What are the core features of Walrus Memory?
 answer: >-
-  Walrus Memory (MemWal) is a portable, verifiable memory layer for AI agents that persists context
+  Walrus Memory (Walrus Memory) is a portable, verifiable memory layer for AI agents that persists context
   across apps, sessions, and workflows. It provides programmable access control, agent coordination
   through shared memory spaces, and memory integrity that can be independently verified without
   centralized trust.
@@ -38,20 +39,36 @@ answer: >-
 
 Walrus Memory enables AI agents to operate reliably across apps and sessions, without losing context. Portable, verifiable, and fully controlled by you, it's the memory layer that lets agents handle complex workflows and coordinate using data they can trust.
 
-<CardGroup cols={2}>
-  <Card title="Portable by Design" icon="shuffle">
-    Memory operates across agents, apps, and workflows without binding to a single runtime or provider
-  </Card>
-  <Card title="Fully Under Your Control" icon="key">
-    Programmable permissions and explicit ownership define how memory is shared, accessed, and updated
-  </Card>
-  <Card title="Built for Agent Coordination" icon="robot">
-    Shared memory spaces help agents coordinate across long-running and multi-step workflows
-  </Card>
-  <Card title="Verifiable Integrity" icon="shield-check">
-    Anyone can independently verify memory integrity without centralized trust
-  </Card>
-</CardGroup>
+<Cards>
+  <div className="feature-card">
+
+**Portable by Design**
+
+Memory operates across agents, apps, and workflows without binding to a single runtime or provider
+
+</div>
+  <div className="feature-card">
+
+**Fully Under Your Control**
+
+Programmable permissions and explicit ownership define how memory is shared, accessed, and updated
+
+</div>
+  <div className="feature-card">
+
+**Built for Agent Coordination**
+
+Shared memory spaces help agents coordinate across long-running and multi-step workflows
+
+</div>
+  <div className="feature-card">
+
+**Verifiable Integrity**
+
+Anyone can independently verify memory integrity without centralized trust
+
+</div>
+</Cards>
 
 ## Motivation
 
@@ -68,45 +85,81 @@ Walrus Memory groups its features into memory operations, ownership and access c
 
 ### Memory operations
 
-<CardGroup cols={2}>
-  <Card title="Remember" icon="floppy-disk">
-    Store memories with semantic understanding. The relayer generates vector embeddings so your data is searchable by meaning, not just keywords.
-  </Card>
-  <Card title="Recall" icon="magnifying-glass">
-    Retrieve relevant memories using natural language queries. Finds the closest matches based on meaning, scoped to your memory space.
-  </Card>
-  <Card title="Analyze" icon="microscope">
-    Extract structured facts from text automatically. Each fact lands as a separate memory for more precise recall later.
-  </Card>
-  <Card title="Ask" icon="comments">
-    Query your memories and get an AI-generated answer with the relevant context attached. Combines recall with LLM reasoning.
-  </Card>
-</CardGroup>
+<Cards>
+  <div className="feature-card">
+
+**Remember**
+
+Store memories with semantic understanding. The relayer generates vector embeddings so your data is searchable by meaning, not just keywords.
+
+</div>
+  <div className="feature-card">
+
+**Recall**
+
+Retrieve relevant memories using natural language queries. Finds the closest matches based on meaning, scoped to your memory space.
+
+</div>
+  <div className="feature-card">
+
+**Analyze**
+
+Extract structured facts from text automatically. Each fact lands as a separate memory for more precise recall later.
+
+</div>
+  <div className="feature-card">
+
+**Ask**
+
+Query your memories and get an AI-generated answer with the relevant context attached. Combines recall with LLM reasoning.
+
+</div>
+</Cards>
 
 ### Ownership and access control
 
-<CardGroup cols={2}>
-  <Card title="Decentralized Storage" icon="globe">
-    Walrus stores the blobs, with no single point of failure and no central operator holding your data.
-  </Card>
-  <Card title="Programmable Permissions" icon="key">
-    Sui smart contracts enforce ownership and access rules, giving you explicit, programmable control over who can read and write.
-  </Card>
-  <Card title="Delegate Access" icon="user-group">
-    Grant scoped access to other agents, users, or services. The owner manages every grant onchain, enabling agent coordination and cross-app workflows.
-  </Card>
-</CardGroup>
+<Cards>
+  <div className="feature-card">
+
+**Decentralized Storage**
+
+Walrus stores the blobs, with no single point of failure and no central operator holding your data.
+
+</div>
+  <div className="feature-card">
+
+**Programmable Permissions**
+
+Sui smart contracts enforce ownership and access rules, giving you explicit, programmable control over who can read and write.
+
+</div>
+  <div className="feature-card">
+
+**Delegate Access**
+
+Grant scoped access to other agents, users, or services. The owner manages every grant onchain, enabling agent coordination and cross-app workflows.
+
+</div>
+</Cards>
 
 ### Infrastructure
 
-<CardGroup cols={2}>
-  <Card title="Restore" icon="rotate">
-    Rebuild your index from Walrus if it's ever lost. Rediscovers blobs by owner and namespace, re-embeds only missing entries.
-  </Card>
-  <Card title="AI Middleware" icon="wand-magic-sparkles">
-    Drop-in memory for Vercel AI SDK apps. Automatically saves and recalls context around AI conversations.
-  </Card>
-</CardGroup>
+<Cards>
+  <div className="feature-card">
+
+**Restore**
+
+Rebuild your index from Walrus if it's ever lost. Rediscovers blobs by owner and namespace, re-embeds only missing entries.
+
+</div>
+  <div className="feature-card">
+
+**AI Middleware**
+
+Drop-in memory for Vercel AI SDK apps. Automatically saves and recalls context around AI conversations.
+
+</div>
+</Cards>
 
 ## What's included
 
@@ -137,32 +190,32 @@ The repo ships with ready-to-run apps in the [`/apps`](https://github.com/Mysten
 - **Noter:** Note-taking tool that stores knowledge as verifiable memory.
 - **Researcher:** Research assistant that builds and recalls a knowledge base.
 
-See [Example Apps](/examples/example-apps) for short code examples from each app.
+See [Example Apps](/walrus-memory/examples/example-apps) for short code examples from each app.
 
 If Walrus Memory is useful to you, [a star on the GitHub repo ⭐](https://github.com/MystenLabs/MemWal) helps others find it.
 
 ## Explore the docs
 
-<CardGroup cols={2}>
-  <Card title="Concepts" icon="lightbulb" href="/fundamentals/concepts/memory-space">
+<Cards>
+  <Card title="Concepts" href="/walrus-memory/fundamentals/concepts/memory-space">
     Memory spaces, ownership and delegates
   </Card>
-  <Card title="Architecture" icon="building" href="/fundamentals/architecture/core-components">
+  <Card title="Architecture" href="/walrus-memory/fundamentals/architecture/core-components">
     System overview, component responsibilities, core flows, data flow security
   </Card>
-  <Card title="SDK" icon="box" href="/sdk/quick-start">
+  <Card title="SDK" href="/walrus-memory/sdk/quick-start">
     Quickstart, usage patterns, AI integration, and examples
   </Card>
-  <Card title="Relayer" icon="tower-broadcast" href="/relayer/overview">
+  <Card title="Relayer" href="/walrus-memory/relayer/overview">
     Managed relayer, installation and setup, self-hosting
   </Card>
-  <Card title="Smart Contract" icon="scroll" href="/contract/overview">
+  <Card title="Smart Contract" href="/walrus-memory/contract/overview">
     Onchain ownership model, delegate key management, permissions
   </Card>
-  <Card title="Indexer" icon="magnifying-glass" href="/indexer/purpose">
+  <Card title="Indexer" href="/walrus-memory/indexer/purpose">
     Event indexing, onchain events, database sync
   </Card>
-  <Card title="Reference" icon="book" href="/sdk/api-reference">
+  <Card title="Reference" href="/walrus-memory/sdk/api-reference">
     SDK API, relayer API, configuration, environment variables
   </Card>
-</CardGroup>
+</Cards>

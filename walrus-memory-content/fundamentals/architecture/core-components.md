@@ -6,7 +6,7 @@ description: >-
   Indexed Database with their responsibilities and relationships.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - architecture
   - SDK
   - relayer
@@ -30,7 +30,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - What are the core components of the Walrus Memory architecture?
-  - How does the MemWal relayer work?
+  - How does the Walrus Memory relayer work?
   - What role does the Sui smart contract play in Walrus Memory?
 answer: >-
   Walrus Memory consists of six core components: the TypeScript SDK (developer entry point),
@@ -41,6 +41,8 @@ answer: >-
 ---
 
 Walrus Memory is made up of six core components that work together to give your agents portable, verifiable memory that they fully control.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/core-components.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/core-components.md</a>
 
 ```mermaid
 sequenceDiagram
@@ -65,12 +67,14 @@ sequenceDiagram
 
 ## SDK
 
-The TypeScript SDK is the main entry point for developers. It wraps all Walrus Memory operations into a simple client that your app calls directly.
+The TypeScript SDK is the main entry point for developers. It wraps all Walrus Memory operations into a basic client that your app calls directly.
 
 **Responsibilities:**
 - Signs every request with the configured key
 - Sends requests to the relayer
 - Exposes `remember`, `recall`, `analyze`, `ask`, and `restore` methods
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/core-components.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/core-components.md</a>
 
 ```ts
 const memwal = MemWal.create({
@@ -86,7 +90,7 @@ await memwal.waitForRememberJob(job.job_id);
 
 ## Relayer
 
-The relayer is the backend service that processes all SDK requests. It abstracts all Web3 complexity behind a familiar REST API — developers interact with Walrus Memory using standard HTTP calls, while the relayer handles blockchain transactions, encryption, and decentralized storage behind the scenes.
+The relayer is the backend service that processes all SDK requests. It abstracts all Web3 complexity behind a familiar REST API, developers interact with Walrus Memory using standard HTTP calls, while the relayer handles blockchain transactions, encryption, and decentralized storage behind the scenes.
 
 This means Web2 developers can integrate Walrus Memory without touching wallets, signing transactions, or understanding Sui directly. The relayer can also sponsor transaction fees and storage costs on behalf of users, removing onchain friction entirely.
 
@@ -97,16 +101,16 @@ This means Web2 developers can integrate Walrus Memory without touching wallets,
 - Encrypts and decrypts memory payloads
 - Uploads and downloads blobs to/from Walrus
 - Stores and searches vector metadata in the indexed database
-- Scopes all operations to `owner + namespace` (with SEAL encryption bound to the app's package ID)
+- Scopes all operations to `owner + namespace` (with Seal encryption bound to the app's package ID)
 - Can sponsor transaction and storage fees for user requests
 
-<Note>
-Because the relayer handles encryption and plaintext data, you are placing trust in the relayer operator. This is a deliberate trade-off for developer experience. If you need full control over that trust boundary, you can [self-host](/relayer/self-hosting) your own relayer, or use the [manual client flow](/sdk/usage) to handle encryption and embedding entirely on the client side (recommended for Web3-native users). See [Trust & Security Model](/fundamentals/architecture/data-flow-security-model) for details.
-</Note>
+:::note
+Because the relayer handles encryption and plaintext data, you are placing trust in the relayer operator. This is a deliberate trade-off for developer experience. If you need full control over that trust boundary, you can [self-host](/walrus-memory/relayer/self-hosting) your own relayer, or use the [manual client flow](/walrus-memory/sdk/usage) to handle encryption and embedding entirely on the client side (recommended for Web3-native users). See [Trust  and  Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model) for details.
+:::
 
-You can use the [managed relayer](/relayer/public-relayer) to get started, [self-host](/relayer/self-hosting) your own, or use the manual client flow for full client-side control.
+You can use the [managed relayer](/walrus-memory/relayer/public-relayer) to get started, [self-host](/walrus-memory/relayer/self-hosting) your own, or use the manual client flow for full client-side control.
 
-## Walrus Memory Smart Contract
+## Walrus Memory smart contract
 
 The Sui smart contract is the source of truth for ownership and access control.
 
@@ -116,7 +120,7 @@ The Sui smart contract is the source of truth for ownership and access control.
 - Enforces access rules on every request (verified by the relayer)
 - Emits events when accounts or delegates change
 
-The contract doesn't store memory content — it only manages identity and permissions.
+The contract doesn't store memory content, it only manages identity and permissions.
 
 ## Indexer
 
@@ -136,21 +140,21 @@ Walrus is the decentralized storage layer where encrypted memory payloads live.
 - Returns blobs on demand for decryption and recall
 - Carries blob metadata (including namespace) for discovery during restore
 
-Walrus is an external protocol — Walrus Memory uses it as infrastructure, not as something you interact with directly.
+Walrus is an external protocol, Walrus Memory uses it as infrastructure, not as something you interact with directly.
 
-## Indexed Database
+## Indexed database
 
 PostgreSQL with the [pgvector](https://github.com/pgvector/pgvector) extension serves as the local search and sync layer.
 
 **Key tables:**
-- `vector_entries` — stores 1536-dimensional embeddings linked to Walrus blob IDs, with an HNSW index for fast cosine similarity search
-- `delegate_key_cache` — caches delegate key → account mappings for fast auth
-- `accounts` — synced by the indexer for account lookups
-- `indexer_state` — tracks the indexer's event polling cursor
+- `vector_entries`, stores 1536-dimensional embeddings linked to Walrus blob IDs, with an HNSW index for fast cosine similarity search
+- `delegate_key_cache`, caches delegate key → account mappings for fast auth
+- `accounts`, synced by the indexer for account lookups
+- `indexer_state`, tracks the indexer's event polling cursor
 
 **Responsibilities:**
 - Stores vector embeddings for semantic search during recall
 - Caches account and delegate data synced by the indexer
-- Scopes all queries to `owner + namespace` (package ID provides cross-deployment isolation via SEAL)
+- Scopes all queries to `owner + namespace` (package ID provides cross-deployment isolation through Seal)
 
-This is an operational component — it makes recall fast and keeps onchain lookups efficient, but the encrypted source of truth always lives on Walrus. If the database is lost, the [restore flow](/sdk/usage/memwal) can rebuild it from Walrus.
+This is an operational component, it makes recall fast and keeps onchain lookups efficient, but the encrypted source of truth always lives on Walrus. If the database is lost, the [restore flow](/walrus-memory/sdk/usage/memwal) can rebuild it from Walrus.

@@ -4,7 +4,7 @@ description: >-
   Versioning policy and compatibility matrix for the Walrus Memory relayer API, covering SemVer conventions, SDK compatibility, runtime metadata endpoints, the deprecation process, and CI contract checks.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - versioning
   - API compatibility
   - SemVer
@@ -25,7 +25,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "What is the Walrus Memory relayer versioning policy?"
-  - "Which SDK versions are compatible with the MemWal relayer API?"
+  - "Which SDK versions are compatible with the Walrus Memory relayer API?"
   - "How does the Walrus Memory relayer handle deprecation of API surfaces?"
 answer: >-
   The Walrus Memory relayer follows SemVer for its package version and exposes a separate apiVersion for the public API contract. SDKs and MCP clients check the /version endpoint for compatibility before making protected requests. Breaking changes follow a deprecation process that adds a notice to /version.deprecations, documents the replacement, and removes the surface only in the next API major version.
@@ -51,7 +51,7 @@ Public surfaces include:
 - runtime config and environment variables used by self-hosted relayers
 - MCP transport behavior and bearer credential expectations
 
-## Compatibility Matrix
+## Compatibility matrix
 
 | Relayer API | Relayer package | TypeScript SDK | Python SDK | MCP package | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -59,9 +59,11 @@ Public surfaces include:
 
 SDKs and MCP clients read `/version` before protected requests and fail with an explicit compatibility error when the relayer API major or minimum SDK version is unsupported.
 
-## Runtime Metadata
+## Runtime metadata
 
 Modern relayers expose compatibility metadata at `GET /version` and include the same block in `GET /health`.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/versioning-and-compatibility.md" target="_blank" className="code-source-link">Source: relayer/versioning-and-compatibility.md</a>
 
 ```json
 {
@@ -94,7 +96,7 @@ Modern relayers expose compatibility metadata at `GET /version` and include the 
 
 `/health` keeps the legacy `version` field for older monitoring checks. New automation should prefer `relayerVersion`.
 
-## Deprecation Process
+## Deprecation process
 
 Breaking changes must follow this process unless there is an active security incident:
 
@@ -106,13 +108,13 @@ Breaking changes must follow this process unless there is an active security inc
 
 This process applies to headers, routes, environment variables, response fields, feature flags, and MCP transport behavior.
 
-## Environment Variables
+## Environment variables
 
-Environment variables documented in [Environment Variables](/reference/environment-variables) are public contract items for self-hosted deployments. Renaming, removing, or changing their meaning is a breaking relayer API change.
+Environment variables documented in [Environment Variables](/walrus-memory/reference/environment-variables) are public contract items for self-hosted deployments. Renaming, removing, or changing their meaning is a breaking relayer API change.
 
-Additive env vars may ship in a minor release. Deprecating an env var requires a `/version.deprecations` entry, docs update, and a replacement path. `SEAL_KEY_SERVERS` is currently deprecated in favor of `SEAL_SERVER_CONFIGS` and remains supported through relayer API `1.x`.
+Additive env vars might ship in a minor release. Deprecating an env var requires a `/version.deprecations` entry, docs update, and a replacement path. `SEAL_KEY_SERVERS` is currently deprecated in favor of `SEAL_SERVER_CONFIGS` and remains supported through relayer API `1.x`.
 
-## Contract Checks
+## Contract checks
 
 CI runs `pnpm check:compatibility`, which verifies that:
 

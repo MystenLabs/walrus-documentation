@@ -33,6 +33,8 @@ answer: >-
 
 Drop-in memory middleware for Vercel AI SDK apps.
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/with-memwal.md</a>
+
 ```ts
 import { generateText } from "ai";
 import { withMemWal } from "@mysten-incubation/memwal/ai";
@@ -53,7 +55,7 @@ const result = await generateText({
 });
 ```
 
-## What It Does
+## What it does
 
 Before generation:
 
@@ -70,7 +72,7 @@ After generation:
 Set a namespace explicitly for each product surface that uses the middleware. Otherwise recalled
 and auto-saved memories fall back to `"default"`.
 
-## When To Use Direct SDK Calls Instead
+## When to use direct SDK calls instead
 
 Use direct SDK methods when your app needs precise control over:
 

@@ -5,7 +5,7 @@ description: >-
   their own vectors or already have SEAL-encrypted payloads in the Python SDK.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - Python SDK
   - manual methods
   - embed
@@ -26,26 +26,28 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - How do I use remember_manual and recall_manual in the MemWal Python SDK?
-  - How do I compute an embedding without storing a memory in MemWal?
-  - When should I use manual methods vs standard remember/recall in MemWal?
+  - How do I use remember_manual and recall_manual in the Walrus Memory Python SDK?
+  - How do I compute an embedding without storing a memory in Walrus Memory?
+  - When should I use manual methods vs standard remember/recall in Walrus Memory?
 answer: >-
-  The Python SDK provides lower-level manual methods on the same MemWal/MemWalSync client:
+  The Python SDK provides lower-level manual methods on the same Walrus Memory/MemWalSync client:
   `embed` computes a vector without storing anything, `remember_manual` sends
   base64 SEAL-encrypted bytes plus a pre-computed vector (the relayer uploads to
   Walrus), and `recall_manual` searches with a pre-computed query vector returning
   raw blob IDs and distances.
 ---
 
-<Note>
-Unlike the TypeScript SDK there is **no separate `MemWalManual` class** in Python. The Python SDK is relayer-backed for the standard `remember` / `recall` flow. The "manual" methods are lower-level entry points on the same `MemWal` / `MemWalSync` client for callers that already have a vector and SEAL-encrypted bytes.
-</Note>
+:::note
+Unlike the TypeScript SDK there is **no separate `MemWalManual` class** in Python. The Python SDK is relayer-backed for the standard `remember` / `recall` flow. The "manual" methods are lower-level entry points on the same `MemWal` / `MemWalSync` client for callers that already have a vector and Seal-encrypted bytes.
+:::
 
-Use these when you want to control indexing or do your own vector math. For the standard flow, prefer [`remember` / `recall`](/python-sdk/usage/memwal).
+Use these when you want to control indexing or do your own vector math. For the standard flow, prefer [`remember` / `recall`](/walrus-memory/python-sdk/usage/memwal).
 
 ## `embed`
 
 Compute the embedding vector for text without storing anything.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
 ```python
 from memwal import MemWal
@@ -58,7 +60,9 @@ print(len(vec.vector))
 
 ## `remember_manual`
 
-Send base64 SEAL-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping.
+Send base64 Seal-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
 ```python
 from memwal import RememberManualOptions
@@ -75,7 +79,9 @@ print(result.id, result.blob_id, result.owner, result.namespace)
 
 ## `recall_manual`
 
-Search with a pre-computed query vector. Returns `{blob_id, distance}` hits only — no decrypted text (you fetch/decrypt the blobs yourself).
+Search with a pre-computed query vector. Returns `{blob_id, distance}` hits only, no decrypted text (you fetch/decrypt the blobs yourself).
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
 ```python
 from memwal import RecallManualOptions
@@ -94,7 +100,7 @@ for hit in hits.results:
 | --- | --- |
 | Plain text, want it stored | `remember` / `remember_and_wait` |
 | Plain text, want only the vector | `embed` |
-| A vector + SEAL-encrypted bytes | `remember_manual` |
+| A vector + Seal-encrypted bytes | `remember_manual` |
 | A query vector, want raw hits | `recall_manual` |
 | Plain query text, want decrypted matches | `recall` |
 

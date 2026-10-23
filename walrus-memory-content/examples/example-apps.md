@@ -1,11 +1,11 @@
 ---
 title: Example Apps
 description: >-
-  Short examples showing how each demo app in the MemWal repo uses Walrus Memory,
+  Short examples showing how each demo app in the Walrus Memory repo uses Walrus Memory,
   including the Playground, Chatbot, Noter, and Researcher integration patterns.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - example apps
   - demo
   - Playground
@@ -27,32 +27,36 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - What example apps are included in the Walrus Memory repo?
-  - How does the MemWal Chatbot app integrate AI middleware with memory?
-  - How do I run the MemWal demo apps locally?
+  - How does the Walrus Memory Chatbot app integrate AI middleware with memory?
+  - How do I run the Walrus Memory demo apps locally?
 answer: >-
-  The MemWal repo includes four demo apps: Playground (full SDK playground), Chatbot
+  The Walrus Memory repo includes four demo apps: Playground (full SDK playground), Chatbot
   (AI middleware with persistent memory), Noter (note-to-memory extraction using analyze),
   and Researcher (long-form research memory with session rehydration). After configuring
   each app's environment and database, run them with pnpm dev:app, pnpm dev:chatbot,
   pnpm dev:noter, or pnpm dev:researcher.
 ---
 
-The repo includes ready-to-run apps in `apps/` that show different Walrus Memory integration patterns. Start here for app-level patterns; [Quick Start](/sdk/quick-start) and [Walrus Memory Usage](/sdk/usage/memwal) cover the basic SDK flow.
+The repo includes ready-to-run apps in `apps/` that show different Walrus Memory integration patterns. Start here for app-level patterns; [Quick Start](/walrus-memory/sdk/quick-start) and [Walrus Memory Usage](/walrus-memory/sdk/usage/memwal) cover the basic SDK flow.
 
 ## Run locally
 
 Each app needs its own environment file and database setup before it starts; the chatbot, noter, and researcher pages below cover the exact steps. After configuring an app, run it from the repo root:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/example-apps.md" target="_blank" className="code-source-link">Source: examples/example-apps.md</a>
+
 ```bash
-pnpm dev:app
-pnpm dev:chatbot
-pnpm dev:noter
-pnpm dev:researcher
+$ pnpm dev:app
+$ pnpm dev:chatbot
+$ pnpm dev:noter
+$ pnpm dev:researcher
 ```
 
 ## [Playground](https://github.com/MystenLabs/MemWal/tree/main/apps/app)
 
 Dashboard, playground, and interactive demo for Walrus Memory.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/example-apps.md" target="_blank" className="code-source-link">Source: examples/example-apps.md</a>
 
 ```ts
 const memwal = MemWal.create({
@@ -74,6 +78,6 @@ This app covers the full getting-started flow in one place. It signs users in, s
 
 Each demo app has its own page with the integration pattern it shows, the key code, and run instructions:
 
-- **Chatbot:** [An AI chat app](/examples/chatbot) that wraps its model with the AI middleware, so recall runs before each generation and new context saves automatically.
-- **Noter:** [A note-taking app](/examples/noter) with zkLogin sign-in that turns note content into structured, searchable facts through `analyze`.
-- **Researcher:** [A research assistant](/examples/researcher) that saves each sprint as a structured report and rebuilds context for fresh sessions through recall.
+- **Chatbot:** [An AI chat app](/walrus-memory/examples/chatbot) that wraps its model with the AI middleware, so recall runs before each generation and new context saves automatically.
+- **Noter:** [A note-taking app](/walrus-memory/examples/noter) with zkLogin sign-in that turns note content into structured, searchable facts through `analyze`.
+- **Researcher:** [A research assistant](/walrus-memory/examples/researcher) that saves each sprint as a structured report and rebuilds context for fresh sessions through recall.

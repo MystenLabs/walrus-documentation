@@ -5,7 +5,7 @@ description: >-
   relevant memories before each LLM call and saves new facts after each response.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - Python SDK
   - LangChain
   - OpenAI
@@ -28,7 +28,7 @@ goal:
 questions:
   - How do I add Walrus Memory to an existing LangChain or OpenAI client?
   - What does with_memwal_langchain and with_memwal_openai do?
-  - How does the MemWal middleware automatically recall and save memories?
+  - How does the Walrus Memory middleware automatically recall and save memories?
 answer: >-
   The `with_memwal_langchain` and `with_memwal_openai` wrappers add automatic memory
   to existing LLM clients. Before each call, relevant memories are recalled and injected
@@ -38,21 +38,32 @@ answer: >-
 
 `with_memwal_langchain` and `with_memwal_openai` wrap an existing LLM client with automatic memory management. Before each call relevant memories are recalled and injected; after each call the user message is analyzed for new facts (fire-and-forget).
 
-Both integrations import their dependency lazily — install only what you use:
+Both integrations import their dependency lazily, install only what you use:
 
-<CodeGroup>
+<Tabs groupId="code">
+<TabItem value="LangChain" label="LangChain">
 
-```bash LangChain
-pip install memwal[langchain]
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/with-memwal.md</a>
+
+```bash
+$ pip install memwal[langchain]
 ```
 
-```bash OpenAI
-pip install memwal[openai]
+</TabItem>
+<TabItem value="OpenAI" label="OpenAI">
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/with-memwal.md</a>
+
+```bash
+$ pip install memwal[openai]
 ```
 
-</CodeGroup>
+</TabItem>
+</Tabs>
 
 ## LangChain
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/with-memwal.md</a>
 
 ```python
 import os
@@ -78,7 +89,9 @@ Patches both `_agenerate` (async) and `_generate` (sync) on the model instance.
 
 ## OpenAI SDK
 
-Works with both `openai.OpenAI` (sync) and `openai.AsyncOpenAI` (async) — the wrapper detects which and patches `chat.completions.create` accordingly.
+Works with both `openai.OpenAI` (sync) and `openai.AsyncOpenAI` (async), the wrapper detects which and patches `chat.completions.create` accordingly.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/with-memwal.md</a>
 
 ```python
 import os
@@ -101,7 +114,7 @@ response = await smart_client.chat.completions.create(
 
 > The JS-style alias `withMemWal` is exported as a shortcut for `with_memwal_langchain`.
 
-## What It Does
+## What it does
 
 **Before generation:**
 
@@ -122,13 +135,13 @@ Both wrappers accept the same keyword arguments:
 | Option | Default | Description |
 | --- | --- | --- |
 | `server_url` | `https://relayer.memory.walrus.xyz` | Explicit relayer URL (wins over `env`) |
-| `env` | — | Hosted relayer preset: `staging` for testing or `prod` for production |
+| `env` | | Hosted relayer preset: `staging` for testing or `prod` for production |
 | `namespace` | `"default"` | Memory namespace |
 | `max_memories` | `5` | Max memories injected per request |
 | `auto_save` | `True` | Auto-save new facts from the conversation |
 | `min_relevance` | `0.3` | Minimum similarity (0–1) to include a memory |
-| `debug` | `False` | Verbose logging via the `memwal` logger |
+| `debug` | `False` | Verbose logging through the `memwal` logger |
 
-## When To Use Direct SDK Calls Instead
+## When to use direct SDK calls instead
 
 Use direct `MemWal` methods when you need precise control over when memory is stored, which text is analyzed, or how recall results are filtered and displayed.

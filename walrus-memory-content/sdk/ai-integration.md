@@ -8,7 +8,7 @@ keywords:
   - Vercel AI SDK
   - memory middleware
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
 goal:
   description: Wrap a Vercel AI SDK generateText or streamText call with withMemWal to inject relevant memories into every prompt and persist notable outputs automatically.
   requires:
@@ -35,6 +35,8 @@ Walrus Memory includes an AI SDK integration for applications that already use m
 
 ## `withMemWal`
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/ai-integration.md" target="_blank" className="code-source-link">Source: sdk/ai-integration.md</a>
+
 ```ts
 import { generateText } from "ai";
 import { withMemWal } from "@mysten-incubation/memwal/ai";
@@ -55,7 +57,7 @@ const result = await generateText({
 });
 ```
 
-## What It Does
+## What it does
 
 Before generation:
 
@@ -69,12 +71,12 @@ After generation:
 - optionally runs `analyze()` on the user message
 - saves extracted facts asynchronously
 
-## Why Namespace Matters Here
+## Why namespace matters here
 
 Set a namespace explicitly for each product surface that uses the middleware. Otherwise recalled
 and auto-saved memories fall back to `"default"`.
 
-## When To Use Direct SDK Calls Instead
+## When to use direct SDK calls instead
 
 Use direct SDK methods when your app needs precise control over:
 

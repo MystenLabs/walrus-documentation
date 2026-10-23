@@ -1,16 +1,16 @@
 ---
 title: "Overview"
 description: >-
-  Overview of the Walrus Memory SDK surfaces for TypeScript and Python, including the three TypeScript entry points (MemWal, MemWalManual, withMemWal) and the Python client with middleware support.
+  Overview of the Walrus Memory SDK surfaces for TypeScript and Python, including the three TypeScript entry points (Walrus Memory, MemWalManual, withMemWal) and the Python client with middleware support.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - SDK overview
   - TypeScript SDK
   - Python SDK
   - MemWalManual
 goal:
-  description: Compare the three SDK entry points — default MemWal, manual MemWalManual, and AI middleware withMemWal — and select the one that matches your trust model and tech stack.
+  description: Compare the three SDK entry points — default Walrus Memory, manual MemWalManual, and AI middleware withMemWal — and select the one that matches your trust model and tech stack.
   requires:
     - has_frontmatter:
         - title
@@ -26,14 +26,13 @@ goal:
 questions:
   - What SDK entry points does Walrus Memory offer?
   - Should I use the TypeScript or Python Walrus Memory SDK?
-  - What is the difference between MemWal, MemWalManual, and withMemWal?
+  - What is the difference between Walrus Memory, MemWalManual, and withMemWal?
 answer: >-
-  Walrus Memory provides TypeScript and Python SDKs. The TypeScript SDK has three entry points: MemWal (recommended default, relayer-backed), MemWalManual (client-managed embeddings and local SEAL), and withMemWal (AI SDK middleware). The Python SDK mirrors the TypeScript MemWal client with async-native support and LangChain/OpenAI middleware.
+  Walrus Memory provides TypeScript and Python SDKs. The TypeScript SDK has three entry points: Walrus Memory (recommended default, relayer-backed), MemWalManual (client-managed embeddings and local SEAL), and withMemWal (AI SDK middleware). The Python SDK mirrors the TypeScript Walrus Memory client with async-native support and LangChain/OpenAI middleware.
 ---
 
-Walrus Memory exposes SDK surfaces for TypeScript and Python. The SDKs give your agents portable memory that works across apps, sessions, and workflows — fully under your control.
+Walrus Memory exposes SDK surfaces for TypeScript and Python. The SDKs give your agents portable memory that works across apps, sessions, and workflows, fully under your control.
 
-## TypeScript
 
 ### `@mysten-incubation/memwal`
 
@@ -43,15 +42,19 @@ Use this first.
 - best path for most teams
 - main methods: `remember`, `recall`, `analyze`, `restore`, `health`
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
+
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";
 ```
 
 ### `@mysten-incubation/memwal/manual`
 
-Use this when the client must handle embeddings and local SEAL operations.
+Use this when the client must handle embeddings and local Seal operations.
 
 - relayer still handles upload relay, registration, search, and restore
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
 
 ```ts
 import { MemWalManual } from "@mysten-incubation/memwal/manual";
@@ -61,29 +64,34 @@ import { MemWalManual } from "@mysten-incubation/memwal/manual";
 
 Use this when you already use the AI SDK.
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
+
 ```ts
 import { withMemWal } from "@mysten-incubation/memwal/ai";
 ```
 
 ---
 
-## Python
 
 ### `memwal`
 
-The Python SDK mirrors the TypeScript `MemWal` client exactly — same methods, same relayer, same auth flow. Built for the Python AI/ML ecosystem.
+The Python SDK mirrors the TypeScript `MemWal` client exactly, same methods, same relayer, same auth flow. Built for the Python AI/ML ecosystem.
 
 - relayer-backed (same managed relayer endpoints)
-- Ed25519 signing via PyNaCl
+- Ed25519 signing through PyNaCl
 - async-native with a sync convenience wrapper
 - LangChain and OpenAI SDK middleware included
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
+
 ```bash
-pip install memwal
-pip install memwal[langchain]   # LangChain middleware
-pip install memwal[openai]      # OpenAI SDK middleware
-pip install memwal[all]         # everything
+$ pip install memwal
+$ pip install memwal[langchain]   # LangChain middleware
+$ pip install memwal[openai]      # OpenAI SDK middleware
+$ pip install memwal[all]         # everything
 ```
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
 
 ```python
 from memwal import MemWal
@@ -106,9 +114,9 @@ Middleware: `with_memwal_langchain`, `with_memwal_openai`
 
 All clients support a default namespace. If you omit it, it falls back to `"default"`.
 
-## Recommended Path
+## Recommended path
 
 1. Start with `MemWal` (TypeScript) or `memwal` (Python)
 2. Set a namespace explicitly
 3. Validate `remember`, `recall`, `analyze`, and `restore`
-4. Move to `MemWalManual` only if you need client-managed embeddings and local SEAL work
+4. Move to `MemWalManual` only if you need client-managed embeddings and local Seal work

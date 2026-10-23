@@ -6,7 +6,7 @@ description: >-
   funding, publisher sponsorship, sponsored transactions, and pre-funding patterns.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - funding
   - WAL
   - SUI
@@ -40,11 +40,11 @@ answer: >-
   from a central treasury.
 ---
 
-Walrus Memory writes your encrypted memories to Walrus as blobs, as described in [How Storage Works](/fundamentals/architecture/how-storage-works). Someone has to pay for that storage. This page explains who, and the trade-offs between an agent holding WAL itself and having a third party sponsor the cost.
+Walrus Memory writes your encrypted memories to Walrus as blobs, as described in [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works). Someone has to pay for that storage. This page explains who, and the trade-offs between an agent holding WAL itself and having a third party sponsor the cost.
 
-<Note>
-In a typical Walrus Memory setup, the relayer operates the Walrus write path for you, so most agents never touch WAL directly. Whether the storage is sponsored or self-funded then depends on how the relayer is deployed: a [public relayer](/relayer/public-relayer) abstracts funding away from the agent, while [self-hosting](/relayer/self-hosting) means you fund the writes. The models below explain what sits underneath either choice.
-</Note>
+:::note
+In a typical Walrus Memory setup, the relayer operates the Walrus write path for you, so most agents never touch WAL directly. Whether the storage is sponsored or self-funded then depends on how the relayer is deployed: a [public relayer](/walrus-memory/relayer/public-relayer) abstracts funding away from the agent, while [self-hosting](/walrus-memory/relayer/self-hosting) means you fund the writes. The models below explain what sits underneath either choice.
+:::
 
 ## What a write costs: 2 tokens, not 1
 
@@ -55,23 +55,27 @@ A Walrus write consumes 2 different tokens, and any funding design accounts for 
 
 WAL cost scales with blob size and the number of epochs. SUI gas stays roughly fixed for each transaction. A typical store runs as 2 transactions: one for `reserve_space` and `register_blob`, which changes both your SUI and WAL balances, and one for `certify_blob`, which changes only your SUI balance.
 
-<Note>
+:::note
 The funding question is really 2 questions: who supplies the WAL, and who supplies the SUI gas. Different sponsored mechanisms cover different halves, so be explicit about which part a given mechanism handles.
-</Note>
+:::
 
 A successful write also produces a `Blob` object on Sui. Whoever owns that object controls the blob lifecycle, such as extending its lifetime, deleting it, adding attributes, or burning it to reclaim Sui storage. Ownership matters as much as payment, so track it deliberately, especially in sponsored flows.
 
-## Model A: the agent holds WAL directly
+## Model a: the agent holds WAL directly
 
 The agent has its own Sui address (key pair) that holds both SUI and WAL, and it signs and pays for its own writes. This is the default model for a long-lived, autonomous agent that owns and manages its own data.
 
 Store through the CLI:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/funding-storage.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/funding-storage.md</a>
 
 ```bash
 $ walrus store memory.json --epochs 10
 ```
 
 Store through the TypeScript SDK, where the agent's key pair is the `signer` that pays both gas and storage fees:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/funding-storage.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/funding-storage.md</a>
 
 ```ts
 await client.walrus.writeFiles({
@@ -84,6 +88,8 @@ await client.walrus.writeFiles({
 
 The agent's address needs WAL before it can write. The most basic path swaps SUI for WAL onchain:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/funding-storage.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/funding-storage.md</a>
+
 ```bash
 $ walrus get-wal --amount AMOUNT_IN_FROST
 ```
@@ -95,7 +101,7 @@ This model gives the agent full autonomy, because no external service sits in th
 - Keep both balances funded. Running out of either SUI or WAL stalls writes.
 - Manage the blob lifecycle. Blobs expire after the paid number of epochs (an epoch is about 2 weeks on Mainnet and about 1 day on Testnet, and you can buy up to about 2 years in advance), so the agent extends them before expiry or the network drops the data.
 
-## Model B: sponsored storage
+## Model b: sponsored storage
 
 Sponsored storage is not a single feature. Several distinct patterns exist, and they sponsor different parts of the cost. Choose based on how much you want the agent to hold and own.
 
@@ -106,13 +112,13 @@ A publisher is an HTTP service that accepts raw bytes and runs the entire write 
 - This is the most complete form of sponsorship, because the sponsoring application carries 100% of the WAL and SUI cost.
 - By default, the publisher's sub-wallet owns the resulting `Blob` object. To let the agent keep ownership, set the publisher's `send-object-to` parameter to the agent's Sui address so the publisher transfers the blob after upload.
 
-<Warning>
+:::warning
 Mainnet has no public, unauthenticated publisher, because each upload spends the operator's real WAL and SUI. In production, this is a private, authenticated publisher that the sponsoring application runs and gates for its own agents.
-</Warning>
+:::
 
 Use a publisher when the agent runs in a constrained or untrusted environment, or when you do not want the agent to custody tokens.
 
-### Sui sponsored transactions: sponsor pays SUI gas only
+### Sui Sponsored transactions: sponsor pays SUI gas only
 
 Sui natively supports sponsored transactions, where a sponsor account provides the gas coin for a transaction the agent signs. This covers only the SUI side. The WAL storage fee still comes from somewhere else, either the agent's own WAL or a publisher.
 
@@ -157,9 +163,9 @@ Walrus reserves a portion of WAL supply as subsidies that supplement storage-nod
 
 ## Related links
 
-- [How Storage Works](/fundamentals/architecture/how-storage-works)
-- [Public relayer](/relayer/public-relayer)
-- [Self-hosting the relayer](/relayer/self-hosting)
+- [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works)
+- [Public relayer](/walrus-memory/relayer/public-relayer)
+- [Self-hosting the relayer](/walrus-memory/relayer/self-hosting)
 - [Walrus storage costs](https://docs.wal.app/docs/system-overview/storage-costs)
 - [Walrus network reference](https://docs.wal.app/docs/network-reference)
 - [Walrus upload relay](https://docs.wal.app/docs/operator-guide/upload-relay)

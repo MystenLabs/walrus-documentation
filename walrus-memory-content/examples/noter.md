@@ -6,9 +6,11 @@ keywords: [noter, example app, analyze, fact extraction, zkLogin, notes, Next.js
 
 The noter example (`apps/noter`) is a note-taking app with zkLogin sign-in, so users authenticate with OAuth instead of managing a wallet. It shows the note-to-memory pattern: free-form writing becomes structured facts that recall can find later.
 
-## How it uses Walrus Memory
+## How it uses Walrus memory
 
 Noter keeps a shared server-side Walrus Memory client and uses `analyze` to turn note content into discrete facts, which the relayer stores asynchronously:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/noter.md" target="_blank" className="code-source-link">Source: examples/noter.md</a>
 
 ```ts
 export const extractMemories = async (text: string): Promise<string[]> => {
@@ -26,10 +28,12 @@ Noter ships without an `.env.example`, so create `apps/noter/.env` yourself with
 
 With the environment configured, create the database tables and start the app from the repo root:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/noter.md" target="_blank" className="code-source-link">Source: examples/noter.md</a>
+
 ```bash
-pnpm install
-pnpm --filter noter db:push
-pnpm dev:noter
+$ pnpm install
+$ pnpm --filter noter db:push
+$ pnpm dev:noter
 ```
 
 The app runs on [localhost:3002](http://localhost:3002).

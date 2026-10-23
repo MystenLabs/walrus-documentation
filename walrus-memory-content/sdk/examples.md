@@ -4,7 +4,7 @@ description: >-
   Practical Walrus Memory SDK examples covering basic store and recall, manual registration with pre-computed vectors, fact extraction with analyze(), AI middleware, and a research app pattern for structured memory.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - examples
   - store and recall
   - analyze
@@ -28,12 +28,14 @@ questions:
   - How do I extract facts from text with Walrus Memory?
   - What does a basic Walrus Memory example look like?
 answer: >-
-  The basic example creates a MemWal client, stores a memory with remember(), waits for completion with waitForRememberJob(), and recalls it with recall(). Advanced examples cover manual registration for pre-computed vectors, fact extraction with analyze() for longer text, and AI middleware with withMemWal for automatic recall and save in AI pipelines.
+  The basic example creates a Walrus Memory client, stores a memory with remember(), waits for completion with waitForRememberJob(), and recalls it with recall(). Advanced examples cover manual registration for pre-computed vectors, fact extraction with analyze() for longer text, and AI middleware with withMemWal for automatic recall and save in AI pipelines.
 ---
 
-## Basic: Store and Recall
+## Basic: store and recall
 
 The shortest working Walrus Memory example using the default relayer-backed SDK.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/examples.md" target="_blank" className="code-source-link">Source: sdk/examples.md</a>
 
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";
@@ -68,17 +70,18 @@ What you should see:
 - `waitForRememberJob()` returns a `blob_id`
 - `recall()` returns plaintext results for the same namespace
 
-## Advanced: Manual Methods and Analyze
 
-### Manual Registration
+### Manual registration
 
 Use `rememberManual()` when you already have an encrypted payload plus vector, and `recallManual()`
 when you already have a query vector.
 
-### Fact Extraction
+### Fact extraction
 
 Use `analyze()` when you want the relayer to extract facts from longer text and store them as
 memories.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/examples.md" target="_blank" className="code-source-link">Source: sdk/examples.md</a>
 
 ```ts
 const analyzed = await memwal.analyze(
@@ -90,9 +93,9 @@ console.log(analyzed.facts, analyzed.job_ids);
 ### AI Middleware
 
 Use `withMemWal` when you want recall before generation and optional auto-save after generation.
-See [AI Integration](/sdk/ai-integration) for the full setup.
+See [AI Integration](/walrus-memory/sdk/ai-integration) for the full setup.
 
-## Research App Pattern
+## Research app pattern
 
 Use this when you want to store structured research findings and recall them in later sessions.
 

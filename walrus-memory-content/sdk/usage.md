@@ -1,16 +1,16 @@
 ---
 title: "Usage"
 description: >-
-  Detailed usage guide for all three Walrus Memory clients: MemWal, MemWalManual, and withMemWal. Covers namespace rules and when to use each entry point.
+  Detailed usage guide for all three Walrus Memory clients: Walrus Memory, MemWalManual, and withMemWal. Covers namespace rules and when to use each entry point.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - usage
   - namespace
   - MemWalManual
   - withMemWal
 goal:
-  description: Select the right Walrus Memory client (MemWal, MemWalManual, or withMemWal) for your use case, configure a namespace that scopes memory correctly, and avoid common setup mistakes.
+  description: Select the right Walrus Memory client (Walrus Memory, MemWalManual, or withMemWal) for your use case, configure a namespace that scopes memory correctly, and avoid common setup mistakes.
   requires:
     - has_frontmatter:
         - title
@@ -24,22 +24,22 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - When should I use MemWal vs MemWalManual vs withMemWal?
+  - When should I use Walrus Memory vs MemWalManual vs withMemWal?
   - How do namespaces work in Walrus Memory?
   - What are the namespace rules for the Walrus Memory SDK?
 answer: >-
-  Walrus Memory exposes three entry points: MemWal (recommended default with relayer-handled operations), MemWalManual (client-managed embeddings and SEAL), and withMemWal (Vercel AI SDK middleware). Namespaces can be set per client or per call, and fall back to "default" if omitted.
+  Walrus Memory exposes three entry points: Walrus Memory (recommended default with relayer-handled operations), MemWalManual (client-managed embeddings and SEAL), and withMemWal (Vercel AI SDK middleware). Namespaces can be set per client or per call, and fall back to "default" if omitted.
 ---
 
 Walrus Memory exposes three entry points:
 
 | Entry point | Import | When to use |
 | --- | --- | --- |
-| `MemWal` | `@mysten-incubation/memwal` | **Recommended default** — relayer handles embeddings, SEAL, and storage |
-| `MemWalManual` | `@mysten-incubation/memwal/manual` | You need client-managed embeddings and local SEAL operations |
+| `MemWal` | `@mysten-incubation/memwal` | **Recommended default**, relayer handles embeddings, Seal, and storage |
+| `MemWalManual` | `@mysten-incubation/memwal/manual` | You need client-managed embeddings and local Seal operations |
 | `withMemWal` | `@mysten-incubation/memwal/ai` | You already use the Vercel AI SDK and want memory as middleware |
 
-## Namespace Rules
+## Namespace rules
 
 - Set a default namespace in `create(...)` when one app or agent uses one boundary
 - Pass `namespace` per call when one client needs multiple boundaries

@@ -1,12 +1,12 @@
 ---
-title: "Ownership & Delegates"
+title: "Ownership and Delegates"
 description: >-
   Programmable permissions and explicit ownership in Walrus Memory. Covers how owners control
   their memory through cryptographic keys, how delegates are granted access for agents and
   services, and how access control is enforced onchain by Sui smart contracts.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - ownership
   - delegates
   - access control
@@ -28,7 +28,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How does ownership work in Walrus Memory?
-  - What are delegates in MemWal and how do they get access?
+  - What are delegates in Walrus Memory and how do they get access?
   - How is access control enforced in Walrus Memory?
 answer: >-
   Memory belongs to the owner recorded in a MemWalAccount. The SDK's accountId selects that
@@ -45,6 +45,8 @@ Memory content is stored on Walrus under the owner address recorded in a `MemWal
 
 For the relayer-backed client, `key` is a registered delegate private key used to authenticate requests. Its derived wallet address identifies the delegate, not the account owner. The relayer resolves the owner from the selected account.
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/concepts/ownership-and-access.md" target="_blank" className="code-source-link">Source: fundamentals/concepts/ownership-and-access.md</a>
+
 ```ts
 const memwal = MemWal.create({
   key: process.env.MEMWAL_PRIVATE_KEY!, // delegate private key
@@ -54,9 +56,9 @@ const memwal = MemWal.create({
 });
 ```
 
-In a [multi-tenant server app](/sdk/cookbook-multi-tenant), the operator owns the account and the memories stored through it. An end user signs in with a wallet to prove identity to that application. Signing in does not create an account for the user or give the user ownership of those memories.
+In a [multi-tenant server app](/walrus-memory/sdk/cookbook-multi-tenant), the operator owns the account and the memories stored through it. An end user signs in with a wallet to prove identity to that application. Signing in does not create an account for the user or give the user ownership of those memories.
 
-Ownership is separate from payment; see [Managed relayer costs](/relayer/public-relayer#storage-costs).
+Ownership is separate from payment; see [Managed relayer costs](/walrus-memory/relayer/public-relayer#storage-costs).
 
 ## Delegates
 
@@ -67,9 +69,11 @@ This enables 2 use cases:
 - **Agent access:** give each agent a separate key so you can label and revoke it individually.
 - **Service access:** authorize a backend to read and write memory under the owner's account without handing over account-management credentials.
 
-<Warning>
+:::warning
 Delegate keys are not scoped to a namespace or a read-only subset of memory. An authorized delegate can access memories across every namespace in the account. Namespaces organize data and scope queries; a multi-tenant application must authenticate users and choose the allowed namespace on its server.
-</Warning>
+:::
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/concepts/ownership-and-access.md" target="_blank" className="code-source-link">Source: fundamentals/concepts/ownership-and-access.md</a>
 
 ```mermaid
 flowchart TD
@@ -90,7 +94,7 @@ Account authorization and application-user authorization operate at different le
 
 - The owner's wallet address controls the account and delegate registrations onchain.
 - The relayer verifies that the signing delegate is authorized for the selected account before serving memory requests.
-- The [Seal](/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or registered delegate before releasing decryption keys.
+- The [Seal](/walrus-memory/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or registered delegate before releasing decryption keys.
 - An application using one account for many users enforces each user's namespace access in its own server. The account contract does not distinguish those application users.
 
-Removing a delegate rotates the account's encryption identity for future writes. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Keep the owner key secure so you can manage and replace delegate keys. See [Delegate key management](/contract/delegate-key-management) for revocation steps.
+Removing a delegate rotates the account's encryption identity for future writes. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Keep the owner key secure so you can manage and replace delegate keys. See [Delegate key management](/walrus-memory/contract/delegate-key-management) for revocation steps.

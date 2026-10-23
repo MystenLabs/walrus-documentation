@@ -5,7 +5,7 @@ description: >-
   covering installation, credential configuration, all SDK methods, and middleware integrations.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - Python SDK
   - Google Colab
   - notebook
@@ -26,7 +26,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - Is there a Colab notebook for the Walrus Memory Python SDK?
-  - How do I try the MemWal Python SDK without local setup?
+  - How do I try the Walrus Memory Python SDK without local setup?
   - What does the Walrus Memory Python SDK Colab notebook cover?
 answer: >-
   The Walrus Memory Python SDK Colab notebook provides a runnable walkthrough covering

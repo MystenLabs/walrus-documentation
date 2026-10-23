@@ -5,7 +5,7 @@ description: >-
   uses them to update local backend state, including current coverage details.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - onchain events
   - Sui events
   - indexer
@@ -26,7 +26,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "What onchain events does the Walrus Memory contract emit?"
-  - "Which Sui events does the MemWal indexer listen to?"
+  - "Which Sui events does the Walrus Memory indexer listen to?"
   - "What fields are included in the AccountCreated event?"
 answer: >-
   The Walrus Memory contract emits AccountCreated, DelegateKeyAdded, DelegateKeyRemoved,
@@ -51,6 +51,6 @@ The Walrus Memory contract emits the following events:
 | `AccountQuarantined` | Admin containment is applied | `account_id`, `owner` |
 | `AccountQuarantineCleared` | Admin containment is released | `account_id`, `owner` |
 
-## Current Coverage
+## Current coverage
 
-The indexer currently targets the `AccountCreated` event flow as its primary sync path. Delegate key events and account activation events are part of the broader design and may be indexed in future iterations.
+The indexer currently targets the `AccountCreated` event flow as its primary sync path. Delegate key events and account activation events are part of the broader design and might be indexed in future iterations.

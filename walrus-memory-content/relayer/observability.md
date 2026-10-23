@@ -4,7 +4,7 @@ description: >-
   Observability guide for production Walrus Memory relayers, covering structured logging, Prometheus metrics, recommended dashboards, alert rules, and APM integration for monitoring the relayer and its external dependencies.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - observability
   - Prometheus metrics
   - monitoring
@@ -25,15 +25,15 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "What metrics does the Walrus Memory relayer expose?"
-  - "How do I monitor a MemWal relayer in production?"
+  - "How do I monitor a Walrus Memory relayer in production?"
   - "What alerts should I set up for the Walrus Memory relayer?"
 answer: >-
   The Walrus Memory relayer exposes Prometheus metrics at /metrics covering HTTP request volume, latency histograms, error counts, rate-limit denials, external service latency, sidecar failures, and PostgreSQL pool stats. Production deployments should use JSON structured logs with request correlation IDs and set up alerts for 5xx rates, latency regressions, Redis degradation, sidecar failures, and database saturation.
 ---
 
-Production relayers should emit structured logs, scrape Prometheus metrics, and send alerts for the external systems Walrus Memory depends on: PostgreSQL, Redis, Sui RPC, OpenAI-compatible embedding/LLM APIs, SEAL, Walrus, and the TypeScript sidecar.
+Production relayers should emit structured logs, scrape Prometheus metrics, and send alerts for the external systems Walrus Memory depends on: PostgreSQL, Redis, Sui RPC, OpenAI-compatible embedding/LLM APIs, Seal, Walrus, and the TypeScript sidecar.
 
-## Request Correlation
+## Request correlation
 
 Every relayer request gets an `x-request-id`.
 
@@ -48,6 +48,8 @@ Use this ID when searching logs across the Rust relayer and TypeScript sidecar.
 ## Logs
 
 For production, run with JSON logs:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/observability.md" target="_blank" className="code-source-link">Source: relayer/observability.md</a>
 
 ```bash
 RUST_LOG=memwal_server=info,tower_http=info
@@ -67,15 +69,19 @@ Useful fields include:
 
 The relayer avoids logging memory text, recall queries, and ask/analyze prompts. It logs byte or character lengths instead.
 
-## Prometheus Metrics
+## Prometheus metrics
 
 The Rust relayer exposes Prometheus metrics at:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/observability.md" target="_blank" className="code-source-link">Source: relayer/observability.md</a>
 
 ```text
 GET /metrics
 ```
 
 The TypeScript sidecar also exposes wallet-specific counters and upload-queue counters at:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/observability.md" target="_blank" className="code-source-link">Source: relayer/observability.md</a>
 
 ```text
 GET <SIDECAR_URL>/metrics/wallet
@@ -94,12 +100,14 @@ Core relayer metrics:
 | `memwal_errors_total` | `kind`, `route` | Application error counts |
 | `memwal_rate_limit_denials_total` | `bucket`, `route` | Rate-limit denials |
 | `memwal_rate_limit_fallbacks_total` | `scope` | Redis fallback usage |
-| `memwal_external_request_duration_seconds` | `service`, `operation`, `status` | OpenAI, Sui RPC, SEAL sidecar, Walrus latency |
+| `memwal_external_request_duration_seconds` | `service`, `operation`, `status` | OpenAI, Sui RPC, Seal sidecar, Walrus latency |
 | `memwal_sidecar_failures_total` | `operation`, `reason` | Sidecar transport and HTTP failures |
 | `memwal_db_query_duration_seconds` | `operation`, `status` | PostgreSQL and pgvector query latency |
 | `memwal_db_pool_connections` | `state` | PostgreSQL pool `open` and `idle` gauges |
 
 Example Prometheus scrape config:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/observability.md" target="_blank" className="code-source-link">Source: relayer/observability.md</a>
 
 ```yaml
 scrape_configs:
@@ -109,7 +117,7 @@ scrape_configs:
       - targets: ["relayer.example.com"]
 ```
 
-## Recommended Dashboards
+## Recommended dashboards
 
 Create panels for:
 
@@ -122,14 +130,14 @@ Create panels for:
 - PostgreSQL query latency and pool open/idle connections.
 - Sidecar wallet counters: `walletSubmittedTotal`, `walletLockErrorsTotal`, `walletPermanentFailuresTotal`.
 
-## Recommended Alerts
+## Recommended alerts
 
 | Alert | Suggested Condition |
 | --- | --- |
 | High 5xx rate | 5xx responses exceed 1% for 5 minutes |
 | Route latency regression | p95 `/api/recall` or `/api/remember` latency exceeds the normal SLO for 10 minutes |
 | Redis degraded | `memwal_rate_limit_fallbacks_total` increases in production |
-| Sidecar unhealthy | `memwal_sidecar_failures_total` increases for SEAL or Walrus operations |
+| Sidecar unhealthy | `memwal_sidecar_failures_total` increases for Seal or Walrus operations |
 | OpenAI latency/errors | External `service="openai"` p95 latency or non-2xx status rate spikes |
 | Walrus download/upload failures | External `service="walrus"` or sidecar Walrus failures increase |
 | Sui RPC failures | `service="sui_rpc"` transport errors or non-2xx statuses increase |

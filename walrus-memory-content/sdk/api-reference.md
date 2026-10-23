@@ -1,10 +1,10 @@
 ---
 title: "API Reference"
 description: >-
-  Complete API reference for the Walrus Memory SDK, including method signatures, config fields, and return types for MemWal, MemWalManual, withMemWal, account management, and utility functions.
+  Complete API reference for the Walrus Memory SDK, including method signatures, config fields, and return types for Walrus Memory, MemWalManual, withMemWal, account management, and utility functions.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - API reference
   - method signatures
   - SDK methods
@@ -25,18 +25,20 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - What are the method signatures for the Walrus Memory SDK?
-  - What config options does MemWal.create accept?
+  - What config options does Walrus Memory.create accept?
   - What does the recall method return in Walrus Memory?
 answer: >-
-  The Walrus Memory SDK API includes MemWal (remember, recall, analyze, restore, health, rememberBulk, and more), MemWalManual (rememberManual, recallManual, restore), withMemWal (AI SDK middleware), account management utilities (createAccount, addDelegateKey, removeDelegateKey, generateDelegateKey), and utility functions for delegate key operations.
+  The Walrus Memory SDK API includes Walrus Memory (remember, recall, analyze, restore, health, rememberBulk, and more), MemWalManual (rememberManual, recallManual, restore), withMemWal (AI SDK middleware), account management utilities (createAccount, addDelegateKey, removeDelegateKey, generateDelegateKey), and utility functions for delegate key operations.
 ---
 
 See also:
 
-- [Configuration](/reference/configuration)
-- [Relayer API](/relayer/api-reference)
+- [Configuration](/walrus-memory/reference/configuration)
+- [Relayer API](/walrus-memory/relayer/api-reference)
 
 ## `MemWal.create(config)`
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 MemWal.create(config: MemWalConfig): MemWal
@@ -46,30 +48,31 @@ Config:
 
 | Property | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `key` | `string \| Uint8Array` | Yes | — | Delegate private key: hex (optionally `0x`-prefixed), `suiprivkey1...`, or `Uint8Array` |
-| `accountId` | `string` | Yes | — | MemWalAccount object ID on Sui |
+| `key` | `string \| Uint8Array` | Yes | | Delegate private key: hex (optionally `0x`-prefixed), `suiprivkey1...`, or `Uint8Array` |
+| `accountId` | `string` | Yes | | MemWalAccount object ID on Sui |
 | `serverUrl` | `string` | No | `https://relayer.memory.walrus.xyz` | Relayer URL |
 | `namespace` | `string` | No | `"default"` | Default namespace for memory isolation |
 | `requestTimeoutMs` | `number` | No | `30000` | Deadline for one relayer request. A non-positive or non-finite value falls back to `30000`. `restore` and `analyze` use their own 60s deadlines |
 | `recallTimeoutMs` | `number` | No | `15000` | Deadline for the `/api/recall` request. Per-call `RecallOptions.timeoutMs` overrides it |
 | `preflightTimeoutMs` | `number` | No | `5000` | Deadline for each preflight round-trip (`GET /version`, `GET /health`, `GET /config`) |
 
-For the full config surface, see [Configuration](/reference/configuration).
+For the full config surface, see [Configuration](/walrus-memory/reference/configuration).
 
 `recallTimeoutMs` covers the recall request alone. The preflights that run
-before it (the relayer compatibility check and the SEAL session build) are
+before it (the relayer compatibility check and the Seal session build) are
 bounded separately by `preflightTimeoutMs`, so a slow relayer preflight cannot
 consume recall's budget.
 
-## `MemWal` Methods
 
 ### `remember(text, namespace?): Promise<RememberAcceptedResult>`
 
-Submit one memory through the relayer. The method returns after the relayer creates a background job; embedding, SEAL encryption, Walrus upload, and vector indexing continue asynchronously.
+Submit one memory through the relayer. The method returns after the relayer creates a background job; embedding, Seal encryption, Walrus upload, and vector indexing continue asynchronously.
 
 HTTP 426 throws `MemWalCompatibilityError`.
 
 **Returns:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 {
@@ -83,6 +86,8 @@ HTTP 426 throws `MemWalCompatibilityError`.
 Submit one memory and poll until the background job completes.
 
 **Returns:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 {
@@ -107,6 +112,8 @@ Poll a previously accepted remember job until it reaches `done` or `failed`. A j
 Submit up to 20 memories in one request and return the accepted job IDs immediately.
 
 **Returns:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 {
@@ -136,6 +143,8 @@ Search for memories matching a natural language query, scoped to `owner + namesp
 
 **Returns:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 {
   results: Array<{
@@ -163,6 +172,8 @@ the set at all.**
 That second part is the one that bites. Ranking happens server-side, before
 `limit` truncates, so a newest-wins protocol written like this is broken:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 // WRONG: the newest record may never have been in `results`.
 const { results } = await memwal.recall({ query: "current task", limit: 3 });
@@ -174,6 +185,8 @@ one does, the older record outranks it and the newest falls outside the window
 entirely. Sorting client-side cannot recover a record the server never returned.
 
 Ask the relayer for a recency ordering instead, with `sort: "recent"`:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 // The relayer widens the candidate set first, then orders by write-time.
@@ -205,7 +218,7 @@ so a newest record worded less literally than an older one still comes first.
 That is the part `scoringWeights` cannot do: weights reorder the rows the
 search already returned, and `sort` changes which rows those are.
 
-Selection runs before the Walrus download and SEAL decrypt, so the wider net
+Selection runs before the Walrus download and Seal decrypt, so the wider net
 costs one broader SQL query rather than five times the decrypt work.
 
 Two limits worth knowing:
@@ -255,6 +268,8 @@ Extract memorable facts from text using an LLM, then return accepted background 
 
 **Returns:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 {
   job_ids: string[];
@@ -273,11 +288,13 @@ Use `analyzeAndWait(text, namespace?, opts?)` to wait for every extracted fact j
 
 ### `restore(namespace, limit?): Promise<RestoreResult>`
 
-Rebuild missing indexed entries for one namespace from Walrus. Incremental — only re-indexes blobs that aren't already in the local database.
+Rebuild missing indexed entries for one namespace from Walrus. Incremental, only re-indexes blobs that aren't already in the local database.
 
 - `limit` defaults to `10` (relayer clamps to `[1, 100]`)
 
 **Returns:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 {
@@ -301,6 +318,8 @@ Recall is similarity-ranked and needs a namespace to search, so an agent connect
 
 **Returns:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 {
   namespaces: Array<{
@@ -317,6 +336,8 @@ Recall is similarity-ranked and needs a namespace to search, so an agent connect
 ```
 
 Paginate on `has_more`, not on page length. The relayer clamps `limit`, so a caller asking for more than the cap gets exactly the cap back and would wrongly conclude it was done.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 let cursor: string | undefined;
@@ -338,6 +359,8 @@ List the memories this account holds, without a semantic query. Use it to confir
 - `options.namespace`: Keep only this namespace. Filtered client-side, so a page can be short or empty while `has_more` is still `true`
 
 **Returns:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 {
@@ -365,6 +388,8 @@ List the memories this account holds, without a semantic query. Use it to confir
 
 Paginate on `has_more`, not on page length:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 let cursor: string | undefined;
 let more = true;
@@ -379,7 +404,7 @@ while (more) {
 
 ### `health(): Promise<HealthResult>`
 
-Check relayer health. Does not require authentication — a successful response confirms the relayer is reachable, not that your `key`/`accountId` are valid. A signed call (e.g. `remember()`, `recall()`) can still fail with `401` immediately after a passing `health()`.
+Check relayer health. Does not require authentication, a successful response confirms the relayer is reachable, not that your `key`/`accountId` are valid. A signed call (for example, `remember()`, `recall()`) can still fail with `401` immediately after a passing `health()`.
 
 **Returns:** `{ status: string, version: string, relayerVersion?: string, apiVersion?: string, minSupportedSdk?: ... }`
 
@@ -397,32 +422,34 @@ These exist on the `MemWal` class for advanced use cases:
 
 | Method | Description |
 |--------|-------------|
-| `rememberManual({ encryptedData, vector, namespace? })` | Send SEAL-encrypted bytes + a pre-computed vector; the relayer uploads to Walrus |
+| `rememberManual({ encryptedData, vector, namespace? })` | Send Seal-encrypted bytes + a pre-computed vector; the relayer uploads to Walrus |
 | `recallManual({ vector, limit?, namespace? })` | Search with a pre-computed query vector. Returns `RecallManualHitResult`: blob IDs and distances, no decrypted text |
 | `embed(text)` | Generate an embedding vector for text (no storage) |
 
 ## `MemWalManual`
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
+
 ```ts
 import { MemWalManual } from "@mysten-incubation/memwal/manual";
 ```
 
-See [MemWalManual usage](/sdk/usage/memwal-manual) for the full setup and flow details.
+See [MemWalManual usage](/walrus-memory/sdk/usage/memwal-manual) for the full setup and flow details.
 
 ### `rememberManual(text, namespace?): Promise<RememberManualResult>`
 
-Embed locally, SEAL encrypt locally, send encrypted payload + vector to relayer for Walrus upload and vector registration.
+Embed locally, Seal encrypt locally, send encrypted payload + vector to relayer for Walrus upload and vector registration.
 
 ### `recallManual(query, limit?, namespace?): Promise<RecallManualMemoryResult>`
 
-Embed locally, search via relayer, download from Walrus, SEAL decrypt locally. Returns decrypted text results. This is not the hit-only `RecallManualHitResult` returned by `MemWal.recallManual()`.
+Embed locally, search through relayer, download from Walrus, Seal decrypt locally. Returns decrypted text results. This is not the hit-only `RecallManualHitResult` returned by `MemWal.recallManual()`.
 
 - `recallManual(query, { limit?, namespace?, scoringWeights? })` is valid
 - `recallManual(query, namespace)` throws `TypeError`; namespace is not a valid second argument
 
 ### `restore(namespace, limit?): Promise<RestoreResult>`
 
-Same as `MemWal.restore()` — delegates to the relayer.
+Same as `MemWal.restore()`, delegates to the relayer.
 
 ### `isWalletMode: boolean`
 
@@ -431,11 +458,13 @@ Whether this client uses a connected wallet signer (vs. raw keypair).
 ### Config notes
 
 - `suiNetwork` defaults to `mainnet`
-- `sealServerConfigs` lets the client configure independent or committee SEAL servers; committee entries require `aggregatorUrl`
+- `sealServerConfigs` lets the client configure independent or committee Seal servers; committee entries require `aggregatorUrl`
 - `sealKeyServers` remains supported as a legacy independent key server object ID override
-- All `@mysten/*` peer dependencies are loaded dynamically — only needed if you use `MemWalManual`
+- All `@mysten/*` peer dependencies are loaded dynamically, only needed if you use `MemWalManual`
 
 ## `withMemWal`
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 import { withMemWal } from "@mysten-incubation/memwal/ai";
@@ -462,9 +491,11 @@ Wraps a Vercel AI SDK model with automatic memory recall and save.
 | `minRelevance` | `0.3` | Minimum similarity score (0–1) to include a memory |
 | `debug` | `false` | Enable debug logging |
 
-See [Configuration](/reference/configuration) for all options.
+See [Configuration](/walrus-memory/reference/configuration) for all options.
 
-## Account Management
+## Account management
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 import {
@@ -478,13 +509,15 @@ import {
 | Function | Description |
 |----------|-------------|
 | `generateDelegateKey()` | Generate a new Ed25519 keypair (returns `privateKey`, `publicKey`, `suiAddress`) |
-| `createAccount(opts)` | Create a new MemWalAccount on-chain (one per Sui address) |
+| `createAccount(opts)` | Create a new MemWalAccount onchain (one per Sui address) |
 | `addDelegateKey(opts)` | Add a delegate key to an account (owner only) |
 | `removeDelegateKey(opts)` | Remove a delegate key from an account (owner only) |
 
 `addDelegateKey` and `removeDelegateKey` require the shared `registryId` alongside the package and account IDs.
 
-## Utility Functions
+## Utility functions
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
 ```ts
 import { delegateKeyToSuiAddress, delegateKeyToPublicKey } from "@mysten-incubation/memwal";

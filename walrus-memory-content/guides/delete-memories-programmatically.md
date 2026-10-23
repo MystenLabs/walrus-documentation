@@ -5,7 +5,7 @@ description: >-
   using a Node.js script with wallet authentication and sponsored Sui transactions.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - delete memories
   - Security Delete API
   - programmatic deletion
@@ -26,7 +26,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "How do I delete Walrus Memory blobs programmatically?"
-  - "What endpoints does the MemWal Security Delete API use?"
+  - "What endpoints does the Walrus Memory Security Delete API use?"
   - "How do I authenticate with the Security Delete API to remove old memories?"
 answer: >-
   Use the Security Delete API to authenticate with a wallet challenge, list deletable blobs,
@@ -41,10 +41,10 @@ Use the Security Delete API to find memories owned by a wallet, select memories 
 than a cutoff date, and permanently delete them. The API prepares and sponsors the Sui
 transaction; your wallet authenticates the requests and signs the prepared transaction.
 
-<Warning>
-  Deletion is permanent. Start with the dry run in this guide, review every blob ID, and
+:::warning
+Deletion is permanent. Start with the dry run in this guide, review every blob ID, and
   only then enable deletion.
-</Warning>
+:::
 
 The deletion flow uses these endpoints:
 
@@ -61,7 +61,7 @@ The deletion flow uses these endpoints:
 You need:
 
 - Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x).
-- The base URL of a MemWal deployment with the Security Delete API enabled.
+- The base URL of a Walrus Memory deployment with the Security Delete API enabled.
 - The Sui private key for the wallet that owns the memories.
 
 The example uses an Ed25519 key. Keep the key in a secret manager or environment variable;
@@ -70,14 +70,18 @@ wallet's `signPersonalMessage` and `signTransaction` methods instead.
 
 Create a small Node.js project and install the Sui SDK:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/delete-memories-programmatically.md" target="_blank" className="code-source-link">Source: guides/delete-memories-programmatically.md</a>
+
 ```bash
-npm install @mysten/sui
-npm install --save-dev tsx
+$ npm install @mysten/sui
+$ npm install --save-dev tsx
 ```
 
 ## Create the deletion script
 
 Create `delete-old-memories.ts`:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/delete-memories-programmatically.md" target="_blank" className="code-source-link">Source: guides/delete-memories-programmatically.md</a>
 
 ```ts
 import { decodeSuiPrivateKey } from '@mysten/sui/cryptography'
@@ -288,12 +292,14 @@ await main()
 Set the API URL, wallet key, and age cutoff. The script only lists candidates unless
 `CONFIRM_DELETE` is exactly `true`.
 
-```bash
-export MEMWAL_URL="https://your-memwal-deployment.example"
-export SUI_PRIVATE_KEY="suiprivkey1..."
-export MEMORY_MAX_AGE_DAYS="90"
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/delete-memories-programmatically.md" target="_blank" className="code-source-link">Source: guides/delete-memories-programmatically.md</a>
 
-npx tsx delete-old-memories.ts
+```bash
+$ export MEMWAL_URL="https://your-memwal-deployment.example"
+$ export SUI_PRIVATE_KEY="suiprivkey1..."
+$ export MEMORY_MAX_AGE_DAYS="90"
+
+$ npx tsx delete-old-memories.ts
 ```
 
 Review the wallet address, cutoff timestamp, blob IDs, object IDs, and creation dates in
@@ -303,9 +309,11 @@ the output.
 
 After you confirm the dry-run output, enable deletion and run the same script again:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/delete-memories-programmatically.md" target="_blank" className="code-source-link">Source: guides/delete-memories-programmatically.md</a>
+
 ```bash
-export CONFIRM_DELETE="true"
-npx tsx delete-old-memories.ts
+$ export CONFIRM_DELETE="true"
+$ npx tsx delete-old-memories.ts
 ```
 
 The script chunks the selection using the server's `deleteBatchMax` value. Each batch
@@ -317,6 +325,8 @@ Run the script again without `CONFIRM_DELETE`. Successfully deleted blobs no lon
 in the default `deletable` list. To inspect terminal states directly, request them with the
 same Bearer token:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/delete-memories-programmatically.md" target="_blank" className="code-source-link">Source: guides/delete-memories-programmatically.md</a>
+
 ```http
 GET /api/security-deletable-blobs?state=deleted,deleted_external&limit=200
 Authorization: Bearer <token>
@@ -327,4 +337,4 @@ If submitting a batch times out or returns `RPC_UNAVAILABLE`, query
 replacement batch for the same blobs while its state is `executing`.
 
 To delete memories through the dashboard instead, see
-[Delete old memories](/guides/delete-old-memories).
+[Delete old memories](/walrus-memory/guides/delete-old-memories).

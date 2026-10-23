@@ -6,7 +6,7 @@ description: >-
   and how to inspect each property yourself.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - verifiable memory
   - persistent memory
   - content addressing
@@ -29,7 +29,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How is memory verified in Walrus Memory?
-  - What makes MemWal memory persistent and tamper-proof?
+  - What makes Walrus Memory memory persistent and tamper-proof?
   - How can I verify that my stored memories have not been altered?
 answer: >-
   Walrus Memory provides persistent, verifiable memory through three independent properties:
@@ -48,21 +48,21 @@ Every write to Walrus produces a **blob ID derived from the stored bytes**. The 
 
 Each memory you store carries its own blob ID. The result of `rememberAndWait` includes a `blob_id`, and every hit returned by `recall` carries the `blob_id` of the memory it matched, so you always have a durable handle to the exact revision that was stored.
 
-<Note>
+:::note
 A blob ID addresses the **Seal ciphertext** that Walrus stores, not your plaintext. It proves the encrypted bytes are intact and unchanged. Confidentiality comes from Seal encryption. Content-addressing provides integrity and immutability on top of it.
-</Note>
+:::
 
-Because a new version is a new blob with a new ID, the chain of blob IDs over time is an immutable lineage of revisions. For the versioning pattern built on this property, see [Versioned datasets](/sdk/versioned-datasets).
+Because a new version is a new blob with a new ID, the chain of blob IDs over time is an immutable lineage of revisions. For the versioning pattern built on this property, see [Versioned datasets](/walrus-memory/sdk/versioned-datasets).
 
 ## Onchain-enforced ownership
 
 Your memory is anchored to a `MemWalAccount` object on Sui. Ownership of that account, and the authorization of the delegate keys that can act on it, are enforced onchain by the smart contract, not by the relayer. A compromised or malicious relayer cannot change who owns an account or forge delegate permissions. It can serve requests, but it cannot rewrite the ownership record.
 
-This is what makes the memory portable and censorship-resistant: control follows the onchain account, so you can move to a different relayer, or self-host one, without losing ownership. For the full enforcement model, see [Ownership and access](/fundamentals/concepts/ownership-and-access) and the [data flow and security model](/fundamentals/architecture/data-flow-security-model).
+This is what makes the memory portable and censorship-resistant: control follows the onchain account, so you can move to a different relayer, or self-host one, without losing ownership. For the full enforcement model, see [Ownership and access](/walrus-memory/fundamentals/concepts/ownership-and-access) and the [data flow and security model](/walrus-memory/fundamentals/architecture/data-flow-security-model).
 
 ## Decentralized durability
 
-The encrypted blobs live on Walrus, which stores data across a decentralized network with no single point of failure. Walrus is the permanent record: the relayer keeps a vector index for fast search, but that index is a cache. If it is lost, `restore` rebuilds it by reading your blobs back from Walrus, decrypting, and re-indexing. The memory survives the loss of the relayer's database because the source of truth is onchain and on Walrus, not in the relayer. For how blobs are written, funded, and read back, see [How storage works](/fundamentals/architecture/how-storage-works).
+The encrypted blobs live on Walrus, which stores data across a decentralized network with no single point of failure. Walrus is the permanent record: the relayer keeps a vector index for fast search, but that index is a cache. If it is lost, `restore` rebuilds it by reading your blobs back from Walrus, decrypting, and re-indexing. The memory survives the loss of the relayer's database because the source of truth is onchain and on Walrus, not in the relayer. For how blobs are written, funded, and read back, see [How storage works](/walrus-memory/fundamentals/architecture/how-storage-works).
 
 ## Verify it yourself
 
@@ -72,14 +72,14 @@ You can check all three properties yourself. Inspect each one directly:
 - **Integrity:** Read the `blob_id` off a `recall` result. It is a content-addressed handle to the exact stored ciphertext, so a blob ID that resolves confirms that encrypted blob is intact and unchanged. This is blob-level integrity, and the plaintext inside is protected by Seal encryption, not by content-addressing.
 - **Ownership:** Take your `MemWalAccount` object ID and open it in a Sui explorer. The account, its owner, and its delegate authorizations are public onchain state that anyone can inspect, independent of the relayer.
 
-<Note>
+:::note
 A dedicated `verify()` helper that reconstructs a memory from its onchain blob object is on the roadmap. Until it ships, verifiability comes from the three properties above: content-addressed blob IDs, onchain-enforced ownership you can inspect on a Sui explorer, and durability backed by Walrus. It is a property of the architecture, not a single SDK call.
-</Note>
+:::
 
 ## References
 
-- [Versioned datasets](/sdk/versioned-datasets)
-- [Ownership and access](/fundamentals/concepts/ownership-and-access)
-- [Data flow and security model](/fundamentals/architecture/data-flow-security-model)
-- [How storage works](/fundamentals/architecture/how-storage-works)
-- [Agent Storage Loop](/sdk/agent-storage-loop)
+- [Versioned datasets](/walrus-memory/sdk/versioned-datasets)
+- [Ownership and access](/walrus-memory/fundamentals/concepts/ownership-and-access)
+- [Data flow and security model](/walrus-memory/fundamentals/architecture/data-flow-security-model)
+- [How storage works](/walrus-memory/fundamentals/architecture/how-storage-works)
+- [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop)

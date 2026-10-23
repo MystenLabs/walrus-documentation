@@ -41,11 +41,13 @@ The loop has three parts:
 2. **Store** chunks of code and project context as memories.
 3. **Recall** the most relevant chunks by semantic similarity whenever the assistant needs context, and pass them to the model.
 
-Set up the client first. In an editor extension or a backend service, initialize it headlessly from the environment, as described in [Headless SDK Setup](/sdk/headless-setup).
+Set up the client first. In an editor extension or a backend service, initialize it headlessly from the environment, as described in [Headless SDK Setup](/walrus-memory/sdk/headless-setup).
 
 ## Scope memory per repository
 
 Give each repository its own namespace so recall never crosses codebases. Derive the namespace deterministically from the repository identity, so the same repo always maps to the same space:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/codebase-memory.md" target="_blank" className="code-source-link">Source: sdk/codebase-memory.md</a>
 
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";
@@ -68,6 +70,8 @@ Break code and project knowledge into focused chunks, then write them in batches
 
 `rememberBulk` accepts up to 20 items per call, so chunk your input and send it in batches:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/codebase-memory.md" target="_blank" className="code-source-link">Source: sdk/codebase-memory.md</a>
+
 ```ts
 const chunks = [
   { text: "src/auth/session.ts - createSession(userId): issues a signed session token, 30 min TTL. Uses jose for signing." },
@@ -81,6 +85,8 @@ const result = await memwal.rememberBulkAndWait(chunks);
 
 For longer material such as a design document or a pull request description, `analyze` extracts discrete facts from the text and stores them as separate memories, which recall better than one large blob:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/codebase-memory.md" target="_blank" className="code-source-link">Source: sdk/codebase-memory.md</a>
+
 ```ts
 await memwal.analyzeAndWait(pullRequestDescription);
 ```
@@ -88,6 +94,8 @@ await memwal.analyzeAndWait(pullRequestDescription);
 ## Recall relevant context at query time
 
 When the assistant is about to answer, recall the most relevant memories for the current question and add them to the prompt. `recall` embeds the query, searches the repository's namespace, and returns the closest matches by cosine distance, where a lower distance means a closer match:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/codebase-memory.md" target="_blank" className="code-source-link">Source: sdk/codebase-memory.md</a>
 
 ```ts
 const recalled = await memwal.recall({
@@ -114,12 +122,12 @@ Choose sub-namespaces when categories should never be searched together, and key
 
 ## When to use the SDK instead of the MCP server
 
-Building codebase memory yourself with the SDK is the right path when you are writing an assistant or an editor integration. If instead you want to give an existing tool like Cursor access to Walrus Memory without writing code, connect the Walrus Memory MCP server. See [Cursor](/mcp/cursor) for that setup. The two paths can coexist: build repository memory with the SDK, and expose it to an editor through MCP.
+Building codebase memory yourself with the SDK is the right path when you are writing an assistant or an editor integration. If instead you want to give an existing tool like Cursor access to Walrus Memory without writing code, connect the Walrus Memory MCP server. See [Cursor](/walrus-memory/mcp/cursor) for that setup. The two paths can coexist: build repository memory with the SDK, and expose it to an editor through MCP.
 
 ## References
 
-- [Headless SDK Setup](/sdk/headless-setup)
-- [Walrus Memory client](/sdk/usage/memwal)
-- [Memory space](/fundamentals/concepts/memory-space)
-- [Multi-tenant cookbook](/sdk/cookbook-multi-tenant)
-- [Cursor MCP server](/mcp/cursor)
+- [Headless SDK Setup](/walrus-memory/sdk/headless-setup)
+- [Walrus Memory client](/walrus-memory/sdk/usage/memwal)
+- [Memory space](/walrus-memory/fundamentals/concepts/memory-space)
+- [Multi-tenant cookbook](/walrus-memory/sdk/cookbook-multi-tenant)
+- [Cursor MCP server](/walrus-memory/mcp/cursor)

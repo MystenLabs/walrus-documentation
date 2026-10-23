@@ -7,7 +7,7 @@ keywords:
   - headless agent
   - rememberBulk
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - batch writes
 goal:
   description: "Implement a complete headless agent storage loop: initialize the SDK from env vars, batch-write a set of memories, poll until durability is confirmed, then run a recall to verify the stored content."
@@ -44,7 +44,9 @@ The loop has four stages:
 
 An agent runtime has no human to click through a wallet or paste a key at a prompt. Generate the account ID and delegate key once at [staging.memory.walrus.xyz](https://staging.memory.walrus.xyz) for Testnet, store them as secrets, and load them from the environment at startup.
 
-```ts agent.ts
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
+
+```ts title="agent.ts"
 import { MemWal } from "@mysten-incubation/memwal";
 
 function requireEnv(name: string): string {
@@ -66,9 +68,9 @@ const memwal = MemWal.create({
 await memwal.health();
 ```
 
-<Note>
+:::note
 Read every credential from the environment. Never hardcode an account ID copied from docs or another project: recall is scoped per **account plus namespace**, so a shared ID puts your agent's memories in a space other readers can see.
-</Note>
+:::
 
 The `MemWal.create` config takes four fields:
 
@@ -79,11 +81,13 @@ The `MemWal.create` config takes four fields:
 | `serverUrl` | `string` | No | Relayer URL for your network |
 | `namespace` | `string` | No | Default namespace, falls back to `"default"` |
 
-## Batch many small writes with Quilt
+## Batch many small writes with quilt
 
 Agents tend to produce many small state blobs: observations, intermediate results, per-step notes. Writing them one at a time means a separate round trip and Sui transaction set for each. The SDK batches them instead, backed by Walrus Quilt under the hood.
 
 `rememberBulk` accepts up to 20 items per call. The relayer embeds and Seal-encrypts every item concurrently and uploads them to Walrus in parallel, so the whole batch shares far fewer Sui transactions than writing each item on its own would. For an agent writing dozens of small memories a minute, that is the difference between a workable cost profile and an unworkable one.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
 
 ```ts
 const items = [
@@ -96,9 +100,9 @@ const items = [
 const result = await memwal.rememberBulkAndWait(items);
 ```
 
-<Note>
+:::note
 Keep each batch at 20 items or fewer. If you have more, chunk the array and call `rememberBulkAndWait` per chunk. To fan out without blocking, use `rememberBulkAsync` and collect the returned `job_ids` to confirm later.
-</Note>
+:::
 
 ## Encrypt agent state
 
@@ -107,6 +111,8 @@ All blobs on Walrus are public, so you must encrypt private agent state. There a
 1. **Relayer-managed encryption (default):** With the standard `MemWal` client used above, the relayer encrypts every item with Seal before it reaches Walrus. You do not manage keys, and this is the right default for most agents.
 
 2. **Client-managed encryption.** When the agent must hold its own keys and never delegate decryption to the relayer, use the manual entry point. `MemWalManual` performs Seal encryption client-side, so plaintext never leaves the agent process.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
 
 ```ts
 import { MemWalManual } from "@mysten-incubation/memwal/manual";
@@ -128,17 +134,19 @@ const manual = MemWalManual.create({
 await manual.rememberManual("Private: internal risk score for account 0xabc is 0.82.");
 ```
 
-<Warning>
+:::warning
 Client-managed encryption means the agent is responsible for its key material. If the delegate key is lost, you cannot recover the encrypted memories. Treat the key as you would any production secret, and rotate it through the dashboard if it might be exposed.
-</Warning>
+:::
 
-For the full client-managed flow, including local embeddings and recall, see [MemWalManual](/sdk/usage/memwal-manual).
+For the full client-managed flow, including local embeddings and recall, see [MemWalManual](/walrus-memory/sdk/usage/memwal-manual).
 
 ## Confirm a write before depending on it
 
 An autonomous agent should not act on a memory it only believes it wrote. Before the agent reads state back or makes a decision that assumes the write persisted, confirm that the write reached a durable state.
 
 The `*AndWait` helpers already block until the relayer reports each job `done`, which is the signal that the relayer embedded, encrypted, and uploaded the memory to Walrus. When you need to write without blocking and confirm later, capture the job IDs and wait on them explicitly:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
 
 ```ts
 const accepted = await memwal.rememberBulkAsync(items);
@@ -153,13 +161,15 @@ if (failed.length > 0) {
 }
 ```
 
-<Note>
+:::note
 A dedicated `verify()` helper that reconstructs a memory from its onchain blob object is on the roadmap. Until it ships, a job reaching `done` is the durability signal to gate on, and the memory's Walrus blob object on Sui is the onchain record of the write.
-</Note>
+:::
 
 ## Recall the stored context
 
 After you confirm the writes, recall pulls the relevant memories back by semantic similarity. The relayer verifies the request, embeds the query, searches, downloads from Walrus, decrypts, and returns plaintext.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
 
 ```ts
 const recalled = await memwal.recall({
@@ -178,7 +188,9 @@ Recall is scoped to the client's namespace by default. Pass `namespace` to read 
 
 Putting the four stages together, here is a complete headless agent that runs end to end on Testnet:
 
-```ts agent.ts
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
+
+```ts title="agent.ts"
 import { MemWal } from "@mysten-incubation/memwal";
 
 function requireEnv(name: string): string {
@@ -229,7 +241,7 @@ main().catch((err) => {
 
 ## Next steps
 
-- [Walrus Memory client](/sdk/usage/memwal): full method signatures for the default client
-- [MemWalManual](/sdk/usage/memwal-manual): the client-managed encryption flow
-- [Public relayer](/relayer/public-relayer): managed Mainnet and Testnet relayer endpoints
-- [API Reference](/sdk/api-reference): every config field and return type
+- [Walrus Memory client](/walrus-memory/sdk/usage/memwal): full method signatures for the default client
+- [MemWalManual](/walrus-memory/sdk/usage/memwal-manual): the client-managed encryption flow
+- [Public relayer](/walrus-memory/relayer/public-relayer): managed Mainnet and Testnet relayer endpoints
+- [API Reference](/walrus-memory/sdk/api-reference): every config field and return type

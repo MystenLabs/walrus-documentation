@@ -6,7 +6,7 @@ keywords:
   - headless setup
   - server runtime
   - agent runtime
-  - MemWal
+  - Walrus Memory
   - environment variables
   - Walrus Memory
 goal:
@@ -25,13 +25,17 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I set up the Walrus Memory SDK in a server without a browser?
-  - How do I initialize MemWal from environment variables?
+  - How do I initialize Walrus Memory from environment variables?
   - When should I use MemWalManual instead of the default client in a headless setup?
 answer: >-
-  Generate credentials once via the dashboard, then load the delegate key and account ID from environment variables at startup. Use MemWal.create() with key, accountId, serverUrl, and namespace, and call health() to confirm the relayer is reachable before serving traffic. Use MemWalManual only when the runtime must hold its own keys and keep plaintext entirely client-side.
+  Generate credentials once via the dashboard, then load the delegate key and account ID from environment variables at startup. Use Walrus Memory.create() with key, accountId, serverUrl, and namespace, and call health() to confirm the relayer is reachable before serving traffic. Use MemWalManual only when the runtime must hold its own keys and keep plaintext entirely client-side.
 ---
 
-A server or agent runtime has no human to click through a wallet or paste a key at a prompt. The Walrus Memory SDK initializes entirely from configuration, so you can drop it into a backend service, a cron job, or an autonomous agent. For the full write-confirm-recall loop that builds on this setup, see [Agent Storage Loop](/sdk/agent-storage-loop).
+<AgentPrompt
+  prompt="Set up the Walrus Memory SDK headlessly in this server codebase: load the delegate key, account ID, and relayer URL from the environment, create the client at startup, and add a health check that calls memwal.health() on boot."
+/>
+
+A server or agent runtime has no human to click through a wallet or paste a key at a prompt. The Walrus Memory SDK initializes entirely from configuration, so you can drop it into a backend service, a cron job, or an autonomous agent. For the full write-confirm-recall loop that builds on this setup, see [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop).
 
 ## Generate credentials once
 
@@ -46,7 +50,9 @@ This is the only step that involves a browser. Your runtime never opens one.
 
 Load the credentials from environment variables and construct the client at startup. Call `health()` to confirm the relayer is reachable before your service starts serving traffic:
 
-```ts service.ts
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/headless-setup.md" target="_blank" className="code-source-link">Source: sdk/headless-setup.md</a>
+
+```ts title="service.ts"
 import { MemWal } from "@mysten-incubation/memwal";
 
 function requireEnv(name: string): string {
@@ -67,9 +73,9 @@ const memwal = MemWal.create({
 await memwal.health();
 ```
 
-<Note>
+:::note
 `health()` is an unauthenticated liveness and version check. It confirms the relayer is reachable, but it does not validate your delegate key or account ID. A bad key or account ID surfaces on the first authenticated call, such as `remember` or `recall`. If you want to validate credentials at boot, make a cheap authenticated call, for example a `recall` with a trivial query, and handle its error.
-</Note>
+:::
 
 The `MemWal.create` config takes 4 fields:
 
@@ -80,17 +86,19 @@ The `MemWal.create` config takes 4 fields:
 | `serverUrl` | `string` | No | Relayer URL for your network. Pass it explicitly so the target network is unambiguous |
 | `namespace` | `string` | No | Default namespace, falls back to `"default"` |
 
-<Note>
+:::note
 The SDK reads the delegate key from the `key` config field, not from any specific environment variable. The examples in these docs use both `MEMWAL_PRIVATE_KEY` and `MEMWAL_KEY` as the variable name for that value. Pick one name and use it consistently across your project.
-</Note>
+:::
 
-<Warning>
+:::warning
 Recall is scoped per **account plus namespace**. Never hardcode an account ID copied from docs or another project, and never share one delegate key across tenants that should not read each other's memories. Load every credential from the environment.
-</Warning>
+:::
 
 ## When to use the manual client
 
 The default `MemWal` client lets the relayer handle embedding and Seal encryption on your behalf, which is the right choice for most runtimes. Use `MemWalManual` only when the runtime must hold its own keys and keep plaintext entirely client-side. With the manual client, the runtime embeds and Seal-encrypts locally, then the relayer uploads the resulting ciphertext to Walrus and stores the vector row, so the relayer never sees plaintext. It requires a few more fields, including a Sui key that authorizes Seal:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/headless-setup.md" target="_blank" className="code-source-link">Source: sdk/headless-setup.md</a>
 
 ```ts
 import { MemWalManual } from "@mysten-incubation/memwal/manual";
@@ -109,12 +117,12 @@ const manual = MemWalManual.create({
 });
 ```
 
-For the complete client-managed flow, see [MemWalManual](/sdk/usage/memwal-manual).
+For the complete client-managed flow, see [MemWalManual](/walrus-memory/sdk/usage/memwal-manual).
 
 ## References
 
-- [Agent Storage Loop](/sdk/agent-storage-loop)
-- [Walrus Memory client](/sdk/usage/memwal)
-- [Public relayer](/relayer/public-relayer)
-- [Environment Variables](/reference/environment-variables)
-- [API Reference](/sdk/api-reference)
+- [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop)
+- [Walrus Memory client](/walrus-memory/sdk/usage/memwal)
+- [Public relayer](/walrus-memory/relayer/public-relayer)
+- [Environment Variables](/walrus-memory/reference/environment-variables)
+- [API Reference](/walrus-memory/sdk/api-reference)

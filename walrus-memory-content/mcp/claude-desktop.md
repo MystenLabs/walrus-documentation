@@ -1,16 +1,16 @@
 ---
 title: Claude Desktop
 description: >-
-  Add portable Walrus Memory to Claude Desktop through the MemWal MCP server.
+  Add portable Walrus Memory to Claude Desktop through the Walrus Memory MCP server.
   Claude Desktop supports MCP-only installation with proactive memory tools.
 keywords:
   - MCP
   - Claude Desktop
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - memory tools
 goal:
-  description: Add the MemWal MCP server to Claude Desktop's configuration, authenticate, and verify that memory tools are available in your Claude Desktop session.
+  description: Add the Walrus Memory MCP server to Claude Desktop's configuration, authenticate, and verify that memory tools are available in your Claude Desktop session.
   requires:
     - has_frontmatter:
         - title
@@ -25,8 +25,8 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I add Walrus Memory to Claude Desktop?
-  - How do I configure the MemWal MCP server for Claude Desktop?
-  - Does Claude Desktop support the MemWal automatic memory plugin?
+  - How do I configure the Walrus Memory MCP server for Claude Desktop?
+  - Does Claude Desktop support the Walrus Memory automatic memory plugin?
 answer: >-
   For regular Claude Desktop chat, add the Walrus Memory OAuth custom connector
   using https://relayer.memory.walrus.xyz/api/mcp and complete browser consent;
@@ -35,17 +35,17 @@ answer: >-
   The Code tab uses the separate Claude Code plugin setup.
 ---
 
-Add MemWal to Claude Desktop so the agent can save and recall durable facts. Claude Desktop uses the **MCP server** (the memory tools); the automatic-memory plugin hooks are available on [Claude Code](/mcp/claude-code), [Codex](/mcp/codex), [Cursor](/mcp/cursor), and [Antigravity](/mcp/antigravity).
+Add Walrus Memory to Claude Desktop so the agent can save and recall durable facts. Claude Desktop uses the **MCP server** (the memory tools); the automatic-memory plugin hooks are available on [Claude Code](/walrus-memory/mcp/claude-code), [Codex](/walrus-memory/mcp/codex), [Cursor](/walrus-memory/mcp/cursor), and [Antigravity](/walrus-memory/mcp/antigravity).
 
 ## Choose your setup
 
-For **regular Claude Desktop chat**, use the [OAuth custom connector](/mcp/claude-connector):
+For **regular Claude Desktop chat**, use the [OAuth custom connector](/walrus-memory/mcp/claude-connector):
 open **Settings → Connectors → Add custom connector**, enter
 `https://relayer.memory.walrus.xyz/api/mcp`, and complete the wallet consent flow.
 This requires no local Node.js, CLI, or manually copied delegate key. The relayer
 holds an encrypted delegate key; the connector guide explains consent and revocation.
 
-The **Code tab inside Claude Desktop** uses the [Claude Code plugin setup](/mcp/claude-code)
+The **Code tab inside Claude Desktop** uses the [Claude Code plugin setup](/walrus-memory/mcp/claude-code)
 instead. The chat connector does not install Code lifecycle hooks.
 
 The rest of this page describes the optional **local MCP** setup for regular
@@ -63,6 +63,8 @@ Add the server to your Claude Desktop config:
 - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/claude-desktop.md" target="_blank" className="code-source-link">Source: mcp/claude-desktop.md</a>
+
 ```json
 {
   "mcpServers": {
@@ -75,22 +77,24 @@ Add the server to your Claude Desktop config:
 }
 ```
 
-<Note>
+:::note
 Newer Claude Desktop versions pre-populate `claude_desktop_config.json` with other top-level keys (such as `preferences`) and no `mcpServers` block. Add `mcpServers` as a sibling of the existing keys rather than replacing the file. If an `mcpServers` block already exists, add the `memwal` entry inside it alongside any other servers.
-</Note>
+:::
 
 Quit and reopen Claude Desktop (`Cmd+Q` on macOS; closing the window is not enough), then ask the agent to run `memwal_login` on first use.
 
 ## Add memory instructions
 
 Regular Claude Desktop chat does not run the lifecycle hooks that reinforce automatic memory on
-[Claude Code](/mcp/claude-code), [Codex](/mcp/codex), and [Antigravity](/mcp/antigravity).
+[Claude Code](/walrus-memory/mcp/claude-code), [Codex](/walrus-memory/mcp/codex), and [Antigravity](/walrus-memory/mcp/antigravity).
 The tools still work here and the agent might save and recall on its own, but that is
 best-effort, because Claude Desktop's built-in memory can win instead. State the
 expectation yourself to get closer to the plugin behavior.
 
 Open **Settings → Profile → personal preferences** (applies to every conversation), or a
 single **Project's instructions** (applies only inside that project), and paste:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/claude-desktop.md" target="_blank" className="code-source-link">Source: mcp/claude-desktop.md</a>
 
 ```text
 Use Walrus Memory as my memory.
@@ -112,7 +116,7 @@ Use Walrus Memory as my memory.
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/mcp/reference) for full parameters.
+The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## Verify
 

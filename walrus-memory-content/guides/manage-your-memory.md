@@ -1,15 +1,23 @@
 ---
 title: Manage Your Memory
 description: Browse, search, organize, renew, and delete the memories your Walrus Memory account holds, from the dashboard and through the SDK.
-keywords: [manage memory, browse, search, delete, namespace, epoch, renew, extend, dashboard, MemWal, Walrus]
+keywords: [manage memory, browse, search, delete, namespace, epoch, renew, extend, dashboard, Walrus Memory, Walrus]
 ---
 
 Your Walrus Memory account accumulates memories over time. See what you have stored, organize it with namespaces, renew memories before they expire, and delete the ones you no longer want, from the dashboard or through the SDK.
 
-## Prerequisites
+<div className="outlined-tabs">
 
-- A Sui wallet that owns the memories you want to manage.
-- For SDK access, a delegate key and account ID from the dashboard. See [SDK Quickstart](/sdk/quick-start).
+<Tabs>
+<TabItem value="prereq" label="Prerequisites">
+
+- [x] A Sui wallet that owns the memories you want to manage.
+- [x] For SDK access, a delegate key and account ID from the dashboard. See [SDK Quickstart](/walrus-memory/sdk/quick-start).
+
+</TabItem>
+</Tabs>
+
+</div>
 
 Connect your wallet to open the dashboard:
 
@@ -21,6 +29,8 @@ Connect your wallet to open the dashboard:
 ## Browse and search
 
 You do not browse memories by name or folder. You search them by meaning: give a natural language query, and recall returns the closest matches, scoped to your memory space. Recall works the same whether an agent runs it or you run it to check what you stored.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/manage-your-memory.md" target="_blank" className="code-source-link">Source: guides/manage-your-memory.md</a>
 
 ```ts
 const result = await memwal.recall({
@@ -37,7 +47,7 @@ Each result carries a `distance`, where a smaller number means a closer match. R
 
 ### Preview stored content
 
-From code, `recall` returns the decrypted `text` of each match, so you can read stored content programmatically. Preview a memory before deleting it, because deletion cannot be undone; the [Delete old memories](/guides/delete-old-memories) guide covers previewing content in the dashboard delete flow.
+From code, `recall` returns the decrypted `text` of each match, so you can read stored content programmatically. Preview a memory before deleting it, because deletion cannot be undone; the [Delete old memories](/walrus-memory/guides/delete-old-memories) guide covers previewing content in the dashboard delete flow.
 
 ## Organize with namespaces
 
@@ -51,6 +61,8 @@ Use namespaces to keep unrelated memory apart:
 
 You set the namespace when you create the client, and every write and recall on that client uses it by default:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/manage-your-memory.md" target="_blank" className="code-source-link">Source: guides/manage-your-memory.md</a>
+
 ```ts
 const memwal = MemWal.create({
   key: process.env.MEMWAL_PRIVATE_KEY!,
@@ -60,11 +72,11 @@ const memwal = MemWal.create({
 });
 ```
 
-Storing into one namespace never affects another, and recall in `personal` never returns a `work` memory. For the full model, including how the app ID adds a second isolation boundary, see [Memory Space](/fundamentals/concepts/memory-space).
+Storing into one namespace never affects another, and recall in `personal` never returns a `work` memory. For the full model, including how the app ID adds a second isolation boundary, see [Memory Space](/walrus-memory/fundamentals/concepts/memory-space).
 
-<Tip>
+:::tip
 Choose namespaces before you write at scale. Because recall and restore match a namespace exactly, splitting or merging memories across namespaces later means re-writing them. A small, stable set of namespaces is easier to manage than many overlapping ones.
-</Tip>
+:::
 
 ## Renew memories
 
@@ -73,22 +85,22 @@ A memory persists on Walrus for the number of epochs you paid for. An epoch is a
 Renewal covers two cases:
 
 1. **Console uploads:** New assets that you upload through the console renew automatically.
-2. **Self-managed and agent-owned assets:** Renew at the storage layer by extending the `Blob` object on Walrus. For how expiry and extension work, and how an autonomous agent runs an extend-before-expiry loop, see [Tracking Agent-Owned Blobs and Storage](/fundamentals/architecture/tracking-agent-storage) and [How an Agent Funds Walrus Storage](/fundamentals/architecture/funding-storage).
+2. **Self-managed and agent-owned assets:** Renew at the storage layer by extending the `Blob` object on Walrus. For how expiry and extension work, and how an autonomous agent runs an extend-before-expiry loop, see [Tracking Agent-Owned Blobs and Storage](/walrus-memory/fundamentals/architecture/tracking-agent-storage) and [How an Agent Funds Walrus Storage](/walrus-memory/fundamentals/architecture/funding-storage).
 
-<Warning>
+:::warning
 Renew before the expiry epoch, not after. Once a blob lapses, you cannot recover its content, and you cannot renew a lapsed memory. Track expiry epochs and renew with a margin to spare.
-</Warning>
+:::
 
 ## Delete memories
 
 Deletion permanently removes a memory from Walrus Memory. You cannot undo it, so preview a memory before you delete it. Delete from the dashboard or from code:
 
-1. **Dashboard:** Review and delete stored memories from the dashboard delete flow. See [Delete old memories](/guides/delete-old-memories).
-2. **Programmatic:** The Security Delete API finds memories older than a cutoff, prepares a sponsored transaction, and deletes them in batches after a dry run. See [Delete memories programmatically](/guides/delete-memories-programmatically).
+1. **Dashboard:** Review and delete stored memories from the dashboard delete flow. See [Delete old memories](/walrus-memory/guides/delete-old-memories).
+2. **Programmatic:** The Security Delete API finds memories older than a cutoff, prepares a sponsored transaction, and deletes them in batches after a dry run. See [Delete memories programmatically](/walrus-memory/guides/delete-memories-programmatically).
 
-<Warning>
+:::warning
 Both deletion paths are permanent. Start with a preview in the dashboard or a dry run in the API, review every blob ID, and only then delete.
-</Warning>
+:::
 
 ## Rebuild the index
 
@@ -96,9 +108,11 @@ The search index lives in the relayer's database, not in your browser, so switch
 
 Restore rediscovers the blobs your account owns in a namespace and re-indexes any the relayer does not already have:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/manage-your-memory.md" target="_blank" className="code-source-link">Source: guides/manage-your-memory.md</a>
+
 ```ts
 const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
 
-Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of the namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, rerun restore with a progressively higher `limit` until `restored` stops increasing. Restore is safe to run more than once, because it skips blobs the relayer already indexed. For the full restore flow, see [How Storage Works](/fundamentals/architecture/how-storage-works).
+Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of the namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, rerun restore with a progressively higher `limit` until `restored` stops increasing. Restore is safe to run more than once, because it skips blobs the relayer already indexed. For the full restore flow, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).

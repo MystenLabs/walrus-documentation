@@ -1,17 +1,17 @@
 ---
 title: Cursor
 description: >-
-  Add portable Walrus Memory to Cursor through the MemWal MCP server.
+  Add portable Walrus Memory to Cursor through the Walrus Memory MCP server.
   Install as a plugin with automatic memory hooks or as MCP-only for just the memory tools.
 keywords:
   - MCP
   - Cursor
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - plugin
   - automatic memory
 goal:
-  description: Add MemWal to Cursor as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify persistent recall is working across Cursor sessions.
+  description: Add Walrus Memory to Cursor as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify persistent recall is working across Cursor sessions.
   requires:
     - has_frontmatter:
         - title
@@ -26,23 +26,31 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I add Walrus Memory to Cursor?
-  - How do I install the MemWal plugin on Cursor?
-  - Does Cursor support MemWal lifecycle hooks?
+  - How do I install the Walrus Memory plugin on Cursor?
+  - Does Cursor support Walrus Memory lifecycle hooks?
 answer: >-
-  To add Walrus Memory to Cursor, install the MemWal plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall and save need no extra instructions. Cursor ships no plugin CLI, so the copy is the install. You can instead configure MemWal as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
+  To add Walrus Memory to Cursor, install the Walrus Memory plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall and save need no extra instructions. Cursor ships no plugin CLI, so the copy is the install. You can instead configure Walrus Memory as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
 ---
 
-Add MemWal to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** (adds automatic-memory hooks) or as **MCP-only** (just the tools).
+Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** (adds automatic-memory hooks) or as **MCP-only** (just the tools).
 
-## Prerequisites
+<div className="outlined-tabs">
 
-- Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x)
-- A Walrus Memory account. The first memory tool call opens a browser sign-in (`memwal_login`).
+<Tabs>
+<TabItem value="prereq" label="Prerequisites">
+
+- [x] Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x)
+- [x] A Walrus Memory account. The first memory tool call opens a browser sign-in (`memwal_login`).
+
+</TabItem>
+</Tabs>
+
+</div>
 
 ## Installation
 
-<Tabs>
-  <Tab title="Plugin (recommended)">
+<Tabs groupId="code">
+  <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
     Cursor loads plugins from `~/.cursor/plugins/local/<name>/`. Copy the plugin (MCP server + lifecycle hooks) into that directory:
     ```bash
     npx -y degit MystenLabs/MemWal/packages/mcp/plugin ~/.cursor/plugins/local/memwal
@@ -52,8 +60,8 @@ Add MemWal to Cursor so the agent recalls context and saves durable facts. Insta
     Fully quit and reopen Cursor (`Cmd+Q` on macOS; closing the window is not enough). The plugin then appears under **Customize** in the sidebar, and its hooks give proactive recall and save with no further instructions.
 
     If you already added a manual `memwal` entry to `~/.cursor/mcp.json`, remove it. The plugin ships its own server and the two entries duplicate it.
-  </Tab>
-  <Tab title="MCP-only">
+  </TabItem>
+  <TabItem value="MCP-only" label="MCP-only">
     Add the server to `~/.cursor/mcp.json`:
     ```json
     {
@@ -68,18 +76,18 @@ Add MemWal to Cursor so the agent recalls context and saves durable facts. Insta
     To pin a default namespace, pass `"--namespace", "<name>"` in `args` (or set `MEMWAL_NAMESPACE` in `env`). Restart Cursor (MCP servers load at startup), then ask the agent to run `memwal_login` on first use.
 
     This path gives the memory tools without the hooks, so proactive behavior is best-effort.
-  </Tab>
+  </TabItem>
 </Tabs>
 
-<Note>
+:::note
 Cursor ships no plugin CLI. Do not look for a `cursor plugin` command, and do not try to add this repository as a marketplace: importing a third-party marketplace needs a Cursor team admin. The copy above is the install.
-</Note>
+:::
 
 ## What the plugin includes
 
 | Component | Plugin | MCP-only |
 |---|:-:|:-:|
-| MemWal MCP (memory tools) | ✓ | ✓ |
+| Walrus Memory MCP (memory tools) | ✓ | ✓ |
 | Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
 
 ## Lifecycle hooks (plugin)
@@ -106,7 +114,7 @@ The hook scripts ship inside the plugin bundle (`packages/mcp/plugin/`), so the 
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/mcp/reference) for full parameters.
+The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## Verify
 

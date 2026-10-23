@@ -6,7 +6,7 @@ description: >-
   and manual client flow, and the Ed25519 authentication flow.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - security model
   - trust model
   - encryption
@@ -28,7 +28,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How does Walrus Memory handle security and trust?
-  - What does the MemWal relayer see and how can I reduce that trust?
+  - What does the Walrus Memory relayer see and how can I reduce that trust?
   - How does authentication work in Walrus Memory?
 answer: >-
   Walrus Memory splits security between onchain enforcement (ownership, delegate authorization,
@@ -88,6 +88,8 @@ You have options depending on your trust requirements:
 - **Manual client flow**: use `MemWalManual` to handle encryption and embedding entirely on the client side. The relayer only sees encrypted payloads and vectors, never plaintext. This flow suits Web3-native users who want full control over their data and are comfortable managing keys, signing, and Seal operations directly.
 
 ## What lives where
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/architecture/data-flow-security-model.md" target="_blank" className="code-source-link">Source: fundamentals/architecture/data-flow-security-model.md</a>
 
 ```mermaid
 flowchart LR

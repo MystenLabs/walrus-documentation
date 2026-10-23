@@ -1,10 +1,10 @@
 ---
 title: Cloudflare Workers
 description: >-
-  Run MemWal on the Cloudflare Workers edge runtime. Covers the required nodejs_compat flag, bundle size considerations, and a crash-isolation pattern using dynamic imports for graceful degradation.
+  Run Walrus Memory on the Cloudflare Workers edge runtime. Covers the required nodejs_compat flag, bundle size considerations, and a crash-isolation pattern using dynamic imports for graceful degradation.
 keywords:
   - Cloudflare Workers
-  - MemWal
+  - Walrus Memory
   - edge runtime
   - nodejs_compat
   - bundle size
@@ -25,19 +25,21 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I use Walrus Memory with Cloudflare Workers?
-  - What configuration is needed to run MemWal on Cloudflare Workers?
-  - How large is the MemWal bundle on Cloudflare Workers?
+  - What configuration is needed to run Walrus Memory on Cloudflare Workers?
+  - How large is the Walrus Memory bundle on Cloudflare Workers?
 answer: >-
-  MemWal runs on Cloudflare Workers but requires the nodejs_compat compatibility flag in wrangler.toml for Node.js crypto support. The default MemWal client bundles to roughly 1.2 MB raw (225 KB gzipped). Use a dynamic import pattern for crash isolation so the Worker keeps serving even if the memory layer is unavailable.
+  Walrus Memory runs on Cloudflare Workers but requires the nodejs_compat compatibility flag in wrangler.toml for Node.js crypto support. The default Walrus Memory client bundles to roughly 1.2 MB raw (225 KB gzipped). Use a dynamic import pattern for crash isolation so the Worker keeps serving even if the memory layer is unavailable.
 ---
 
-MemWal runs on the [Cloudflare Workers](https://developers.cloudflare.com/workers/) runtime, but the edge environment differs from Node.js in a few ways that affect bundling and reliability. The configuration and patterns below make it work cleanly.
+Walrus Memory runs on the [Cloudflare Workers](https://developers.cloudflare.com/workers/) runtime, but the edge environment differs from Node.js in a few ways that affect bundling and reliability. The configuration and patterns below make it work cleanly.
 
 ## Required configuration
 
 The SDK relies on the Node.js `crypto` built-in, and `@mysten/seal` and `@mysten/sui` pull in more Node APIs. Enable the Node.js compatibility flag in your `wrangler.toml`:
 
-```toml wrangler.toml
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/cloudflare-workers.md" target="_blank" className="code-source-link">Source: sdk/cloudflare-workers.md</a>
+
+```toml title="wrangler.toml"
 compatibility_flags = ["nodejs_compat"]
 ```
 
@@ -52,7 +54,9 @@ Even the default `MemWal` client requires `@mysten/seal` and `@mysten/sui` as pe
 
 ## Crash isolation with dynamic import
 
-To keep a MemWal bundling or runtime issue from taking down the rest of your agent, load it behind a defensive dynamic import and feature-flag it off when config is missing or the client fails to come up. This way the app keeps serving requests even if memory is unavailable for a cycle:
+To keep a Walrus Memory bundling or runtime issue from taking down the rest of your agent, load it behind a defensive dynamic import and feature-flag it off when config is missing or the client fails to come up. This way the app keeps serving requests even if memory is unavailable for a cycle:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/cloudflare-workers.md" target="_blank" className="code-source-link">Source: sdk/cloudflare-workers.md</a>
 
 ```ts
 let memwal: any = null;
@@ -69,6 +73,6 @@ try {
 
 Guard your read and write paths on `memwal` being non-null, and the rest of the Worker stays healthy regardless of the memory layer's state.
 
-<Note>
+:::note
 The dynamic `import()` also keeps the heavy dependency graph out of your Worker's cold-start critical path until memory is actually needed.
-</Note>
+:::

@@ -5,7 +5,7 @@ description: >-
   MemWalManualConfig, and WithMemWalOptions, with field descriptions and behavioral rules.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - configuration
   - SDK
   - MemWalConfig
@@ -90,8 +90,8 @@ Walrus and network fields:
 | Field | Required | Notes |
 | --- | --- | --- |
 | `suiNetwork` | no | `testnet` or `mainnet`. Default: `mainnet` |
-| `sealServerConfigs` | no | Full SEAL configs for independent or committee servers. Committee entries require `aggregatorUrl` |
-| `sealKeyServers` | no | Legacy override for independent SEAL key server object IDs |
+| `sealServerConfigs` | no | Full Seal configs for independent or committee servers. Committee entries require `aggregatorUrl` |
+| `sealKeyServers` | no | Legacy override for independent Seal key server object IDs |
 | `sealThreshold` | no | Default: `2`, capped to total configured server weight |
 | `walrusEpochs` | no | Default: `50` |
 | `walrusAggregatorUrl` | no | Walrus download endpoint. Defaults follow `suiNetwork` |
@@ -108,7 +108,7 @@ Walrus and network fields:
 | `minRelevance` | no | Default: `0.3` |
 | `debug` | no | Default: `false` |
 
-## Rules That Matter
+## Rules that matter
 
 - `namespace` defaults to `"default"` when omitted.
 - A blown deadline throws a `TimeoutError` whose `phase` names the round-trip that stalled; `isTimeoutError()` distinguishes it from a transport failure.
@@ -117,12 +117,12 @@ Walrus and network fields:
 - `withMemWal` builds on top of `MemWal`, so it uses the same relayer-backed config shape.
 - `MemWalManual` now defaults to `mainnet` network settings unless you pass `suiNetwork: "testnet"`.
 - `sealServerConfigs` takes priority over `sealKeyServers`; `sealKeyServers` remains supported for legacy independent key server lists.
-- Relayer/sidecar SEAL defaults use Mysten's initial committee aggregator on `testnet`. `mainnet` keeps the legacy independent key server pair until an official mainnet committee aggregator is available.
-- `MemWalManual` keeps the legacy independent testnet default for compatibility. Pass `sealServerConfigs` to use a committee aggregator manually.
+- Relayer/sidecar Seal defaults use Mysten's initial committee aggregator on `testnet`. `mainnet` keeps the legacy independent key server pair until an official Mainnet committee aggregator is available.
+- `MemWalManual` keeps the legacy independent Testnet default for compatibility. Pass `sealServerConfigs` to use a committee aggregator manually.
 - Use `sealServerConfigs` to override the built-in default with another committee by providing `objectId`, `weight`, and `aggregatorUrl`.
 
 ## Relayer configuration
 
 The fields above configure the client SDKs. If you run your own relayer, its behavior is configured through environment variables rather than these config objects. One option to be aware of is the Sui RPC transport, `SUI_GRPC_URL`. Set this to a Sui gRPC fullnode URL to route the relayer's Sui calls through gRPC instead of JSON-RPC. It covers both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. It is empty by default, which keeps JSON-RPC. This option exists to migrate ahead of the Sui JSON-RPC sunset in July 2026.
 
-For the full list of relayer settings, see the [Environment Variables](/reference/environment-variables) reference and the [Self-Hosting](/relayer/self-hosting) guide.
+For the full list of relayer settings, see the [Environment Variables](/walrus-memory/reference/environment-variables) reference and the [Self-Hosting](/walrus-memory/relayer/self-hosting) guide.

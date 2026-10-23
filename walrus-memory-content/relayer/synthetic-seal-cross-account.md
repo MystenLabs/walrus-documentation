@@ -2,10 +2,10 @@
 title: "SEAL Cross-Account Synthetic"
 description: >-
   How operators schedule the production-safe negative synthetic that pages if
-  an identity from MemWal account A can authorize account B's SEAL key.
+  an identity from Walrus Memory account A can authorize account B's SEAL key.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - SEAL
   - synthetic
   - cross-account
@@ -37,14 +37,14 @@ answer: >-
   Schedule it with `gh workflow run` or an ops cron that dispatches that workflow.
 ---
 
-## SEAL Cross-Account Synthetic
+## Seal Cross-account synthetic
 
 COMG-715 adds a production-safe **negative** synthetic on top of the Move unit
 test `test_seal_approve_delegate_requires_matching_owner`. The unit test covers
 the contract in isolation. This check would **alert** if a live identity from
-account A can authorize account B's SEAL key.
+account A can authorize account B's Seal key.
 
-The script is **read-only**. It never calls remember, never fetches SEAL
+The script is **read-only**. It never calls remember, never fetches Seal
 decryption keys, and never executes a transaction. It `devInspect`s
 `account::seal_approve` only.
 
@@ -59,7 +59,7 @@ If the two account ids and two delegate keys are unset, the script prints
 
 ## Secrets and variables
 
-Use two **isolated** MemWal accounts (different owners). Each key must be a
+Use two **isolated** Walrus Memory accounts (different owners). Each key must be a
 delegate or owner of its own account and must **not** be registered on the other.
 
 | Name | Where | Purpose |
@@ -78,14 +78,18 @@ Do not commit private keys. Do not reuse the shared benchmark account as both A 
 
 Dispatch from a protected ref after the secrets exist:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/synthetic-seal-cross-account.md" target="_blank" className="code-source-link">Source: relayer/synthetic-seal-cross-account.md</a>
+
 ```bash
-gh workflow run synthetic-seal-cross-account.yml --ref main
+$ gh workflow run synthetic-seal-cross-account.yml --ref main
 ```
 
-Or Actions → **Synthetic SEAL cross-account** → **Run workflow**.
+Or Actions → **Synthetic Seal cross-account** → **Run workflow**.
 
 To cron it, add `on.schedule` to that workflow once the two-account secrets
 are in place (left off by default so an empty repo cannot false-green or page):
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/synthetic-seal-cross-account.md" target="_blank" className="code-source-link">Source: relayer/synthetic-seal-cross-account.md</a>
 
 ```yaml
 on:
@@ -96,4 +100,4 @@ on:
 
 Point the workflow failure at on-call. A red job whose log contains
 `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` means live `seal_approve` allowed a
-cross-account identity. That is a SEAL policy regression, not a flake.
+cross-account identity. That is a Seal policy regression, not a flake.

@@ -4,7 +4,7 @@ description: >-
   Complete HTTP API reference for the Walrus Memory relayer, including authentication headers, public routes, the protected endpoints for remember, recall, analyze, embed, ask, restore, forget, and stats, and the MCP transport endpoints.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - API reference
   - relayer API
   - REST endpoints
@@ -25,7 +25,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - "What are the Walrus Memory relayer API endpoints?"
-  - "How do I authenticate requests to the MemWal relayer?"
+  - "How do I authenticate requests to the Walrus Memory relayer?"
   - "What is the request and response format for the remember and recall APIs?"
 answer: >-
   The Walrus Memory relayer exposes public routes (health, version, config, metrics, sponsor) and protected routes (remember, recall, analyze, embed, ask, restore, forget, stats) that require Ed25519 signed headers, plus MCP transport endpoints that use bearer authentication. Signed authentication uses x-public-key, x-signature, x-timestamp, and x-nonce headers, with the signature covering the timestamp, method, path, body hash, nonce, and account ID.
@@ -35,9 +35,9 @@ The Rust relayer exposes these routes. The route table lives in `services/server
 
 See also:
 
-- [Environment Variables](/reference/environment-variables)
-- [Configuration](/reference/configuration)
-- [Versioning and Compatibility](/relayer/versioning-and-compatibility)
+- [Environment Variables](/walrus-memory/reference/environment-variables)
+- [Configuration](/walrus-memory/reference/configuration)
+- [Versioning and Compatibility](/walrus-memory/relayer/versioning-and-compatibility)
 
 ## Authentication
 
@@ -66,6 +66,8 @@ Not every `/api/*` route works this way. Account existence checks and the quaran
 
 The signed message is:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```text
 {timestamp}.{method}.{path_and_query}.{body_sha256}.{nonce}.{account_id}
 ```
@@ -85,12 +87,14 @@ Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 
 `writes` is `"ok"`, `"degraded"`, or `"paused"`.
 
 - `"paused"` when `WRITES_PAUSED` is set (`1` / `true` / `yes`). That flag is write-path admission, not a health-only signal: `POST /api/remember`, `/api/remember/manual`, `/api/remember/bulk`, and `/api/analyze` then return HTTP 503 with `{"error":"writes are paused"}`. `/health` itself stays HTTP 200 with `status: "ok"` and `writes: "paused"`, so clients can distinguish an intentional pause from an integrator bug. Reads (`recall`, `restore`, remember job status) stay available.
-- `"degraded"` when recent durable writes (last 15 minutes) have **failed at least three times and none have landed**. The relayer still accepts and queues a write (`write_ready` stays `true`; HTTP 200), but Walrus is not storing it — expect the job to fail rather than queue more. A single success in that window keeps `"ok"` even if other writes failed: this is a total-outage detector, not a per-request verdict. `memwal_health` prints `writes=degraded` when this is set.
+- `"degraded"` when recent durable writes (last 15 minutes) have **failed at least three times and none have landed**. The relayer still accepts and queues a write (`write_ready` stays `true`; HTTP 200), but Walrus is not storing it, expect the job to fail rather than queue more. A single success in that window keeps `"ok"` even if other writes failed: this is a total-outage detector, not a per-request verdict. `memwal_health` prints `writes=degraded` when this is set.
 - `"ok"` otherwise (including a quiet window with no finished writes).
 
 `write_ready` is `true` when the encryption sidecar process answered its own `/health` **and** Postgres can accept writes (cached a few seconds). Postgres is considered not writable when Neon cluster size (`pg_cluster_size`, not `pg_database_size` of this database) is at or within 1MB of `neon.max_cluster_size`. If `pg_cluster_size()` is missing (no `neon` extension), the probe falls back to `sum(pg_database_size)` against that GUC. Self-hosted Postgres without the GUC keeps the sidecar-only check. Probe errors and timeouts fail open (`write_ready` stays true) so CI is not blocked; timeouts log at warn. A sidecar outage or a disk/project-size write outage can still return HTTP 200 with `write_ready: false`. Use `writes`, not `write_ready`, for the pause or Walrus-outage signal. `write_ready: true` is not a guarantee that remember or analyze succeed.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -124,13 +128,15 @@ Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 
 
 Stable relayer/API compatibility metadata.
 
-**Response:** the compatibility object documented in [Versioning and Compatibility](/relayer/versioning-and-compatibility#runtime-metadata).
+**Response:** the compatibility object documented in [Versioning and Compatibility](/walrus-memory/relayer/versioning-and-compatibility#runtime-metadata).
 
 ### `GET /config`
 
 Public deployment parameters that the SDK reads to build a Seal SessionKey client-side. The endpoint returns no secrets.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -149,7 +155,7 @@ This example shows the fields a client needs to select a transport and build a s
 
 ### `GET /metrics`
 
-Prometheus metrics for scraping. See [Observability](/relayer/observability) for the exported series and how to wire a scraper.
+Prometheus metrics for scraping. See [Observability](/walrus-memory/relayer/observability) for the exported series and how to wire a scraper.
 
 ### `POST /sponsor`
 
@@ -167,11 +173,15 @@ No authentication. Same per-IP limit as `GET /api/accounts/:owner/exists`: 20 re
 
 An owner with no account returns HTTP 200:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 { "account_id": null, "keys": [] }
 ```
 
-Otherwise each on-chain key is listed. `public_key` is 64 lowercase hex characters and has no `0x` prefix.
+Otherwise each onchain key is listed. `public_key` is 64 lowercase hex characters and has no `0x` prefix.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -189,7 +199,9 @@ Otherwise each on-chain key is listed. `public_key` is 64 lowercase hex characte
 
 ### `GET /api/accounts/:owner/incident`
 
-Public answer for the owner in the path. The dashboard uses it to decide whether to show the quarantine banner. The response names no other owner. `affected_public_keys` lists only this account's current delegate public keys that are in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`. On testnet, one preview owner is reported locked. When that list is empty, the preview response pins one current key whose label contains `migrat` for the life of the process. A non-empty list does not pin a replacement.
+Public answer for the owner in the path. The dashboard uses it to decide whether to show the quarantine banner. The response names no other owner. `affected_public_keys` lists only this account's current delegate public keys that are in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`. On Testnet, one preview owner is reported locked. When that list is empty, the preview response pins one current key whose label contains `migrat` for the life of the process. A non-empty list does not pin a replacement.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -201,7 +213,7 @@ Public answer for the owner in the path. The dashboard uses it to decide whether
 }
 ```
 
-`affected` is true when the owner is listed in `MEMWAL_AFFECTED_OWNERS`, a current delegate public key is listed in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`, or the account is `admin_quarantined`. With both lists empty, `affected` follows the on-chain flag. An owner with no account still returns HTTP 200: `account_id` is null, `quarantined` and `active` are false, and `affected` is true only when that owner is in `MEMWAL_AFFECTED_OWNERS`.
+`affected` is true when the owner is listed in `MEMWAL_AFFECTED_OWNERS`, a current delegate public key is listed in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`, or the account is `admin_quarantined`. With both lists empty, `affected` follows the onchain flag. An owner with no account still returns HTTP 200: `account_id` is null, `quarantined` and `active` are false, and `affected` is true only when that owner is in `MEMWAL_AFFECTED_OWNERS`.
 
 ### `POST /api/accounts/:owner/unblock-requests`
 
@@ -209,11 +221,15 @@ The owner signs a Sui personal message. The relayer stores one request. Clearing
 
 The signed text uses the lowercased owner and the account id read from chain, not a value from the body:
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```text
 Walrus Memory unblock request
 owner:0x...
 account:0x...
 ```
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 { "signature": "<base64 personal-message signature>" }
@@ -239,6 +255,8 @@ The motivating use is rebuilding local credentials: a client that holds a workin
 
 **Response:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "account_id": "0x...",
@@ -255,6 +273,8 @@ Submit text as an encrypted memory job. The relayer returns after creating a bac
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "text": "User prefers dark mode",
@@ -266,6 +286,8 @@ Submit text as an encrypted memory job. The relayer returns after creating a bac
 `namespace` defaults to `"default"` if omitted and is limited to 255 UTF-8 bytes. `idempotency_key` is an optional string (up to 255 UTF-8 bytes); when supplied, repeated calls with the same key collapse onto the existing job row.
 
 **Response:** `202 Accepted`
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -279,6 +301,8 @@ Submit text as an encrypted memory job. The relayer returns after creating a bac
 Poll a remember job. `status` is one of `pending`, `running`, `uploaded`, `done`, or `failed`. Failed jobs include an `error` message. Unknown job IDs and jobs that belong to another owner return `404`, so callers cannot enumerate job IDs.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -296,6 +320,8 @@ Submit up to 20 memories in one request. `job_ids[i]` corresponds to `items[i]`.
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "items": [
@@ -309,6 +335,8 @@ Submit up to 20 memories in one request. `job_ids[i]` corresponds to `items[i]`.
 `idempotency_key` is an optional string (up to 255 UTF-8 bytes). When provided, each item in the batch is assigned `bulk:{idempotency_key}:{i}`, so repeated requests with the same batch key collapse onto the original jobs.
 
 **Response:** `202 Accepted`
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -324,6 +352,8 @@ Poll a batch of remember jobs. Unknown job IDs come back with status `not_found`
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "job_ids": ["uuid-1", "uuid-2"]
@@ -331,6 +361,8 @@ Poll a batch of remember jobs. Unknown job IDs come back with status `not_found`
 ```
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -346,6 +378,8 @@ Poll a batch of remember jobs. Unknown job IDs come back with status `not_found`
 Search for memories matching a natural language query. Returns decrypted plaintext results.
 
 **Request:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -366,6 +400,8 @@ Search for memories matching a natural language query. Returns decrypted plainte
 `sort` is optional: `"relevance"` (the cosine order, and the behaviour when omitted) or `"recent"` (the newest among the semantic matches). An explicit `sort`, `"relevance"` included, is the order, and the relayer ignores `scoring_weights` for that request.
 
 `deadline_ms` is optional: how long the caller waits for this response, in milliseconds. When set, the relayer stops about one second before it, counting from when the request arrived, and answers `504` with the step that was still running, so the caller learns where the recall stalled instead of timing out blind. A short deadline still gets at least 2 seconds of work; if the whole deadline went on authentication before the recall started, the relayer answers at once with stage `auth`. Values above `600000` are capped. Omit it to let the recall run to completion. The TypeScript SDK sends `14000`, a second under the 15s it aborts `recall()` at: the relayer's own margin runs from arrival, so it covers the reply's trip back but not the connect the caller's timer already started on.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -392,6 +428,8 @@ The optional `scoring_weights` object turns on composite ranking. The same objec
 
 **Response:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "results": [
@@ -415,6 +453,8 @@ Register a client-encrypted payload. The client sends Seal-encrypted data (base6
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "encrypted_data": "base64-encoded-seal-encrypted-bytes",
@@ -424,6 +464,8 @@ Register a client-encrypted payload. The client sends Seal-encrypted data (base6
 ```
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -440,6 +482,8 @@ Search with a precomputed query vector. Returns index hits only; the client hand
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "vector": [0.01, -0.02, ...],
@@ -449,6 +493,8 @@ Search with a precomputed query vector. Returns index hits only; the client hand
 ```
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -472,6 +518,8 @@ Extract facts from text using an LLM, then enqueue each fact as a separate memor
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "text": "I live in Hanoi and prefer dark mode.",
@@ -483,6 +531,8 @@ Extract facts from text using an LLM, then enqueue each fact as a separate memor
 `occurred_at` is an optional RFC 3339 timestamp that anchors the extracted facts in time, for example when you import older conversations. The extractor writes the date into the fact text itself; the relayer stores no separate event-time metadata and cannot filter or rank by event time.
 
 **Response:** `202 Accepted`
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -503,6 +553,8 @@ Return an embedding vector for `text` without storing a memory. Uses the same mo
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "text": "hello world"
@@ -512,6 +564,8 @@ Return an embedding vector for `text` without storing a memory. Uses the same mo
 `text` must be non-empty and at most 64 KiB.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -525,6 +579,8 @@ Recall memories, inject them into an LLM prompt, and return an AI-generated answ
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "question": "What do you know about my preferences?",
@@ -536,6 +592,8 @@ Recall memories, inject them into an LLM prompt, and return an AI-generated answ
 `limit` defaults to `5` and caps at `100`. `namespace` defaults to `"default"`. The request accepts the same optional `scoring_weights` object as [`POST /api/recall`](#scoring-weights).
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -557,6 +615,8 @@ Rebuild missing vector entries for one namespace. Queries onchain blobs by owner
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "namespace": "demo",
@@ -567,6 +627,8 @@ Rebuild missing vector entries for one namespace. Queries onchain blobs by owner
 `limit` defaults to `10` and caps the onchain query itself, newest blobs first. Raise it to cover a larger namespace.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -590,6 +652,8 @@ Delete every vector index row for one namespace. The Walrus blobs persist, so a 
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "namespace": "demo"
@@ -599,6 +663,8 @@ Delete every vector index row for one namespace. The Walrus blobs persist, so a 
 `namespace` defaults to `"default"`.
 
 **Response:**
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
 ```json
 {
@@ -616,6 +682,8 @@ Return the memory count and stored byte total for one namespace, scoped to the a
 
 **Request:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "namespace": "demo"
@@ -626,6 +694,8 @@ Return the memory count and stored byte total for one namespace, scoped to the a
 
 **Response:**
 
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
+
 ```json
 {
   "memory_count": 42,
@@ -635,6 +705,6 @@ Return the memory count and stored byte total for one namespace, scoped to the a
 }
 ```
 
-## MCP transports
+## MCP Transports
 
-The relayer also proxies Model Context Protocol traffic to its Node sidecar. `GET`, `POST`, `DELETE`, and `OPTIONS` on `/api/mcp` serve the Streamable HTTP transport, and `GET /api/mcp/sse` plus `POST /api/mcp/messages` serve the legacy SSE transport. These routes use bearer authentication instead of signed headers. See [Reference](/mcp/reference) for transport details and client configuration.
+The relayer also proxies Model Context Protocol traffic to its Node sidecar. `GET`, `POST`, `DELETE`, and `OPTIONS` on `/api/mcp` serve the Streamable HTTP transport, and `GET /api/mcp/sse` plus `POST /api/mcp/messages` serve the legacy SSE transport. These routes use bearer authentication instead of signed headers. See [Reference](/walrus-memory/mcp/reference) for transport details and client configuration.

@@ -1,16 +1,16 @@
 ---
 title: OpenCode
 description: >-
-  Add portable Walrus Memory to OpenCode through the MemWal MCP server.
+  Add portable Walrus Memory to OpenCode through the Walrus Memory MCP server.
   OpenCode supports MCP-only installation with proactive memory tools.
 keywords:
   - MCP
   - OpenCode
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - memory tools
 goal:
-  description: Add the MemWal MCP server to OpenCode, authenticate with your account credentials, and verify memory tools are available in your OpenCode session.
+  description: Add the Walrus Memory MCP server to OpenCode, authenticate with your account credentials, and verify memory tools are available in your OpenCode session.
   requires:
     - has_frontmatter:
         - title
@@ -25,22 +25,32 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How do I add Walrus Memory to OpenCode?
-  - How do I configure the MemWal MCP server for OpenCode?
-  - Does OpenCode support the MemWal plugin?
+  - How do I configure the Walrus Memory MCP server for OpenCode?
+  - Does OpenCode support the Walrus Memory plugin?
 answer: >-
-  To add Walrus Memory to OpenCode, configure the MemWal MCP server in ~/.config/opencode/opencode.json as a local stdio server using npx -y @mysten-incubation/memwal-mcp. OpenCode supports MCP-only (not the plugin with lifecycle hooks). The tool descriptions make the agent save and recall proactively. Pin a default namespace by adding a MEMWAL_NAMESPACE environment variable to the server entry.
+  To add Walrus Memory to OpenCode, configure the Walrus Memory MCP server in ~/.config/opencode/opencode.json as a local stdio server using npx -y @mysten-incubation/memwal-mcp. OpenCode supports MCP-only (not the plugin with lifecycle hooks). The tool descriptions make the agent save and recall proactively. Pin a default namespace by adding a MEMWAL_NAMESPACE environment variable to the server entry.
 ---
 
-Add MemWal to OpenCode so the agent can save and recall durable facts. OpenCode uses the **MCP server** (the memory tools); the automatic-memory plugin hooks are available on [Claude Code](/mcp/claude-code), [Codex](/mcp/codex), [Cursor](/mcp/cursor), and [Antigravity](/mcp/antigravity).
+Add Walrus Memory to OpenCode so the agent can save and recall durable facts. OpenCode uses the **MCP server** (the memory tools); the automatic-memory plugin hooks are available on [Claude Code](/walrus-memory/mcp/claude-code), [Codex](/walrus-memory/mcp/codex), [Cursor](/walrus-memory/mcp/cursor), and [Antigravity](/walrus-memory/mcp/antigravity).
 
-## Prerequisites
+<div className="outlined-tabs">
 
-- Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x)
-- A Walrus Memory account. The first memory tool call opens a browser sign-in (`memwal_login`).
+<Tabs>
+<TabItem value="prereq" label="Prerequisites">
+
+- [x] Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x)
+- [x] A Walrus Memory account. The first memory tool call opens a browser sign-in (`memwal_login`).
+
+</TabItem>
+</Tabs>
+
+</div>
 
 ## Installation
 
 Add the server to `~/.config/opencode/opencode.json` as a local (stdio) MCP server:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/opencode.md" target="_blank" className="code-source-link">Source: mcp/opencode.md</a>
 
 ```json
 {
@@ -68,7 +78,7 @@ To pin a default namespace, add `"environment": { "MEMWAL_NAMESPACE": "<name>" }
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/mcp/reference) for full parameters.
+The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## Verify
 

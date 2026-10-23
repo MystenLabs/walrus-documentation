@@ -42,13 +42,15 @@ Every write to Walrus produces a **blob ID derived from the stored bytes**. Two 
 
 Put together, you get an append-only version history without building one: each revision is a separate, permanent, independently addressable object, and the chain of blob IDs is the lineage.
 
-<Warning>
-Memories are SEAL-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Treat every write as a new immutable version, and do not assume identical input produces an identical blob ID. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
-</Warning>
+:::warning
+Memories are Seal-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Treat every write as a new immutable version, and do not assume identical input produces an identical blob ID. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
+:::
 
 ## Capturing a version handle
 
 `rememberAndWait` returns the blob ID once the write is durable, and every recalled memory carries the blob ID it came from. Those are the two places you collect the permanent handle for a version.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/versioned-datasets.md" target="_blank" className="code-source-link">Source: sdk/versioned-datasets.md</a>
 
 ```ts
 // On write: capture the blob ID as the version's permanent handle.
@@ -65,6 +67,8 @@ for (const memory of result.results) {
 ## Worked example: a versioned agent dataset
 
 This agent revises a dataset over time and keeps an auditable lineage. Each revision is written as a new immutable blob, and the agent records a small lineage entry that links the new version to its parent. The dataset content lives in one namespace; the lineage records live in another, so the history is queryable on its own.
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/versioned-datasets.md" target="_blank" className="code-source-link">Source: sdk/versioned-datasets.md</a>
 
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";
@@ -116,9 +120,9 @@ const v2 = await dataset.commit({ rows: 142, schema: "v1" });
 
 Because each `blobId` permanently and verifiably addresses one exact revision, an agent (or an auditor reviewing it later) can point to the precise dataset a decision was made against, and confirm it has not changed since.
 
-<Note>
+:::note
 Keep the lineage index wherever your agent already keeps durable state. Storing it as a memory, as shown here, keeps everything inside Walrus Memory. A database row or a Sui object works equally well, because the blob IDs are the durable handles either way.
-</Note>
+:::
 
 ## When this pattern fits
 
@@ -128,6 +132,6 @@ Keep the lineage index wherever your agent already keeps durable state. Storing 
 
 ## Next steps
 
-- [How storage works](/fundamentals/architecture/how-storage-works): where blob IDs come from in the write path
-- [Walrus Memory client](/sdk/usage/memwal): full signatures for `rememberAndWait` and `recall`
-- [API Reference](/sdk/api-reference): return types, including the blob ID on every result
+- [How storage works](/walrus-memory/fundamentals/architecture/how-storage-works): where blob IDs come from in the write path
+- [Walrus Memory client](/walrus-memory/sdk/usage/memwal): full signatures for `rememberAndWait` and `recall`
+- [API Reference](/walrus-memory/sdk/api-reference): return types, including the blob ID on every result

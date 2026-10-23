@@ -2,17 +2,17 @@
 title: "Usage"
 description: >-
   Async vs sync clients, namespace rules, manual methods, and AI middleware
-  for the Walrus Memory Python SDK. Covers MemWal, MemWalSync, and the async remember model.
+  for the Walrus Memory Python SDK. Covers Walrus Memory, MemWalSync, and the async remember model.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - Python SDK
   - async
   - sync
   - namespace
   - middleware
 goal:
-  description: Choose between the async MemWal and sync SyncMemWal clients, configure the correct namespace for your data scope, and wire up the client in your Python application.
+  description: Choose between the async Walrus Memory and sync SyncMemWal clients, configure the correct namespace for your data scope, and wire up the client in your Python application.
   requires:
     - has_frontmatter:
         - title
@@ -26,11 +26,11 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - What is the difference between MemWal and MemWalSync in the Python SDK?
+  - What is the difference between Walrus Memory and MemWalSync in the Python SDK?
   - How do namespaces work in the Walrus Memory Python SDK?
-  - How does the async remember model work in MemWal?
+  - How does the async remember model work in Walrus Memory?
 answer: >-
-  The Python SDK provides MemWal (async-native) and MemWalSync (synchronous wrapper)
+  The Python SDK provides Walrus Memory (async-native) and MemWalSync (synchronous wrapper)
   with identical APIs. Namespaces isolate memories and can be set per-client or per-call.
   The async remember model returns immediately with a job ID, and you can poll to completion
   with `remember_and_wait` or `wait_for_remember_job`.
@@ -40,19 +40,21 @@ The Python SDK exposes one relayer-backed client in two forms, plus middleware:
 
 | Entry point | Import | When to use |
 | --- | --- | --- |
-| `MemWal` | `from memwal import MemWal` | **Recommended default** — async-native; relayer handles embeddings, SEAL, and storage |
-| `MemWalSync` | `from memwal import MemWalSync` | Same API surface, synchronous — scripts, notebooks, non-async apps |
+| `MemWal` | `from memwal import MemWal` | **Recommended default**, async-native; relayer handles embeddings, Seal, and storage |
+| `MemWalSync` | `from memwal import MemWalSync` | Same API surface, synchronous, scripts, notebooks, non-async apps |
 | `with_memwal_langchain` / `with_memwal_openai` | `from memwal import ...` | Automatic recall + save as middleware around an existing LLM client |
 
 Detailed pages:
 
-- [Walrus Memory](/python-sdk/usage/memwal) — the default async/sync client and its core methods
-- [Manual methods](/python-sdk/usage/memwal-manual) — lower-level `remember_manual` / `recall_manual` / `embed`
-- [with_memwal](/python-sdk/usage/with-memwal) — LangChain and OpenAI middleware
+- [Walrus Memory](/walrus-memory/python-sdk/usage/memwal), the default async/sync client and its core methods
+- [Manual methods](/walrus-memory/python-sdk/usage/memwal-manual), lower-level `remember_manual` / `recall_manual` / `embed`
+- [with_memwal](/walrus-memory/python-sdk/usage/with-memwal), LangChain and OpenAI middleware
 
-## Async vs Sync
+## Async vs sync
 
 `MemWal` is async-native. Every API method is a coroutine:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage.md" target="_blank" className="code-source-link">Source: python-sdk/usage.md</a>
 
 ```python
 from memwal import MemWal, RecallParams
@@ -63,7 +65,9 @@ result = await memwal.recall(RecallParams(query="preferences"))
 await memwal.close()
 ```
 
-`MemWalSync` wraps it through `asyncio.run()` — identical methods, no `await`. It is notebook-safe (detects a running loop and offloads to a worker thread):
+`MemWalSync` wraps it through `asyncio.run()`, identical methods, no `await`. It is notebook-safe (detects a running loop and offloads to a worker thread):
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage.md" target="_blank" className="code-source-link">Source: python-sdk/usage.md</a>
 
 ```python
 from memwal import MemWalSync, RecallParams
@@ -76,7 +80,7 @@ client.close()
 
 Both support context managers (`async with MemWal.create(...)` / `with MemWalSync.create(...)`) which close the underlying HTTP client on exit.
 
-## Namespace Rules
+## Namespace rules
 
 - Set a default namespace in `create(...)` when one app or agent uses one boundary
 - Pass `namespace=` per call when one client needs multiple boundaries
@@ -84,9 +88,11 @@ Both support context managers (`async with MemWal.create(...)` / `with MemWalSyn
 
 Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing.
 
-## Async Remember Model
+## Async remember model
 
-`remember` returns a `RememberAcceptedResult` (`job_id`, `status`) as soon as the relayer accepts the request — the Walrus upload and on-chain commit happen in a background worker. Three ways to consume it:
+`remember` returns a `RememberAcceptedResult` (`job_id`, `status`) as soon as the relayer accepts the request, the Walrus upload and onchain commit happen in a background worker. Three ways to consume it:
+
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage.md" target="_blank" className="code-source-link">Source: python-sdk/usage.md</a>
 
 ```python
 # 1. Fire and forget the wait — poll later if you need the blob_id

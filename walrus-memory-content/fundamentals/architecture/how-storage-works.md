@@ -6,7 +6,7 @@ description: >-
   vector indexing), the recall flow, and the restore flow for rebuilding from Walrus.
 keywords:
   - Walrus Memory
-  - MemWal
+  - Walrus Memory
   - storage
   - encryption
   - SEAL
@@ -30,7 +30,7 @@ goal:
       label: Needs answer summary for AI citation
 questions:
   - How does Walrus Memory store and encrypt memories?
-  - How does semantic recall work in MemWal?
+  - How does semantic recall work in Walrus Memory?
   - How can I restore a lost Walrus Memory database?
 answer: >-
   When you store a memory, the relayer generates a vector embedding, encrypts the content with
@@ -55,31 +55,21 @@ When you call `memwal.remember(...)`, the relayer accepts a background job immed
   </figcaption>
 </figure>
 
-<Steps>
-  <Step>
-    ### Embedding
+### Embedding
 
     The relayer generates a vector embedding from your plaintext content. This embedding is a numerical representation of the meaning of your memory. It's what makes semantic search possible during recall.
-  </Step>
 
-  <Step>
-    ### Encryption
+  ### Encryption
 
     The relayer encrypts the plaintext content using Seal (Sui's encryption framework). Only the owner or their authorized delegates can decrypt the encrypted payload.
-  </Step>
 
-  <Step>
-    ### Blob upload
+  ### Blob upload
 
     The relayer uploads the encrypted payload to Walrus as a blob and attaches metadata, including the namespace, so restore can discover the blob later. Walrus stores it durably across a decentralized network, so there is no single point of failure.
-  </Step>
 
-  <Step>
-    ### Vector indexing
+  ### Vector indexing
 
     The relayer stores the vector embedding (1536 dimensions, from `text-embedding-3-small`), along with the blob ID, owner address, and namespace, in the `vector_entries` table in PostgreSQL with pgvector. An HNSW index on the embedding column enables fast approximate nearest neighbor search during recall.
-  </Step>
-</Steps>
 
 ## Recalling a memory
 
@@ -102,9 +92,9 @@ When you call `memwal.remember(...)`, the relayer accepts a background job immed
 4. It decrypts each blob with Seal using the delegate key.
 5. It returns the plaintext results to your app, sorted by distance (most relevant first).
 
-<Note>
+:::note
 If a blob has expired on Walrus (returns 404), the relayer automatically deletes the stale vector entry from the database. This reactive cleanup keeps your recall results clean without manual intervention.
-</Note>
+:::
 
 ## Restoring a memory space
 
