@@ -16,7 +16,6 @@ src/.generated/*
 ws-resources.json
 .markdown/
 
-
 # Misc
 .DS_Store
 .env.local

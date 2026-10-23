@@ -1,6 +1,12 @@
 # Walrus Documentation
 
-Walrus developer documentation, built with [Docusaurus](https://docusaurus.io/) and deployed as a [Walrus Site](https://docs.wal.app/).
+Developer documentation for Walrus, Walrus Oyster, and Walrus Memory, built with
+[Docusaurus](https://docusaurus.io/) and published at [docs.wal.app](https://docs.wal.app/).
+
+This repository holds every page the site serves. The Oyster and Walrus Memory
+docs used to be fetched from their product repositories at build time; they now
+live here under `oyster-content/` and `walrus-memory-content/`, and a change to
+them is a pull request here.
 
 ## Quick start
 
@@ -17,14 +23,15 @@ pnpm build
 pnpm serve     # preview the production build locally
 ```
 
-Requires Node.js 18+.
+Requires Node.js 18+ and pnpm. Set `GITHUB_TOKEN` to avoid GitHub API rate
+limits: the build reads release notes and skill descriptions from GitHub.
 
 ## Directory structure
 
 ```
-docs/
+.
 ├── blog/                  # Blog posts (MDX)
-├── content/               # Main documentation pages (MDX)
+├── content/               # Walrus documentation pages (MDX), served under /docs
 │   ├── getting-started/   # Onboarding and quickstart guides
 │   ├── system-overview/   # Architecture and design
 │   ├── walrus-client/     # CLI and client usage
@@ -35,16 +42,19 @@ docs/
 │   ├── examples/          # Example code and tutorials
 │   ├── snippets/          # Reusable MDX snippets
 │   └── ...
+├── oyster-content/        # Walrus Oyster docs, served under /oyster
+├── walrus-memory-content/ # Walrus Memory docs, served under /walrus-memory
 ├── data/                  # YAML data files (portals list, etc.)
 ├── editorial/             # Release notes source files
 ├── examples/              # Standalone example projects (Move, JS, Python, shell)
 ├── fundamentals/          # Supplementary architecture content
-├── walrus-memory-content/ # Walrus Memory product docs
+├── scripts/cache-inference/ # Weekly aggregator cache measurement (operators.json)
 └── site/                  # Docusaurus project root
     ├── docusaurus.config.js
-    ├── sidebars.js
-    ├── ws-resources.json          # Walrus Sites resource config (auto-generated)
-    ├── ws-resources.manual.json   # Manual resource config (redirects, headers)
+    ├── sidebars.js                # Walrus sidebar
+    ├── sidebarsOyster.js          # Oyster sidebar (regenerate with pnpm gen:oyster-sidebar)
+    ├── sidebarsWalrusMemory.js    # Walrus Memory sidebar (regenerate with pnpm gen:memory-sidebar)
+    ├── vercel.json                # Redirects and rewrites
     ├── src/
     │   ├── components/    # Site-specific React components
     │   ├── pages/         # Standalone pages
@@ -80,22 +90,31 @@ These components are globally available and do not need to be imported.
 
 Reusable content fragments live in `content/snippets/`. Import them into pages with the `import` statement for MDX.
 
+### Embedding source files
+
+`<ImportContent source="..." mode="code" />` embeds a file at build time.
+Sources under `examples/` resolve from this repository. Sources under
+`setup/`, `crates/`, and `scripts/` are fetched from
+[MystenLabs/walrus](https://github.com/MystenLabs/walrus) at the ref in
+`WALRUS_SOURCE_REF` (default `main`), so the docs show the canonical copy of
+client configuration and crate config examples. A source that resolves nowhere
+fails the build.
+
 ## Build pipeline
 
 The full build runs these steps in sequence:
 
-1. **`prestart` / `prebuild`** — Generates skills data, prepares Walrus Memory
-   content, processes imports, copies YAML files, and generates release notes
-   from `editorial/` source files.
-2. **`build:prep`** — Inlines imports, copies markdown files, and generates `llms.txt` / `llms-full.txt` for LLM consumption.
+1. **`prestart` / `prebuild`** — Generates skills data from
+   [MystenLabs/walrus-skills](https://github.com/MystenLabs/walrus-skills),
+   resolves embedded source files, copies YAML files, and generates release notes
+   from `editorial/` source files and GitHub releases.
+2. **`build:prep`** — Inlines imports, copies markdown files, and generates `llms.txt` / `llms-full.txt` for each doc set.
 3. **`docusaurus build`** — Compiles the Docusaurus site.
-4. **`generate-routes.js`** — Produces route metadata for the Walrus Sites portal.
 
 ## Redirects and custom headers
 
-Redirects and custom HTTP headers are configured in
-`site/ws-resources.manual.json`. Do not use client-side JavaScript redirects.
-This file is merged with auto-generated route data during the build.
+Redirects and rewrites are configured in `site/vercel.json`. Do not use
+client-side JavaScript redirects.
 
 ## Shared components
 
@@ -107,16 +126,11 @@ used by the Sui, SuiNS, and Seal documentation sites.
 To update shared components:
 
 ```bash
-git subtree pull --prefix=docs/site/src/shared https://github.com/MystenLabs/ML-Shared-Docusaurus.git master --squash
+git subtree pull --prefix=site/src/shared https://github.com/MystenLabs/ML-Shared-Docusaurus.git master --squash
 ```
 
 ## Deployment
 
-The site is deployed as a Walrus Site. To deploy:
-
-```bash
-cd site
-pnpm deploy-site
-```
-
-This runs the `site-builder` CLI to publish the built site to Walrus.
+Vercel deploys production from `main` and a preview for every pull request
+through its Git integration. The `Build docs` workflow runs the same build in
+CI so a broken link fails the pull request before it merges.
