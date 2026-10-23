@@ -287,7 +287,7 @@
     "date": "2026-06-04T15:35:28Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v2.10.0",
-    "description": "Portal aggregator timing rework: a per-attempt fetch timeout plus a Bun `idleTimeout` sized from the worst-case retry budget close the gap where a slow aggregator could trip the inbound connection mid-flight and surface a generic upstream proxy error instead of the portal's own `aggregatorFail()` page. Sui and Walrus deps bumped to their current testnet releases. No Move contract changes.\r\n\r\n> ℹ️ **Portal operators**: each aggregator attempt is now bounded at 10s and fails over to the next URL; Bun's `idleTimeout` is sized from the full retry chain so the portal can return its own response. Tune via `AGGREGATOR_REQUEST_TIMEOUT_MS` (default `10000`) and `PORTAL_IDLE_TIMEOUT_MAX_S` (default `100`); resolved values logged at startup.",
+    "description": "Portal aggregator timing rework: a per-attempt fetch timeout plus a Bun `idleTimeout` sized from the worst-case retry budget close the gap where a slow aggregator could trip the inbound connection mid-flight and surface a generic upstream proxy error instead of the portal's own `aggregatorFail()` page. Sui and Walrus deps bumped to their current testnet releases. No Move contract changes.\n\n> ℹ️ **Portal operators**: each aggregator attempt is now bounded at 10s and fails over to the next URL; Bun's `idleTimeout` is sized from the full retry chain so the portal can return its own response. Tune via `AGGREGATOR_REQUEST_TIMEOUT_MS` (default `10000`) and `PORTAL_IDLE_TIMEOUT_MAX_S` (default `100`); resolved values logged at startup.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.10.0",
     "changes": [
@@ -345,7 +345,7 @@
     "date": "2026-05-07T15:58:00Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v2.9.1",
-    "description": "Patch release with portal observability and configuration fixes, plus dependency bumps and CI hardening. No new features, no breaking changes, and no Move contract changes.\r\n\r\n> ℹ️ **walrus-upgrade**: drop `walrus_package` from your `sites-config.yaml` (to auto-resolve), or update it to the latest package id from the Walrus `staking_object` in `~/.config/walrus/client_config.yaml`.",
+    "description": "Patch release with portal observability and configuration fixes, plus dependency bumps and CI hardening. No new features, no breaking changes, and no Move contract changes.\n\n> ℹ️ **walrus-upgrade**: drop `walrus_package` from your `sites-config.yaml` (to auto-resolve), or update it to the latest package id from the Walrus `staking_object` in `~/.config/walrus/client_config.yaml`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.9.1",
     "changes": [
@@ -468,7 +468,7 @@
     "date": "2026-04-02T13:02:07Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v2.8.0",
-    "description": "This release adds server-side redirect support to Walrus Sites. Redirect rules are stored as dynamic fields on the on-chain `Site` object, configurable via `ws-resources.json` with glob pattern matching. The portal evaluates redirects before resource fetching and serves 3xx response.\r\n\r\n**This release includes a Move contract upgrade** — the `walrus_site` package is upgraded to add redirect storage on-chain. To use the new redirects feature, update the `package_id` in your `sites-config.yaml` to point to the latest package ID, or remove the `package_id` field entirely so that MVR can resolve it automatically.\r\n\r\n**Portal config change:** `site_package` has been renamed to `original_package_id` as this is what actually matters of it.\r\n\r\nThe portal has also been updated to Mysten SDK v2.",
+    "description": "This release adds server-side redirect support to Walrus Sites. Redirect rules are stored as dynamic fields on the on-chain `Site` object, configurable via `ws-resources.json` with glob pattern matching. The portal evaluates redirects before resource fetching and serves 3xx response.\n\n**This release includes a Move contract upgrade** — the `walrus_site` package is upgraded to add redirect storage on-chain. To use the new redirects feature, update the `package_id` in your `sites-config.yaml` to point to the latest package ID, or remove the `package_id` field entirely so that MVR can resolve it automatically.\n\n**Portal config change:** `site_package` has been renamed to `original_package_id` as this is what actually matters of it.\n\nThe portal has also been updated to Mysten SDK v2.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.8.0",
     "changes": [
@@ -1224,7 +1224,7 @@
     "date": "2025-09-22T18:56:36Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v1.2.0",
-    "description": "Further support of quilts under the `quilts-experimental` feature.\r\n\r\n> **Note**  \r\n> Header and ignore-file matching in ws-resources.json, now uses **glob patterns** (e.g. `*.md`, `docs/**`) instead of regular expressions.  \r\n> Regex support was never intentional, so if you were using advanced regex, please update your configs to glob style.([#556](https://github.com/MystenLabs/walrus-sites/pull/556)).",
+    "description": "Further support of quilts under the `quilts-experimental` feature.\n\n> **Note**  \n> Header and ignore-file matching in ws-resources.json, now uses **glob patterns** (e.g. `*.md`, `docs/**`) instead of regular expressions.  \n> Regex support was never intentional, so if you were using advanced regex, please update your configs to glob style.([#556](https://github.com/MystenLabs/walrus-sites/pull/556)).",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v1.2.0",
     "changes": [
@@ -1320,7 +1320,7 @@
     "date": "2025-09-08T14:23:00Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v1.1.0",
-    "description": "This release introduces a new publishing and deployment method for Walrus Sites using [quilts](https://docs.wal.app/usage/quilt.html) instead of blobs. Multiple resources are now bundled as quilt patches on Walrus, significantly reducing the cost of site publishing.\r\n\r\nYou can use this feature with: `site-builder publish-quilts --epochs=<EPOCHS> <YOUR-BUILD-DIR>`.\r\n\r\n> ⚠️ **Important note**: This feature is only available when building `site-builder` from source with `cargo build --features quilts-experimental`.",
+    "description": "This release introduces a new publishing and deployment method for Walrus Sites using [quilts](https://docs.wal.app/usage/quilt.html) instead of blobs. Multiple resources are now bundled as quilt patches on Walrus, significantly reducing the cost of site publishing.\n\nYou can use this feature with: `site-builder publish-quilts --epochs=<EPOCHS> <YOUR-BUILD-DIR>`.\n\n> ⚠️ **Important note**: This feature is only available when building `site-builder` from source with `cargo build --features quilts-experimental`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v1.1.0",
     "changes": [
@@ -1623,7 +1623,7 @@
     "date": "2025-06-16T12:28:03Z",
     "category": "walrus-sites",
     "title": "Walrus Sites walrus_sites_v0.1.0_1750076111_mainnet_ci",
-    "description": "🚀 Welcome to the very first official release of Walrus Sites! This marks the production-ready milestone for the project.\r\n\r\nStarting with this release, each version will include all the necessary components for deploying (via the site-builder) and accessing (via the portals) your Walrus Sites.\r\n\r\nWe are committed to following [semantic versioning](https://semver.org/) conventions for all future releases, ensuring clarity and consistency in version updates.",
+    "description": "🚀 Welcome to the very first official release of Walrus Sites! This marks the production-ready milestone for the project.\n\nStarting with this release, each version will include all the necessary components for deploying (via the site-builder) and accessing (via the portals) your Walrus Sites.\n\nWe are committed to following [semantic versioning](https://semver.org/) conventions for all future releases, ensuring clarity and consistency in version updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/walrus_sites_v0.1.0_1750076111_mainnet_ci",
     "changes": [

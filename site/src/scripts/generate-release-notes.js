@@ -49,7 +49,9 @@ function fetchJSON(urlPath) {
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode === 200) {
-          resolve(JSON.parse(data.replace(/\r\n?/g, "\n")));
+          // Release bodies carry CRLF line endings as JSON escapes; normalize them
+          // so the generated pages pass editorconfig.
+          resolve(JSON.parse(data.replace(/\\r(\\n)?/g, "\\n")));
         } else {
           reject(
             new Error(
