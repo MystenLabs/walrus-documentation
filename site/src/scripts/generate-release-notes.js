@@ -4,7 +4,7 @@
 /**
  * Generates a consolidated changelog from three sources:
  *   1. Walrus GitHub releases (MystenLabs/walrus)
- *   2. Walrus Memory GitHub releases (MystenLabs/MemWal)
+ *   2. Walrus Memory GitHub releases (MystenLabs/walrus-memory, formerly MemWal)
  *   3. Walrus Sites GitHub releases (MystenLabs/walrus-sites)
  *
  * Each entry shows the editorial summary followed by linked
@@ -50,6 +50,10 @@ function fetchJSON(urlPath) {
       res.on("end", () => {
         if (res.statusCode === 200) {
           resolve(JSON.parse(data));
+        } else if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
+          // A renamed repository answers 301 with the new location.
+          const next = new URL(res.headers.location);
+          resolve(fetchJSON(next.pathname + next.search));
         } else {
           reject(
             new Error(
@@ -416,9 +420,9 @@ function memwalCategoryKey(pkg) {
 }
 
 async function loadMemWalReleases() {
-  console.log("  Fetching MystenLabs/MemWal releases...");
+  console.log("  Fetching MystenLabs/walrus-memory releases...");
   const releases = await fetchAllPages(
-    "/repos/MystenLabs/MemWal/releases",
+    "/repos/MystenLabs/walrus-memory/releases",
   );
 
   const results = [];
