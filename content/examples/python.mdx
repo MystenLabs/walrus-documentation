@@ -76,7 +76,7 @@ walrus --config <PATH_TO_CLIENT_CONFIG> daemon \
 
 The script then uploads 1 MiB of random data with `PUT /v1/blobs?epochs=5` and reads it back with `GET /v1/blobs/<blob_id>`. A first-time store returns a `newlyCreated` JSON object that carries the blob ID; storing data that already exists on Walrus returns an `alreadyCertified` object instead. See [Storing Blobs](/docs/http-api/storing-blobs#understanding-the-response) for both response shapes.
 
-<ImportContent source="docs/examples/python/hello_walrus_webapi.py" mode="code" org="MystenLabs" repo="walrus" />
+<ImportContent source="examples/python/hello_walrus_webapi.py" mode="code" />
 
 The script prints the blob ID, the blob size, and the transfer times, similar to the following:
 
@@ -107,7 +107,7 @@ The JSON API runs the `walrus` CLI as a subprocess and exchanges JSON on standar
 
 The example stores a 1 MiB file, reads it back, and then checks the blob's certification. Every stored blob has a corresponding Sui object that records its storage lifetime and certification status, so the final part of the script fetches that object through Sui JSON-RPC (`sui_getObject`) and verifies that the onchain `blob_id` matches the uploaded blob.
 
-<ImportContent source="docs/examples/python/hello_walrus_jsonapi.py" mode="code" org="MystenLabs" repo="walrus" />
+<ImportContent source="examples/python/hello_walrus_jsonapi.py" mode="code" />
 
 ## Track Walrus events
 
@@ -119,4 +119,4 @@ The script proceeds in three steps:
 2. Fetches that object with `sui_getObject` to discover the Walrus package ID.
 3. Queries the latest 100 events emitted by the package's `blob` module with `suix_queryEvents`, then prints each event's timestamp, type, size (for registrations), blob ID, and transaction digest.
 
-<ImportContent source="docs/examples/python/track_walrus_events.py" mode="code" org="MystenLabs" repo="walrus" />
+<ImportContent source="examples/python/track_walrus_events.py" mode="code" />

@@ -1,18 +1,33 @@
 // Copyright (c) Walrus Foundation
 // SPDX-License-Identifier: Apache-2.0
+//
+// Builds the map that <ImportContent mode="code"> reads at build time.
+//
+// Sources resolve in two places:
+//   1. This repository, for roots listed in LOCAL_ROOTS (the example projects
+//      under examples/).
+//   2. The MystenLabs/walrus repository, for roots listed in REMOTE_ROOTS
+//      (client configuration under setup/, crate config examples under
+//      crates/, and scripts/). Those files are fetched from GitHub at the ref
+//      in WALRUS_SOURCE_REF (default: main) so the docs always show the
+//      canonical copy without this repository carrying a duplicate.
+//
+// A source that resolves nowhere fails the build: a silently skipped embed
+// renders as a placeholder comment on the published page.
 
 const fs = require("fs");
 const path = require("path");
 
 const SITE_ROOT = path.resolve(__dirname, "../.."); // docusaurus site root
-const REPO_ROOT = path.resolve(SITE_ROOT, "../.."); // project root is two levels up from site
-const CONTENT_ROOT = path.resolve(SITE_ROOT, "../content"); // content folder
+const REPO_ROOT = path.resolve(SITE_ROOT, ".."); // repository root is one level up from site
+const CONTENT_ROOT = path.resolve(REPO_ROOT, "content"); // content folder
 const OUT_FILE = path.join(SITE_ROOT, "src/.generated/ImportContentMap.ts");
 
-// Content directory contains MDX files that might use <ImportContent>
+const LOCAL_ROOTS = new Set(["examples", "data"]);
+const REMOTE_ROOTS = new Set(["setup", "crates", "scripts", "examples"]);
 
-// Optionally constrain which repo roots are permitted for mode="code"
-const ALLOWED_ROOTS = new Set(["documentation", "crates", "examples", "setup", "scripts"]);
+const WALRUS_REPO = process.env.WALRUS_SOURCE_REPO || "MystenLabs/walrus";
+const WALRUS_REF = process.env.WALRUS_SOURCE_REF || "main";
 
 // --- helpers ---
 const readText = (p) => fs.readFileSync(p, "utf8").replace(/\r\n?/g, "\n");
@@ -34,7 +49,7 @@ function* findCodeSources(mdx) {
     while ((m = IMPORT_TAG_RE.exec(haystack))) {
         const tag = m[0];
         if (!/\bmode\s*=\s*["']code["']/i.test(tag)) continue;
-        if (/\borg\s*=\s*/i.test(tag)) continue; // silently skip tags that include an org value
+        if (/\borg\s*=\s*/i.test(tag)) continue; // tags with an org are fetched client-side
         const srcM = /\bsource\s*=\s*["']([^"']+)["']/i.exec(tag);
         const src = srcM ? srcM[1].trim() : "";
         if (src) yield src;
@@ -75,46 +90,92 @@ function findFiles(dir, extensions) {
     return files;
 }
 
-// --- main ---
-const mdxFiles = findFiles(CONTENT_ROOT, [".md", ".mdx"]);
-if (process.env.DEBUG_IMPORT_CONTENT) {
-    console.log(`[generate-import-context] Content root:`, CONTENT_ROOT);
-    console.log(`[generate-import-context] MDX files found: ${mdxFiles.length}`);
+async function fetchFromWalrus(rel) {
+    const url = `https://raw.githubusercontent.com/${WALRUS_REPO}/${WALRUS_REF}/${rel}`;
+    const headers = {};
+    const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(url, { headers });
+    if (!res.ok) {
+        throw new Error(`${res.status} ${res.statusText} fetching ${url}`);
+    }
+    return (await res.text()).replace(/\r\n?/g, "\n");
 }
-const wanted = new Set();
 
-for (const mdxPath of mdxFiles) {
-    const text = readText(mdxPath);
-    for (const raw of findCodeSources(text)) {
-        const rel = normalizeRepoRel(raw);
-        const [root] = rel.split("/");
-        if (!ALLOWED_ROOTS.has(root)) {
-            // Skip unknown roots
-            console.warn(`[skip] Unsupported root "${root}" in ${mdxPath}: ${rel}`);
-            continue;
+async function resolveSource(rel) {
+    const [root] = rel.split("/");
+    if (LOCAL_ROOTS.has(root)) {
+        const abs = path.join(REPO_ROOT, rel);
+        if (fs.existsSync(abs) && fs.statSync(abs).isFile()) {
+            return { text: readText(abs), from: "local" };
         }
-        wanted.add(rel);
     }
+    if (REMOTE_ROOTS.has(root)) {
+        return { text: await fetchFromWalrus(rel), from: `${WALRUS_REPO}@${WALRUS_REF}` };
+    }
+    return null;
 }
 
-const entries = [];
-for (const rel of Array.from(wanted).sort()) {
-    const abs = path.join(REPO_ROOT, rel);
-    if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
-        console.warn(`[warn] Missing file for ImportContent: ${rel}`);
-        continue;
+// --- main ---
+async function main() {
+    const mdxFiles = findFiles(CONTENT_ROOT, [".md", ".mdx"]);
+    if (process.env.DEBUG_IMPORT_CONTENT) {
+        console.log(`[generate-import-context] Content root:`, CONTENT_ROOT);
+        console.log(`[generate-import-context] MDX files found: ${mdxFiles.length}`);
     }
-    const text = readText(abs);
-    entries.push(`  ${JSON.stringify(rel)}: ${JSON.stringify(text)}`);
-}
+    const wanted = new Map(); // rel -> first mdx file that references it
 
-const out = `// AUTO-GENERATED. Do not edit.
+    for (const mdxPath of mdxFiles) {
+        const text = readText(mdxPath);
+        for (const raw of findCodeSources(text)) {
+            const rel = normalizeRepoRel(raw);
+            const [root] = rel.split("/");
+            if (!LOCAL_ROOTS.has(root) && !REMOTE_ROOTS.has(root)) {
+                throw new Error(
+                    `Unsupported ImportContent root "${root}" in ${path.relative(REPO_ROOT, mdxPath)}: ${rel}`,
+                );
+            }
+            if (!wanted.has(rel)) wanted.set(rel, mdxPath);
+        }
+    }
+
+    const entries = [];
+    const failures = [];
+    for (const rel of Array.from(wanted.keys()).sort()) {
+        try {
+            const resolved = await resolveSource(rel);
+            if (!resolved) {
+                failures.push(`${rel} (referenced from ${path.relative(REPO_ROOT, wanted.get(rel))})`);
+                continue;
+            }
+            if (process.env.DEBUG_IMPORT_CONTENT) {
+                console.log(`[generate-import-context] ${rel} <- ${resolved.from}`);
+            }
+            entries.push(`  ${JSON.stringify(rel)}: ${JSON.stringify(resolved.text)}`);
+        } catch (err) {
+            failures.push(`${rel}: ${err.message}`);
+        }
+    }
+
+    if (failures.length > 0) {
+        console.error("[generate-import-context] Unresolved ImportContent sources:");
+        for (const f of failures) console.error(`  - ${f}`);
+        process.exit(1);
+    }
+
+    const out = `// AUTO-GENERATED. Do not edit.
 // Generated by scripts/generate-import-context.js
 export const importContentMap = {
 ${entries.join(",\n")}
 };
 `;
 
-fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
-fs.writeFileSync(OUT_FILE, out, "utf8");
-console.log(`Wrote ${OUT_FILE} with ${entries.length} entries.`);
+    fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
+    fs.writeFileSync(OUT_FILE, out, "utf8");
+    console.log(`Wrote ${OUT_FILE} with ${entries.length} entries.`);
+}
+
+main().catch((err) => {
+    console.error(`[generate-import-context] ${err.message}`);
+    process.exit(1);
+});
