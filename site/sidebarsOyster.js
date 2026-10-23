@@ -9,15 +9,8 @@
 /** @type {import("@docusaurus/plugin-content-docs").SidebarsConfig} */
 const sidebars = {
   "oysterSidebar": [
-    {
-      "type": "category",
-      "label": "Get Started",
-      "collapsed": false,
-      "items": [
-        "introduction",
-        "getting-started"
-      ]
-    },
+    "introduction",
+    "getting-started",
     {
       "type": "category",
       "label": "JSON API Reference",

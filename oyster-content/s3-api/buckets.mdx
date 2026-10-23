@@ -1,7 +1,9 @@
-# Bucket Operations
+---
+title: "Bucket Operations"
+---
 
 All bucket operations require S3 authentication (SigV4). See
-[S3 Setup](setup.md) for configuration.
+[S3 Setup](setup.mdx) for configuration.
 
 ## CreateBucket
 
@@ -19,7 +21,7 @@ aws --profile oyster s3api create-bucket --bucket my-bucket
 }
 ```
 
-Bucket names follow the same [naming rules](../json-api/buckets.md#bucket-naming-rules)
+Bucket names follow the same [naming rules](../json-api/buckets.mdx#bucket-naming-rules)
 as the JSON API: 3–63 characters, lowercase letters/digits/hyphens only,
 no consecutive hyphens, no IP address format, and no reserved names
 (`health`, `ready`, `metrics`, `api`).

@@ -1,4 +1,6 @@
-# Limitations
+---
+title: "Limitations"
+---
 
 Oyster implements the most commonly used S3 operations. The sections below document
 what's different from a full AWS S3 deployment.
@@ -44,7 +46,7 @@ lifetime, with no per-object expiration to set. Oyster runs a
 background extension service that renews the pool before it expires,
 so objects persist indefinitely as long as the service is running and
 the account's wallet stays funded. See
-[Blob Lifecycle](../guides/blob-lifecycle.md) for the model.
+[Blob Lifecycle](../guides/blob-lifecycle.mdx) for the model.
 
 ### Bucket Naming
 

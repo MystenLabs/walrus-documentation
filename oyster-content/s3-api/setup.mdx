@@ -1,16 +1,18 @@
-# S3 Setup
+---
+title: "S3 Setup"
+---
 
 Configure the AWS CLI and SDKs to work with Oyster's S3-compatible API using the steps below.
 
 ## Prerequisites
 
-- An Oyster API key (Bearer token); see [Getting Started](../getting-started.md)
+- An Oyster API key (Bearer token); see [Getting Started](../getting-started.mdx)
 - [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
   (for CLI usage)
 
 ## Step 1: Create S3 Access Keys
 
-Access keys are created through the [Admin API](../json-api/admin.md#create-access-key)
+Access keys are created through the [Admin API](../json-api/admin.mdx#create-access-key)
 using admin-key authentication:
 
 ```bash
@@ -22,7 +24,7 @@ curl -s -X POST \
 Save the `access_key_id` and `secret_access_key` from the response, because the
 secret is only shown once.
 
-See [S3 Access Keys](../json-api/access-keys.md) for more on key format
+See [S3 Access Keys](../json-api/access-keys.mdx) for more on key format
 and limits.
 
 ## Step 2: Configure the AWS CLI
@@ -135,6 +137,9 @@ let config = aws_sdk_s3::Config::builder()
 let client = aws_sdk_s3::Client::from_conf(config);
 ```
 
-> **Important:** Always set `force_path_style: true` (or equivalent). Oyster
-> uses path-style URLs (`endpoint/bucket/key`), not virtual-hosted-style
-> (`bucket.endpoint/key`).
+:::warning
+Always set `force_path_style: true` (or equivalent). Oyster
+uses path-style URLs (`endpoint/bucket/key`), not virtual-hosted-style
+(`bucket.endpoint/key`).
+:::
+

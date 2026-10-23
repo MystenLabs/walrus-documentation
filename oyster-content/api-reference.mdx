@@ -1,0 +1,24 @@
+---
+title: "Interactive API Reference"
+description: "Explore the Walrus Oyster API interactively using the OpenAPI specification."
+hide_table_of_contents: true
+hide_title: true
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+<BrowserOnly>
+  {() => (
+    <iframe
+      src="https://oyster.testnet.mystenlabs.com/api/docs"
+      style={{
+        width: '100%',
+        height: 'calc(100vh - 60px)',
+        border: 'none',
+        display: 'block',
+      }}
+      title="Walrus Oyster API Reference"
+      allow="clipboard-write"
+    />
+  )}
+</BrowserOnly>

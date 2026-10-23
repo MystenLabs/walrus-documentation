@@ -1,9 +1,11 @@
-# Admin API
+---
+title: "Admin API"
+---
 
 The Admin API lets app operators manage accounts, API keys, and S3 access
 keys. All admin endpoints require **admin-key** authentication (long-lived
 per-app Bearer tokens issued through `oysterd app issue-admin-key`;
-see [Authentication](authentication.md)).
+see [Authentication](authentication.mdx)).
 
 An app can only manage accounts it created. Attempting to access another
 app's accounts returns **403 Forbidden**.
@@ -318,7 +320,7 @@ curl -s -X DELETE \
 ## S3 Access Keys
 
 These endpoints manage S3-compatible access keys for accounts. See
-[S3 Access Keys](access-keys.md) for key format details and limits.
+[S3 Access Keys](access-keys.mdx) for key format details and limits.
 
 ### Create Access Key
 
@@ -503,7 +505,7 @@ Registers or rotates the webhook URL for the authenticated app. Each
 call generates a fresh Ed25519 keypair; the response is the only
 opportunity to capture the public key for verification. Subsequent
 deliveries are signed with the corresponding private key. See
-[Webhooks](../guides/webhooks.md) for the signature format.
+[Webhooks](../guides/webhooks.mdx) for the signature format.
 
 **Request body:**
 
@@ -556,7 +558,7 @@ oysterd extend     # run the background blob-extension service only
 
 `oysterd serve` is the default; running `oysterd` with no subcommand is
 equivalent. `oysterd extend` runs only the background task that renews
-expiring storage pools (see [Blob Lifecycle](../guides/blob-lifecycle.md)),
+expiring storage pools (see [Blob Lifecycle](../guides/blob-lifecycle.mdx)),
 without serving the API.
 
 The global `--pearl-service-secret-file <PATH>` flag reads the Pearl service

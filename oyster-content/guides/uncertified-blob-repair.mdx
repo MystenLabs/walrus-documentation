@@ -1,4 +1,6 @@
-# Repairing Uncertified Blobs
+---
+title: "Repairing Uncertified Blobs"
+---
 
 An upload is three steps in order: register the `PooledBlob` in the
 account's `StoragePool`, push the slivers to the storage nodes, and
@@ -14,9 +16,9 @@ answered `201` with the existing `PooledBlob` without certifying it.
 The row it wrote then short-circuited every later `PUT` of the same
 content, so the client had no way to repair it, and had already
 discarded the bytes. The upload path now finishes the certify on the
-retry (see [Blob Lifecycle](blob-lifecycle.md#upload-failure-and-retry))
+retry (see [Blob Lifecycle](blob-lifecycle.mdx#upload-failure-and-retry))
 and on any later dedup hit (see
-[Content Addressing](content-addressing.md#deduplication)). This guide
+[Content Addressing](content-addressing.mdx#deduplication)). This guide
 is the bulk pass for the blobs nobody re-uploads: `oysterd blobs
 repair`.
 

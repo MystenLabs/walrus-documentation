@@ -1,4 +1,6 @@
-# oyster-cli Quick Start
+---
+title: "oyster-cli Quick Start"
+---
 
 `oyster-cli` is a command-line tool for interacting with Oyster. It wraps
 the JSON API and handles authentication, content-type detection, and
@@ -37,8 +39,11 @@ contexts:
     api_key: "dev-key"
 ```
 
-> **Important:** The URL must include the `/api/v1` path. The CLI appends
-> endpoint paths (such as `/buckets`) directly to this URL.
+:::warning
+The URL must include the `/api/v1` path. The CLI appends
+endpoint paths (such as `/buckets`) directly to this URL.
+:::
+
 
 Precedence for the active-context name (highest first):
 
@@ -165,7 +170,7 @@ oyster delete hello.txt --bucket my-bucket
 
 The `oyster tags` command group manages the `key=value` tags on a blob. Tags
 are stored in Oyster's database and shared with the
-[S3 object-tagging](../s3-api/objects.md#object-tagging) operations. Limits:
+[S3 object-tagging](../s3-api/objects.mdx#object-tagging) operations. Limits:
 max 10 tags, key ≤ 128 bytes, value ≤ 256 bytes, set ≤ 2048 bytes, and a
 restricted charset (ASCII alphanumerics plus space and `+ - = . _ : / @`).
 
@@ -213,7 +218,7 @@ oyster tags merge --bucket my-bucket --key hello.txt --tag team=storage
 ## API key and access key management
 
 API keys and S3 access keys are managed by operators through the Admin API,
-not through the CLI. See the [Admin API docs](../json-api/admin.md) for
+not through the CLI. See the [Admin API docs](../json-api/admin.mdx) for
 details on creating, listing, and revoking keys.
 
 ## Other commands
@@ -279,7 +284,7 @@ app are supported with no cap.
 ### Webhook management
 
 `oyster app webhook` drives the self-service webhook endpoints
-([Set Webhook URL](../json-api/admin.md#set-webhook-url)) using the active
+([Set Webhook URL](../json-api/admin.mdx#set-webhook-url)) using the active
 context's admin key. When the context defines more than one app, pass
 `--app <name>` to choose which one.
 
@@ -295,7 +300,7 @@ oyster app webhook set https://example.com/oyster/webhook
 oyster app webhook clear
 ```
 
-See [Webhooks](webhooks.md) for the delivery signature format.
+See [Webhooks](webhooks.mdx) for the delivery signature format.
 
 ## Account management
 

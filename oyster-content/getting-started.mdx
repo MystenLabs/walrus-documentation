@@ -1,4 +1,6 @@
-# Getting Started
+---
+title: "Getting Started"
+---
 
 Follow these steps to complete your first interactions with Oyster. By the end,
 you have created a bucket, uploaded a blob, and downloaded it back.
@@ -19,7 +21,7 @@ the route prefix selects which credential table is consulted.
 ### For Operators
 
 The server operator creates an app, gets back a first admin key, and
-provisions accounts. See the [Admin API docs](json-api/admin.md) for full
+provisions accounts. See the [Admin API docs](json-api/admin.mdx) for full
 details.
 
 ```bash
@@ -200,15 +202,18 @@ Response:
 }
 ```
 
-> **Important:** The `bearer_token` field is only shown once. Save it immediately.
+:::warning
+The `bearer_token` field is only shown once. Save it immediately.
+:::
 
-See the [Admin API docs](json-api/admin.md#create-api-key) for full
+
+See the [Admin API docs](json-api/admin.mdx#create-api-key) for full
 details including error handling and key revocation.
 
 ## Set Up S3 Access Keys (Operator)
 
 To use the AWS CLI or any S3-compatible SDK, the operator creates S3 access
-keys through the [Admin API](json-api/admin.md#create-access-key). This
+keys through the [Admin API](json-api/admin.mdx#create-access-key). This
 requires the `$ADMIN_KEY` and `$ACCOUNT_ID` variables from the
 [Obtaining Credentials](#obtaining-credentials) section.
 
@@ -228,8 +233,11 @@ Response:
 }
 ```
 
-> **Important:** The `secret_access_key` is only shown once. Save it
-> immediately. You can have up to 3 active S3 access keys per account.
+:::warning
+The `secret_access_key` is only shown once. Save it
+immediately. You can have up to 3 active S3 access keys per account.
+:::
+
 
 Then configure the AWS CLI:
 
@@ -255,13 +263,13 @@ aws --profile oyster s3api get-object \
   --bucket my-s3-bucket --key hello.txt downloaded.txt
 ```
 
-For the full S3 API reference, see **[S3 API Reference](s3-api/README.md)**.
+For the full S3 API reference, see **[S3 API Reference](s3-api/index.mdx)**.
 
 ## What's Next
 
-- **[JSON API Reference](json-api/README.md)**: detailed documentation of
+- **[JSON API Reference](json-api/index.mdx)**: detailed documentation of
   every endpoint.
-- **[S3 API Reference](s3-api/README.md)**: complete S3-compatible
+- **[S3 API Reference](s3-api/index.mdx)**: complete S3-compatible
   operations and setup.
-- **[Guides](guides/README.md)**: CLI quick start, SDK examples, and
+- **[Guides](guides/index.mdx)**: CLI quick start, SDK examples, and
   advanced topics.

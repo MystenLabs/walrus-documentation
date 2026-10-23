@@ -1,4 +1,6 @@
-# JSON API Reference
+---
+title: "JSON API Reference"
+---
 
 The Oyster JSON API is served under `/api/v1/`. All requests and responses
 use JSON (except blob content, which is raw binary). Authenticated endpoints
@@ -72,23 +74,23 @@ once here; per-route docs link back.
   Body carries a `funding_required: { wal_frost, sui_mist }`
   block (both decimal strings). Currently fires on
   `PUT /buckets/{bucket}/blobs/{key}` (see
-  [Store Blob](blobs.md#store-blob)) and
+  [Store Blob](blobs.mdx#store-blob)) and
   `DELETE /buckets/{bucket}/blobs/{key}` (see
-  [Delete Blob](blobs.md#delete-blob)). When the lookup itself
+  [Delete Blob](blobs.mdx#delete-blob)). When the lookup itself
   fails, `funding_required` is `null`.
 - **`CapExceeded` (400)**: the upload would push the account
   past its per-account `max_unencoded_bytes` cap. Body carries a
   `cap_exceeded` block pointing at the admin endpoint that can
   raise the cap. Currently fires on
   `PUT /buckets/{bucket}/blobs/{key}` (see
-  [Store Blob](blobs.md#store-blob)). The cap is an *upper* bound by
+  [Store Blob](blobs.mdx#store-blob)). The cap is an *upper* bound by
   default; a per-account
-  [`avg_blob_size`](admin.md#lower-bound-semantics-avg_blob_size)
+  [`avg_blob_size`](admin.mdx#lower-bound-semantics-avg_blob_size)
   turns it into a *lower* bound on storable capacity for blobs of
   that size.
 
 The admin-side onchain shrink endpoint
-([`PUT /accounts/{account_id}/max-storage`](admin.md#update-storage-cap))
+([`PUT /accounts/{account_id}/max-storage`](admin.mdx#update-storage-cap))
 has its own 400 variants (`would_orphan`, `shrink_aborted`)
 documented in the admin reference.
 

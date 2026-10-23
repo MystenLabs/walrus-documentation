@@ -1,4 +1,6 @@
-# Webhooks
+---
+title: "Webhooks"
+---
 
 Oyster posts a single webhook event: `account.funding_required`.
 It tells the owning app that an account's Pearl-derived wallet cannot
@@ -169,7 +171,7 @@ oyster app webhook clear
 is generated, so already-deployed receivers must be updated with the
 new key after each call. The corresponding HTTP endpoints are
 `PUT /api/v1/admin/app/webhook`, `DELETE /api/v1/admin/app/webhook`,
-and `GET /api/v1/admin/app`. See [Admin API](../json-api/admin.md).
+and `GET /api/v1/admin/app`. See [Admin API](../json-api/admin.mdx).
 
 ## Verifying signatures
 

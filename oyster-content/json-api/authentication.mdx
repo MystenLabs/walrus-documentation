@@ -1,4 +1,6 @@
-# Authentication
+---
+title: "Authentication"
+---
 
 Oyster uses **Bearer tokens** for authenticated routes plus **public access**
 for blob reads and infrastructure probes. There are two tiers of Bearer
@@ -45,7 +47,7 @@ curl -s \
 | Prefix | First 8 characters, used to identify keys without exposing the secret |
 
 API keys are provisioned through the Admin API (see
-[Admin](admin.md)). The full secret is shown **only once** at
+[Admin](admin.mdx)). The full secret is shown **only once** at
 creation time. A lost key cannot be recovered.
 
 ### Errors
