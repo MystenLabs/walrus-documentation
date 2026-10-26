@@ -104,8 +104,15 @@ function productKeyword(entry) {
   return slug.replace(/-v\d+\.\d+\.\d+$/, "");
 }
 
+const PRODUCT_TITLES = {
+  "Walrus Memory mcp": "Walrus Memory MCP",
+  "Walrus Memory sdk": "Walrus Memory TypeScript SDK",
+  "Walrus Memory python": "Walrus Memory Python SDK",
+  "Walrus Memory openclaw": "Walrus Memory OpenClaw",
+};
+
 function renderFile(entry, description, summary) {
-  const title = `${entry.product} v${entry.version}`;
+  const title = `${PRODUCT_TITLES[entry.product] ?? entry.product} v${entry.version}`;
   // Walrus releases are network-paired, so the line and keywords name the
   // network. Product releases (Walrus Memory packages, Walrus Sites) carry
   // the product label in `network`; the house format shows only the date.
@@ -142,6 +149,11 @@ deciding whether the release matters to them.
 Write from the release body you are given. Do not add facts that are not in it, do not speculate
 about motivation, and do not mention pull request numbers, commit hashes, or links; the page lists
 the linked changes separately below your summary.
+
+Leave out anything addressed to maintainers rather than users: publishing steps, version pins to
+retarget, "unreleased" status, CI or packaging details. If, after that, the body announces a version
+without describing any user-facing change, reply with exactly NO_CHANGES and nothing else. Never
+write a summary about the release notes being thin; the page has fixed text for that case.
 
 Style, from the Sui Documentation Style Guide:
 - US English, present tense, active voice, second person where a reader is addressed.
@@ -185,6 +197,7 @@ function userPrompt(entry) {
 }
 
 function parseDraft(text) {
+  if (text.trim() === "NO_CHANGES") return null;
   const match = text.match(/DESCRIPTION:\s*(.+?)\s*\n+SUMMARY:\s*\n([\s\S]+)$/);
   if (!match) throw new Error("model output did not match the DESCRIPTION/SUMMARY shape");
   const description = match[1].replace(/\s+/g, " ").trim();
@@ -266,6 +279,11 @@ async function main() {
       } else {
         draft = await draftWithClaude(client, args.model, entry);
         how = args.model;
+        if (draft === null) {
+          // The model found no user-facing change behind the body.
+          draft = { description: MAINTENANCE_SUMMARY, summary: MAINTENANCE_SUMMARY };
+          how = `maintenance, per ${args.model}`;
+        }
       }
     } catch (err) {
       const reason =
