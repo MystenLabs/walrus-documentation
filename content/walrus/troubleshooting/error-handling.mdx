@@ -10,7 +10,7 @@ keywords:
   - SDK
   - debugging
 goal:
-  description: Reader can handle Walrus errors robustly with retries, on-chain verification, and consistency checks
+  description: Reader can handle Walrus errors robustly with retries, onchain verification, and consistency checks
   requires:
     - has_frontmatter:
         - title
@@ -27,7 +27,7 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - How do I verify on-chain state after timeouts?
+  - How do I verify onchain state after timeouts?
   - How do I implement retry logic with exponential backoff?
   - How do I use strict consistency checks for critical data?
 answer: Best practices for handling Walrus errors.
@@ -37,9 +37,9 @@ Handle Walrus errors in your applications by retrying transient failures with ex
 
 ## Which errors can you retry?
 
-Not all errors are equal. Some are safe to retry, some require you to check on-chain state (an operation might have succeeded on-chain even though the client did not receive a confirmation), and some require you to fix your input before trying again. The following table summarizes the most common failure types:
+Not all errors are equal. Some are safe to retry, some require you to check onchain state (an operation might have succeeded onchain even though the client did not receive a confirmation), and some require you to fix your input before trying again. The following table summarizes the most common failure types:
 
-| **Failure type** | **Retryable** | **Check on-chain state** | **Recommended action** |
+| **Failure type** | **Retryable** | **Check onchain state** | **Recommended action** |
 |---|---|---|---|
 | Network timeout | Yes | Yes | Retry with exponential backoff |
 | Publisher or aggregator down | Yes | No | Try a different endpoint or use the CLI |
@@ -51,7 +51,7 @@ Not all errors are equal. Some are safe to retry, some require you to check on-c
 
 :::caution
 
-For transaction timeouts, always check on-chain state before retrying. A timed-out transaction might have succeeded. Retrying without checking can result in duplicate blob registrations and wasted funds.
+For transaction timeouts, always check onchain state before retrying. A timed-out transaction might have succeeded. Retrying without checking can result in duplicate blob registrations and wasted funds.
 
 :::
 
@@ -93,11 +93,11 @@ const result = await retryWithBackoff(() =>
 );
 ```
 
-Only retry errors that are transient. Errors such as insufficient funds, invalid blob IDs, or blobs that are too large do not benefit from retries. Note that the `for` loop already bounds `attempt` to `maxRetries`, so the extra `attempt <= maxRetries` check in the `catch` block is always true and is redundant.
+Only retry errors that are transient. Errors such as insufficient funds, invalid blob IDs, or blobs that are too large do not benefit from retries.
 
 ## How to verify onchain state after a timeout
 
-When an upload or transaction times out, the operation might have succeeded on-chain even though the client did not receive a confirmation. Always check before retrying.
+When an upload or transaction times out, the operation might have succeeded onchain even though the client did not receive a confirmation. Always check before retrying.
 
 Using the CLI:
 
@@ -111,7 +111,7 @@ Using the Walrus CLI:
 $ walrus blob-status --blob-id BLOB_ID
 ```
 
-If the transaction succeeded, proceed normally. If it was not found, the transaction might have been dropped from the mempool and is safe to retry.
+If the transaction succeeded, proceed normally. If the transaction does not appear, the network might have dropped it from the mempool, and it is safe to retry.
 
 ## Capture storage node errors with the TypeScript SDK
 
