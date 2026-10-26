@@ -35,7 +35,7 @@ answer: >-
 
 Add Walrus Memory to Claude Code so it recalls context and saves durable facts as you work. Install it as a **plugin** (recommended; adds automatic-memory hooks) or as **MCP-only** (just the tools).
 
-This guide covers Claude Code, including the **Code tab inside Claude Desktop**.
+These steps apply to Claude Code, including the **Code tab inside Claude Desktop**.
 For regular Desktop or web chat, use the [OAuth custom connector](/walrus-memory/mcp/claude-connector),
 which does not require Node.js or the Claude Code CLI.
 
@@ -44,7 +44,7 @@ which does not require Node.js or the Claude Code CLI.
 <Tabs>
 <TabItem value="prereq" label="Prerequisites">
 
-- [x] Confirm `claude --version` works in the terminal you uses. Installing the Desktop app does not guarantee the CLI is on your `PATH`; see [Claude Code setup](https://code.claude.com/docs/en/setup).
+- [x] Confirm `claude --version` works in the terminal you use. Installing the Desktop app does not guarantee the CLI is on your `PATH`; see [Claude Code setup](https://code.claude.com/docs/en/setup).
 - [x] Install Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x) with `npx` on your `PATH`; check with `node --version`.
 - [x] Use a Claude Code version with plugin support if you want the plugin install; the `/plugin` command confirms support, and MCP-only works on any version with `claude mcp add`.
 - [x] Have a [Walrus Memory account](/walrus-memory/fundamentals/concepts/ownership-and-access) ready. An unauthenticated memory-tool call returns sign-in instructions rather than signing you in, so ask the agent to run `memwal_login` and open the URL it returns. You can create the account during that flow at [memory.walrus.xyz](https://memory.walrus.xyz). Config files carry no keys: credentials land in `~/.memwal/credentials.json` after sign-in.
@@ -85,7 +85,7 @@ Run these as separate commands in a terminal, stopping if one fails. Agents with
 
 Restart Claude Code, then ask the agent to run `memwal_login` and open the URL it returns to connect your wallet. MCP-only is not a complete Claude Code setup: without the plugin, the agent often writes Claude's built-in `MEMORY.md` instead of calling `memwal_remember`.
 
-        Claude's system prompt still prefers `MEMORY.md` over MCP instructions. Show this block, get the user's go-ahead, then merge it into `~/.claude/CLAUDE.md` (do not replace the file). If `<!-- memwal:start -->` ... `<!-- memwal:end -->` is already there, replace that span only. Turn off Claude's built-in / native memory in account settings if it is on:
+        Claude's system prompt still prefers `MEMORY.md` over MCP instructions. Show this block, get the user's go-ahead, then merge it into `~/.claude/CLAUDE.md` (do not replace the file). If `<!-- memwal:start -->` ... `<!-- memwal:end -->` is already there, replace that span only. Turn off Claude's built-in (native) memory in account settings if it is on:
 
         ```markdown
         <!-- memwal:start -->
@@ -116,11 +116,11 @@ Restart Claude Code, then ask the agent to run `memwal_login` and open the URL i
 | **Component** | **Plugin** | **MCP-only** |
 |---|:-:|:-:|
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
-| Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
+| Lifecycle hooks (automatic recall and save) | ✓ | ✗ |
 
 MCP-only still saves and recalls on its own because the tools are proactive. The plugin adds hooks that reinforce the behavior and make the agent **prefer Walrus Memory over Claude Code's built-in memory**.
 
-The plugin also starts the server differently. Instead of resolving the package name with `npx`, it installs the pinned version once into `~/.memwal/runtime/memwal-mcp@<version>` and launches that absolute path. `npx` resolves a name against the directory the client was started in, which is your project, so a package installed there under the same name and claiming the pinned version would have been run instead, the version pin does not prevent that. The plugin's launcher never looks at your project's `node_modules`, and it fails rather than falling back if the pinned version cannot be installed.
+The plugin also starts the server differently. Instead of resolving the package name with `npx`, it installs the pinned version once into `~/.memwal/runtime/memwal-mcp@<version>` and launches that absolute path. `npx` resolves a name against the directory you started the client in, which is your project, so if your project contains a package with the same name that claims the pinned version, `npx` runs that package instead. The version pin does not prevent that. The plugin's launcher never looks at your project's `node_modules`, and it fails rather than falling back if it cannot install the pinned version.
 
 ## Available tools
 
@@ -141,7 +141,7 @@ See [Reference](/walrus-memory/mcp/reference) for full parameters.
 | **Hook** | **Event** | **What it does** |
 |------|-------|--------------|
 | Session start | `SessionStart` | Announces that memory is active and reminds the agent to use the `memwal_*` tools (preferring them over any built-in memory). |
-| User prompt | `UserPromptSubmit` | Injects a decision rubric so the agent chooses recall vs save from meaning (any language or spelling). |
+| User prompt | `UserPromptSubmit` | Injects a decision rubric so the agent chooses recall or save from meaning (any language or spelling). |
 | Post-tool | `PostToolUse` (Bash) | When a command's output looks like an error, reminds the agent to recall prior fixes and save the resolution. |
 
 ## Example workflow
@@ -184,9 +184,9 @@ Work through these three checks in order; each one isolates a different layer.
 ## Troubleshooting FAQ
 
 **`/mcp` reports memwal as failed or missing.**
-Restart Claude Code first; MCP servers load at startup. If it still fails, run `npx -y @mysten-incubation/memwal-mcp --help` in a plain terminal: that surfaces the real error, most often a Node version below the supported security patch minimum (22.23.4 / 24.22.1 / 26.12.1) or a `PATH` without `npx` in the environment Claude Code inherits. For a full trace, add `MEMWAL_MCP_DEBUG=1` to the server's environment.
+Restart Claude Code first; MCP servers load at startup. If it still fails, run `npx -y @mysten-incubation/memwal-mcp --help` in a plain terminal: that surfaces the real error, most often a Node version below the supported security patch minimum (22.23.4, 24.22.1, or 26.12.1) or a `PATH` without `npx` in the environment Claude Code inherits. For a full trace, add `MEMWAL_MCP_DEBUG=1` to the server's environment.
 
-**`/plugin` commands are not recognized.**
+**Claude Code does not recognize `/plugin` commands.**
 Your Claude Code version predates plugin support. Update Claude Code, or use the MCP-only install; the memory tools behave the same, you only lose the automatic-memory hooks.
 
 **The browser sign-in cannot open (SSH, containers, headless machines).**
@@ -212,10 +212,10 @@ Every recall runs inside one account and namespace. If you set `MEMWAL_NAMESPACE
 The lifecycle hooks ship only with the **plugin** install; MCP-only provides the tools without hooks. Confirm the plugin appears in `/plugin` and restart after installing.
 
 **The agent writes `MEMORY.md` instead of calling `memwal_remember`.**
-Claude Code's built-in memory is in the system prompt and outranks MCP instructions. Confirm the plugin is enabled, merge the Walrus Memory block into `~/.claude/CLAUDE.md`, and turn off Claude's built-in / native memory in account settings.
+Claude Code's built-in memory is in the system prompt and outranks MCP instructions. Confirm the plugin is enabled, merge the Walrus Memory block into `~/.claude/CLAUDE.md`, and turn off Claude's built-in (native) memory in account settings.
 
 **Tool calls fail with an authentication error after working before.**
 The stored credential can lapse if you revoked its delegate key from the dashboard. Run `memwal_logout` then `memwal_login` to mint a fresh delegate key.
 
 **Corporate proxy or restricted network.**
-The server needs outbound HTTPS to `relayer.memory.walrus.xyz` (and the sign-in flow needs `memory.walrus.xyz`). If only the relayer is blocked, the HTTP transport option above fails identically; allowlist both hosts.
+The server needs outbound HTTPS to `relayer.memory.walrus.xyz` (and the sign-in flow needs `memory.walrus.xyz`). If the network blocks only the relayer, the HTTP transport option above fails identically; allowlist both hosts.
