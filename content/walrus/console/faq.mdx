@@ -34,7 +34,7 @@ With a Google account or an Apple account. Walrus Console uses Sui [zkLogin](htt
 
 ### What are the storage limits?
 
-Each space holds up to 5 GB of storage and five folders, and each upload is capped at 100 MiB. See [Storage limits](./overview#storage-limits).
+Each space holds up to 5 GB of storage and five folders, and Console caps each upload at 100 MiB. See [Storage limits](./overview#storage-limits).
 
 ### What happens when you hit a limit?
 
@@ -42,7 +42,7 @@ Uploads stop at the storage cap, and a sixth folder returns a `plan_limit_exceed
 
 ### Can you delete your account?
 
-Yes, from **Settings**, under **Account Deletion**: choose **Delete account**, type `DELETE`, then confirm. Deletion removes your folders, files, and API keys permanently and cannot be undone. Memories in Walrus Memory are not affected. See [Delete your account](./overview#delete-your-account).
+Yes, from **Settings**, under **Account Deletion**: choose **Delete account**, type `DELETE`, then confirm. Deletion removes your folders, files, and API keys permanently, and you cannot undo it. Deletion does not affect memories in Walrus Memory. See [Delete your account](./overview#delete-your-account).
 
 ## Your files
 
@@ -58,7 +58,7 @@ The per-upload cap is 100 MiB. An upload above the cap fails with a `payload_too
 
 ### Can Walrus Console see files you already uploaded with the Walrus CLI or SDK?
 
-No. Walrus Console shows only the files you upload through Console, the API, or the MCP server. Files you stored on Walrus directly with the CLI or an SDK are not listed.
+No. Walrus Console shows only the files you upload through Console, the API, or the MCP server. Console does not list files you stored on Walrus directly with the CLI or an SDK.
 
 ### Can you delete a file?
 
@@ -70,7 +70,7 @@ Programmatic access, agent clients, and what a team shares today.
 
 ### What is the API key for?
 
-Everything programmatic. Both the MCP server and any application you write against the API authenticate with it. You mint keys under **Integrations** in Walrus Console, choose a `read_write` or `read_only` role for each, and revoke a key whenever you want. Pick a plain **API key** for the MCP server and for your own applications; a **Management API key** mints further keys programmatically but cannot upload, download, or manage assets. Console shows the full key once, at creation, so store it like a cloud secret access key. You can also rotate a key from Integrations. See [API keys and roles](./overview#api-keys-and-roles).
+Everything programmatic. Both the MCP server and any application you write against the API authenticate with it. You mint keys under **Integrations** in Walrus Console, choose a `read_write` or `read_only` role for each, and revoke a key whenever you want. Pick a plain **API key** for the MCP server and for your own applications; a **Management API key** mints further keys programmatically but cannot upload, download, or manage assets. Console shows the full key once, at creation, so store it like a cloud secret access key. You can also rotate a key from **Integrations**. See [API keys and roles](./overview#api-keys-and-roles).
 
 ### What happens when you rotate an API key?
 
