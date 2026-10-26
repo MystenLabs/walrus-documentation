@@ -51,7 +51,7 @@ The public `wal.app` portal only serves Mainnet sites linked with SuiNS names. I
 
 :::
 
-## Public portals
+## Which public portals are available? {#public-portals}
 
 A list of public portals is maintained in the [Walrus docs repository](https://github.com/MystenLabs/walrus-documentation). Portals can self-identify by opening a PR that adds an entry to `site/static/portals.json`.
 
@@ -86,7 +86,7 @@ Testnet is the development and staging network. Sites deployed on Testnet are on
 | Epoch duration | How long each storage epoch lasts. Shorter than Mainnet, suited for development and testing. | 1 day |
 | Public portal | The Walrus Foundation does not operate a public Testnet portal. | No, self-host or run locally |
 
-## Portal configuration {#configuration}
+## How to configure a local portal {#configuration}
 
 The `portal-config.yaml` file is the primary configuration file for a Walrus Sites server portal. It sets the network, onchain addresses, URL endpoints, and feature flags the portal uses at runtime.
 
@@ -148,6 +148,8 @@ network: mainnet
 
 The onchain address of the Walrus Sites Move package. This address differs between Mainnet and Testnet and changes after package upgrades. 
 
+To get the current address, run the following command. Replace `<network>` with `mainnet` or `testnet` before you run it.
+
 ```sh
 $ git pull origin mainnet && grep 'site_package' portal/server/portal-config.<network>.example.yaml | awk '{print $2}' | tr -d '"'
 ```
@@ -180,6 +182,8 @@ site_package: "0xf99aee9f21493e1590e7e5a9aea6f343a1f381031a04a732724871fc294be79
 #### `landing_page_oid_b36`
 
 The base-36 encoded object ID of the site the portal serves at its root domain. This is the page users see when they navigate to the portal directly, without a site-specific subdomain.
+
+To get the current value, run the following command. Replace `<network>` with `mainnet` or `testnet` before you run it.
 
 ```sh
 $ git pull origin mainnet && grep 'landing_page_oid_b36' portal/server/portal-config.<network>.example.yaml | awk '{print $2}' | tr -d '"'
