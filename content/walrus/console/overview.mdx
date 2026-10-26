@@ -19,7 +19,7 @@ keywords:
 
 Walrus Console is the developer-first interface for interacting with the Walrus network. It gives you a hosted place to store, manage, and serve data without running your own Walrus client or handling wallets and tokens directly. You sign in and upload your first file in minutes, then manage everything from one place; when you want programmatic access, you mint an API key.
 
-## How Walrus Console relates to Walrus
+## How does Walrus Console relate to Walrus?
 
 Walrus is the underlying protocol: a decentralized network that stores data as blobs, coordinated onchain through Sui. You can use Walrus directly through the CLI and SDKs, which give you low-level control over blobs, storage epochs, and payments.
 
@@ -31,7 +31,7 @@ Console organizes your data in three levels.
 
 1. A **space** is the top-level container tied to your account. Console creates a **Personal Space** for you automatically when you sign up. A space tracks how much storage you have used against your storage cap.
 
-2. A **folder** is a named container inside a space that holds files. All folders are private and encrypted with [Seal](/docs/data-security).
+2. A **folder** is a named container inside a space that holds files. All folders are private and encrypted with [Seal](/docs/data-security), so you cannot make a folder public.
 
 3. A **file** is an individual object that lives inside a folder. Uploads are asynchronous: you upload a file, then poll its status until Console confirms that Walrus stores it. Each file can carry metadata you define, which you can use later to search and organize your data.
 
@@ -89,7 +89,7 @@ Walrus storage is time-bound. You pay to store data for a number of storage epoc
 
 Console extends the storage of your files automatically before it expires, so you keep your data without a manual renewal step. See [Storage, Epochs, and Renewal](./storage-epochs).
 
-## Storage limits
+## What are the storage limits?
 
 Each space holds up to 5 GB of storage and five folders, and each upload is capped at 100 MiB. Console manages WAL token handling on your behalf.
 
