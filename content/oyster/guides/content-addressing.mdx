@@ -1,9 +1,11 @@
 ---
 title: "Content Addressing"
+description: Oyster identifies blobs by a hash of their contents, which enables deduplication, integrity verification, and content-based retrieval.
+keywords: [ content addressing, blob ID, BLAKE2s-256, deduplication, reference counting, Oyster ]
 ---
 
 Oyster uses **content addressing** to identify blobs. A blob's
-identity is derived from its contents, not from where it is stored. This
+identity comes from its contents, not from its storage location. This
 enables deduplication, integrity verification, and content-based retrieval.
 
 ## What is a blob ID?
@@ -16,9 +18,9 @@ of the raw bytes. This produces a 64-character hex string called the
 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
 ```
 
-This blob ID is returned in the upload response and stored alongside the
+The server returns this blob ID in the upload response and stores it alongside the
 object metadata. The same data always produces the same blob ID, regardless
-of which bucket or key it's stored under.
+of which bucket or key holds it.
 
 ## Deduplication
 
@@ -42,13 +44,13 @@ identical. The underlying storage holds only one copy.
 
 The dedup short-circuit only trusts a `blobs` row whose
 `certified_epoch` is set. That column records that Oyster saw the
-on-chain `PooledBlob` certified; every upload since migration 026
-writes it. A row without it (written before the migration, or for a
-blob whose certify never ran) is checked against the chain on its
-next dedup hit: an already-certified blob is stamped and reused, an
+onchain `PooledBlob` certified; every upload since migration 026
+writes it. Oyster checks a row without it (written before the migration, or for a
+blob whose certify never ran) against the chain on its
+next dedup hit: Oyster stamps and reuses an already-certified blob, and an
 uncertified one gets its sliver upload and certify finished first
 (`oyster_dedup_certify_verify_total{certified="already"|"completed"}`).
-Either way the row is stamped, so the chain read happens once per row.
+Either way Oyster stamps the row, so the chain read happens once per row.
 
 ## Reference counting
 
@@ -60,8 +62,8 @@ bucket-a/photo.png  →  blob_id: abc123...  (ref count: 2)
 bucket-b/copy.png   →  blob_id: abc123...
 ```
 
-When you delete a key, Oyster removes that reference. The physical blob
-data is only deleted from storage when **all references are removed**:
+When you delete a key, Oyster removes that reference. Oyster deletes the physical blob
+data from storage only when **you remove all references**:
 
 ```bash
 # Delete one reference — blob data still exists
@@ -95,11 +97,11 @@ database or onchain) and want to retrieve the data directly.
 
 ## Practical implications
 
-- **Storage efficiency**: identical files across buckets cost no extra
+- **Storage efficiency:** Identical files across buckets cost no extra
   storage.
-- **Safe deletion**: deleting a key never destroys data that other keys
+- **Safe deletion:** Deleting a key never destroys data that other keys
   depend on.
-- **Integrity**: the blob ID serves as a checksum; if the data is
+- **Integrity:** The blob ID serves as a checksum; if the data becomes
   corrupted, the hash does not match.
-- **Immutable content**: a given blob ID always maps to the same data.
+- **Immutable content:** A given blob ID always maps to the same data.
   Overwriting a key creates a new blob with a new blob ID.
