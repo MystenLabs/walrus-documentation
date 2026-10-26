@@ -1,21 +1,23 @@
 ---
 title: "S3 API Reference"
+description: Oyster provides an S3-compatible API on the same HTTP port as the JSON API, with SigV4 authentication through S3 access keys.
+keywords: [ S3, S3-compatible API, Oyster, SigV4, AWS CLI, boto3, AWS SDK, access keys, buckets, objects ]
 ---
 
 Oyster provides an S3-compatible API that works with the AWS CLI, `boto3`,
 the AWS SDK for JavaScript, and any other S3-compatible client. It uses
 standard AWS Signature Version 4 (SigV4) authentication.
 
-## How It Works
+## How it works
 
-The S3 API runs on the **same HTTP port** as the JSON API. Any request that
-doesn't match `/api/v1/`, `/health`, `/ready`, `/metrics`, or `/api/docs`
-is routed to the S3-compatible handler.
+The S3 API runs on the **same HTTP port** as the JSON API. Oyster routes any
+request that doesn't match `/api/v1/`, `/health`, `/ready`, `/metrics`, or
+`/api/docs` to the S3-compatible handler.
 
 This means you point your S3 client at the same `$OYSTER_URL`, with no separate
 port or endpoint needed.
 
-## Supported Operations
+## Supported operations
 
 | Category | Operations |
 |----------|------------|
@@ -28,13 +30,13 @@ full AWS S3.
 
 ## Authentication
 
-S3 requests are authenticated using **S3 access keys** (created through the
+Oyster authenticates S3 requests using **S3 access keys** (created through the
 [JSON API](../json-api/access-keys.mdx)). The AWS SDK and CLI handle SigV4
 signing automatically, so you just provide your access key ID and secret.
 
 Both APIs share the same database, so buckets and objects created through S3
 are visible in the JSON API and vice versa.
 
-## Getting Started
+## Getting started
 
 Head to [S3 Setup](setup.mdx) to configure your AWS CLI or SDK.

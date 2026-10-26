@@ -1,5 +1,7 @@
 ---
 title: "Object Operations"
+description: Upload, download, inspect, delete, list, and tag objects through the Oyster S3 API with SigV4 authentication.
+keywords: [ S3, Oyster, PutObject, GetObject, HeadObject, DeleteObject, ListObjectsV2, object tagging, SigV4 ]
 ---
 
 All S3 operations require authentication (SigV4), including reads. See
@@ -11,7 +13,7 @@ All S3 operations require authentication (SigV4), including reads. See
 ## PutObject
 
 Uploads an object to a bucket. If an object with the same key already
-exists, it is replaced.
+exists, the upload replaces it.
 
 ```bash
 aws --profile oyster s3api put-object \
@@ -40,9 +42,9 @@ aws --profile oyster s3api put-object \
   --content-type "image/png"
 ```
 
-If `--content-type` is omitted, it defaults to `application/octet-stream`.
+If you omit `--content-type`, it defaults to `application/octet-stream`.
 
-### Setting Tags on Upload
+### Setting tags on upload
 
 Attach tags at upload time with `--tagging`, a URL-encoded query string of
 `key=value` pairs:
@@ -59,23 +61,23 @@ Tags set this way share the same store as the [JSON API](../json-api/blobs.mdx#b
 and the [Object Tagging](#object-tagging) operations below, and are subject to
 the same [tag rules](../json-api/blobs.mdx#tag-rules).
 
-### Key Behavior
+### Key behavior
 
-- **Overwrite:** Uploading to an existing key replaces the object
+- **Overwrite:** Uploading to an existing key replaces the object.
 - **Expiration:** Objects share the owning account's `StoragePool`
   lifetime; the background extension service renews the pool before it
-  expires (see [Blob Lifecycle](../guides/blob-lifecycle.mdx))
+  expires (see [Blob Lifecycle](../guides/blob-lifecycle.mdx)).
 - **Content-addressed:** Identical content produces the same blob ID
-  internally, enabling deduplication
+  internally, enabling deduplication.
 
-### Conditional Headers
+### Conditional headers
 
 PutObject supports `If-Match` and `If-None-Match` headers for safe writes:
 
-- **`If-None-Match: *`**: upload only if the key doesn't already exist
+- `If-None-Match: *`: Upload only if the key doesn't already exist
   (create-only semantics). Returns `412 PreconditionFailed` if the key
   exists.
-- **`If-Match: "<etag>"`**: overwrite only if the current object's ETag
+- `If-Match: "<etag>"`: Overwrite only if the current object's ETag
   matches. Returns `412 PreconditionFailed` on mismatch.
 
 ```bash
@@ -89,10 +91,10 @@ aws --profile oyster s3api put-object \
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
-| `PreconditionFailed` | `If-Match` / `If-None-Match` condition not met |
+| `PreconditionFailed` | `If-Match` or `If-None-Match` condition not met |
 
 ## GetObject
 
@@ -116,16 +118,16 @@ aws --profile oyster s3api get-object \
 }
 ```
 
-The file contents are written to the output path (`downloaded.txt` in this
-example).
+The command writes the file contents to the output path (`downloaded.txt` in
+this example).
 
-### Conditional Headers
+### Conditional headers
 
 GetObject supports `If-Match` and `If-None-Match` for cache validation:
 
-- **`If-Match: "<etag>"`**: return the object only if its ETag matches.
+- `If-Match: "<etag>"`: Return the object only if its ETag matches.
   Returns `412 PreconditionFailed` on mismatch.
-- **`If-None-Match: "<etag>"`**: return the object only if its ETag
+- `If-None-Match: "<etag>"`: Return the object only if its ETag
   differs. Returns `304 NotModified` if the ETag matches (useful for
   cache validation).
 
@@ -140,7 +142,7 @@ aws --profile oyster s3api get-object \
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 | `NoSuchKey` | Object key doesn't exist |
@@ -175,7 +177,7 @@ headers as [GetObject](#getobject). Returns `412 PreconditionFailed` or
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 | `NoSuchKey` | Object key doesn't exist |
@@ -197,19 +199,19 @@ Returns no output on success.
 This operation is **idempotent**: deleting a key that doesn't exist still
 returns success, matching standard S3 behavior.
 
-Deletion is **reference-counted**: the underlying blob data is only removed
-from storage when no other keys reference the same content.
+Deletion is **reference-counted**: Oyster removes the underlying blob data from
+storage only when no other keys reference the same content.
 
-### Conditional Headers
+### Conditional headers
 
 DeleteObject supports `If-Match` for safe deletion:
 
-- **`If-Match: "<etag>"`**: delete only if the object's ETag matches.
+- `If-Match: "<etag>"`: Delete only if the object's ETag matches.
   Returns `412 PreconditionFailed` on mismatch.
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 | `PreconditionFailed` | `If-Match` condition not met |
@@ -218,7 +220,7 @@ DeleteObject supports `If-Match` for safe deletion:
 
 Lists objects in a bucket with optional filtering and pagination.
 
-### Basic Listing
+### Basic listing
 
 ```bash
 aws --profile oyster s3api list-objects-v2 --bucket my-bucket
@@ -251,9 +253,9 @@ aws --profile oyster s3api list-objects-v2 --bucket my-bucket
 }
 ```
 
-### Filtering by Prefix
+### Filtering by prefix
 
-List only objects under a specific "folder":
+List only objects under a specific virtual folder:
 
 ```bash
 aws --profile oyster s3api list-objects-v2 \
@@ -261,7 +263,7 @@ aws --profile oyster s3api list-objects-v2 \
   --prefix "images/"
 ```
 
-### Simulating Folders with Delimiter
+### Simulating folders with delimiter
 
 Use `--delimiter "/"` to group objects into virtual folders:
 
@@ -297,12 +299,12 @@ aws --profile oyster s3api list-objects-v2 \
 }
 ```
 
-Objects directly at the root level appear in `Contents`, while "folders"
+Objects directly at the root level appear in `Contents`, while virtual folders
 (key prefixes before the delimiter) appear in `CommonPrefixes`.
 
-### Combining Prefix and Delimiter
+### Combining prefix and delimiter
 
-List the contents of a specific "folder":
+List the contents of a specific virtual folder:
 
 ```bash
 aws --profile oyster s3api list-objects-v2 \
@@ -328,29 +330,29 @@ aws --profile oyster s3api list-objects-v2 \
   --starting-token "last-key-from-previous-page"
 ```
 
-### Supported Parameters
+### Supported parameters
 
-| Parameter | AWS CLI Flag | Description |
+| Parameter | AWS CLI flag | Description |
 |-----------|--------------|-------------|
 | Prefix | `--prefix` | Filter keys that start with this string |
 | Delimiter | `--delimiter` | Group keys by this separator (for example, `/`) |
-| MaxKeys | `--max-keys` | Max objects to return (default: 1000) |
+| MaxKeys | `--max-keys` | Maximum objects to return (default: 1000) |
 | StartAfter | `--start-after` | Return keys after this value (lexicographic) |
 | ContinuationToken | `--starting-token` | Continue from a previous response |
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 
-## Object Tagging
+## Object tagging
 
-Oyster implements the three S3 object-tagging operations. Tags are stored in
-Oyster's database in the same `blob_tags` table used by the
-[JSON API tag endpoints](../json-api/blobs.mdx#blob-tags); a tag set through S3
+Oyster implements the three S3 object-tagging operations. Oyster stores tags in
+its database in the same `blob_tags` table that the
+[JSON API tag endpoints](../json-api/blobs.mdx#blob-tags) use; a tag set through S3
 is visible through the JSON API and vice versa. The same
-[tag rules](../json-api/blobs.mdx#tag-rules) apply (max 10 tags; key ≤ 128 B;
+[tag rules](../json-api/blobs.mdx#tag-rules) apply (maximum 10 tags; key ≤ 128 B;
 value ≤ 256 B; set ≤ 2048 B; restricted charset).
 
 ### PutObjectTagging
@@ -397,7 +399,7 @@ aws --profile oyster s3api delete-object-tagging \
 
 **Errors:**
 
-| S3 Error Code | Condition |
+| S3 error code | Condition |
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 | `NoSuchKey` | Object key doesn't exist |

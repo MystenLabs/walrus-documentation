@@ -1,8 +1,10 @@
 ---
 title: "S3 Setup"
+description: Configure the AWS CLI and AWS SDKs to use the Oyster S3-compatible API with S3 access keys and path-style addressing.
+keywords: [ Oyster, S3, S3-compatible API, AWS CLI, AWS SDK, access keys, boto3, path-style addressing ]
 ---
 
-Configure the AWS CLI and SDKs to work with Oyster's S3-compatible API using the steps below.
+Configure the AWS CLI and SDKs to work with Oyster's S3-compatible API.
 
 ## Prerequisites
 
@@ -10,9 +12,9 @@ Configure the AWS CLI and SDKs to work with Oyster's S3-compatible API using the
 - [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
   (for CLI usage)
 
-## Step 1: Create S3 Access Keys
+## Step 1: Create S3 access keys
 
-Access keys are created through the [Admin API](../json-api/admin.mdx#create-access-key)
+Create access keys through the [Admin API](../json-api/admin.mdx#create-access-key)
 using admin-key authentication:
 
 ```bash
@@ -21,8 +23,8 @@ curl -s -X POST \
   "$OYSTER_URL/api/v1/accounts/$ACCOUNT_ID/access-keys" | jq
 ```
 
-Save the `access_key_id` and `secret_access_key` from the response, because the
-secret is only shown once.
+Save the `access_key_id` and `secret_access_key` from the response, because
+Oyster shows the secret only once.
 
 See [S3 Access Keys](../json-api/access-keys.mdx) for more on key format
 and limits.
@@ -41,7 +43,7 @@ aws configure set endpoint_url "$OYSTER_URL" --profile oyster
 > **Region:** Oyster ignores the region value, but AWS SigV4
 > requires one. Use any valid region string, for example `us-east-1`.
 
-## Step 3: Verify Connectivity
+## Step 3: Verify connectivity
 
 ```bash
 aws --profile oyster s3api list-buckets
@@ -56,7 +58,7 @@ haven't created any yet):
 }
 ```
 
-## Quick Test
+## Quick test
 
 Try a full round-trip:
 
@@ -75,7 +77,7 @@ aws --profile oyster s3api get-object \
 cat /tmp/downloaded.txt
 ```
 
-## SDK Configuration
+## SDK configuration
 
 When using AWS SDKs programmatically, you need to set **path-style
 addressing** and a custom endpoint. Here are examples for common SDKs:
@@ -97,7 +99,7 @@ s3 = boto3.client(
 s3.list_buckets()
 ```
 
-### JavaScript / TypeScript (AWS SDK v3)
+### JavaScript and TypeScript (AWS SDK v3)
 
 ```javascript
 import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
