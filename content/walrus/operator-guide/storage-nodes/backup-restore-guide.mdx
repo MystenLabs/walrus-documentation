@@ -92,7 +92,7 @@ The current backup implementation creates full copies of the database files. Bac
 </Tabs>
 </div>
 
-## Set up automated periodic backups
+## How to set up automated periodic backups
 
 Storage nodes support scheduled automatic backups through checkpoint configuration. Add the following to your node configuration:
 
@@ -121,7 +121,7 @@ checkpoint_config:
 
 To disable automated backups, set `periodic_db_checkpoints: false` in your configuration.
 
-## Create manual backups
+## How to create manual backups
 
 Create on-demand backups using the `local-admin` command.
 
@@ -136,7 +136,7 @@ $ sudo -u walrus walrus-node local-admin \
 
 The backup operation runs in the background within the storage node. After backup creation initializes, the process continues independently even if you terminate the command-line interface.
 
-## List available backups
+## How to list available backups
 
 Run the following command to list available backups:
 
@@ -152,7 +152,7 @@ Backup ID: 1, Size: 85.9 GiB, Files: 1055, Created: 2025-07-02T00:25:48Z
 Backup ID: 2, Size: 86.2 GiB, Files: 1058, Created: 2025-07-02T04:25:52Z
 ```
 
-## Restore from a backup
+## How to restore from a backup
 
 :::danger
 
