@@ -1,5 +1,35 @@
 [
   {
+    "id": "memwal-@mysten-incubation/memwal-mcp@0.0.16",
+    "date": "2026-10-26T10:55:40Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory MCP v0.0.16",
+    "description": "This release updates `@modelcontextprotocol/sdk` to 1.32.1, which includes transport security fixes.\n\nAuthenticated SSE GET and POST requests now refuse redirects. The message endpoint that the server\nsupplies must stay on the configured relayer origin. Because of this, custom authentication headers\nand tool arguments cannot be forwarded to a redirected origin. If your deployment relies on\nredirects to reach the relayer, configure the final relayer URL directly.",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.16",
+    "changes": []
+  },
+  {
+    "id": "memwal-@mysten-incubation/memwal@0.1.10",
+    "date": "2026-10-26T10:55:20Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory TypeScript SDK v0.1.10",
+    "description": "This release tightens input and response validation in the Walrus Memory SDK. `recallManual` on\n`MemWal` and `MemWalManual` rejects `NaN` or `Infinity` in `scoringWeights` before signing, matching\n`recall`. Previously, `JSON.stringify` sent these values to the relayer as `null`. `remember`,\n`rememberBulk`, `analyze`, `embed`, and `recall` also reject text containing only whitespace and\nzero-width characters. Previously, these calls waited until the client timed out. `MemWalMock`\nrejects the same input.\n\nWhen a 2xx response has the wrong JSON shape, the SDK raises an error naming the endpoint and the\nmissing array instead of a raw `TypeError`. The SDK does not retry these bulk status errors. A null\nor non-object status body makes `getRememberStatus` return `not_found` and `waitForRememberJob`\nthrow `MemWalRememberJobNotFoundError`.",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.10",
+    "changes": []
+  },
+  {
+    "id": "memwal-memwal-python@0.2.1",
+    "date": "2026-10-26T10:55:12Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory Python SDK v0.2.1",
+    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.1",
+    "changes": []
+  },
+  {
     "id": "memwal-memwal-python@0.2.0",
     "date": "2026-10-23T10:31:32Z",
     "category": "walrus-memory",
