@@ -33,7 +33,7 @@ answer: >-
   The Walrus Memory MCP reference documents eight tools (memwal_remember, memwal_remember_bulk, memwal_recall, memwal_analyze, memwal_restore, memwal_health, memwal_login, memwal_logout) with full parameter details. It covers CLI flags such as --relayer, --namespace, and --label, environment presets (prod, staging, local), two transport modes (stdio and Streamable HTTP), credential file format, default namespace precedence, self-hosting configuration, and runtime safety notes for 401 handling and relayer overrides.
 ---
 
-The Walrus Memory MCP package exposes the tools, flags, environment variables, and transport routes below. For per-client setup, start with the [MCP overview](/walrus-memory/mcp/overview).
+The Walrus Memory MCP package exposes MCP tools, CLI flags, environment variables, and transport routes. For per-client setup, start with the [MCP overview](/walrus-memory/mcp/overview).
 
 ## Tools
 
@@ -41,7 +41,7 @@ The MCP server exposes **eight tools**: six **relayer tools** (memory operations
 
 ## First-run behavior
 
-When no credentials file is found (see [Credential locations](#credential-locations)), the stdio package does **not** exit immediately if an MCP host launched it.
+When the stdio package finds no credentials file (see [Credential locations](#credential-locations)), it does **not** exit immediately if an MCP host launched it.
 
 Instead it starts in an auth-required mode that:
 
@@ -51,18 +51,18 @@ Instead it starts in an auth-required mode that:
 
 This is why many first-run sessions show `memwal_login` before the other tools are actually usable.
 
-### Memwal_remember
+### `memwal_remember`
 
-Save a durable fact to the user's Walrus Memory. The agent calls this **proactively** when the user states a preference, decision, constraint, correction, identity detail, or recurring workflow, not only when they explicitly ask, provided automatic memory is on. That is the user's standing answer to a question `memwal-mcp login` asks once in a terminal; it can be changed with `memwal-mcp auto-save on|off`. Skip one-off tasks, the current file or bug, and small talk. Pass the full statement; do not summarize.
+Save a durable fact to the user's Walrus Memory. The agent calls this **proactively** when the user states a preference, decision, constraint, correction, identity detail, or recurring workflow, not only when they explicitly ask, provided automatic memory is on. That is the user's standing answer to a question `memwal-mcp login` asks once in a terminal; the user can change it with `memwal-mcp auto-save on|off`. Skip one-off tasks, the current file or bug, and small talk. Pass the full statement; do not summarize.
 
-Credentials are never stored. Passwords, API keys, access and refresh tokens, private keys, seed phrases, authorization headers, session cookies, and URLs with an embedded `user:password` are stripped from the text before the write, on this tool, `memwal_remember_bulk` and `memwal_analyze` alike. A message that mixes a preference with a credential keeps the preference and loses only the credential; the reply names which kinds were removed.
+This tool, `memwal_remember_bulk`, and `memwal_analyze` never store credentials. Before the write, they strip passwords, API keys, access and refresh tokens, private keys, seed phrases, authorization headers, session cookies, and URLs with an embedded `user:password` from the text. A message that mixes a preference with a credential keeps the preference and loses only the credential; the reply names which kinds the tool removed.
 
 | **Parameter** | **Type** | **Required** | **Description** |
 | --- | --- | --- | --- |
 | `text` | string | yes | The complete fact to save. |
 | `namespace` | string | no | Namespace bucket. Defaults to the session namespace. |
 
-### Memwal_remember_bulk
+### `memwal_remember_bulk`
 
 Save several durable facts in one batched call. Prefer this over repeated `memwal_remember` calls when the agent learns multiple distinct facts at once.
 
@@ -71,31 +71,31 @@ Save several durable facts in one batched call. Prefer this over repeated `memwa
 | `facts` | string[] (1–20) | yes | Array of complete fact statements, one full fact per entry, no summarizing. |
 | `namespace` | string | no | Namespace bucket applied to every fact. Defaults to the session namespace. |
 
-### Memwal_recall
+### `memwal_recall`
 
 Search the user's Walrus Memory for facts relevant to a query. The agent calls this **proactively** at the start of a task or when the user references past work, decisions, or preferences. Returns matches ranked by relevance.
 
-Each result line includes `score` and `distance`. `distance` is cosine distance (low = similar). Displayed `score` is `1 − cosine distance` (high = similar). Optional `maxDistance` is a cosine-distance cutoff: hits with `distance >= maxDistance` are dropped. Omit `maxDistance` to apply no cutoff.
+Each result line includes `score` and `distance`. `distance` is cosine distance (low = similar). Displayed `score` is `1 − cosine distance` (high = similar). Optional `maxDistance` is a cosine-distance cutoff: the tool drops hits with `distance >= maxDistance`. Omit `maxDistance` to apply no cutoff.
 
-The cutoff is applied to the `limit` nearest matches, not before them, so a tight `maxDistance` returns fewer than `limit` results, that is the cutoff biting, not an empty namespace. Raise `limit` to widen the candidate pool the cutoff sees.
+The tool applies the cutoff to the `limit` nearest matches, not before them, so a tight `maxDistance` returns fewer than `limit` results. That is the cutoff biting, not an empty namespace. Raise `limit` to widen the candidate pool the cutoff sees.
 
 | **Parameter** | **Type** | **Required** | **Description** |
 | --- | --- | --- | --- |
 | `query` | string | yes | Natural-language query to match against stored memories. |
 | `limit` | integer (1–100) | no | Max memories to return. Default `10`. |
 | `namespace` | string | no | Namespace bucket to search. |
-| `maxDistance` | number (>= 0) | no | Cosine-distance cutoff (low = similar). Hits with `distance >= maxDistance` are dropped. Omit for no cutoff. |
+| `maxDistance` | number (>= 0) | no | Cosine-distance cutoff (low = similar). The tool drops hits with `distance >= maxDistance`. Omit for no cutoff. |
 
-### Memwal_analyze
+### `memwal_analyze`
 
-Extract memorable facts from a longer passage of text (preferences, habits, biographical info, constraints) and save each as a separate memory.
+Extract memorable facts from a longer passage of text (preferences, habits, biographical information, constraints) and save each as a separate memory.
 
 | **Parameter** | **Type** | **Required** | **Description** |
 | --- | --- | --- | --- |
 | `text` | string | yes | Conversation transcript, note, or arbitrary text to extract from. |
 | `namespace` | string | no | Namespace for the extracted facts. |
 
-### Memwal_restore
+### `memwal_restore`
 
 Re-index a namespace from Walrus blobs back into the relayer's search index. Returns counts (`restored` / `skipped` / `total`) plus `truncated`, and does **not** return memory texts. Call `memwal_recall` afterwards to query the rebuilt index.
 
@@ -106,17 +106,17 @@ Re-index a namespace from Walrus blobs back into the relayer's search index. Ret
 | `namespace` | string | yes | Namespace bucket to restore. |
 | `limit` | integer (1–100) | no | Max memories to re-index. Default `10`. The relayer clamps values outside that range. |
 
-### Memwal_health
+### `memwal_health`
 
 Lightweight connectivity check. Calls the relayer's public `/health` endpoint (no request signing, no search or decryption) and returns its `status` and `version`. Use this to confirm the server is reachable instead of `memwal_recall`, which is a full retrieval round-trip. Takes no parameters.
 
-### Memwal_login
+### `memwal_login`
 
 Open a browser to sign in (or re-sign in) with your Sui wallet. Use to switch wallets, refresh credentials, or sign in for the first time inline. Takes no parameters.
 
 Returns a one-time URL valid for **5 minutes**. If it expires, call the tool again to mint a fresh URL.
 
-### Memwal_logout
+### `memwal_logout`
 
 Remove the saved credentials from this machine, from whichever file is currently in use (see [Credential locations](#credential-locations)). Takes no parameters.
 
@@ -125,7 +125,7 @@ Remove the saved credentials from this machine, from whichever file is currently
 :::
 
 :::note
-Both session tools (`memwal_login`, `memwal_logout`) are intercepted locally by the stdio package and never reach the relayer. They read and write files on the client machine only.
+The stdio package intercepts both session tools (`memwal_login`, `memwal_logout`) locally, so they never reach the relayer. They read and write files on the client machine only.
 :::
 
 ## Credential locations
@@ -137,11 +137,11 @@ Credentials resolve from two places, in order:
 
 The search starts in the working directory and walks up, the way `.npmrc` and `.git/config` resolve, so a command run from a subfolder still picks up that project's credentials. The first `.memwal/credentials.json` it finds wins, provided you approved it.
 
-The walk stops at your project root (the directory holding `.git`), at your home directory, or at the filesystem root, whichever comes first. That bound keeps one project from picking up a credentials file belonging to a parent folder that holds unrelated checkouts. If nothing is found inside it, the global file is used. Whichever file is chosen is the one read, written, and deleted for that run.
+The walk stops at your project root (the directory holding `.git`), at your home directory, or at the filesystem root, whichever comes first. That bound keeps one project from picking up a credentials file belonging to a parent folder that holds unrelated checkouts. If the search finds nothing inside it, the package uses the global file. The package reads, writes, and deletes whichever file it chooses for that run.
 
 ### Approving a project file
 
-A project's `.memwal/credentials.json` lives inside the repository, so anyone who can commit to it, or who can get you to open a clone, could otherwise pick the account and relayer every memory written from that directory goes to. The file is therefore **ignored until you approve it**, once per machine:
+A project's `.memwal/credentials.json` lives inside the repository, so anyone who can commit to it, or who can get you to open a clone, could otherwise pick the account and relayer every memory written from that directory goes to. The package therefore **ignores the file until you approve it**, once per machine:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/reference.md" target="_blank" className="code-source-link">Source: mcp/reference.md</a>
 
@@ -150,11 +150,11 @@ $ cd ~/code/my-project
 $ memwal-mcp approve-project
 ```
 
-Until then the global credentials are used and one stderr line names the file that was skipped, the account and relayer it wanted, and this command. An approval covers one exact project path, account, delegate key and relayer: change any of them and it has to be approved again. The record is kept in `~/.memwal/project-approvals.json`, outside the repository, so a repository cannot carry its own approval. `memwal-mcp revoke-project` withdraws it.
+Until then the package uses the global credentials, and one stderr line names the file it skipped, the account and relayer that file wanted, and this command. An approval covers one exact project path, account, delegate key, and relayer: change any of them and you have to approve it again. The package keeps the record in `~/.memwal/project-approvals.json`, outside the repository, so a repository cannot carry its own approval. `memwal-mcp revoke-project` withdraws it.
 
-Approving decides which file is written as well as which is read. From then on a sign-in from that project stores a delegate private key, in plain text, in `.memwal/credentials.json` inside the repository, `approve-project` and the pre-sign-in warning both say so. Add `.memwal/` to `.gitignore`. The login write-ahead record is kept in `~/.memwal/login-pending/` and never enters the repository.
+Approving decides which file the package writes as well as which it reads. From then on a sign-in from that project stores a delegate private key, in plain text, in `.memwal/credentials.json` inside the repository. `approve-project` and the pre-sign-in warning both say so. Add `.memwal/` to `.gitignore`. The package keeps the login write-ahead record in `~/.memwal/login-pending/`, and that record never enters the repository.
 
-`MEMWAL_CREDS_DIR` overrides project resolution entirely and needs no approval. Because it skips the gate it must be an **absolute path outside the current project**, and anything else is refused with an error rather than ignored: a relative value resolves against the working directory, which would put the credentials and the approval record inside the repository, and an MCP client hands this process the `env` block it reads from `.cursor/mcp.json`, `.vscode/mcp.json` or `.claude/settings.json` in the checkout, where editors expand `${workspaceFolder}`, so an in-project absolute path is not evidence you set it. An empty value means unset.
+`MEMWAL_CREDS_DIR` overrides project resolution entirely and needs no approval. Because it skips the gate it must be an **absolute path outside the current project**, and the package refuses anything else with an error rather than ignoring it: a relative value resolves against the working directory, which would put the credentials and the approval record inside the repository, and an MCP client hands this process the `env` block it reads from `.cursor/mcp.json`, `.vscode/mcp.json`, or `.claude/settings.json` in the checkout, where editors expand `${workspaceFolder}`, so an in-project absolute path is not evidence you set it. An empty value means unset.
 
 ### Working on several accounts
 
@@ -207,7 +207,7 @@ $ cp credentials.backup-<timestamp>.json credentials.json
 $ chmod 600 credentials.json
 ```
 
-Backups accumulate; they are never pruned automatically. Each holds a delegate private key, so delete the ones you no longer need.
+Backups accumulate; the package never prunes them automatically. Each holds a delegate private key, so delete the ones you no longer need.
 
 ## CLI
 
@@ -219,9 +219,9 @@ The stdio package accepts CLI flags and environment variables. **CLI takes prece
 | `--web-url <url>` | `MEMWAL_WEB_URL` | Override the dashboard URL used during login. |
 | `--label <text>` | `MEMWAL_CLIENT_LABEL` | Friendly delegate-key label shown in the Walrus Memory dashboard. |
 | `--namespace <name>` (alias `--ns`) | `MEMWAL_NAMESPACE` | Default memory namespace injected into memory tool calls that omit one. See [Default namespace](#default-namespace). |
-| `--login` (or `login` subcommand) | Not applicable | Force a re-login even when credentials exist. The existing file is kept until the new sign-in succeeds. |
+| `--login` (or `login` subcommand) | Not applicable | Force a re-login even when credentials exist. The package keeps the existing file until the new sign-in succeeds. |
 | `--logout` | Not applicable | Delete the credentials file currently in use and exit. |
-| `approve-project` | Not applicable | Approve the project-local `.memwal/credentials.json` found from the current directory, so it is the file used here. Requires an interactive terminal. See [Approving a project file](#approving-a-project-file). |
+| `approve-project` | Not applicable | Approve the project-local `.memwal/credentials.json` found from the current directory, so the package uses that file here. Requires an interactive terminal. See [Approving a project file](#approving-a-project-file). |
 | `revoke-project` | Not applicable | Withdraw that approval. Requires an interactive terminal. |
 | `--help`, `-h` | Not applicable | Print usage and exit. |
 
@@ -238,7 +238,7 @@ Precedence, highest first:
 3. **`MEMWAL_NAMESPACE` environment variable**.
 4. **Unset**. The package forwards the call without a `namespace`, and the relayer applies its own `"default"` namespace.
 
-CLI wins over the environment variable when you set both, which matches every other flag in the table above.
+CLI wins over the environment variable when you set both, which matches every other flag in the [CLI](#cli) table.
 
 :::note
 `memwal_restore` still lists `namespace` as **required** in its tool schema, so agents normally pass one explicitly. The configured default only acts as a fallback when the agent calls `memwal_restore` without a namespace.
@@ -275,20 +275,20 @@ The file includes:
 - label
 - creation timestamp
 
-The file is written with restrictive permissions (`0600`) on supported systems.
+The package writes the file with restrictive permissions (`0600`) on supported systems.
 
 :::warning
-Treat the delegate private key in this file like an API key. Anyone who gets it can act as this MCP client until the delegate is revoked.
+Treat the delegate private key in this file like an API key. Anyone who gets it can act as this MCP client until you revoke the delegate.
 :::
 
 ## Client config paths
 
 Common local config locations:
 
-- **Cursor**: `~/.cursor/mcp.json`
-- **Claude Desktop (macOS)**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Codex**: `~/.codex/config.toml`
-- **Claude Code**: stored through the `claude mcp add` registry
+- **Cursor:** `~/.cursor/mcp.json`
+- **Claude Desktop (macOS):** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Codex:** `~/.codex/config.toml`
+- **Claude Code:** stored through the `claude mcp add` registry
 
 ### Environment presets
 
@@ -347,9 +347,9 @@ $ claude mcp add --transport http memwal https://relayer.memory.walrus.xyz/api/m
 
 If your client cannot attach headers from the CLI, edit the generated MCP config file to add them manually.
 
-### Oauth (claude custom connectors)
+### OAuth (Claude custom connectors)
 
-Claude's native "Add custom connector" flow speaks OAuth 2.1 rather than the explicit-header model above. Claude discovers an authorization server, registers itself as a client, and sends the user through a hosted consent screen instead of expecting a pasted bearer token. For the end-user steps, see [Claude custom connector](/walrus-memory/mcp/claude-connector).
+Claude's native **Add custom connector** flow speaks OAuth 2.1 rather than the explicit-header model in [Streamable HTTP](#streamable-http). Claude discovers an authorization server, registers itself as a client, and sends the user through a hosted consent screen instead of expecting a pasted bearer token. For the end-user steps, see [Claude custom connector](/walrus-memory/mcp/claude-connector).
 
 When an operator configures OAuth, the hosted relayer additionally exposes:
 
@@ -406,9 +406,9 @@ That is intentional. A `401` can mean a revoked delegate key, but it can also co
 
 ### `--relayer` override behavior
 
-If a saved credentials file already points at one relayer and the current process is launched with a different `--relayer`, the override applies to the **current process only**.
+If a saved credentials file already points at one relayer and you launch the current process with a different `--relayer`, the override applies to the **current process only**.
 
-The saved file is not silently rewritten. To rotate the saved relayer permanently, sign out and log in again on the target environment.
+The package does not silently rewrite the saved file. To rotate the saved relayer permanently, sign out and log in again on the target environment.
 
 ## Self-hosting
 
@@ -424,7 +424,7 @@ Self-hosted relayers expose the same public MCP routes as the hosted relayer. Th
 
 See [Environment Variables](/walrus-memory/reference/environment-variables) for the full list including `@mysten/seal` encryption, Walrus, embeddings, and database settings.
 
-### MCP Oauth 2.1 configuration
+### MCP OAuth 2.1 configuration
 
 Claude custom connector support uses OAuth 2.1. The relayer derives most values from `MEMWAL_RELAYER_URL` and requires exactly one secret. For the end-user flow, see [Claude custom connector](/walrus-memory/mcp/claude-connector).
 
@@ -522,13 +522,13 @@ Credentials are missing. Ask the agent to call `memwal_login`, or run `npx -y @m
 
 The URL is valid for **5 minutes**. Call the tool again to mint a fresh one. Make sure your browser is logged into the wallet you intend to use before clicking.
 
-### Recall returns "no matching memories found" right after a remember
+### Recall returns `no matching memories found` right after a remember
 
-By default `memwal_remember` returns at accept (`job_id`, ~1s). That reply is **not stored yet**, the Walrus write is still in flight. Empty recall immediately after accept is expected. Settle with the job-status tool this server advertises (`memwal_remember_status` on a current sidecar) and only treat `blob_id` as saved. `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` is the opt-in wait-for-`blob_id` path (needs a client that raises the 60s tools/call ceiling).
+By default `memwal_remember` returns at accept (`job_id`, ~1s). At that point the server has **not stored the memory yet**; the Walrus write is still in flight. Expect an empty recall immediately after accept. Settle with the job-status tool this server advertises (`memwal_remember_status` on a current sidecar) and only treat `blob_id` as saved. `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` is the opt-in wait-for-`blob_id` path (needs a client that raises the 60s tools/call ceiling).
 
 ### 401 unauthorized from the relayer
 
-Your delegate key was revoked from the dashboard, or your saved credentials point at the wrong environment. Run `--logout` then `login --<env>` for the env you want.
+Someone revoked your delegate key from the dashboard, or your saved credentials point at the wrong environment. Run `--logout` then `login --<env>` for the env you want.
 
 ### Verbose logs for debugging
 
