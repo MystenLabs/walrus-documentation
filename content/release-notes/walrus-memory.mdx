@@ -14,6 +14,22 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
 <TabItem value="mcp" label="MCP" default>
 
+### Walrus Memory mcp v0.0.16
+
+October 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.16)
+
+Authenticated SSE GET and POST requests now refuse redirects. The server-supplied message endpoint
+must also stay on the configured relayer origin. Custom authentication headers and tool arguments
+cannot be forwarded to a redirected origin. If your deployment relied on redirects, configure your
+final relayer URL directly. The release also updates `@modelcontextprotocol/sdk` to 1.32.1 for its
+transport security fixes.
+
+This version is unreleased. Package and plugin manifests are bumped to 0.0.16, but the launcher
+still installs the published 0.0.15 through `mcpPackageVersion` until 0.0.16 is available on npm.
+Retarget that pin after publishing.
+
+---
+
 ### Walrus Memory MCP v0.0.15
 
 October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.15)
@@ -50,7 +66,7 @@ September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releas
 
 ### Walrus Memory MCP v0.0.12
 
-September 8, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.12)
+September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.12)
 
 #### Changes
 
@@ -124,7 +140,7 @@ Rebrands package metadata from MemWal to Walrus Memory throughout the MCP server
 
 ### Package v0.0.2
 
-May 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.2)
+May 25, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.2)
 
 Adds relayer compatibility checks and rebrands from MemWal to Walrus Memory across the MCP server
 package.
@@ -133,7 +149,7 @@ package.
 
 ### Package v0.0.1
 
-May 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.1)
+May 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.1)
 
 Initial release of the MCP server with stdio transport, browser wallet login, and inline session
 tools. Includes memory tools for remember, recall, analyze, and restore.
@@ -143,6 +159,23 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 </TabItem>
 
 <TabItem value="sdk" label="TypeScript SDK">
+
+### Walrus Memory sdk v0.1.10
+
+October 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.10)
+
+This release tightens input and response validation in the MemWal SDK. `remember`, `rememberBulk`,
+`analyze`, `embed`, and `recall` reject text made only of whitespace and zero-width format
+characters before signing. They return the same error as blank text instead of waiting for the
+client timeout, and `MemWalMock` rejects the same set.
+
+A 2xx response that contains valid JSON of the wrong shape raises an SDK error that names the
+endpoint, not a raw `TypeError`. The bulk status error is not retried. `waitForRememberJob` throws
+`MemWalRememberJobNotFoundError` when the status body is null or not an object.
+`MemWal.recallManual` and `MemWalManual.recallManual` reject non-finite `scoringWeights` values
+before signing, matching `recall`.
+
+---
 
 ### Walrus Memory TypeScript SDK v0.1.9
 
@@ -185,7 +218,7 @@ September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releas
 
 ### Walrus Memory TypeScript SDK v0.1.6
 
-September 8, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.6)
+September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.6)
 
 ---
 
@@ -249,7 +282,7 @@ Also documents `restore()` response fields.
 
 ### Package v0.0.5
 
-May 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.5)
+May 25, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.5)
 
 Adds relayer compatibility checks, `RecallOptions` for `topK`/`namespace`/`maxDistance` filtering,
 and prefers Sui gRPC for SEAL sessions. This release also rebrands from MemWal to Walrus Memory.
@@ -258,7 +291,7 @@ and prefers Sui gRPC for SEAL sessions. This release also rebrands from MemWal t
 
 ### Package v0.0.4
 
-May 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.4)
+May 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.4)
 
 Adds `getRememberStatus` for polling async job state and `SealServerConfig` for manual SEAL
 configuration. Manual mode validates API key pairs.
@@ -267,7 +300,7 @@ configuration. Manual mode validates API key pairs.
 
 ### Package v0.0.3
 
-May 7, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.3)
+May 8, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.3)
 
 Updates `remember()` for the async relayer flow and introduces `rememberAsync`,
 `waitForRememberJob`, `rememberAndWait`, and bulk remember helpers. Also adds async analysis with
@@ -277,7 +310,7 @@ Updates `remember()` for the async relayer flow and introduces `rememberAsync`,
 
 ### Package v0.0.2
 
-April 29, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.2)
+April 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.0.2)
 
 Adds per-request nonce signing to block replay attacks and replaces delegate key transport with
 ephemeral SEAL sessions. SDK versions that do not include a nonce are rejected with HTTP 426.
@@ -287,6 +320,18 @@ ephemeral SEAL sessions. SDK versions that do not include a nonce are rejected w
 </TabItem>
 
 <TabItem value="python" label="Python SDK">
+
+### Walrus Memory python v0.2.1
+
+October 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.1)
+
+This release publishes version 0.2.1 of the memwal Python SDK for Walrus Memory. The release body
+announces the new version only. It does not describe new features, fixes, breaking changes, or
+required actions, so you cannot tell from these notes whether the update affects your integration.
+If you use the memwal Python SDK, review the linked changes listed below this summary to decide
+whether to upgrade from your current version.
+
+---
 
 ### Walrus Memory python v0.2.0
 
@@ -322,7 +367,7 @@ Release memwal Python SDK v0.1.10
 
 ### Walrus Memory python v0.1.9
 
-September 8, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.9)
+September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.9)
 
 Release memwal Python SDK v0.1.9
 
@@ -378,7 +423,7 @@ A patch release for the Walrus Memory Python SDK.
 
 ### Package v0.1.2
 
-May 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.2)
+May 25, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.2)
 
 A patch release for the Walrus Memory Python SDK.
 
@@ -398,7 +443,7 @@ Initial release of the Walrus Memory Python SDK.
 
 ### Walrus Memory SDK v0.0.7
 
-October 1, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.7)
+October 2, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.7)
 
 ---
 
@@ -434,7 +479,7 @@ passes the current timestamp, and the SDK is bumped for the new `AnalyzeOptions`
 
 ### Package v0.0.3
 
-May 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.3)
+May 25, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.3)
 
 Rebrands from MemWal to Walrus Memory across the OpenClaw memory plugin.
 
@@ -442,7 +487,7 @@ Rebrands from MemWal to Walrus Memory across the OpenClaw memory plugin.
 
 ### Package v0.0.2
 
-April 29, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.2)
+April 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.2)
 
 Initial release of the OpenClaw memory plugin with automatic recall and capture hooks, session
 summary, CLI commands, and LLM tools.
