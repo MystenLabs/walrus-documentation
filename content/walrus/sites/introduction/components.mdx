@@ -55,7 +55,7 @@ Each section below covers one component on its own. To follow all four through a
 
 ## Site files on Walrus
 
-Your site's static assets (HTML, CSS, JavaScript, images, fonts, and so on) are stored as blobs on Walrus. When you deploy a site, the `site-builder` uploads your assets to Walrus by encoding multiple files into a single storage entity called a [quilt](/docs/system-overview/quilt), a unique feature designed to reduce upload cost and improve upload speed. Each file in the quilt is assigned a `QuiltPatchID`.
+Your site's static assets (HTML, CSS, JavaScript, images, fonts, and so on) are stored as blobs on Walrus. When you deploy a site, the `site-builder` uploads your assets to Walrus by encoding multiple files into a single storage entity called a [quilt](/docs/system-overview/quilt), a unique feature designed to reduce upload cost and improve upload speed. Each file in the quilt is a patch with its own `QuiltPatchID`, which identifies that file within the quilt.
 
 ## The Sui site object
 
@@ -98,9 +98,9 @@ The primary command is [`deploy`](/docs/sites/getting-started/using-the-site-bui
 site-builder deploy --epochs <NUMBER> <DIRECTORY>
 ```
 
-The `site-builder` requires a [`sites-config.yaml` configuration file](/docs/sites/getting-started/using-the-site-builder) that specifies the Sui package ID for the Walrus Sites contract and your network context.
-
 When you run `deploy` for the first time, it publishes a new site and writes the resulting Sui object ID to the `object_id` field in `ws-resources.json`. On subsequent runs, `deploy` reads that object ID and updates the existing site instead of creating a new one.
+
+The `site-builder` requires a [`sites-config.yaml` configuration file](/docs/sites/getting-started/using-the-site-builder) that specifies the Sui package ID for the Walrus Sites contract and your network context. `sites-config.yaml` is separate from `ws-resources.json`. It configures the `site-builder` tool, while `ws-resources.json` configures an individual site.
 
 ## `ws-resources.json`
 
