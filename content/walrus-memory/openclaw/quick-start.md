@@ -1,7 +1,7 @@
 ---
 title: "Quick Start"
 description: >-
-  Install the Walrus Memory plugin for NemoClaw/OpenClaw and verify it works.
+  Install the Walrus Memory plugin for NemoClaw or OpenClaw and verify it works.
   Covers prerequisites, installation, credential setup, configuration, and end-to-end testing.
 keywords:
   - OpenClaw
@@ -29,7 +29,7 @@ questions:
   - How do I configure the Walrus Memory OpenClaw plugin with my delegate key?
   - How do I verify that the OpenClaw memory plugin is working?
 answer: >-
-  Install the Walrus Memory OpenClaw plugin with openclaw plugins install @mysten-incubation/oc-memwal. Configure it in ~/.openclaw/openclaw.json with your delegate key (via MEMWAL_PRIVATE_KEY env var), account ID, and relayer URL. Restart the gateway and verify by running openclaw memwal stats, then test the memory loop by storing a fact in one conversation and recalling it in another.
+  Install the Walrus Memory OpenClaw plugin with openclaw plugins install @mysten-incubation/oc-memwal. Configure it in ~/.openclaw/openclaw.json with your delegate key (through the MEMWAL_PRIVATE_KEY environment variable), account ID, and relayer URL. Restart the gateway and verify by running openclaw memwal stats, then test the memory loop by storing a fact in one conversation and recalling it in another.
 ---
 
 Get the plugin running and test the memory loop in a few minutes.
@@ -46,7 +46,7 @@ Get the plugin running and test the memory loop in a few minutes.
 
 </div>
 
-You also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory, the steps below guides you through getting these.
+You also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory. [Get your Walrus Memory credentials](#get-your-walrus-memory-credentials) explains how to get these.
 
 
 ### Install the plugin
@@ -61,7 +61,7 @@ You also need a **delegate key**, **account ID**, and **relayer URL** from Walru
 
     | Value | What it is |
     |-------|-----------|
-    | **Delegate Key** | A private key (64-char hex) used to sign requests and encrypt memories |
+    | **Delegate key** | A private key (64-character hex) used to sign requests and encrypt memories |
     | **Account ID** | Your MemWalAccount object ID on Sui (`0x...`) |
     | **Relayer URL** | The Walrus Memory relayer endpoint that handles search, storage, and encryption |
 
@@ -75,12 +75,12 @@ You also need a **delegate key**, **account ID**, and **relayer URL** from Walru
     | **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
 
     :::info
-These managed relayer endpoints are provided as a public good by Walrus Foundation.
+Walrus Foundation provides these managed relayer endpoints as a public good.
 :::
 
   ### Set your delegate key
 
-    Store your delegate key as an environment variable so it's never hardcoded in config files:
+    Store your delegate key as an environment variable so you never hardcode it in config files:
 
     ```bash
     # Add to your shell profile (.zshrc, .bashrc, etc.)
@@ -113,7 +113,7 @@ These managed relayer endpoints are provided as a public good by Walrus Foundati
     ```
 
     :::warning
-The config key is **`memory-memwal`**, the plugin's manifest id, not the npm
+The config key is `memory-memwal`, the plugin's manifest ID, not the npm
     package name `oc-memwal`. The installer reports this as
     `using manifest id as the config key`. Using `oc-memwal` leaves the plugin
     unbound, and it never loads.
@@ -132,11 +132,11 @@ You can add these to the `config` block to tune behavior. The defaults work well
       |--------|---------|-------------|
       | `autoRecall` | `true` | Inject relevant memories before each turn |
       | `autoCapture` | `true` | Extract and store facts after each turn |
-      | `maxRecallResults` | `5` | Max memories to inject per turn |
+      | `maxRecallResults` | `5` | Maximum memories to inject per turn |
       | `minRelevance` | `0.3` | Relevance threshold (0-1) for memory injection |
       | `captureMaxMessages` | `10` | How many recent messages to analyze for facts |
       | `defaultNamespace` | `"default"` | Memory scope for the main agent |
-      | `requestTimeoutMs` | `10000` | Deadline in ms for each relayer call. Raise it for a slow self-hosted relayer |
+      | `requestTimeoutMs` | `10000` | Deadline in ms for each relayer call. Raise it for a slow self-hosted relayer. |
 
 </details>
 
@@ -154,7 +154,7 @@ You can add these to the `config` block to tune behavior. The defaults work well
     ```
 
     :::tip
-If you see `health check failed`, check that your relayer URL is reachable and your `MEMWAL_PRIVATE_KEY` env var is set.
+If you see `health check failed`, check that your relayer URL is reachable and that you set the `MEMWAL_PRIVATE_KEY` environment variable.
 :::
 
 
@@ -168,11 +168,11 @@ Run the stats command to confirm the plugin is connected:
 $ openclaw memwal stats
 ```
 
-This shows the relayer status, your key (masked), account ID, active namespace, and whether auto-recall/capture are enabled.
+This shows the relayer status, your key (masked), account ID, active namespace, and whether auto-recall and auto-capture are enabled.
 
 ### Test the memory loop
 
-The core value of the plugin is the automatic recall/capture cycle. Test it end-to-end:
+The core value of the plugin is the automatic recall and capture cycle. Test it end-to-end:
 
 **1. Store a fact**, start a conversation and share something memorable:
 
@@ -217,7 +217,7 @@ If all three steps work, the plugin is fully operational.
 
 ### Enable LLM tools (optional)
 
-By default, the plugin works entirely through hooks, the LLM doesn't know about memory tools. To give the LLM explicit control, add tools to your agent profile:
+By default, the plugin works entirely through hooks, and the large language model (LLM) doesn't know about memory tools. To give the LLM explicit control, add tools to your agent profile:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/openclaw/quick-start.md" target="_blank" className="code-source-link">Source: openclaw/quick-start.md</a>
 
