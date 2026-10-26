@@ -42,7 +42,7 @@ answer: >-
 
 Monitor, update, and maintain a Walrus storage node, including key metrics, update procedures, and community tools.
 
-This page covers the ongoing operation of your Walrus storage node after [initial setup](/docs/operator-guide/storage-nodes/storage-node-setup).
+These tasks cover the ongoing operation of your Walrus storage node after [initial setup](/docs/operator-guide/storage-nodes/storage-node-setup).
 
 ## What data should you back up?
 
@@ -81,7 +81,7 @@ Other metrics like `walrus_storage_confirmations_issued_total` should also incre
 
 To update your node:
 
-##### Step 1: Stop services.
+##### Step 1: Stop services
 
 Stop the node service (and aggregator or publisher if running on the same host):
 
@@ -91,11 +91,11 @@ $ sudo systemctl stop walrus-aggregator.service  # if applicable
 $ sudo systemctl stop walrus-publisher.service   # if applicable
 ```
 
-##### Step 2: Download new binaries.
+##### Step 2: Download new binaries
 
 Download the new `walrus-node` and `walrus` binaries to `/opt/walrus/bin`.
 
-##### Step 3: Start the services again.
+##### Step 3: Start the services again
 
 ```sh
 $ sudo systemctl start walrus-node.service
@@ -105,7 +105,7 @@ $ sudo systemctl start walrus-publisher.service   # if applicable
 
 :::info
 
-You are generally expected to upgrade within 24 hours of a new release. In emergency situations, immediate action is appreciated. Subscribe to the [Walrus release calendar](https://calendar.google.com/calendar/u/0/embed?src=c_97763fcda7894da7ddcd68595a797397b9b4294b69603a52e30d4fa0c3fee2bb@group.calendar.google.com) to stay informed about upcoming releases.
+The Walrus team generally expects you to upgrade within 24 hours of a new release. In emergency situations, the team appreciates immediate action. Subscribe to the [Walrus release calendar](https://calendar.google.com/calendar/u/0/embed?src=c_97763fcda7894da7ddcd68595a797397b9b4294b69603a52e30d4fa0c3fee2bb@group.calendar.google.com) to stay informed about upcoming releases.
 
 :::
 
@@ -115,7 +115,7 @@ If the node database becomes corrupted (for example, after an unclean shutdown),
 
 :::warning
 
-Previous versions of `walrus-node` exposed a `db-tool repair-db` command. That command has been removed because it can silently leave the database in an inconsistent state. Do not run it from older binaries.
+Previous versions of `walrus-node` exposed a `db-tool repair-db` command. Current versions no longer include that command because it can silently leave the database in an inconsistent state. Do not run it from older binaries.
 
 :::
 
@@ -196,11 +196,11 @@ Verify the migration:
 - The health endpoint reports `"nodeStatus": "Active"`.
 - The `walrus_sui_balance_mist` metric reports the balance of the new wallet.
 - The logs show no authorization errors for transactions such as epoch sync confirmations.
-- The capability object is owned by the new wallet address. The `AddressOwner` field in the output of `sui client object $CAP_OBJECT_ID` must show the new wallet address.
+- The new wallet address owns the capability object. The `AddressOwner` field in the output of `sui client object $CAP_OBJECT_ID` must show the new wallet address.
 
 ##### Step 7: Update related authorizations
 
-The commission receiver and the entity authorized for governance are configured independently of the capability. If you never changed them, the commission receiver defaults to the wallet address that registered the node, which is the old wallet.
+You configure the commission receiver and the entity authorized for governance independently of the capability. If you never changed them, the commission receiver defaults to the wallet address that registered the node, which is the old wallet.
 
 Check the `commission_receiver` and `governance_authorized` fields of your node's `StakingPool` object. The object ID of the staking pool is your node ID:
 
@@ -219,7 +219,7 @@ Do not delete the old wallet before verifying the migration and updating the com
 
 ## Community monitoring tools
 
-Several community members have created tools for monitoring Walrus services. These tools are listed on [awesome-walrus](https://github.com/MystenLabs/awesome-walrus).
+Several community members have created tools for monitoring Walrus services. The [awesome-walrus](https://github.com/MystenLabs/awesome-walrus) repository lists these tools.
 
 :::caution
 
