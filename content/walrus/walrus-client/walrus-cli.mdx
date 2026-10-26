@@ -1,6 +1,6 @@
 ---
 title: Walrus Client
-description: Use the Walrus client through the command line to store and retrieve blobs.
+description: Install the Walrus CLI through suiup, configure it for Testnet or Mainnet, set wallet and gas options, and acquire WAL by exchanging SUI.
 keywords:
   - walrus
   - cli
@@ -68,7 +68,7 @@ Each subcommand of `walrus` can also be called with `--help` to print its specif
 
 If you have multiple contexts in your configuration file, you can specify the context for each command using the `--context` option. Generate a `bash`, `zsh`, or `fish` completion script with `walrus completion` and place it in an appropriate directory like `~/.local/share/bash-completion/completions`.
 
-## Configuration
+## How to configure the Walrus CLI
 
 The Walrus client needs to know about the Sui objects that store the Walrus system and staking information. Configure these in the `client_config.yaml` file.
 
@@ -103,7 +103,7 @@ You can access Testnet and Mainnet through the following configuration. This exa
 
 Storing data costs WAL, and every transaction costs SUI for gas. The `walrus` CLI exchanges SUI for WAL on Testnet. To move WAL between addresses, use `sui client`, because Sui handles the transfer rather than Walrus.
 
-### Exchange SUI for WAL on Testnet
+### How to exchange SUI for WAL on Testnet
 
 Run `walrus get-wal` to exchange Testnet SUI for Testnet WAL at a 1:1 rate:
 
@@ -131,7 +131,7 @@ Note that this command is only available on Testnet.
 
 On Mainnet, acquire WAL on an exchange that lists the token, or receive a transfer from an address that already holds WAL. Avoid third-party WAL faucets: they can hand you WAL from a package the Walrus client rejects, and storage payments then fail.
 
-### Transfer WAL between addresses
+### How to send WAL to another address
 
 Walrus has no transfer command. Sui holds WAL as a coin type, so `sui client` moves it. You need this when you fund a publisher wallet, a shared team wallet, or an agent wallet that stores blobs for you.
 
