@@ -55,17 +55,16 @@ This page explains how those pieces fit together. For a description of each comp
   </figcaption>
 </figure>
 
-## Publishing a site
+## How do you publish a Walrus Site?
 
-When you run [`site-builder deploy`](/docs/sites/getting-started/using-the-site-builder#deploy), the CLI tool performs 2 operations in sequence.
+When you run [`site-builder deploy`](/docs/sites/getting-started/using-the-site-builder#deploy), the CLI tool performs 2 operations in sequence:
 
-First, it uploads your site's files to Walrus by batching all files into a single storage unit called a [Walrus quilt](/docs/system-overview/quilt). Walrus returns a `QuiltPatchID` for each file.
-
-Second, it writes a site object to Sui. This object acts as an onchain index: it records the URL path of every resource in your site alongside the Walrus identifier needed to retrieve it. The wallet that signs this transaction becomes the owner of the site object and is the only wallet that can update or destroy it.
+1. **Upload the files.** It uploads your site's files to Walrus by batching all files into a single storage unit called a [Walrus quilt](/docs/system-overview/quilt). Each file inside the quilt is a quilt patch, and Walrus returns a `QuiltPatchID` for each one.
+2. **Write the site object.** It writes a site object to Sui. This object acts as an onchain index: it records the URL path of every resource in your site alongside the Walrus identifier needed to retrieve it. The wallet that signs this transaction becomes the owner of the site object and is the only wallet that can update or destroy it.
 
 After publishing, your site exists entirely onchain and in Walrus storage. No server is required to keep it available.
 
-## Resolving and serving a site
+## How does a portal resolve and serve a site?
 
 Visitors access a Walrus Site through a portal. A portal is a service that translates a browser request into Sui and Walrus lookups, then returns a standard HTTP response. Anyone can run a portal. The Mainnet portal at [https://wal.app](https://wal.app) is operated by Mysten Labs.
 
@@ -95,6 +94,6 @@ The `wal.app` portal does not support Base36 domain resolution. To access a site
 
 :::
 
-## Ownership and updates
+## How do ownership and updates work?
 
 Because a Walrus Site is a standard Sui object, it participates in Sui's ownership model. The owner can transfer, share, or destroy the site object, and can assign it a SuiNS name. Updating a site re-uploads all resource files to Walrus as a new quilt and updates the onchain index to point to the new content. The site's Sui object ID does not change between updates, so any SuiNS name or bookmark pointing to it remains valid.
