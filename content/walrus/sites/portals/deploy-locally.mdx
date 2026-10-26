@@ -177,7 +177,19 @@ Be sure that version tag matches the tag of the image you run: the `mysten/walru
 The command maps the container port with `-p 3000:3000`, so port 3000 must be free on your host. Once the Docker container is running, open your browser and navigate to the following URL:
 
 ```
-http:/localhost:3000
+http://localhost:3000
+```
+
+To view a specific Walrus Site, navigate to the following URL instead:
+
+```
+http://SITE_OBJECT_ID_B36.localhost:3000
+```
+
+Replace `SITE_OBJECT_ID_B36` with the Base36-encoded object ID of the Walrus Site you want to view. To obtain the Base36 ID of a site you published, use the [`convert` command](/docs/sites/getting-started/using-the-site-builder):
+
+```sh
+$ site-builder convert HEX_OBJECT_ID
 ```
 
 ### Local development (server portal on port 3000, service-worker portal on port 8080)
@@ -213,6 +225,8 @@ $ cp server/portal-config.testnet.example.yaml server/portal-config.yaml
 
 $ bun run server
 ```
+
+To view a specific Walrus Site on the server portal, use the same `http://SITE_OBJECT_ID_B36.localhost:3000` URL pattern as the Docker portal.
 
 To run a service-worker portal, copy the example [`.env.local`](/docs/sites/portals/mainnet-testnet#environment-variable-overrides) for your target network and start the worker. The service-worker portal runs at `localhost:8080`.
 
