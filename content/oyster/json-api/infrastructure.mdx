@@ -1,18 +1,20 @@
 ---
 title: "Infrastructure"
+description: Health, readiness, metrics, and API documentation endpoints for monitoring and observing the Oyster server.
+keywords: [ health check, readiness check, liveness probe, Prometheus, metrics, OpenAPI, observability, Kubernetes ]
 ---
 
-These endpoints are used for health monitoring and observability. They do
+Use these endpoints for health monitoring and observability. They do
 **not** require authentication and are **not** under the `/api/v1/` prefix.
 
-## Health Check (Liveness)
+## Health check (liveness)
 
 ```
 GET /health
 ```
 
 Always returns `200 OK`. Use this as a Kubernetes liveness probe or a
-simple "is the server running?" check.
+basic check that the server is running.
 
 **Example:**
 
@@ -28,7 +30,7 @@ curl -s "$OYSTER_URL/health" | jq
 }
 ```
 
-## Readiness Check
+## Readiness check
 
 ```
 GET /ready
@@ -71,7 +73,7 @@ curl -s "$OYSTER_URL/ready" | jq
 The `database` and `pearl` fields are only present when the corresponding
 service is unhealthy.
 
-## Prometheus Metrics
+## Prometheus metrics
 
 ```
 GET /metrics
@@ -112,7 +114,7 @@ oyster_blob_store_operations_total{operation="delete",result="success"} 100
 | `oyster_active_blobs` | gauge | Total number of stored blobs |
 | `oyster_blob_store_operations_total` | counter | Blob store operations (labels: `operation`, `result`) |
 
-## OpenAPI Documentation
+## OpenAPI documentation
 
 ```
 GET /api/docs

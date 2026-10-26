@@ -1,11 +1,13 @@
 ---
 title: "Buckets"
+description: Buckets are globally unique named containers that hold your blobs. Create, list, and delete buckets with the buckets API.
+keywords: [ buckets, bucket naming rules, create bucket, list buckets, delete bucket, blobs, API ]
 ---
 
 Buckets are named containers that hold your blobs. Bucket names are
 **globally unique**: no two accounts can have a bucket with the same name.
 
-## Bucket Naming Rules
+## Bucket naming rules
 
 Bucket names must follow these rules:
 
@@ -21,7 +23,7 @@ Bucket names must follow these rules:
 **Invalid examples:** `My-Bucket` (uppercase), `a` (too short),
 `-bucket` (starts with hyphen), `my--bucket` (consecutive hyphens)
 
-## Create Bucket
+## Create bucket
 
 ```
 POST /api/v1/buckets
@@ -73,7 +75,7 @@ curl -s -X POST \
 | `401` | Missing or invalid API key |
 | `409` | Bucket name already exists |
 
-## List Buckets
+## List buckets
 
 ```
 GET /api/v1/buckets
@@ -85,7 +87,7 @@ Returns a paginated list of buckets owned by your account.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `cursor` | string | — | Opaque cursor from a previous `next_cursor` |
+| `cursor` | string | None | Opaque cursor from a previous `next_cursor` |
 | `limit` | integer | 20 | Items per page (max: 100) |
 
 **Example:**
@@ -118,7 +120,7 @@ curl -s -H "Authorization: Bearer $API_KEY" \
 When `next_cursor` is not `null`, pass it as the `cursor` query parameter
 to fetch the next page.
 
-## Delete Bucket
+## Delete bucket
 
 ```
 DELETE /api/v1/buckets/{bucket_name}
