@@ -4,7 +4,7 @@ description: Answers to common questions about the WAL token, covering fee flows
 keywords: ["walrus", "wal token", "tokenomics", "staking", "re-delegation", "rewards", "slashing", "storage fund", "fees", "burn", "faq"]
 ---
 
-This page answers common questions about the WAL token and how value flows through Walrus. It focuses on mechanics that are visible to users and integrators: what you pay, where those payments go, how staking and rewards work, and what actually happens when you burn a blob.
+Common questions about the WAL token and how value flows through Walrus focus on mechanics that are visible to users and integrators: what you pay, where those payments go, how staking and rewards work, and what actually happens when you burn a blob.
 
 For the authoritative economic model, including token supply and long-term incentive design, see the [Walrus whitepaper](/walrus.pdf). Where a third-party summary disagrees with the whitepaper or with `walrus info`, treat those two as the source of truth.
 
@@ -14,13 +14,13 @@ You pay for Walrus in two tokens: WAL covers storage and write fees, and SUI cov
 
 ### What is WAL used for?
 
-WAL is the native token of Walrus. You use it to pay for storage and to stake with storage nodes. Storage is priced at a fixed **$0.023/GB/month** and paid in WAL, with the WAL amount adjusting automatically as the WAL price changes. See [Storage Costs](/docs/system-overview/storage-costs) for the full pricing model.
+WAL is the native token of Walrus. You use it to pay for storage and to stake with storage nodes. Walrus prices storage at a fixed **$0.023/GB/month**, and you pay in WAL, with the WAL amount adjusting automatically as the WAL price changes. See [Storage Costs](/docs/system-overview/storage-costs) for the full pricing model.
 
 You also pay SUI, not WAL, for the Sui transactions that register, certify, and extend blobs. WAL covers storage and write fees, and SUI covers onchain gas.
 
 ### Where do my storage fees go?
 
-When you buy storage, your WAL is paid into the **storage fund**, which holds WAL for the epochs your blob is stored across. At the end of each epoch, the fund distributes WAL to storage nodes based on their measured performance, which is determined through light audits of each other. Stakers receive a share of these fees as rewards. See [Storage Costs](/docs/system-overview/storage-costs#storage-fund).
+When you buy storage, you pay your WAL into the **storage fund**, which holds WAL for the epochs across which Walrus stores your blob. At the end of each epoch, the fund distributes WAL to storage nodes based on their measured performance, which nodes determine through light audits of each other. Stakers receive a share of these fees as rewards. See [Storage Costs](/docs/system-overview/storage-costs#storage-fund).
 
 ### What is the write fee?
 
@@ -28,15 +28,15 @@ Registering a blob costs a WAL write fee in addition to the storage payment. Thi
 
 ### What are subsidies?
 
-On networks that configure an onchain storage subsidy, the subsidy can offset part of the WAL storage cost. A subsidy changes how much WAL a store consumes, but it does not change who signs the store or who pays the SUI gas. The Mainnet subsidies package is listed in the [Network Reference](/docs/network-reference#package-ids). See also [Sponsored and walletless uploads](/docs/sponsored-uploads).
+On networks that configure an onchain storage subsidy, the subsidy can offset part of the WAL storage cost. A subsidy changes how much WAL a store consumes, but it does not change who signs the store or who pays the SUI gas. The [Network Reference](/docs/network-reference#package-ids) lists the Mainnet subsidies package. See also [Sponsored and walletless uploads](/docs/sponsored-uploads).
 
 ## Staking, re-delegation, and rewards
 
-Walrus runs a delegated proof-of-stake system on the WAL token. Committee changes between epochs are managed by the [staking contracts](https://github.com/MystenLabs/walrus/tree/main/contracts/walrus/sources/staking).
+Walrus runs a delegated proof-of-stake system on the WAL token. The [staking contracts](https://github.com/MystenLabs/walrus/tree/main/contracts/walrus/sources/staking) manage committee changes between epochs.
 
 ### How do staking rewards work?
 
-Anyone can delegate WAL to storage nodes. Shards are assigned to nodes each epoch roughly in proportion to the stake delegated to them, and by staking you earn a share of the storage fees that node collects. For the full walkthrough, see [Staking and Unstaking](/docs/operator-guide/stake).
+Anyone can delegate WAL to storage nodes. Each epoch, Walrus assigns shards to nodes roughly in proportion to the stake delegated to them, and by staking you earn a share of the storage fees that node collects. For the full walkthrough, see [Staking and Unstaking](/docs/operator-guide/stake).
 
 ### How do I move stake between nodes (re-delegation)?
 
@@ -55,13 +55,13 @@ Walrus never slashes your delegated principal. If a storage node misbehaves, com
 
 ## Burning and supply
 
-The term burn refers to two different actions in Walrus: protocol-level WAL burns, and burning a blob's Sui object. These are not the same, and neither happens simply because you store or delete data.
+The term burn refers to two different actions in Walrus: protocol-level WAL burns, and burning a blob's Sui object. These are not the same, and neither happens because you store or delete data.
 
 ### Does Walrus burn WAL when I store or delete data?
 
 The system does not burn your storage payment all at once, and deleting a blob does not refund WAL. Protocol-level WAL burns do exist, though, so it is not accurate to say Walrus never burns WAL.
 
-When you store a blob, your WAL goes into the storage fund, which distributes it to storage nodes as rewards across the epochs your blob is stored. At each epoch change, the system burns **3% of that epoch's total rewards** before distributing the rest to nodes and their stakers. Slashing a misbehaving node also burns that operator's accumulated commission.
+When you store a blob, your WAL goes into the storage fund, which distributes it to storage nodes as rewards across the epochs that Walrus stores your blob. At each epoch change, the system burns **3% of that epoch's total rewards** before distributing the rest to nodes and their stakers. Slashing a misbehaving node also burns that operator's accumulated commission.
 
 Users commonly mistake two things for burning WAL, but neither is:
 

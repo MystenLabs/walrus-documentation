@@ -45,7 +45,7 @@ RedStuff encoding has 4 steps:
 3. Apply the secondary encoding to each row. Each column of the expanded matrix is a secondary sliver.
 4. Store one primary sliver and one secondary sliver, a sliver pair, on each shard.
 
-Consider a Walrus instance with $N = 7 = 3f + 1$ shards, so $f = 2$. This means the number of primary source symbols is $N - 2f = 3$, and secondary $N - f = 5$. A blob of size $S = 15 \cdot s$ can therefore be divided into 15 symbols of size $s$, and arranged in the matrix as follows.
+Consider a Walrus instance with $N = 7 = 3f + 1$ shards, so $f = 2$. This means the number of primary source symbols is $N - 2f = 3$, and secondary $N - f = 5$. You can therefore divide a blob of size $S = 15 \cdot s$ into 15 symbols of size $s$ and arrange them in the matrix as follows.
 
 $$
 \left[
@@ -102,7 +102,7 @@ Thanks to the linearity of Reed-Solomon codes, the expansion of:
 - the repair secondary slivers (columns 5 and 6) with the primary encoding, and
 - the repair primary slivers (rows 3, 4, 5, and 6) with the secondary encoding,
 
-results in the same set of symbols, which is essential for recovery. These symbols can be represented as the lower-right quadrant of what is called the fully expanded message matrix.
+results in the same set of symbols, which is essential for recovery. You can represent these symbols as the lower-right quadrant of the fully expanded message matrix.
 
 $$
 \left[
@@ -119,7 +119,7 @@ r_{6,0} & r_{6,1} & r_{6,2} & r_{6,3} & r_{6,4} & \color{blue} r_{6,5} & \color{
 \right]
 $$
 
-These symbols do not need to be stored on any node because they can always be recomputed by expanding either a primary or secondary sliver. For example, $r_{4,5}$ can be obtained by:
+No node needs to store these symbols because you can always recompute them by expanding either a primary or secondary sliver. For example, you can obtain $r_{4,5}$ from:
 
 - the secondary-encoding expansion of primary sliver 4: $[r_{4,0}, r_{4,1}, r_{4,2}, r_{4,3}, r_{4,4}, \color{blue} r_{4,5}, r_{4,6}]$, or
 - the primary-encoding expansion of secondary sliver 5, which extends its 3 symbols to 7: $[r_{0,5}, r_{1,5}, r_{2,5}, r_{3,5}, \color{blue} r_{4,5}, r_{5,5}, r_{6,5}]$.

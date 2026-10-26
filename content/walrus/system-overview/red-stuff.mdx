@@ -36,7 +36,7 @@ answer: >-
   coding, Reed-Solomon codes, sliver encoding, recovery, and blob metadata.
 ---
 
-The RedStuff encoding algorithm used in Walrus is an adaptation of the Twin-Code framework presented by Rashmi et al. <a href="https://doi.org/10.1109/ISIT.2011.6033732">[1]</a>.
+The RedStuff encoding algorithm used in Walrus is an adaptation of the Twin-Code framework presented by Rashmi and colleagues <a href="https://doi.org/10.1109/ISIT.2011.6033732">[1]</a>.
 
 ## Goals and overview
 
@@ -51,19 +51,19 @@ Given these requirements, one good option is to erasure encode the blobs across 
 1. Erasure coding allows you to recover a blob even if $N - k$ storage nodes fail, providing high availability and durability.
 2. The overall storage overhead is much smaller than for full replication. For a blob of size $S$, the total storage used in the system is $S \cdot c$ instead of $S \cdot N$, where $c \ll N$ is a small constant (about 4.5 in Walrus's case).
 
-To achieve the third requirement, however, simple erasure coding is insufficient. A failed node that wants to reconstruct its part of the encoding needs to first fetch at least $k$ other parts, reconstruct the blob, and then re-encode its own part. Therefore, the communication overhead for recovery is on the order of the size of the whole blob, $S$. With RedStuff, you can instead reconstruct the encoded part of a failed node by fetching only $O(S/N)$ data, meaning only in the order of the size of the lost part. This achieves goal 3.
+To achieve the third requirement, however, basic erasure coding is insufficient. A failed node that wants to reconstruct its part of the encoding needs to first fetch at least $k$ other parts, reconstruct the blob, and then re-encode its own part. Therefore, the communication overhead for recovery is on the order of the size of the whole blob, $S$. With RedStuff, you can instead reconstruct the encoded part of a failed node by fetching only $O(S/N)$ data, meaning only in the order of the size of the lost part. This achieves goal 3.
 
 ## Background
 
-This section provides the essential background on the coding schemes used in RedStuff.
+RedStuff relies on the following coding schemes.
 
 ### Erasure codes
 
-Erasure coding addresses the problem of error correction in the case of bit erasures, where some bits in the message are lost, as in the case of a lossy channel. An erasure code divides a blob (or message) of $S$ bytes into $k$ symbols (bitstrings of fixed length $\sim S/k$), which are then encoded to form a longer message of $N$ symbols, such that the original blob can be recovered from any subset $k'$ of the $N$ symbols. The ratio $k/N$ is called the code rate.
+Erasure coding addresses the problem of error correction in the case of bit erasures, where some bits in the message are lost, as in the case of a lossy channel. An erasure code divides a blob (or message) of $S$ bytes into $k$ symbols (bitstrings of fixed length $\sim S/k$), then encodes them to form a longer message of $N$ symbols, such that any subset $k'$ of the $N$ symbols suffices to recover the original blob. The ratio $k/N$ is the code rate.
 
 ### Reed-Solomon codes
 
-RedStuff is based on Reed-Solomon codes. Walrus uses the [`reed-solomon-simd`](https://crates.io/crates/reed-solomon-simd) implementation, which works over the finite field $GF(2^{16})$. The code that Walrus uses has the following properties:
+RedStuff builds on Reed-Solomon codes. Walrus uses the [`reed-solomon-simd`](https://crates.io/crates/reed-solomon-simd) implementation, which works over the finite field $GF(2^{16})$. The code that Walrus uses has the following properties:
 
 1. It is systematic, meaning the first $k$ symbols of the encoded message correspond to the original message.
 2. It is linear, meaning the encoding process is a linear transformation of the input symbols, or in other words, the encoded symbols are linear combinations of the input symbols.
@@ -90,27 +90,27 @@ Walrus encodes and stores each blob across $N$ shards. A shard is not the same a
 
 An established approach in distributed storage is to use an erasure code to encode blobs of data across multiple storage nodes. By using a $k/N$ rate erasure code for $N$ nodes and $k$ source symbols, the system can tolerate $N - k$ node failures, with just an $N/k$ factor of storage overhead. However, in the case of a node failure, the recovery process is inefficient: the failed node needs to fetch $k$ other parts, reconstruct the blob, and then re-encode its own part. Therefore, the communication overhead for recovery is on the order of the size of the whole blob, $S$.
 
-The Twin-Code framework aims to solve this issue by allowing for efficient node recovery. This section briefly describes how the framework is used in RedStuff. For specific details, refer to the original paper. The RedStuff encoding algorithm is an adaptation of the Twin-Code framework, which allows for efficient node recovery in erasure-coded storage systems.
+The Twin-Code framework aims to solve this issue by allowing for efficient node recovery. This section briefly describes how RedStuff uses the framework. For specific details, refer to the original paper. The RedStuff encoding algorithm is an adaptation of the Twin-Code framework, which allows for efficient node recovery in erasure-coded storage systems.
 
-Consider a scenario in which a blob of data is encoded and stored across $N$ shards in a Byzantine setting. Multiple shards can be mapped to the same storage node. Up to $f$ of the shards can be corrupted by an adversary, with $f \lt 1/3 N$, and the remaining $N - f$ shards are honest.
+Consider a scenario in which you encode and store a blob of data across $N$ shards in a Byzantine setting. Multiple shards can map to the same storage node. An adversary can corrupt up to $f$ of the shards, with $f \lt 1/3 N$, and the remaining $N - f$ shards are honest.
 
 ### Encoding and recovery
 
 The RedStuff encoding and recovery process works as follows:
 
-- First, the data blob of size $S$ is divided into symbols and arranged in a rectangular message matrix of $N - 2f$ rows and $N - f$ columns of symbols. The number of rows ($n_R$) and columns ($n_C$) is fixed, and determines the symbol size $s$, the smallest even number of bytes, at least 2, such that $n_R \cdot n_C$ symbols hold the blob:
+- First, RedStuff divides the data blob of size $S$ into symbols and arranges them in a rectangular message matrix of $N - 2f$ rows and $N - f$ columns of symbols. The number of rows ($n_R$) and columns ($n_C$) is fixed, and determines the symbol size $s$, the smallest even number of bytes, at least 2, such that $n_R \cdot n_C$ symbols hold the blob:
 
 $$
 s = 2 \cdot \left\lceil \max(S, 1) / (2 \cdot n_R \cdot n_C) \right\rceil
 $$
 
-- Then, the columns and the rows of the message matrix are encoded separately with Reed-Solomon codes.
+- Then, RedStuff encodes the columns and the rows of the message matrix separately with Reed-Solomon codes.
   - The primary encoding, performed on columns, expands the $n_R$ symbols of each column to $N$ symbols.
   - The secondary encoding, performed on rows, expands the $n_C$ symbols of each row to $N$ symbols.
-- $n_R$ is also called the number of primary source symbols, and $n_C$ the number of secondary source symbols. The primary encoding has rate $n_R / N$, and the secondary encoding has rate $n_C / N$. These counts are per encoding, not per sliver. A primary sliver has $n_C = N-f$ symbols, and a secondary sliver has $n_R = N-2f$ symbols. For example, with $N = 7$ and $f = 2$, a primary sliver has 5 symbols and a secondary sliver has 3 symbols. The [Walrus paper](https://arxiv.org/abs/2505.05370) uses the per-sliver view. For $N = 3f+1$, the paper's reconstruction thresholds $2f+1$ and $f+1$ equal $N-f$ and $N-2f$.
-- The encoded rows and columns are then used to obtain primary and secondary slivers, which are distributed to shards and used for blob reconstruction and sliver recovery:
-  - Primary slivers are the rows of the matrix of size $N \times n_C$ obtained with the primary encoding of the message matrix. Each primary sliver is therefore composed of $n_C$ symbols.
-  - Secondary slivers are the columns of the matrix of size $n_R \times N$ obtained with the secondary encoding of the message matrix. Each secondary sliver is therefore composed of $n_R$ symbols.
+- $n_R$ is also the number of primary source symbols, and $n_C$ the number of secondary source symbols. The primary encoding has rate $n_R / N$, and the secondary encoding has rate $n_C / N$. These counts are per encoding, not per sliver. A primary sliver has $n_C = N-f$ symbols, and a secondary sliver has $n_R = N-2f$ symbols. For example, with $N = 7$ and $f = 2$, a primary sliver has 5 symbols and a secondary sliver has 3 symbols. The [Walrus paper](https://arxiv.org/abs/2505.05370) uses the per-sliver view. For $N = 3f+1$, the paper's reconstruction thresholds $2f+1$ and $f+1$ equal $N-f$ and $N-2f$.
+- RedStuff then uses the encoded rows and columns to obtain primary and secondary slivers, distributes the slivers to shards, and uses them for blob reconstruction and sliver recovery:
+  - Primary slivers are the rows of the matrix of size $N \times n_C$ obtained with the primary encoding of the message matrix. Each primary sliver therefore consists of $n_C$ symbols.
+  - Secondary slivers are the columns of the matrix of size $n_R \times N$ obtained with the secondary encoding of the message matrix. Each secondary sliver therefore consists of $n_R$ symbols.
 - Each shard receives a primary and a secondary sliver, based on the shard number and the row and column numbers of the slivers. See the [section on sliver-to-shard mapping](red-stuff-parameters#sliver-pair-to-shard-mapping) for more details.
 - The fundamental property achieved with this construction, thanks to the linearity of Reed-Solomon codes, is that encoding the primary slivers (as rows) with the secondary encoding and the secondary slivers (as columns) with the primary encoding results in the same $N \times N$ expanded message matrix. This property enables lost sliver recovery:
   - To reconstruct a lost primary sliver:

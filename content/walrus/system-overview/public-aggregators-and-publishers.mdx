@@ -46,7 +46,7 @@ An aggregator serves blob reads over HTTP, and a publisher accepts blob uploads 
 
 To read or store a blob through a public service:
 
-1. Pick an endpoint from the [aggregators and publishers list](#agg-list) below, or use a Mysten Labs reference endpoint from the [Network Reference](/docs/network-reference#aggregators-and-publishers).
+1. Pick an endpoint from the [aggregators and publishers list](#agg-list), or use a Mysten Labs reference endpoint from the [Network Reference](/docs/network-reference#aggregators-and-publishers).
 2. Set `$AGGREGATOR` or `$PUBLISHER` to the endpoint URL.
 3. Send a standard HTTP request to the `/v1` API paths, as in the following examples.
 
@@ -76,7 +76,7 @@ Most aggregators and publishers limit requests to 10 MiB by default. If you want
 
 :::tip
 
-Do not hardcode a single community endpoint in production code, because community endpoints change over time. Use the operator list below, run your own service, or use the Mysten Labs reference endpoints.
+Do not hardcode a single community endpoint in production code, because community endpoints change over time. Use the [aggregators and publishers list](#agg-list), run your own service, or use the Mysten Labs reference endpoints.
 
 :::
 

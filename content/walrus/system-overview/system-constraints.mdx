@@ -27,9 +27,9 @@ goal:
     - has_answer: true
       label: Needs answer summary for AI citation
 questions:
-  - What is System Constraints & Considerations?
-  - How do I get started with system constraints & considerations?
-  - What are the requirements for system constraints & considerations?
+  - What is System Constraints and Considerations?
+  - How do I get started with system constraints and considerations?
+  - What are the requirements for system constraints and considerations?
 answer: >-
   Storage limits, cost considerations, memory requirements, and other
   constraints to consider when building on Walrus.
@@ -37,31 +37,33 @@ answer: >-
 
 Storage limits, cost considerations, memory requirements, and other constraints to consider when building on Walrus.
 
-This page describes the practical limits and constraints you should consider when designing applications on Walrus. For current values, run `walrus info`.
+Consider the following practical limits and constraints when you design applications on Walrus. For current values, run `walrus info`.
 
 ## What is the maximum blob size?
 
-Walrus supports blobs up to approximately 13.6 GiB. Check the current limit with `walrus info` under "Maximum blob size."
+Walrus supports blobs up to approximately 13.6GB. Check the current limit with `walrus info` under **Maximum blob size**.
 
-When using [quilts](/docs/system-overview/quilt) for batch storage, each individual blob within the quilt is limited to approximately 4 GiB. This per-blob limit is imposed by the quilt's internal header format. Check the current limit with `walrus info` under "Maximum blob size in quilt." If you need to store data larger than 4 GiB, store it as a regular blob instead of within a quilt.
+When you use [quilts](/docs/system-overview/quilt) for batch storage, each individual blob within the quilt has a limit of approximately 4GB. The quilt's internal header format imposes this per-blob limit. Check the current limit with `walrus info` under **Maximum blob size in quilt**. If you need to store data larger than 4GB, store it as a regular blob instead of within a quilt.
 
 If your data exceeds this limit, learn more about [best practices for large data uploads](/docs/large-uploads).
 
 ## How much memory do encoding and decoding need?
 
-Encoding and decoding blobs requires significant memory.
+Encoding and decoding blobs requires significant memory:
 
 - **Encoding (upload):** Requires approximately 2-3x the blob size in available RAM.
 
 - **Decoding (retrieval):** Requires approximately 1.5-2x the blob size in available RAM.
 
-For example, encoding a 5 GiB blob requires 10 to 15 GiB of available RAM.
+For example, encoding a 5GB blob requires 10 to 15GB of available RAM.
 
 If the system runs out of memory during encoding, the operation fails with an error such as `Out of memory` or `Failed to allocate buffer`. Split large blobs into smaller chunks to reduce memory requirements, or run the CLI on a machine with more RAM.
 
-Aggregator operators should provision aggregators with enough memory to handle the largest blobs they are expected to reconstruct.
+Aggregator operators should provision aggregators with enough memory to handle the largest blobs they expect to reconstruct.
 
 ## How to handle rate limits
+
+Rate limits apply to both storage nodes and Sui RPC endpoints.
 
 ### Storage node rate limits
 
@@ -73,7 +75,7 @@ Public Sui RPC endpoints have request quotas. If you encounter `RPC rate limit e
 
 ## How much network bandwidth do uploads use?
 
-Upload and download times are proportional to blob size and network speed. Walrus encodes data with erasure coding, which expands the data approximately 4.5x. As a result, uploading a 1 GiB blob transmits roughly 4.5 GiB of encoded data across the network.
+Upload and download times are proportional to blob size and network speed. Walrus encodes data with erasure coding, which expands the data approximately 4.5x. As a result, uploading a 1GB blob transmits roughly 4.5GB of encoded data across the network.
 
 To reduce upload latency:
 
@@ -91,7 +93,7 @@ Applications should implement retry logic to handle transient failures during ep
 
 ## What fault tolerance does Walrus assume?
 
-Walrus guarantees hold as long as more than 2/3 of storage shards (by stake weight) are managed by honest storage nodes. The system tolerates up to 1/3 of shards being controlled by faulty or malicious nodes.
+Walrus guarantees hold as long as honest storage nodes manage more than 2/3 of storage shards (by stake weight). The system tolerates faulty or malicious nodes controlling up to 1/3 of shards.
 
 This assumption applies both within individual storage epochs and across epoch transitions. Under normal operation, the Sui staking mechanism and economic incentives maintain this property.
 
