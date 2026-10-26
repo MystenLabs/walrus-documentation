@@ -54,7 +54,7 @@ The SHA-256 hash acts as a cryptographic fingerprint of the file at the time you
 When a visitor requests a resource through a [portal](/docs/sites/portals/mainnet-testnet), the portal:
 
 1. Reads the blob ID and expected SHA-256 hash from the Sui object
-2. Fetches the blob from Walrus storage through an aggregator
+2. Fetches the blob from Walrus storage through an aggregator (a service that retrieves blobs from Walrus storage and returns them to the portal)
 3. Computes the SHA-256 hash of the data it received
 4. Compares the computed hash against the hash stored on Sui
 
