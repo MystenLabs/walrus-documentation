@@ -78,7 +78,7 @@ For command-line estimates, run `walrus info` to view current storage prices and
 
 ## How does Walrus pricing work?
 
-Storage on Walrus is paid in WAL but priced at a fixed rate of **$0.023/GB/month**. The amount of WAL required adjusts automatically as the WAL token price changes.
+You pay for storage on Walrus in WAL, but Walrus prices it at a fixed rate of **$0.023/GB/month**. The amount of WAL required adjusts automatically as the WAL token price changes.
 
 Walrus measures storage duration in epochs. On Mainnet, 1 epoch lasts 2 weeks.
 
@@ -109,7 +109,7 @@ For example, to keep a 50 GB file for 1 year:
 - Monthly cost: `225 * 0.023`, roughly `$5.18`.
 - Yearly cost: `$5.18 * 12`, roughly `$62`.
 
-The result is USD-denominated. Storage is paid in WAL, so the WAL amount changes with the WAL price. Use `walrus info` or the [Walrus Cost Calculator](https://costcalculator.wal.app/) to convert to a current WAL figure, and `walrus store --dry-run ...` to confirm the exact encoded size before you spend anything.
+The result is USD-denominated. You pay for storage in WAL, so the WAL amount changes with the WAL price. Use `walrus info` or the [Walrus Cost Calculator](https://costcalculator.wal.app/) to convert to a current WAL figure, and `walrus store --dry-run ...` to confirm the exact encoded size before you spend anything.
 
 #### Estimate cost for many small files
 
@@ -142,11 +142,11 @@ At $0.023 per GB per month, Walrus is in line with centralized storage providers
 
 #### Built-in redundancy
 
-Data is encoded using erasure coding with approximately 4.5x redundancy across independent storage nodes. Achieving similar redundancy in a centralized provider typically requires storing additional copies in multiple regions.
+Walrus encodes data using erasure coding with approximately 4.5x redundancy across independent storage nodes. Achieving similar redundancy in a centralized provider typically requires storing additional copies in multiple regions.
 
 #### Portability
 
-Data is not tied to a single provider and can be accessed across environments efficiently without migration overhead. Moving data across centralized cloud storage can be costly (egress fees) and operationally complex.
+Your data does not depend on a single provider, and you can access it across environments efficiently without migration overhead. Moving data across centralized cloud storage can be costly (egress fees) and operationally complex.
 
 #### Verifiability
 
@@ -154,11 +154,11 @@ Data is content-addressed and cryptographically verifiable, so you can prove it 
 
 #### Programmable access control
 
-Access is enforced through onchain policies, enabling fine-grained, dynamic permissioning reusable across systems. Cloud storage providers manage access through centralized policies outside application logic, often requiring additional infrastructure for dynamic behavior.
+Onchain policies enforce access, enabling fine-grained, dynamic permissioning reusable across systems. Cloud storage providers manage access through centralized policies outside application logic, often requiring additional infrastructure for dynamic behavior.
 
 #### Storage resources
 
-You need a storage resource with adequate capacity and epoch duration to store a blob. Walrus measures storage duration in epochs. On Mainnet, 1 epoch lasts 2 weeks. You can purchase storage resources from the Walrus system contract by paying WAL, which is used by the client and aggregators while free space is available, or you can receive them from other parties.
+You need a storage resource with adequate capacity and epoch duration to store a blob. Walrus measures storage duration in epochs. On Mainnet, 1 epoch lasts 2 weeks. You can purchase storage resources from the Walrus system contract by paying WAL, which the client and aggregators use while free space is available, or you can receive them from other parties.
 
 The cost of a storage resource is based on the blob's **encoded size**, not the size of your original file. The encoded size is the erasure-coded size of the blob, about 4.5x the original, plus a fixed 64 MB of per-blob metadata. For blobs smaller than 10 MB, the fixed metadata cost dominates. See [Reducing costs for small blobs](#reducing-costs-for-small-blobs-with-quilt) for optimization strategies.
 
@@ -175,7 +175,7 @@ Small blobs still pay fixed metadata overhead. If you store many small files, us
 
 #### Storage fund
 
-The storage fund holds WAL for storing blobs across 1 or more epochs. When you purchase storage space from the system object, payments are allocated across the relevant epochs. At the end of each epoch, funds are distributed to storage nodes based on performance, which is determined through light audits that nodes conduct on each other.
+The storage fund holds WAL for storing blobs across 1 or more epochs. When you purchase storage space from the system object, the system allocates payments across the relevant epochs. At the end of each epoch, the system distributes funds to storage nodes based on performance. Nodes measure performance through light audits that they conduct on each other.
 
 #### Upload fees
 
@@ -193,7 +193,7 @@ Storing a blob involves up to 3 onchain [Sui transactions](https://docs.sui.io/c
 
 #### Sui object storage
 
-Walrus blobs are represented as [Sui objects](https://docs.sui.io/guides/developer/objects/object-model) onchain. Creating these objects deposits SUI into the [Sui storage fund](https://docs.sui.io/concepts/sui-architecture/sui-storage#storage-fund), most of which is refunded when you delete the objects.
+Walrus represents blobs as [Sui objects](https://docs.sui.io/guides/developer/objects/object-model) onchain. Creating these objects deposits SUI into the [Sui storage fund](https://docs.sui.io/concepts/sui-architecture/sui-storage#storage-fund), and Sui refunds most of it when you delete the objects.
 
 ## How to measure costs
 
@@ -225,19 +225,21 @@ Use the [Walrus Cost Calculator](https://costcalculator.wal.app/) for interactiv
 
 ## How does the storage resource lifecycle work?
 
+Storage resources and the blobs that use them go through the following stages.
+
 #### Acquiring storage
 
 Purchase storage space from the system object by paying into the storage fund for a specified duration of 1 or more epochs. You can split, merge, or transfer storage resources. The maximum duration you can purchase in advance is approximately 2 years.
 
 #### Assigning a blob ID
 
-After acquiring storage, assign a blob ID to indicate intent to store. This emits a Move resource event, signaling storage nodes to expect and authorize off-chain storage operations.
+After acquiring storage, assign a blob ID to indicate intent to store. This emits a Move resource event, signaling storage nodes to expect and authorize offchain storage operations.
 
 #### Certifying availability
 
-After uploading blob data off-chain, certify availability onchain:
+After uploading blob data offchain, certify availability onchain:
 
-1. Upload blob slivers to storage nodes off-chain.
+1. Upload blob slivers to storage nodes offchain.
 2. Receive an availability certificate from storage nodes.
 3. Upload the certificate onchain.
 4. The system checks the certificate against the current Walrus committee.
@@ -251,7 +253,7 @@ You can extend a certified blob's storage at any time by attaching a storage obj
 
 #### Handling inconsistent blobs
 
-If a blob ID is not correctly encoded, an inconsistency proof certificate can be submitted onchain. This emits an inconsistent blob event, signaling that reads for that blob ID always return `None` and that storage nodes can delete its slivers (except for an indicator to return `None`).
+If a blob ID has an incorrect encoding, submitting an inconsistency proof certificate onchain emits an inconsistent blob event, signaling that reads for that blob ID always return `None` and that storage nodes can delete its slivers (except for an indicator to return `None`).
 
 ## How to acquire storage resources
 
@@ -261,9 +263,11 @@ You can acquire storage resources through 3 methods:
 
 1. **Reuse existing resources:** The CLI automatically uses any user-owned storage resource of appropriate size and duration before purchasing new storage.
 
-1. **Transfer or trade:** Storage resources can be transferred between users or acquired through marketplace implementations.
+1. **Transfer or trade:** You can transfer storage resources between users or acquire them through marketplace implementations.
 
 ## How to optimize costs
+
+The following strategies reduce WAL and SUI costs.
 
 #### Reducing costs for small blobs with Quilt
 
@@ -287,7 +291,7 @@ Pack multiple smart contract calls into a single [Sui programmable transaction b
 
 #### Reclaim and reuse storage
 
-You can reclaim storage resources by deleting non-expired blobs that were created as deletable. If your app only needs to store data for less than 1 epoch (2 weeks on Mainnet), actively deleting blobs and reusing storage space reduces costs.
+You can reclaim storage resources by deleting non-expired blobs that you created as deletable. If your app only needs to store data for less than 1 epoch (2 weeks on Mainnet), actively deleting blobs and reusing storage space reduces costs.
 
 #### Batch blob operations
 

@@ -42,7 +42,7 @@ answer: >-
   parameters, and setup instructions.
 ---
 
-Walrus Mainnet operates a production-quality storage network using corresponding resources on the Sui Mainnet. The Walrus Testnet operates in conjunction with the Sui Testnet and is used to test new features before they graduate to Mainnet. Alternatively, developers can operate a local instance of both Walrus and Sui for personalized testing.
+Walrus Mainnet operates a production-quality storage network using corresponding resources on the Sui Mainnet. The Walrus Testnet operates in conjunction with the Sui Testnet, and Walrus uses it to test new features before they graduate to Mainnet. Alternatively, you can operate a local instance of both Walrus and Sui for personalized testing.
 
 :::info
 
@@ -52,16 +52,16 @@ The [Network Reference](/docs/network-reference) is the canonical source for Wal
 
 ## Network parameters
 
-Important fixed system parameters for Mainnet and Testnet are summarized in the following table:
+The following table summarizes important fixed system parameters for Mainnet and Testnet:
 
 | Parameter                                                | Mainnet | Testnet |
 |----------------------------------------------------------|---------|---------|
 | Sui network                                              | Mainnet | Testnet |
 | Number of shards                                         | 1000    | 1000    |
 | Epoch duration                                           | 2 weeks | 1 day   |
-| Maximum number of epochs for which storage can be bought | 53      | 53      |
+| Maximum number of epochs for which you can buy storage   | 53      | 53      |
 
-Many other parameters, including the system capacity and prices, are dynamic. These parameters are stored in the system object and you can view them with tools like the [Walruscan explorer](https://walruscan.com/).
+Many other parameters, including the system capacity and prices, are dynamic. The system object stores these parameters, and you can view them with tools like the [Walruscan explorer](https://walruscan.com/).
 
 ## Mainnet configuration
 
@@ -87,13 +87,13 @@ All transactions run on the Sui Testnet and use Testnet WAL and SUI, which have 
 
 :::danger
 
-The state of the network can be wiped at any point and possibly without warning. Do not use this Testnet for any production purposes, as it comes with no availability or persistence guarantees. New features on Testnet might break deployed Testnet apps.
+The network state can reset at any point, possibly without warning. Do not use this Testnet for any production purposes, as it comes with no availability or persistence guarantees. New features on Testnet might break deployed Testnet apps.
 
 :::
 
-See the [Testnet terms of service](/docs/legal/testnet_tos) under which this Testnet is made available.
+See the [Testnet terms of service](/docs/legal/testnet_tos) that govern this Testnet.
 
-The configuration parameters for the Walrus Testnet are included in the configuration file described on the [getting started guide](/docs/getting-started#configure-tooling). If you want only the Testnet configuration, you can get the Testnet-only configuration file. The parameters are:
+The configuration file described on the [getting started guide](/docs/getting-started#configure-tooling) includes the configuration parameters for the Walrus Testnet. If you want only the Testnet configuration, you can get the Testnet-only configuration file. The parameters are:
 
 <ImportContent source="/setup/client_config_testnet.yaml" mode="code"/>
 
@@ -101,7 +101,7 @@ You can find the current Testnet package IDs in the `Move.lock` files in the sub
 
 ## Exchange Testnet SUI for WAL {#testnet-wal-faucet}
 
-The Walrus Testnet uses Testnet WAL tokens for buying storage and staking. Testnet WAL tokens have no value and can be exchanged at a 1:1 rate for Testnet SUI tokens, which also have no value.
+The Walrus Testnet uses Testnet WAL tokens for buying storage and staking. Testnet WAL tokens have no value, and you can exchange them at a 1:1 rate for Testnet SUI tokens, which also have no value.
 
 Use the official WAL exchange flow on this page for Testnet WAL. Third-party faucets can distribute WAL from a package the Walrus client does not accept.
 
@@ -152,7 +152,7 @@ If successful, the console responds:
 ╰─────────────────────────────────────────╯
 ```
 
-By default, 0.5 SUI are exchanged for 0.5 WAL. To exchange a different amount of SUI, use the `--amount` option. The value is in MIST/FROST, the raw units shown in the balance output (for example, a balance of `500000000` raw FROST is displayed as `0.50 WAL`). To use a specific SUI/WAL exchange object, use the `--exchange-id` option. Run `walrus get-wal --help` for more information about these options.
+By default, the command exchanges 0.5 SUI for 0.5 WAL. To exchange a different amount of SUI, use the `--amount` option. The value is in MIST or FROST, the raw units shown in the balance output (for example, the balance output displays a balance of `500000000` raw FROST as `0.50 WAL`). To use a specific SUI-to-WAL exchange object, use the `--exchange-id` option. Run `walrus get-wal --help` for more information about these options.
 
 
 ## Run a local Walrus network
