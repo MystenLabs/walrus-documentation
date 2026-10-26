@@ -37,7 +37,7 @@ answer: >-
   onchain actions and only requires specifying the address on which it listens:.
 ---
 
-Run a Walrus aggregator to expose the [HTTP API](/docs/http-api/storing-blobs). The aggregator does not perform any onchain actions and only requires specifying the address on which it listens:
+Run a Walrus aggregator to expose the [HTTP API](/docs/http-api/storing-blobs). The aggregator does not perform any onchain actions and only requires specifying the address on which it listens. The port in the following example (31415) is only illustrative; the `systemd` example later on this page binds the aggregator to port 9000 instead:
 
 ```sh
 $ walrus aggregator --bind-address "127.0.0.1:31415"
@@ -52,7 +52,7 @@ Run a local Walrus daemon through the `walrus` binary using one of the following
 
 :::tip
 
-If you run the aggregator without a reverse proxy, open **port 9000** on your firewall. With a reverse proxy (such as the [nginx caching setup](/docs/operator-guide/limitations#nginx-caching)), only **port 443** needs to be open.
+If you run the aggregator without a reverse proxy, open the port the aggregator binds to on your firewall (**port 9000** in the `systemd` example on this page). With a reverse proxy (such as the [nginx caching setup](/docs/operator-guide/limitations#nginx-caching)), only **port 443** needs to be open.
 
 :::
 
