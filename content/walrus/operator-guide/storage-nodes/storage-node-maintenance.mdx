@@ -44,11 +44,11 @@ Monitor, update, and maintain a Walrus storage node, including key metrics, upda
 
 This page covers the ongoing operation of your Walrus storage node after [initial setup](/docs/operator-guide/storage-nodes/storage-node-setup).
 
-## Important data to back up
+## What data should you back up?
 
 Back up the `/opt/walrus/config` directory. For database backups, see the [Backup and Restore Guide](/docs/operator-guide/storage-nodes/backup-restore-guide).
 
-## Key metrics and alerts
+## Which metrics should you monitor?
 
 The following metrics are the most important for monitoring node health. Set up alerts based on the severity levels below.
 
@@ -77,7 +77,7 @@ $ journalctl -efu walrus-node
 
 Other metrics like `walrus_storage_confirmations_issued_total` should also increase regularly, but they depend on user activity.
 
-## Update your node
+## How to update your node
 
 To update your node:
 
@@ -109,7 +109,7 @@ You are generally expected to upgrade within 24 hours of a new release. In emerg
 
 :::
 
-## Database corruption
+## What to do if the database is corrupted
 
 If the node database becomes corrupted (for example, after an unclean shutdown), do not attempt to repair it yourself. Reach out to the Walrus Core team on Discord for guidance before taking any recovery action.
 
@@ -127,7 +127,7 @@ To modify node parameters (capacity, voting parameters, metadata, and others), e
 
 Avoid changing the node name, keys, and network address unless necessary because this causes some friction in the network.
 
-## Migrate the node wallet to a new wallet
+## How to migrate the node wallet to a new wallet
 
 The storage node uses a Sui wallet (the node wallet) to sign transactions, such as epoch sync confirmations and event blob attestations. The node's `StorageNodeCap` object, which the node wallet owns, authorizes these transactions. Because the capability is a transferable Sui object, you can move it to a new wallet and switch the node to that wallet. For example, you can rotate a hot wallet that you suspect is compromised.
 
