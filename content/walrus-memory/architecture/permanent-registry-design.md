@@ -2,7 +2,7 @@
 title: "Permanent Registry Design"
 description: >-
   Design rationale for the permanent append-only AccountRegistry in Walrus Memory,
-  explaining why account entries are never removed to prevent Sybil attacks,
+  explaining why the registry never removes account entries: to prevent Sybil attacks,
   ensure deterministic indexing, and maintain SEAL access integrity.
 keywords:
   - Walrus Memory
@@ -31,26 +31,25 @@ questions:
   - "How does the permanent registry prevent Sybil attacks in Walrus Memory?"
 answer: >-
   The AccountRegistry is a permanent append-only mapping so that each address can only
-  create one MemWalAccount. Account deletion is treated as deactivation rather than
+  create one MemWalAccount. Walrus Memory treats account deletion as deactivation rather than
   erasure, preventing duplicate Sybil accounts, preserving deterministic indexing for
-  off-chain systems, and ensuring SEAL encryption identity maps to a single stable
-  on-chain policy object.
+  offchain systems, and ensuring SEAL encryption identity maps to a single stable
+  onchain policy object.
 ---
 
-# Permanent Registry Design Intent
+## Permanent registry design intent
 
-## Overview
-The `AccountRegistry` shared object in Walrus Memory is designed as a *permanent* append-only mapping of `owner_address -> account_id`. Even if a user decides to deactivate or "delete" their account, their address remains in the registry.
+The `AccountRegistry` shared object in Walrus Memory is a permanent append-only mapping of `owner_address -> account_id`. Even if you deactivate or delete your account, your address remains in the registry.
 
-## Security  and  architecture rationale
-1. **Preventing Duplicate Sybil Accounts:**
-   By maintaining a permanent record, this ensures that an address can only ever create exactly *one* MemWalAccount. This simplifies offchain indexing and prevents abuses related to account recreation.
+## Security and architecture rationale
+1. **Preventing duplicate Sybil accounts:**
+   By maintaining a permanent record, the registry ensures that an address can only ever create exactly one MemWalAccount. This simplifies offchain indexing and prevents abuses related to account recreation.
    
-2. **Deterministic Indexing:**
-   Indexers rely on a strict 1:1 mapping between a user's wallet address and their Walrus Memory storage container. If accounts could be deleted and recreated with a different ID, historical data queries and relational integrity offchain would be compromised.
+2. **Deterministic indexing:**
+   Indexers rely on a strict 1:1 mapping between your wallet address and your Walrus Memory storage container. If you could delete an account and recreate it with a different ID, offchain historical data queries and relational integrity would break.
 
-3. **Data Immutability Context:**
-   In Web3, identity is persistent. The "deletion" of an account in Walrus Memory is treated as a *deactivation* (freezing) rather than true erasure, which aligns with blockchain state patterns. The account remains frozen, preserving the historical linkage.
+3. **Data immutability context:**
+   In Web3, identity is persistent. Walrus Memory treats the deletion of an account as a deactivation (freezing) rather than true erasure, which aligns with blockchain state patterns. The account remains frozen, preserving the historical linkage.
 
-4. **Seal Access Integrity:**
+4. **Seal access integrity:**
    If an address could recreate its account, old data encrypted under the same Seal Key ID (`bcs(address)`) could become unpredictably accessible or orphaned depending on the new configuration. A permanent registry guarantees that the encryption identity mathematically maps to a single, stable onchain policy object forever.
