@@ -46,7 +46,7 @@ Mint keys through the Console web interface. Each key carries one of three scope
 
 A request with no valid key returns `401`. A key without access to the target resource returns `403`.
 
-## Base URL and conventions
+## What base URL and conventions does the API use?
 
 All paths are relative to the base URL and prefixed with `/api/v1`:
 
@@ -56,11 +56,11 @@ https://api.console.walrus.xyz
 
 Request and response bodies are JSON unless noted. File upload uses `multipart/form-data`, and download redirects to a separate content host. Resource identifiers are UUIDs. Response keys are `snake_case`. Request bodies keep the field names shown in each section, some of which are `camelCase`.
 
-### Pagination
+### How to paginate results
 
 List endpoints return an opaque cursor. Pass `limit` to set page size and `cursor` to fetch the next page. When there are no further results, the cursor field returns `null`. Folder lists return the cursor as `next_cursor`. File lists and search return a `pagination` object with `limit`, `has_more`, and `next_cursor`.
 
-### Asynchronous operations
+### Which operations are asynchronous?
 
 Console processes upload and delete operations asynchronously. Upload returns `202` with a file ID, then you poll the file status endpoint until the job state is `completed`. Delete returns `204` immediately and releases storage after a background worker confirms the removal. Deleting a folder also deletes every file in it.
 
