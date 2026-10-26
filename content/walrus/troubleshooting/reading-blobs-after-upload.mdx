@@ -48,7 +48,7 @@ Walrus itself maintains strong consistency. Once the network certifies a blob, a
 
 Public aggregators often sit behind a content delivery network (CDN). When a request for a blob arrives before the aggregator sees the blob, the CDN might cache the resulting `404 Not Found` response and keep serving it for a short time after the blob becomes available.
 
-## When this applies
+## When does the propagation window apply?
 
 This propagation window only affects you when both conditions are true:
 
@@ -72,7 +72,7 @@ The following helper handles the post-upload path: your app receives a successfu
 
 Tune `maxAttempts` and `baseDelayMs` to your latency budget. A few seconds of total retry time is usually sufficient. Do not use this pattern for general reads. For those reads, treat `404` as final.
 
-### Bypass the CDN cache if needed
+### How to bypass the CDN cache
 
 Some CDNs might ignore cache control headers and cache the `404` response. If retries keep returning the cached `404`, append a unique query parameter:
 
@@ -90,7 +90,7 @@ If a single aggregator is slow to surface the blob, try another aggregator. If o
 
 Before showing a freshly uploaded blob to an audience, retrieve it once from the aggregator you plan to use. This populates the aggregator and CDN caches before you need them.
 
-## Confirm the blob is on the network
+## How to confirm the blob is on the network
 
 If you are unsure whether a persistent `404` is a cache artifact or a missing blob, check the blob directly with the Walrus CLI, which bypasses aggregators and CDNs entirely:
 
@@ -98,7 +98,7 @@ If you are unsure whether a persistent `404` is a cache artifact or a missing bl
 $ walrus blob-status --blob-id <BLOB_ID>
 ```
 
-The command reports whether the blob is certified and its availability period. See [checking blob status](/docs/walrus-client/reading-blobs#check-blob-status). You can also read the bytes directly from storage nodes:
+The command reports whether the blob is certified and its availability period. You can also read the bytes directly from storage nodes:
 
 ```sh
 $ walrus read <BLOB_ID> --out <FILE>
