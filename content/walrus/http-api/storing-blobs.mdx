@@ -60,7 +60,7 @@ When you read through a CDN-fronted aggregator immediately after certification, 
 
 :::
 
-## Configuring storage options
+## How to configure storage options
 
 Control how the new blob is created through a combination of query parameters as documented in the [OpenAPI specification](https://github.com/mystenlabs/walrus/tree/main/crates/walrus-service/publisher_openapi.html).
 
@@ -89,7 +89,7 @@ $ curl -X PUT "$PUBLISHER/v1/blobs?permanent=true" --upload-file "some/file"
 
 :::caution
 
-Newly stored blobs are deletable by default.
+Newly stored blobs are permanent by default; pass `deletable=true` to store a deletable blob. The `newlyCreated` response for a store without query parameters shows `"deletable": false`.
 
 :::
 
@@ -102,7 +102,7 @@ Specify an address to which the resulting `Blob` object is sent using the `send_
 $ curl -X PUT "$PUBLISHER/v1/blobs?send_object_to=$ADDRESS" --upload-file "some/file"
 ```
 
-## Understanding the response
+## What does a store request return?
 
 The store HTTP API endpoints return information about stored blobs in JSON format.
 
