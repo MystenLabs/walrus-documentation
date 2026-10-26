@@ -75,7 +75,7 @@ $ curl -X PUT "$PUBLISHER/v1/blobs?epochs=5" --upload-file "some/file"
 
 ### Deletable and permanent blobs
 
-Specify whether a blob is stored as permanent or deletable through a query parameter `permanent=true` or `deletable=true`:
+Newly stored blobs are deletable by default. Specify whether a blob is stored as permanent or deletable through a query parameter `permanent=true` or `deletable=true`:
 
 ```sh
 # Store file `some/file` as a deletable blob:

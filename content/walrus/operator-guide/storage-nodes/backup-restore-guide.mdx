@@ -182,7 +182,7 @@ Assuming the Walrus storage path is `storage_path: /opt/walrus/db`:
 $ sudo -u walrus cp -r /opt/walrus/db /opt/walrus/db.backup.$(date +%Y%m%d-%H%M%S)
 ```
 
-This command saves the main database files, the events database (`/opt/walrus/db/events/`), and event blob data (`/opt/walrus/db/event_blob_writer/`).
+Because `cp -r` copies the storage path recursively, this single command captures the entire database directory, including the nested events database (`/opt/walrus/db/events/`) and event blob data (`/opt/walrus/db/event_blob_writer/`) subdirectories.
 
 ##### Step 3: Clear existing data (if performing a clean restore).
 

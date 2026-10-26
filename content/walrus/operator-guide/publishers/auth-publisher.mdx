@@ -98,7 +98,7 @@ Each JWT token can only be used once. After storing 1 file, the replay suppressi
 Configure the publisher at startup using the following command line arguments:
 
 - `--jwt-decode-secret`: The secret key used to verify JWT signatures. If set, the publisher only stores blobs with valid JWTs.
-- `--jwt-algorithm`: The algorithm used for JWT verification (defaults to HMAC).
+- `--jwt-algorithm`: The algorithm used for JWT verification (defaults to HS256).
 - `--jwt-expiring-sec`: Duration in seconds after which the JWT is considered expired.
 - `--jwt-verify-upload`: Enables verification of upload parameters against JWT claims.
 

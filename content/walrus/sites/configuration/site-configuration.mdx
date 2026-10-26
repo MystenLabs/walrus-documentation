@@ -159,7 +159,7 @@ You can set a name for your Walrus Site through the optional `site_name` field i
 
 ## Site object ID
 
-The optional `object_id` field in the `ws-resources.json` file stores the Sui object ID of your deployed Walrus Site.
+The optional `object_id` field in the `ws-resources.json` file stores the Sui object ID of your deployed Walrus Site. You can also set this field manually to target an existing site: if a valid `object_id` is present, `deploy` targets that site for modifications.
 
 The [`site-builder deploy` command](/docs/sites/getting-started/using-the-site-builder) primarily uses this field to identify an existing site for updates. If a valid `object_id` is present, `deploy` targets that site for modifications. If this field is missing and no `--object-id` CLI flag is used, `deploy` publishes a new site. If successful, then the command automatically populates this `object_id` field in your `ws-resources.json`.
 

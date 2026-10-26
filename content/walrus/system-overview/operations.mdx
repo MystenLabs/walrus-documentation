@@ -172,7 +172,7 @@ The command `walrus blob-id <FILE>` derives the blob ID of any file. The blob ID
 
 The `walrus list-blobs` command lists all non-expired Sui objects that the current account owns, including their blob ID, object ID, and metadata about expiration and deletable status. The `--include-expired` option also lists expired Sui objects.
 
-The Sui storage cost associated with Sui objects can be reclaimed by burning the Sui object. This does not cause the Walrus blob to be deleted, but means that operations such as extending its lifetime, deleting it, or modifying attributes are no longer available. The `walrus burn-blobs --object-ids <SUI_OBJ_IDS>` command burns a specific list of Sui object IDs. The `--all` flag burns the Sui objects for all blobs under the user account, and `--all-expired` burns all expired blobs under the user account.
+**Burn blob objects to reclaim Sui storage:** The Sui storage cost associated with Sui objects can be reclaimed by burning the Sui object. This does not cause the Walrus blob to be deleted, but means that operations such as extending its lifetime, deleting it, or modifying attributes are no longer available. The `walrus burn-blobs --object-ids <SUI_OBJ_IDS>` command burns a specific list of Sui object IDs. The `--all` flag burns the Sui objects for all blobs under the user account, and `--all-expired` burns all expired blobs under the user account.
 
 ## Extend a blob's storage duration
 

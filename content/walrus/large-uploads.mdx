@@ -96,7 +96,7 @@ Very high ingestion rates can temporarily reduce throughput if recovery processe
 
 Erasure coding and upload processing add memory overhead per blob. Running too many concurrent uploads without sufficient RAM can cause instability or failed uploads. Each upload requires approximately 4.5x the blob size in memory because erasure coding expands the data into redundant shards that the client must hold during encoding.
 
-- Limit concurrent upload workers based on available RAM.
+- Limit concurrent upload workers based on available RAM, allowing approximately 4.5x the blob size of memory for each concurrent upload.
 
 - Estimate total memory as: `blob_size × encoding_overhead × concurrent_uploads`.
 

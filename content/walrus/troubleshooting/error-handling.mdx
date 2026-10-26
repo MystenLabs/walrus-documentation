@@ -95,7 +95,7 @@ const result = await retryWithBackoff(() =>
 );
 ```
 
-Only retry errors that are transient. Errors such as insufficient funds, invalid blob IDs, or blobs that are too large do not benefit from retries.
+Only retry errors that are transient. Errors such as insufficient funds, invalid blob IDs, or blobs that are too large do not benefit from retries. Note that the `for` loop already bounds `attempt` to `maxRetries`, so the extra `attempt <= maxRetries` check in the `catch` block is always true and is redundant.
 
 ## Verify on-chain state after timeouts
 
