@@ -37,7 +37,7 @@ answer: >-
   wallets, TLS, RPC configuration, and commission rates.
 ---
 
-Walrus storage node operators commonly ask about wallets, TLS, Sui RPC configuration, and commission rates.
+A Walrus storage node needs its own wallet compatible with the Sui Rust SDK, reads its TLS settings from `walrus-node.yaml`, sends all Sui interactions to the `--sui-rpc` endpoint, and sets its commission rate in basis points, with a default of 6000 bp (60%).
 
 ## Which wallets do you need? {#wallets}
 
