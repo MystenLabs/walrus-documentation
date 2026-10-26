@@ -186,7 +186,7 @@ Site object ID: 0x4a1be0fb330215c532d74c70d34bc35f185cc7ce025e04b9ad42bc4ac8eda5
     1. For local development: http://1uhtkoi4t8swxbn2y0mec0l94368nhq2wa1xlh1kc1e43fbzym.localhost:3000
     2. For public sharing: http://1uhtkoi4t8swxbn2y0mec0l94368nhq2wa1xlh1kc1e43fbzym.yourdomain.com:3000
 
-    📖 Setup instructions: https://docs.wal.app/walrus-sites/portal.html#running-the-portal-locally
+    📖 Setup instructions: https://docs.wal.app/docs/sites/portals/deploy-locally.html#running-the-portal-locally
 
     💡 Tip: You may also bring your own domain (/docs/sites/custom-domains/bringing-your-own-domain)
             or find third-party hosted testnet portals.
@@ -275,7 +275,7 @@ There are workarounds for simulating redirect behavior in the browser. For more 
 
 If you have a script that generates pure markdown files from your site's pages for ingestion by agents, you must configure `ws-resources.json` to serve those files correctly. Two things are required: a header entry and a route entry.
 
-### Headers
+### How to add a header entry
 
 Add a header entry in your `ws-resources.json` file for each markdown file so that browsers and tools receive the correct `Content-Type` and display the file inline rather than triggering a download:
 
@@ -296,7 +296,7 @@ This entry is case sensitive. `"content-type"` must be lowercase.
 Without this, the file will be served as a generic binary download rather than readable markdown.
 :::
 
-### Routes
+### How to add a route entry
 
 Add a route entry mapping the public-facing URL to the markdown file's path in your build output:
 
