@@ -28,7 +28,7 @@ questions:
   - "How do I connect to the public Walrus Memory relayer?"
   - "What are the trade-offs of using the managed Walrus Memory relayer?"
 answer: >-
-  The Walrus Foundation hosts managed relayer endpoints for production (mainnet) at relayer.memory.walrus.xyz and staging (testnet) at relayer-staging.memory.walrus.xyz. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext during encryption, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
+  The Walrus Foundation hosts managed relayer endpoints for production (Mainnet) at relayer.memory.walrus.xyz and staging (Testnet) at relayer-staging.memory.walrus.xyz. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext during encryption, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
 ---
 
 A managed relayer is a simpler experience for teams that want to get started without running infrastructure. If a managed relayer endpoint is available for your environment, it gives you the fastest path to integration.
@@ -57,9 +57,9 @@ const memwal = MemWal.create({
 
 ## What to know
 
-- **Shared App ID** - all users of the managed relayer share the same Walrus Memory package ID. Your own `owner + namespace` (Memory Space) isolates your data, but the underlying deployment is shared.
-- **Trust assumption** - the relayer sees plaintext during encryption and embedding. By using the managed relayer, you're trusting the Walrus Foundation-hosted instance with that data. See [Trust and Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model) for details.
-- **Availability** - the Walrus Foundation provides the managed relayer as a public good without SLA guarantees.
+- **Shared App ID:** All users of the managed relayer share the same Walrus Memory package ID. Your own `owner + namespace` (Memory Space) isolates your data, but all users share the underlying deployment.
+- **Trust assumption:** The relayer sees plaintext during encryption and embedding. By using the managed relayer, you're trusting the Walrus Foundation-hosted instance with that data. See [Trust and Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model) for details.
+- **Availability:** The Walrus Foundation provides the managed relayer as a public good without SLA guarantees.
 
 ## Storage costs
 
