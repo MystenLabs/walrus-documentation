@@ -28,7 +28,7 @@ answer: >-
   every push, and port Next.js apps by building with static export.
 ---
 
-A working deploy and a production site differ in a handful of predictable ways: which portal serves it, how client-side routes resolve, how caches behave across updates, and how new versions ship. Work through each section below before you share a production URL.
+A working deploy and a production site differ in a handful of predictable ways: which portal serves it, how client-side routes resolve, how caches behave across updates, and how new versions ship. Work through each section before you share a production URL.
 
 ## Which network and portal should you use?
 
@@ -84,10 +84,10 @@ const nextConfig = {
 };
 ```
 
-`next build` then writes plain HTML and assets to `out/`, which you deploy directly (`--epochs` is required; place `ws-resources.json` in `public/` so redeploys update the same site):
+`next build` then writes plain HTML and assets to `out/`, which you deploy directly (you must pass `--epochs`; place `ws-resources.json` in `public/` so redeploys update the same site):
 
 ```sh
 $ site-builder deploy --epochs <NUMBER> ./out
 ```
 
-Features that need a server at request time, such as API routes, server actions, and on-demand rendering, do not run on a static host; move that logic to external services or client-side calls. Client-side navigation works with the SPA routing configuration above.
+Features that need a server at request time, such as API routes, server actions, and on-demand rendering, do not run on a static host; move that logic to external services or client-side calls. Client-side navigation works with the routing configuration from [How to configure SPA routing](#how-to-configure-spa-routing).

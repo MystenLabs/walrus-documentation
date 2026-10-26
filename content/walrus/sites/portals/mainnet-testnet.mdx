@@ -35,15 +35,15 @@ questions:
   - How do I testnet?
   - How do I get started with configure a local sites portal?
 answer: >-
-  Walrus Site Portals are used to access and browse a Walrus Site. The portal
-  you run **must** match the network on which your site is deployed.
+  You use Walrus Site Portals to access and browse a Walrus Site. The portal
+  you run **must** match the network where you deployed your site.
 ---
 
-Walrus Site Portals are used to access and browse a Walrus Site. The portal you run **must** match the network on which your site is deployed. Each network has its own onchain package, default RPC endpoint, and Walrus aggregator.
+You use Walrus Site Portals to access and browse a Walrus Site. The portal you run **must** match the network where you deployed your site. Each network has its own onchain package, default RPC endpoint, and Walrus aggregator.
 
-The public portal `https://wal.app` is provided by the Walrus Foundation and only serves sites deployed on Mainnet that also have a SuiNS domain name configured. Walrus Foundation does not maintain a portal that serves Testnet Walrus Sites.
+The Walrus Foundation provides the public portal `https://wal.app`, which only serves sites deployed on Mainnet that also have a SuiNS domain name configured. Walrus Foundation does not maintain a portal that serves Testnet Walrus Sites.
 
-To access sites that are deployed on Mainnet without a SuiNS domain name, or sites deployed to Testnet, you must run your own portal through self-hosting or within a local environment.
+To access sites deployed on Mainnet without a SuiNS domain name, or sites deployed to Testnet, you must run your own portal through self-hosting or within a local environment.
 
 :::caution
 
@@ -53,7 +53,7 @@ The public `wal.app` portal only serves Mainnet sites linked with SuiNS names. I
 
 ## Which public portals are available? {#public-portals}
 
-A list of public portals is maintained in the [Walrus docs repository](https://github.com/MystenLabs/walrus-documentation). Portals can self-identify by opening a PR that adds an entry to `site/static/portals.json`.
+The [Walrus docs repository](https://github.com/MystenLabs/walrus-documentation) maintains a list of public portals. Portals can self-identify by opening a pull request that adds an entry to `site/static/portals.json`.
 
 import PortalsList from '@site/src/components/PortalsList';
 
@@ -249,7 +249,7 @@ bring_your_own_domain: false
 
 #### `enable_blocklist`
 
-When `true`, the portal rejects requests for sites on the blocklist. Enabling this requires setting the `BLOCKLIST_REDIS_URL` environment variable, as the blocklist is stored in Redis and has no YAML equivalent.
+When `true`, the portal rejects requests for sites on the blocklist. Enabling this requires setting the `BLOCKLIST_REDIS_URL` environment variable, because the blocklist lives in Redis and has no YAML equivalent.
 
 **Type:** `boolean` 
 **Required:** Yes  
@@ -261,13 +261,13 @@ enable_blocklist: false
 
 :::info
 
-`BLOCKLIST_REDIS_URL` must be set as an environment variable. There is no `portal-config.yaml` equivalent.
+You must set `BLOCKLIST_REDIS_URL` as an environment variable. There is no `portal-config.yaml` equivalent.
 
 :::
 
 #### `enable_allowlist`
 
-When `true`, the portal serves only sites on the allowlist and requires `premium_rpc_urls` to be configured. Enabling this also requires setting the `ALLOWLIST_REDIS_URL` environment variable.
+When `true`, the portal serves only sites on the allowlist and requires you to configure `premium_rpc_urls`. Enabling this also requires setting the `ALLOWLIST_REDIS_URL` environment variable.
 
 **Type:** `boolean`  
 **Required:** Yes  
@@ -279,7 +279,7 @@ enable_allowlist: false
 
 :::info
 
-`ALLOWLIST_REDIS_URL` must be set as an environment variable. It has no `portal-config.yaml` equivalent.
+You must set `ALLOWLIST_REDIS_URL` as an environment variable. It has no `portal-config.yaml` equivalent.
 
 :::
 
@@ -369,9 +369,9 @@ aggregator_urls:
 
 ## Environment variable overrides {#environment-variable-overrides}
 
-The environment variables are set in the `.env.local` file at the root of each portal directory. All fields in `portal-config.yaml` can be overridden at runtime by the corresponding environment variable. When both are set, the environment variable takes precedence.
+You set the environment variables in the `.env.local` file at the root of each portal directory. The corresponding environment variable can override any field in `portal-config.yaml` at runtime. When both are set, the environment variable takes precedence.
 
-The following variables have no `portal-config.yaml` equivalent and must always be set as environment variables:
+The following variables have no `portal-config.yaml` equivalent, and you must always set them as environment variables:
 
 | Variable | Required when |
 |---|---|
@@ -382,16 +382,16 @@ The following variables have no `portal-config.yaml` equivalent and must always 
 
 ## Constants
 
-You can find the `constants.ts` file in the `portal/common/lib` directory. It holds key configuration parameters for the portal. Typically, you won't need to modify these, but if you do, these are the available parameters:
+You can find the `constants.ts` file in the `portal/common/lib` directory. It holds key configuration parameters for the portal. Typically, you do not need to modify these, but if you do, these are the available parameters:
 
 | Constant | Description |
 |---|---|
 | `MAX_REDIRECT_DEPTH` | The number of [redirects](/docs/sites/linking/redirects) the portal follows before stopping. |
-| `SITE_NAMES` | Hard-coded `name: objectID` mappings that override SuiNS names. For development only. Use at your own risk, as it might render some sites with legitimate SuiNS names unusable. |
+| `SITE_NAMES` | Hard-coded `name: objectID` mappings that override SuiNS names. For development only. Use at your own risk, because it might render some sites with legitimate SuiNS names unusable. |
 | `FALLBACK_PORTAL` | Applies to the service-worker portal only. The fallback portal is a server-side portal used when a browser does not support service workers. |
 
 :::warning
  
-The portal reserves the `/__wal__/*` path prefix for internal operations such as health checks. Do not use this prefix for any of your site's resources, as they will not be served correctly.
+The portal reserves the `/__wal__/*` path prefix for internal operations such as health checks. Do not use this prefix for any of your site's resources, because the portal does not serve them correctly.
  
 :::

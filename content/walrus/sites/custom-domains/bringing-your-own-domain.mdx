@@ -1,8 +1,8 @@
 ---
 title: Bringing Your Own Domain
 description: >-
-  Complete guide to configuring a custom DNS domain for a Walrus Site by
-  deploying a local portal and pointing your domain to it.
+  Configure a custom DNS domain for a Walrus Site by deploying a local portal
+  and pointing your domain to it.
 keywords:
   - walrus sites
   - custom domain
@@ -36,23 +36,23 @@ questions:
   - How do I deploy your portal to a server?
   - How do I configure your dns?
 answer: >-
-  Complete guide to configuring a custom DNS domain for a Walrus Site by
-  deploying a local portal and pointing your domain to it.
+  Configure a custom DNS domain for a Walrus Site by deploying a local portal
+  and pointing your domain to it.
 ---
 
 <AgentPrompt
   prompt="Serve my Walrus Site at a custom domain I own. Walk me through deploying a portal on my server, configuring it to serve only my site, and pointing my DNS records to it."
 />
 
-By default, Walrus Sites are served through a portal at a subdomain address like `https://example.wal.app`. If you want to serve your site at a classic DNS domain you own, for example `https://example.com`, you can do so by deploying your own portal and configuring it to serve only your site.
+By default, a portal serves Walrus Sites at a subdomain address like `https://example.wal.app`. If you want to serve your site at a classic DNS domain you own, for example `https://example.com`, you can do so by deploying your own portal and configuring it to serve only your site.
 
 :::info
 
-This guide requires you to deploy and run your own portal. The public `wal.app` portal does not support custom DNS domains. For an alternative approach that does not require running your own portal, see [Setting a SuiNS Name](/docs/sites/custom-domains/setting-a-suins-name).
+Serving your site at a custom DNS domain requires you to deploy and run your own portal. The public `wal.app` portal does not support custom DNS domains. For an alternative approach that does not require running your own portal, see [Setting a SuiNS Name](/docs/sites/custom-domains/setting-a-suins-name).
 
 :::
 
-When a visitor navigates to your domain, their request reaches your portal. The portal resolves the Walrus Site object and returns that site's content. Configuring the portal to serve only your domain prevents it from being used to serve other Walrus Sites.
+When a visitor navigates to your domain, their request reaches your portal. The portal resolves the Walrus Site object and returns that site's content. Configuring the portal to serve only your domain prevents anyone from using it to serve other Walrus Sites.
 
 <div className="outlined-tabs">
 <Tabs>
@@ -68,9 +68,9 @@ When a visitor navigates to your domain, their request reaches your portal. The 
 
 ## How to get your Walrus Site object ID in Base36
 
-When serving a Walrus Site through a portal, the portal identifies your site by its object ID in Base36 format. This is different from the standard hexadecimal object ID shown in most Sui tools.
+When serving a Walrus Site through a portal, the portal identifies your site by its object ID in Base36 format. This is different from the standard hexadecimal object ID that most Sui tools show.
 
-If you deployed your site using the [`site-builder`](/docs/sites/getting-started/using-the-site-builder) CLI, the hexadecimal object ID is printed in the deployment output:
+If you deployed your site using the [`site-builder`](/docs/sites/getting-started/using-the-site-builder) CLI, the deployment output prints the hexadecimal object ID:
 
 ```
 New site object ID: 0x617221edd060dafb4070b73160ebf535e1516bf7f246890ed35190eba786d7ac
@@ -137,14 +137,14 @@ aggregator_urls:
 
 - `landing_page_oid_b36`: The Base36 object ID of your Walrus Site. The portal uses this to identify which site to serve at your root domain.
 - `bring_your_own_domain`: Set this to `true`. When enabled, the portal serves only the site specified by `landing_page_oid_b36` and rejects requests for any other subdomain with a 404 error.
-- `network`: Set to `mainnet` or `testnet` to match the network your site is deployed on.
+- `network`: Set to `mainnet` or `testnet` to match the network you deployed your site on.
 - `site_package`: The Sui object ID of the Walrus Sites package. The correct value for each network is already present in the example files.
 - `rpc_urls`: One or more Sui RPC nodes the portal uses to read onchain data.
 - `aggregator_urls`: One or more Walrus aggregator nodes the portal uses to fetch site content.
 
 :::info
 
-Environment variables are supported and override any value set in `portal-config.yaml`. The `.env.mainnet.example` and `.env.testnet.example` files in `portal/server/` document the available environment variable names.
+The portal supports environment variables, which override any value set in `portal-config.yaml`. The `.env.mainnet.example` and `.env.testnet.example` files in `portal/server/` document the available environment variable names.
 
 :::
 

@@ -82,7 +82,7 @@ Then, install the `site-builder`:
 $ suiup install site-builder@mainnet
 ```
 
-The `site-builder` will automatically be installed in `$HOME/.local/bin`. Confirm the installation with the command:
+`suiup` automatically installs the `site-builder` in `$HOME/.local/bin`. Confirm the installation with the command:
 
 ```sh
 $ site-builder --help
@@ -90,7 +90,7 @@ $ site-builder --help
 
 ### Using a pre-built binary
 
-A `site-builder` client binary is available for Ubuntu, macOS (Apple and Intel CPUs), and [Windows](#windows) operating systems. You can download any of the binaries from the Google Cloud Storage (GCS) bucket using the links in the table below.
+A `site-builder` client binary is available for Ubuntu, macOS (Apple and Intel CPUs), and [Windows](#windows) operating systems. You can download any of the binaries from the Google Cloud Storage (GCS) bucket using the links in the following table.
 <div className="outlined-tabs">
 
 <Tabs>
@@ -194,14 +194,14 @@ site-builder
 
 ## How to configure `site-builder` {#configuration}
 
-To use `site-builder` commands to deploy Walrus Sites, the `site-builder` tool must be configured. You configure `site-builder` with the `sites-config.yaml` configuration file. Set `$NETWORK` to either `testnet` or `mainnet` before you run the download command. You can download the `sites-config.yaml` using the following command:
+To use `site-builder` commands to deploy Walrus Sites, you must configure the `site-builder` tool. You configure `site-builder` with the `sites-config.yaml` configuration file. Set `$NETWORK` to either `testnet` or `mainnet` before you run the download command. You can download the `sites-config.yaml` using the following command:
 
 ```sh
 $ curl https://raw.githubusercontent.com/MystenLabs/walrus-sites/refs/heads/$NETWORK/sites-config.yaml -o ~/.config/walrus/sites-config.yaml
 ```
 
 :::info 
-Replace `$NETWORK` with either `testnet` or `mainnet` depending on which network you want to deploy your site to. If you plan to test your site on Testnet first, then deploy on Mainnet afterwards, you will need to ensure the `sites-config.yaml` file contains configurations for both networks.
+Replace `$NETWORK` with either `testnet` or `mainnet` depending on which network you want to deploy your site to. If you plan to test your site on Testnet first, then deploy on Mainnet afterwards, make sure the `sites-config.yaml` file contains configurations for both networks.
 :::
 
 By default, `site-builder` requires the `sites-config.yaml` file to be in one of the following locations: 
@@ -211,7 +211,7 @@ By default, `site-builder` requires the `sites-config.yaml` file to be in one of
 - `~/.config/walrus/`
 - `~/.walrus/`
 
-If the configuration file is not in one of these locations, and you do not specify the location of the file with the flag `--config`, you will see the following error when attempting to run any `site-builder` command:
+If the configuration file is not in one of these locations, and you do not specify the location of the file with the flag `--config`, you see the following error when attempting to run any `site-builder` command:
 
 ```sh
 Error during execution: could not find a valid sites configuration file; consider using  the --config flag to specify the config
