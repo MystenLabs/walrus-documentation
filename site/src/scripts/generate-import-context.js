@@ -9,8 +9,9 @@
 //   2. The MystenLabs/walrus repository, for roots listed in REMOTE_ROOTS
 //      (client configuration under setup/, crate config examples under
 //      crates/, and scripts/). Those files are fetched from GitHub at the ref
-//      in WALRUS_SOURCE_REF (default: main) so the docs always show the
-//      canonical copy without this repository carrying a duplicate.
+//      pinned in site/upstream.json, so a build is reproducible and a change in
+//      the walrus repository reaches the docs only through a reviewed bump of
+//      that file. WALRUS_SOURCE_REPO and WALRUS_SOURCE_REF override the pin.
 //
 // A source that resolves nowhere fails the build: a silently skipped embed
 // renders as a placeholder comment on the published page.
@@ -26,8 +27,9 @@ const OUT_FILE = path.join(SITE_ROOT, "src/.generated/ImportContentMap.ts");
 const LOCAL_ROOTS = new Set(["examples", "data"]);
 const REMOTE_ROOTS = new Set(["setup", "crates", "scripts", "examples"]);
 
-const WALRUS_REPO = process.env.WALRUS_SOURCE_REPO || "MystenLabs/walrus";
-const WALRUS_REF = process.env.WALRUS_SOURCE_REF || "main";
+const UPSTREAM = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "upstream.json"), "utf8"));
+const WALRUS_REPO = process.env.WALRUS_SOURCE_REPO || UPSTREAM.walrus.repo;
+const WALRUS_REF = process.env.WALRUS_SOURCE_REF || UPSTREAM.walrus.ref;
 
 // --- helpers ---
 const readText = (p) => fs.readFileSync(p, "utf8").replace(/\r\n?/g, "\n");

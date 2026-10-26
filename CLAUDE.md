@@ -20,15 +20,17 @@ pnpm build     # production build (checks broken links/anchors)
 pnpm start     # local dev server with hot reload
 ```
 
-Set `GITHUB_TOKEN` to avoid API rate limits; the build reads GitHub releases and
-the `walrus-skills` repository. The sidebars for Oyster and Walrus Memory are
-tracked files; regenerate them with `pnpm gen:oyster-sidebar` and
-`pnpm gen:memory-sidebar` after adding pages.
+The build does not call the GitHub API. Content from other repositories is
+tracked here and refreshed only by the `Update upstream content` workflow (or
+`pnpm gen:upstream`, which needs `GITHUB_TOKEN`), which opens a pull request:
+`site/src/data/skills.json`, `content/release-notes/*.mdx`,
+`site/src/data/changelog.json`, and the walrus ref in `site/upstream.json` that
+embedded source files are fetched from. Do not edit those generated files by
+hand, and do not bump the pin outside a pull request. Everything under
+`site/src/.generated/` is build output.
 
-Generated files that must not be edited by hand: `content/release-notes/*.mdx`
-and `site/src/data/changelog.json` (from `gen:release-notes`),
-`site/src/data/skills.json` (from `gen:skills`), and everything under
-`site/src/.generated/`.
+The sidebars for Oyster and Walrus Memory are tracked files; regenerate them
+with `pnpm gen:oyster-sidebar` and `pnpm gen:memory-sidebar` after adding pages.
 
 ## Style
 

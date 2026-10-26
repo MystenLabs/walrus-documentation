@@ -3,8 +3,7 @@
 #
 # Opens a tracking issue for every release that has no editorial summary
 # in editorial/, so releases without GTM content no longer slip past
-# the release-notes page unnoticed. Runs on each published release, weekly
-# as a safety net, and on demand.
+# the release-notes page unnoticed. Runs weekly and on demand.
 #
 # Covers all three sources the changelog draws on: MystenLabs/walrus,
 # MystenLabs/MemWal, and MystenLabs/walrus-sites. Every editorial summary
@@ -17,9 +16,9 @@
 
 name: Editorial coverage
 
+# Releases are published in the product repositories, not here, so there is
+# no release event to listen for: the weekly schedule is the trigger.
 on:
-  release:
-    types: [published]
   schedule:
     - cron: "17 14 * * 1" # Mondays 14:17 UTC
   workflow_dispatch:

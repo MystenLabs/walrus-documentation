@@ -7,15 +7,37 @@ questions:
   - What changed in the latest Walrus Sites release?
   - Where can I find Walrus Sites release history?
 answer: Release notes for Walrus Sites.
-keywords:
-  - walrus sites
-  - release notes
-  - changelog
-  - portal
-  - site-builder
-  - SuiNS
-  - gRPC
-  - mainnet
+---
+
+### Walrus Sites v2.12.2
+
+October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.12.2)
+
+Follow-up to v2.12.1: the portal Docker images move to a current Bun base image (`oven/bun:1.4.3`, Debian 13) so the server-portal image can be built again; the previous base image reached end of life and broke the v2.12.1 image build. The site-builder is unchanged from v2.12.1 (Walrus `testnet-v1.58.1`, Sui `testnet-v1.81.0`). No Move contract changes.
+
+> ℹ️ Known limitation: `--dry-run` cost estimation still uses the Sui JSON-RPC `dev_inspect` API, which public Sui fullnodes no longer serve. Regular `deploy`, `publish` and `update` are unaffected; a gRPC-based estimate will ship in a follow-up.
+
+#### Changes
+
+- [server-portal: Move Docker images to `oven/bun:1.4.3` (Debian 13) so `apt` works again in the image build](https://github.com/MystenLabs/walrus-sites/pull/735)
+- [Bump version to 2.12.2](https://github.com/MystenLabs/walrus-sites/pull/736)
+
+---
+
+### Walrus Sites v2.12.1
+
+October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v2.12.1)
+
+Dependency catch-up release. The site-builder now builds against Walrus `testnet-v1.58.1` and Sui `testnet-v1.81.0` (previously `testnet-v1.51.2` / `testnet-v1.74.0`) on Rust 1.96. No portal or Move contract changes.
+
+> ℹ️ Known limitation: `--dry-run` cost estimation still uses the Sui JSON-RPC `dev_inspect` API, which public Sui fullnodes no longer serve. Regular `deploy`, `publish` and `update` are unaffected; a gRPC-based estimate will ship in a follow-up.
+
+#### Changes
+
+- [site-builder: Bump Sui to `testnet-v1.81.0`, Walrus to `testnet-v1.58.1`, Rust toolchain to 1.96](https://github.com/MystenLabs/walrus-sites/pull/733)
+- [site-builder: Initialize typed-store DB metrics once in the integration-test harness to fix a startup race](https://github.com/MystenLabs/walrus-sites/pull/733)
+- [Bump version to 2.12.1](https://github.com/MystenLabs/walrus-sites/pull/734)
+
 ---
 
 ### Walrus Sites v2.12.0
