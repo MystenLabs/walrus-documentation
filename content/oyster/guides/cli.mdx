@@ -1,5 +1,7 @@
 ---
 title: "oyster-cli Quick Start"
+description: Use oyster-cli to manage Oyster buckets, blobs, tags, app admin keys, and accounts from the command line.
+keywords: [ oyster-cli, Oyster, CLI, buckets, blobs, blob tags, admin keys, accounts, webhooks ]
 ---
 
 `oyster-cli` is a command-line tool for interacting with Oyster. It wraps
@@ -19,7 +21,7 @@ The CLI looks for a config file in this order:
 
 `client.yaml` holds a map of **named contexts**, each pointing at a
 different Oyster deployment. The top-level `active_context` selects which
-context is used by default.
+context the CLI uses by default.
 
 **Example `client.yaml`:**
 
@@ -51,8 +53,8 @@ Precedence for the active-context name (highest first):
 2. `OYSTER_CONTEXT` environment variable
 3. `active_context` field in `client.yaml`
 
-If none of the three is set and the file has exactly one context, that
-context is used automatically. Ad-hoc `--url ... --api-key ...`
+If you set none of the three and the file has exactly one context, the
+CLI uses that context automatically. Ad-hoc `--url ... --api-key ...`
 invocations without any context still work for one-time commands.
 
 You can also override individual fields with flags:
@@ -66,12 +68,14 @@ oyster --url http://localhost:3000/api/v1 --api-key "your-key" list-buckets
 | Flag | Description |
 |------|-------------|
 | `--config <PATH>` | Path to config file |
-| `--context <NAME>` | Named context to use (overrides `OYSTER_CONTEXT` / `active_context`) |
+| `--context <NAME>` | Named context to use (overrides `OYSTER_CONTEXT` or `active_context`) |
 | `--url <URL>` | Oyster server URL (overrides the context's `url`) |
 | `--api-key <KEY>` | API key (overrides the context's `api_key`) |
 | `--json` | Output JSON instead of human-readable format |
 
 ## Bucket management
+
+Use the following commands to create, list, and delete buckets.
 
 ### Create a bucket
 
@@ -102,6 +106,8 @@ an error.
 
 ## Storing and reading blobs
 
+Use the following commands to upload, download, list, and delete blobs.
+
 ### Upload a file
 
 ```bash
@@ -120,7 +126,7 @@ Set a specific content type:
 oyster store data.bin --bucket my-bucket --content-type application/x-custom
 ```
 
-If `--content-type` is omitted, the CLI auto-detects it from the file
+If you omit `--content-type`, the CLI auto-detects it from the file
 extension (see [Content-Type Detection](#content-type-detection) below).
 
 Attach tags at upload time with `--tag key=value` (repeatable):
@@ -129,7 +135,7 @@ Attach tags at upload time with `--tag key=value` (repeatable):
 oyster store photo.png --bucket my-bucket --tag env=prod --tag team=platform
 ```
 
-Tags are replaced on every upload to a key. See [Blob tags](#blob-tags) for the
+Each upload to a key replaces its tags. See [Blob tags](#blob-tags) for the
 limits and for managing tags after upload.
 
 ### Download a file
@@ -168,8 +174,8 @@ oyster delete hello.txt --bucket my-bucket
 
 ## Blob tags
 
-The `oyster tags` command group manages the `key=value` tags on a blob. Tags
-are stored in Oyster's database and shared with the
+The `oyster tags` command group manages the `key=value` tags on a blob. Oyster
+stores tags in its database and shares them with the
 [S3 object-tagging](../s3-api/objects.mdx#object-tagging) operations. Limits:
 max 10 tags, key ≤ 128 bytes, value ≤ 256 bytes, set ≤ 2048 bytes, and a
 restricted charset (ASCII alphanumerics plus space and `+ - = . _ : / @`).
@@ -217,11 +223,13 @@ oyster tags merge --bucket my-bucket --key hello.txt --tag team=storage
 
 ## API key and access key management
 
-API keys and S3 access keys are managed by operators through the Admin API,
+Operators manage API keys and S3 access keys through the Admin API,
 not through the CLI. See the [Admin API docs](../json-api/admin.mdx) for
 details on creating, listing, and revoking keys.
 
 ## Other commands
+
+Use the following commands to view the wallet address and the resolved configuration.
 
 ### View wallet address
 
@@ -235,7 +243,7 @@ oyster wallet
 oyster info
 ```
 
-Shows which config file is loaded, the server URL, and the API key prefix.
+Shows which config file the CLI loads, the server URL, and the API key prefix.
 
 ## App admin-key management
 
@@ -253,7 +261,7 @@ oyster app import my-app
 
 Prompts for the admin key without echoing it (when stdin is a tty), then
 writes it to the active context's `apps.my-app` entry. If stdin is a pipe,
-the key is read as a line instead — useful for scripts. Requires that
+the CLI reads the key as a line instead, which is useful for scripts. Requires that
 `client.yaml` already exists; the CLI does not auto-create it.
 
 ### Rotation
@@ -278,8 +286,8 @@ oysterd app revoke-admin-key <OLD_KEY_ID>
 ```
 
 `oysterd app list-admin-keys <APP_ID>` shows all keys (active and
-revoked), so an operator can confirm what is live. Multiple admin keys per
-app are supported with no cap.
+revoked), so an operator can confirm what is live. Each app supports
+multiple admin keys with no cap.
 
 ### Webhook management
 
@@ -314,7 +322,7 @@ owns. Use it to mint accounts, rotate which account the CLI's
 Every `oyster app account` subcommand resolves which app to act
 through using `crates/oyster-cli/src/config.rs::resolve_admin`:
 
-- If the active context defines exactly one app, it is auto-selected.
+- If the active context defines exactly one app, the CLI auto-selects it.
 - If the active context defines multiple apps, you must pass
   `--app <name>` (or the command errors and lists the known apps).
 - If the active context defines zero apps, the command errors.
@@ -346,8 +354,8 @@ Mints a fresh account plus an initial API key for it.
 - `--note NOTE`: note attached to the issued API key (defaults to
   `"api"` server-side).
 - `--activate`: atomically saves the new bearer to
-  `context.api_key` in `client.yaml`. Without this flag, the bearer
-  is printed once and you can wire it up yourself.
+  `context.api_key` in `client.yaml`. Without this flag, the CLI prints
+  the bearer once and you can wire it up yourself.
 
 ```bash
 oyster app account create --name alice --activate
@@ -396,7 +404,7 @@ oyster app account select
 #### `keys <id-or-name>`
 
 Lists API key metadata for the named account: id, note,
-`created_at`, and `revoked_at`. Bearer secrets are never returned.
+`created_at`, and `revoked_at`. The command never returns bearer secrets.
 
 ```bash
 oyster app account keys alice

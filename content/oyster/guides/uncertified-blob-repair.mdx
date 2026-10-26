@@ -1,12 +1,14 @@
 ---
 title: "Repairing Uncertified Blobs"
+description: Repair Oyster blobs that Walrus registered but never certified by using the oysterd blobs repair command.
+keywords: [ oyster, walrus, uncertified blobs, PooledBlob, certify, blob repair, oysterd ]
 ---
 
 An upload is three steps in order: register the `PooledBlob` in the
 account's `StoragePool`, push the slivers to the storage nodes, and
 submit the certify transaction. Walrus serves a blob only once it is
 certified. If the certify transaction fails after register landed, the
-`PooledBlob` stays on chain with `certified_epoch: null` and the data
+`PooledBlob` stays onchain with `certified_epoch: null` and the data
 is unreadable.
 
 Before 0.14.4 this state could become permanent. The failed upload
@@ -18,13 +20,13 @@ content, so the client had no way to repair it, and had already
 discarded the bytes. The upload path now finishes the certify on the
 retry (see [Blob Lifecycle](blob-lifecycle.mdx#upload-failure-and-retry))
 and on any later dedup hit (see
-[Content Addressing](content-addressing.mdx#deduplication)). This guide
-is the bulk pass for the blobs nobody re-uploads: `oysterd blobs
+[Content Addressing](content-addressing.mdx#deduplication)). The bulk pass for
+the blobs nobody re-uploads is `oysterd blobs
 repair`.
 
 ## What it does
 
-A candidate is one `(account, blob)` with its on-chain `PooledBlob`.
+A candidate is one `(account, blob)` with its onchain `PooledBlob`.
 Candidates come from the database (`blobs` rows that reference a
 `PooledBlob` but have no `certified_epoch`) and from `--ids-file`, a
 list of `PooledBlob` object IDs, which also reaches orphans with no row
@@ -41,10 +43,10 @@ For each candidate:
    while. With a certificate, submit certify and stamp the rows
    (`certified`). The blob is readable again.
 4. No certificate: the bytes are gone from Walrus and Oyster never kept
-   a copy. By default this is reported as `UNRECOVERABLE`. With
+   a copy. By default the tool reports this as `UNRECOVERABLE`. With
    `--delete-unrecoverable` the tool deletes the `PooledBlob` (returning
    its capacity to the pool), removes the rows, and prints the keys so
-   the customer can be told to re-upload (`deleted`).
+   you can tell the customer to re-upload (`deleted`).
 
 Every step is idempotent. Re-running after a crash or a transient
 failure picks up where it left off. `--dry-run` reads the chain and the
@@ -58,10 +60,10 @@ writing anything.
   the upload path no longer creates these blobs.
 - The same environment as `oysterd serve`: `DATABASE_URL`,
   `PEARL_GRPC_URL`, `PEARL_SERVICE_SECRET`, `SUI_RPC_URL`,
-  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Certify and delete
-  transactions are signed by Pearl under each account's own key and
-  paid from the account's wallet (SUI gas only; no WAL).
-- An account under `oysterd keys migrate` is skipped (`FAILED: signer:
+  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Pearl signs certify
+  and delete transactions under each account's own key, and the
+  account's wallet pays for them (SUI gas only; no WAL).
+- The tool skips an account under `oysterd keys migrate` (`FAILED: signer:
   key migration in progress`); re-run after the rotation.
 
 ## Procedure
@@ -75,7 +77,7 @@ writing anything.
 
    Output is TSV: `ACCOUNT`, `BLOB_ID`, `POOLED_BLOB`, `REFERENCES`
    (`bucket/key,...`), `OUTCOME`. A summary line goes to stderr. The
-   `would-certify` count is what the real run will recover.
+   `would-certify` count is what the real run recovers.
 
 2. Run it:
 
@@ -92,14 +94,14 @@ writing anything.
    - `FAILED: ...`: transient (RPC, a concurrent transaction on the
      account's pool). Re-run.
 
-3. For the unrecoverable ones, once the affected customers know their
-   keys will disappear:
+3. For the unrecoverable ones, once the affected customers know the tool
+   deletes their keys:
 
    ```bash
    oysterd blobs repair --delete-unrecoverable
    ```
 
-   Each `deleted` line lists the keys that were removed. Deleting is
+   Each `deleted` line lists the keys that the tool removed. Deleting is
    what lets a future `PUT` of the same content register afresh; until
    then the `PooledBlob` blocks re-registration and the rows would make
    the dedup path try (and fail) to certify it again.
@@ -112,8 +114,8 @@ writing anything.
    oysterd blobs repair --ids-file pooled-blobs.txt --skip-db
    ```
 
-   `--skip-db` repairs only the listed IDs. Entries whose
-   `StoragePool` matches no account are reported as `UNKNOWN-POOL`.
+   `--skip-db` repairs only the listed IDs. The tool reports entries whose
+   `StoragePool` matches no account as `UNKNOWN-POOL`.
 
 ## Verifying
 
@@ -122,6 +124,6 @@ writing anything.
   `certified` key.
 - `oyster_dedup_certify_verify_total{certified="completed"}` and
   `oyster_register_dedup_self_heal_total{certified="completed"}` stay
-  flat afterwards; a rising count means certify transactions are still
+  flat afterward; a rising count means certify transactions are still
   failing on first attempt (see
   `oyster_certify_stale_version_retries_total`).
