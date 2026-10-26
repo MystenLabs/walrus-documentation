@@ -10,6 +10,8 @@ keywords:
   - Walrus Memory
   - plugin
   - automatic memory
+  - lifecycle hooks
+  - mcp.json
 goal:
   description: Add Walrus Memory to Cursor as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify persistent recall is working across Cursor sessions.
   requires:

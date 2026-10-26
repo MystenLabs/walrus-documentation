@@ -13,6 +13,10 @@ keywords:
   - manual client
   - AI middleware
   - MCP
+  - managed relayer
+  - self-hosted relayer
+  - MCP server
+  - choose your path
 goal:
   description: Compare the four integration paths — default SDK, manual client, AI middleware, and MCP server — and pick the one that matches your trust model, tech stack, and control requirements.
   requires:

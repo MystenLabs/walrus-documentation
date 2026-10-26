@@ -9,6 +9,10 @@ keywords:
   - cost management
   - Walrus Memory
   - Walrus Memory
+  - exponential backoff
+  - key custody
+  - graceful degradation
+  - idempotency key
 goal:
   description: "Harden a Walrus Memory integration for production: add idempotent writes, configure retry and timeout logic, cap costs, secure key custody, and add graceful degradation when the relayer is unreachable."
   requires:

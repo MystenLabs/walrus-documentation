@@ -11,6 +11,8 @@ keywords:
   - security
   - unauthenticated endpoint
   - API design
+  - load balancer
+  - rate limiting
 goal:
   description: Explain the deliberate security decision to leave /health and /version unauthenticated, identify what information they expose, and assess whether this is appropriate for your threat model.
   requires:
