@@ -31,7 +31,7 @@ questions:
 answer: >-
   To get started with Walrus Memory, install the @mysten-incubation/memwal TypeScript SDK,
   generate an account ID and delegate key from the Walrus Memory Playground, choose a relayer
-  endpoint, configure the SDK client, and call remember/recall to store and retrieve memories.
+  endpoint, configure the SDK client, and call remember and recall to store and retrieve memories.
 ---
 
 <AgentPrompt
@@ -45,7 +45,7 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
 <Tabs>
 <TabItem value="prereq" label="Prerequisites">
 
-- [x] [Node.js](https://nodejs.org/) v22.23.4+ (or v24.22.1+ / v26.12.1+) or [Bun](https://bun.sh/) v1+
+- [x] [Node.js](https://nodejs.org/) v22.23.4+ (or v24.22.1+ or v26.12.1+) or [Bun](https://bun.sh/) v1+
 
 </TabItem>
 </Tabs>
@@ -134,8 +134,8 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
 
     Create a Walrus Memory account ID and delegate private key for your SDK client using one of the hosted endpoints below.
 
-    :::note
-The following endpoints are provided as a public good by Walrus Foundation.
+    :::info
+Walrus Foundation provides the following endpoints as a public good.
 :::
 
     | **App** | **URL** |
@@ -148,8 +148,8 @@ The following endpoints are provided as a public good by Walrus Foundation.
 
     Use a hosted relayer, or deploy your own [self-hosted relayer](/walrus-memory/relayer/self-hosting) with access to a wallet funded with WAL and SUI:
 
-    :::note
-Following endpoints are provided as public good by Walrus Foundation.
+    :::info
+Walrus Foundation provides the following endpoints as a public good.
 :::
 
     | **Network** | **Relayer URL** |
@@ -174,7 +174,7 @@ Following endpoints are provided as public good by Walrus Foundation.
     ```
 
     :::warning
-Use the `accountId` **you** generated in the previous step. Recall is scoped per **account + namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
+Use the `accountId` **you** generated in the previous step. Recall scope is per **account and namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
 :::
 
   ### Verify your connection
@@ -195,6 +195,6 @@ Use the `accountId` **you** generated in the previous step. Recall is scoped per
     console.log(result.results);
     ```
 
-    You're up and running.
+    Walrus Memory is now running.
 
-If Walrus Memory is useful to you, [a star on the GitHub repo ⭐](https://github.com/MystenLabs/MemWal) helps others find it.
+If Walrus Memory is useful to you, [a star on the GitHub repository](https://github.com/MystenLabs/MemWal) helps others find it.
