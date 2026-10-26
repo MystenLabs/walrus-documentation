@@ -53,7 +53,7 @@ answer: >-
 
 Use the Walrus client to manage blobs and their metadata.
 
-## Check a blob's status and expiry
+## How to check a blob's status and expiry
 
 Before you extend or depend on a blob, check that it is still stored and see when it expires. Use the blob ID:
 
@@ -83,7 +83,7 @@ The blob cannot be expired when you run this command. Both address-owned blobs a
 
 You need the blob's object ID to extend it. The blob ID is not needed. Run `walrus extend --help` for more information on blob extension.
 
-## Delete blobs
+## How to delete blobs
 
 You can delete a blob that was set as deletable upon creation before its expiry, but only the owner of the Sui object corresponding to the blob can do so. Deletable blobs are indicated as such in the Sui events that certify them, and other users should not rely on them for availability.
 
@@ -105,7 +105,7 @@ All blobs stored in Walrus are public and discoverable by all. The `delete` comm
 
 :::
 
-## Burn blobs
+## How to burn blobs
 
 Burn a blob to remove the blob's corresponding object on Sui without deleting the data from Walrus and without refunding the storage. Burning a blob's corresponding Sui object forfeits control of that blob and the data it represents. After burning, you cannot extend permanent blobs and you cannot extend or delete deletable blobs.
 
