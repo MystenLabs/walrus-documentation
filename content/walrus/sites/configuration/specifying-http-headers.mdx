@@ -81,13 +81,13 @@ Headers live onchain, not in a server configuration file:
 
 Because the headers live on Sui, editing `ws-resources.json` alone changes nothing on your live site. Run `site-builder deploy` again to apply the new headers.
 
-## Defaults
+## Which headers apply by default?
 
 By default, you do not need to specify any headers. The `site-builder` automatically tries to infer the `Content-Type` header based on the file extension, and sets the `Content-Encoding` to `identity` (no transformation).
 
 If the `site-builder` cannot infer the content type, it sets the `Content-Type` to `application/octet-stream`. Headers you specify in the `ws-resources.json` file override these defaults.
 
-## `Content-Type`
+## How to set `Content-Type`
 
 Set the `Content-Type` explicitly when the inferred type is incorrect, when you need to specify a charset, or when you serve a file type the `site-builder` does not recognize.
 
@@ -100,7 +100,7 @@ Set the `Content-Type` explicitly when the inferred type is incorrect, when you 
 
 For [raw markdown files served for LLM ingestion](/docs/sites/configuration/site-configuration#markdown), use lowercase `content-type`.
 
-## `Cache-Control`
+## How to control caching with `Cache-Control`
 
 Walrus blobs are immutable, so browsers can safely cache assets with build-hashed filenames forever. Do not let browsers cache entry points such as `/index.html`, because their content changes on every deployment while their paths stay the same.
 
@@ -118,7 +118,7 @@ Walrus blobs are immutable, so browsers can safely cache assets with build-hashe
 | `max-age=31536000, immutable` | Cache for 1 year (content never changes) |
 | `max-age=3600` | Cache for 1 hour |
 
-## `Content-Disposition`
+## How to control downloads with `Content-Disposition`
 
 The `Content-Disposition` header controls whether the browser renders a resource inline or downloads it as a file.
 
@@ -128,7 +128,7 @@ The `Content-Disposition` header controls whether the browser renders a resource
 "/exports/data.csv": { "Content-Disposition": "attachment; filename=\"data-export.csv\"" }
 ```
 
-## `Content-Encoding`
+## How to serve pre-compressed assets with `Content-Encoding`
 
 Set `Content-Encoding` when you serve pre-compressed assets from your build pipeline, so browsers decompress them correctly.
 
