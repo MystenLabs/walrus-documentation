@@ -29,6 +29,14 @@ embedded source files are fetched from. Do not edit those generated files by
 hand, and do not bump the pin outside a pull request. Everything under
 `site/src/.generated/` is build output.
 
+Release summaries in `editorial/` are drafted in batches by the `Editorial summaries`
+workflow and reviewed in its pull request; edit them there or by hand, in the
+house format the existing files use.
+
+The sidebars for Oyster and Walrus Memory are
+tracked files; regenerate them with `pnpm gen:oyster-sidebar` and
+`pnpm gen:memory-sidebar` after adding pages.
+
 The sidebars for Oyster and Walrus Memory are tracked files; regenerate them
 with `pnpm gen:oyster-sidebar` and `pnpm gen:memory-sidebar` after adding pages.
 

@@ -105,6 +105,15 @@ configuration and crate config examples and a build is reproducible. The
 through a pull request. `WALRUS_SOURCE_REF` overrides it locally. A source that
 resolves nowhere fails the build.
 
+## Release notes editorial summaries
+
+Each release of Walrus, Walrus Memory, and Walrus Sites gets an editorial summary in
+`editorial/`, which the release notes pages render. The `Editorial summaries` workflow runs
+on the 1st and 15th, drafts a summary for every release that has none (from the GitHub
+release body, with Claude), regenerates the release notes pages, and opens one pull request
+with the batch. Review the summaries there as you would any docs page. `pnpm gen:editorial`
+in `site/` does the same locally; it needs `GITHUB_TOKEN` and `ANTHROPIC_API_KEY`.
+
 ## Build pipeline
 
 The full build runs these steps in sequence:

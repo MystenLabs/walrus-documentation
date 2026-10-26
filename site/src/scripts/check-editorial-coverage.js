@@ -3,7 +3,7 @@
 
 /**
  * Reports Walrus platform releases that have no editorial summary in
- * docs/editorial/, so no release ships without changelog coverage.
+ * editorial/, so no release ships without changelog coverage.
  *
  * The release-notes SOP covers releases that arrive with GTM content.
  * Releases without it (GitHub body is empty or just the Full Log link)
@@ -62,6 +62,9 @@ function fetchJSON(urlPath) {
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode === 200) resolve(JSON.parse(data));
+        // A renamed repository answers 301 with the new location.
+        else if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location)
+          resolve(fetchJSON(new URL(res.headers.location).pathname + new URL(res.headers.location).search));
         else reject(new Error(`GitHub API ${res.statusCode}: ${data.slice(0, 200)}`));
       });
     });
@@ -170,7 +173,7 @@ function groupProductReleases(releases, parseTag) {
 // ── Release sources ────────────────────────────────────────────────
 //
 // The changelog draws on three repositories, but every editorial summary
-// lives in this repository under docs/editorial/. A missing summary for any
+// lives in this repository under editorial/. A missing summary for any
 // product is fixed by a pull request here, which is why the tracking issues
 // belong in this repository too.
 
@@ -200,7 +203,7 @@ const SOURCES = [
   {
     id: "memwal",
     label: "Walrus Memory",
-    repo: "MystenLabs/MemWal",
+    repo: "MystenLabs/walrus-memory",
     editorialPattern: /^memwal-(sdk|mcp|python|openclaw)-v(\d+\.\d+\.\d+)\.md$/,
     editorialKey: (match) => `memwal-${match[1]}|${match[2]}`,
     // Package releases tagged <package>@<version>.
@@ -255,7 +258,7 @@ function loadEditorialVersions() {
   return covered;
 }
 
-// ── Draft skeleton in the docs/editorial house format ──────────────
+// ── Draft skeleton in the editorial/ house format ──────────────
 
 function formatDate(isoDate) {
   if (!isoDate) return "";
@@ -316,6 +319,7 @@ async function checkSource(source, args, editorial) {
       const entry = byVersion.get(version);
       const release = entry.mainnet || entry.testnet;
       if (!release) continue;
+      const paired = entry.mainnet && entry.testnet ? entry.testnet : null;
 
       const hasContent = substantiveBody(release.body).length >= 20;
       const title = source.titleFor(version);
@@ -328,7 +332,10 @@ async function checkSource(source, args, editorial) {
         date: release.date,
         url: release.url,
         hasContent,
-        editorialFile: `docs/editorial/${source.slugFor(version)}.md`,
+        editorialFile: `editorial/${source.slugFor(version)}.md`,
+        body: release.body,
+        pairedBody: paired ? paired.body : "",
+        pairedNetwork: paired ? paired.network : "",
         draft: buildDraft(title, release, hasContent, source.id),
       });
     }
@@ -353,7 +360,10 @@ async function checkSource(source, args, editorial) {
         date: entry.release.date,
         url: entry.release.url,
         hasContent,
-        editorialFile: `docs/editorial/${entry.editorialSlug}.md`,
+        editorialFile: `editorial/${entry.editorialSlug}.md`,
+        body: entry.release.body,
+        pairedBody: "",
+        pairedNetwork: "",
         draft: buildDraft(title, entry.release, hasContent, source.id),
       });
     }

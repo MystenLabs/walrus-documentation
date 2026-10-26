@@ -29,6 +29,7 @@
         "gen:oyster-sidebar": "node src/scripts/generate-oyster-sidebar.js",
         "gen:memory-sidebar": "node src/scripts/generate-walrus-memory-sidebar.js",
         "gen:llms:oyster": "node src/scripts/generate-llmstxt.mjs --only-prefix oyster --output static/oyster/llms.txt",
+        "gen:editorial": "node src/scripts/generate-editorial-summaries.mjs",
         "gen:upstream": "npm run gen:skills&&npm run gen:release-notes"
     },
     "dependencies": {
@@ -66,6 +67,7 @@
         "unist-util-visit": "^5.1.0"
     },
     "devDependencies": {
+        "@anthropic-ai/sdk": "^1.2.0",
         "@docusaurus/module-type-aliases": "3.8.1",
         "@docusaurus/types": "3.8.1",
         "@tailwindcss/postcss": "^4.1.18",
