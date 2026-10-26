@@ -1,5 +1,7 @@
 ---
 title: "Admin API"
+description: The Oyster Admin API and oysterd server commands let app operators manage accounts, storage caps, API keys, S3 access keys, webhooks, and admin keys.
+keywords: [ Oyster, Admin API, accounts, storage cap, API keys, S3 access keys, webhooks, admin keys, oysterd ]
 ---
 
 The Admin API lets app operators manage accounts, API keys, and S3 access
@@ -12,14 +14,14 @@ app's accounts returns **403 Forbidden**.
 
 ## Accounts
 
-### Create Account
+### Create account
 
 ```
 POST /api/v1/accounts
 ```
 
-Creates a new account owned by the authenticated app. An initial API key
-is generated automatically.
+Creates a new account owned by the authenticated app. Oyster generates an
+initial API key automatically.
 
 **Request body** (optional):
 
@@ -34,8 +36,8 @@ is generated automatically.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `name` | string | no | Human-readable account name; defaults to the account ID if omitted |
-| `max_unencoded_bytes` | integer | no | Per-account storage cap, in *unencoded* bytes. Defaults to `5_000_000_000` (5 × 10⁹) when omitted. Must be strictly positive; `0` and negative values are rejected with `400` |
-| `avg_blob_size` | integer | no | Assumed average blob size, in *unencoded* bytes. Turns `max_unencoded_bytes` into a **lower** bound on storable capacity for blobs of this size (see [Lower-bound semantics](#lower-bound-semantics-avg_blob_size) below). Defaults to the server's `OYSTER_DEFAULT_AVG_BLOB_SIZE` (**10 MB**) when omitted. `0` disables inflation (the historical upper-bound behavior); negative values are rejected with `400`; an oversized value is accepted as a silent no-op |
+| `max_unencoded_bytes` | integer | no | Per-account storage cap, in unencoded bytes. Defaults to `5_000_000_000` (5 × 10⁹) when omitted. Must be strictly positive; Oyster rejects `0` and negative values with `400` |
+| `avg_blob_size` | integer | no | Assumed average blob size, in unencoded bytes. Turns `max_unencoded_bytes` into a **lower** bound on storable capacity for blobs of this size (see [Lower-bound semantics](#lower-bound-semantics-avg_blob_size) below). Defaults to the server's `OYSTER_DEFAULT_AVG_BLOB_SIZE` (**10 MB**) when omitted. `0` disables inflation (the historical upper-bound behavior). Oyster rejects negative values with `400` and accepts an oversized value as a silent no-op |
 
 **Example:**
 
@@ -69,8 +71,8 @@ curl -s -X POST \
 | `api_key.bearer_token` | string | The full API key, **shown only once** |
 | `api_key.created_at` | string | ISO 8601 timestamp |
 
-> The `bearer_token` is returned only at creation time. A lost
-> key cannot be recovered; create a new one instead.
+> Oyster returns the `bearer_token` only at creation time. You cannot
+> recover a lost key; create a new one instead.
 
 **Errors:**
 
@@ -79,15 +81,15 @@ curl -s -X POST \
 | `400` | `max_unencoded_bytes` must be a positive integer, or `avg_blob_size` is negative |
 | `401` | Missing or invalid admin key |
 
-### Update Storage Cap
+### Update storage cap
 
 ```
 PUT /api/v1/accounts/{account_id}/max-storage
 ```
 
-Raises or lowers the per-account `max_unencoded_bytes` cap. Lowering
-the cap below the account's current onchain encoded usage is
-rejected; lowering between current usage and current pool capacity
+Raises or lowers the per-account `max_unencoded_bytes` cap. Oyster
+rejects any attempt to lower the cap below the account's current onchain
+encoded usage. Lowering between current usage and current pool capacity
 submits an onchain shrink transaction to release the freed reserve
 back to the Pearl-derived wallet.
 
@@ -105,8 +107,8 @@ back to the Pearl-derived wallet.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `max_unencoded_bytes` | integer | yes | New per-account cap, in *unencoded* bytes. Must be strictly positive |
-| `avg_blob_size` | integer | no | New assumed average blob size, in *unencoded* bytes (see [Lower-bound semantics](#lower-bound-semantics-avg_blob_size)). When **omitted, the account's existing `avg_blob_size` is retained** and the orphan/shrink threshold is recomputed against it. `0` disables inflation; negative values are rejected with `400`; an oversized value is a silent no-op |
+| `max_unencoded_bytes` | integer | yes | New per-account cap, in unencoded bytes. Must be strictly positive |
+| `avg_blob_size` | integer | no | New assumed average blob size, in unencoded bytes (see [Lower-bound semantics](#lower-bound-semantics-avg_blob_size)). When omitted, **Oyster retains the account's existing `avg_blob_size`** and recomputes the orphan and shrink threshold against it. `0` disables inflation. Oyster rejects negative values with `400`; an oversized value is a silent no-op |
 
 **Example:**
 
@@ -135,31 +137,31 @@ curl -s -X PUT \
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `account_id` | string | The account whose cap was updated |
-| `max_unencoded_bytes` | integer | The new cap, in *unencoded* bytes |
+| `account_id` | string | The account whose cap changed |
+| `max_unencoded_bytes` | integer | The new cap, in unencoded bytes |
 | `avg_blob_size` | integer | The effective assumed average blob size after the update. Echoes the request value when supplied, otherwise the account's retained value |
-| `pool` | object or null | Onchain `StoragePool` snapshot after the (optional) shrink. `null` when the account has never lazy-created a pool (DB-only fast path; no onchain read was performed) |
+| `pool` | object or null | Onchain `StoragePool` snapshot after the (optional) shrink. `null` when the account has never lazy-created a pool (database-only fast path; Oyster performs no onchain read) |
 | `pool.reserved_encoded_bytes` | integer | `storage.storage_size`: encoded bytes reserved by the pool |
 | `pool.used_encoded_bytes` | integer | Encoded bytes currently consumed by registered blobs |
-| `shrink_tx_digest` | string or null | Digest of the submitted `decrease_storage_pool_capacity_by_size` PTB, or `null` when no shrink was needed |
+| `shrink_tx_digest` | string or null | Digest of the submitted `decrease_storage_pool_capacity_by_size` programmable transaction block (PTB), or `null` when the update requires no shrink |
 
 When the account has no pool yet (no upload has lazy-created one),
-the cap is updated in the DB only (`pool` and `shrink_tx_digest`
+Oyster updates the cap in the database only (`pool` and `shrink_tx_digest`
 are both `null`). When the new cap covers the existing pool's reserved
-bytes, the same DB-only path runs (`shrink_tx_digest` is `null`,
-`pool` is populated from the onchain read).
+bytes, the same database-only path runs (`shrink_tx_digest` is `null`,
+and Oyster populates `pool` from the onchain read).
 
 ### Lower-bound semantics (`avg_blob_size`)
 
-`max_unencoded_bytes` is stated in *unencoded* bytes, but Walrus tracks
-usage in *encoded* bytes, and the encoding `f` carries a large fixed
+`max_unencoded_bytes` measures unencoded bytes, but Walrus tracks
+usage in encoded bytes, and the encoding `f` carries a large fixed
 per-blob metadata overhead. By default (`avg_blob_size = 0`) the cap
 therefore acts as an **upper** bound: an account storing many small
 blobs pays that overhead per blob and hits the cap well below its
 stated unencoded budget.
 
-Setting `avg_blob_size = s` flips this into a **lower** bound *for blobs
-averaging `s`*: Oyster inflates the encoded admission ceiling by the
+Setting `avg_blob_size = s` flips this into a **lower** bound for blobs
+averaging `s`: Oyster inflates the encoded admission ceiling by the
 per-blob expansion factor `f(s)/s`, guaranteeing that at least
 `max_unencoded_bytes` unencoded bytes are storable when the account's
 blobs average ≥ `s`. The expansion factor shrinks as blobs grow:
@@ -169,7 +171,7 @@ default) sets the ceiling at about `11 ×` the cap's bare encoded value.
 Blobs smaller than `s` carry more overhead and so reach the ceiling
 before the unencoded total reaches `max_unencoded_bytes`.
 
-This only raises the *admission ceiling*; it does **not** pre-reserve or
+This only raises the admission ceiling; it does **not** pre-reserve or
 pre-pay capacity. Onchain pool capacity still grows incrementally per
 upload (pay-as-you-go for actual encoded usage), so a non-zero
 `avg_blob_size` costs nothing for normal workloads. Setting
@@ -177,16 +179,16 @@ upload (pay-as-you-go for actual encoded usage), so a non-zero
 byte-for-byte; accounts created before this feature default to `0`.
 
 **Onchain shrink semantics.** When the new cap is lower than the
-pool's current reserved capacity and at least one encoded byte can
-be freed without orphaning data, Oyster submits a Pearl-signed
+pool's current reserved capacity and Oyster can free at least one
+encoded byte without orphaning data, Oyster submits a Pearl-signed
 `system::decrease_storage_pool_capacity_by_size` PTB. The contract
 extracts a `Storage` object covering the freed bytes and transfers
 it back to the pool's owner (the Pearl-managed sender). Over time
 these extracted `Storage` objects accumulate in the wallet[^orphan].
 
-[^orphan]: Tooling for absorbing accumulated `Storage` objects back
-    into a pool is planned but not yet present. See the project's
-    `PLAN.md` for the "Recycle orphaned Storage objects" item.
+[^orphan]: The project plans tooling for absorbing accumulated `Storage` objects back
+    into a pool, but this tooling does not exist yet. See the **Recycle orphaned
+    Storage objects** item in the project's `PLAN.md`.
 
 **Errors:**
 
@@ -198,7 +200,7 @@ these extracted `Storage` objects accumulate in the wallet[^orphan].
 | `404` | Account not found |
 | `503` | Pearl or Sui RPC unavailable while performing the onchain read or PTB submission |
 
-**`would_orphan` body**: emitted when lowering would drop the cap
+`would_orphan` body: emitted when lowering would drop the cap
 below current onchain usage:
 
 ```json
@@ -212,7 +214,7 @@ below current onchain usage:
 }
 ```
 
-**`shrink_aborted` body**: emitted when the shrink PTB aborted
+`shrink_aborted` body: emitted when the shrink PTB aborted
 because another replica's upload raced and re-consumed the
 capacity Oyster was about to extract:
 
@@ -234,9 +236,9 @@ the underlying state has settled (for example, delete some blobs to lower
 A successful cap change writes an `account.max_storage_updated`
 audit event.
 
-## API Keys
+## API keys
 
-### Create API Key
+### Create API key
 
 ```
 POST /api/v1/accounts/{account_id}/api-keys
@@ -284,7 +286,7 @@ curl -s -X POST \
 | `403` | Account does not belong to the authenticated app |
 | `404` | Account not found |
 
-### Revoke API Key
+### Revoke API key
 
 ```
 DELETE /api/v1/accounts/{account_id}/api-keys/{key_id}
@@ -317,18 +319,18 @@ curl -s -X DELETE \
 | `403` | Account does not belong to the authenticated app |
 | `404` | API key not found or already revoked |
 
-## S3 Access Keys
+## S3 access keys
 
 These endpoints manage S3-compatible access keys for accounts. See
 [S3 Access Keys](access-keys.mdx) for key format details and limits.
 
-### Create Access Key
+### Create access key
 
 ```
 POST /api/v1/accounts/{account_id}/access-keys
 ```
 
-Creates a new S3 access key pair. The secret is returned **only once**, so
+Creates a new S3 access key pair. Oyster returns the secret **only once**, so
 save it immediately. Each account can have up to **3 active access keys**.
 
 **Path parameters:**
@@ -368,16 +370,16 @@ curl -s -X POST \
 | `401` | Missing or invalid admin key |
 | `403` | Account does not belong to the authenticated app |
 | `404` | Account not found |
-| `409` | Access key limit reached (max 3 active keys) |
+| `409` | Access key limit reached (maximum 3 active keys) |
 
-### List Access Keys
+### List access keys
 
 ```
 GET /api/v1/accounts/{account_id}/access-keys
 ```
 
 Returns all S3 access keys for the account, including revoked ones.
-Secrets are **never** included in list responses.
+List responses **never** include secrets.
 
 **Path parameters:**
 
@@ -424,7 +426,7 @@ curl -s \
 | `403` | Account does not belong to the authenticated app |
 | `404` | Account not found |
 
-### Revoke Access Key
+### Revoke access key
 
 ```
 DELETE /api/v1/accounts/{account_id}/access-keys/{access_key_id}
@@ -461,7 +463,7 @@ curl -s -X DELETE \
 
 ## App
 
-### Get App
+### Get app
 
 ```
 GET /api/v1/admin/app
@@ -487,7 +489,7 @@ when you need to retrieve the response from `PUT /admin/app/webhook`.
 | Field | Type | Description |
 |-------|------|-------------|
 | `webhook_url` | string or null | Currently configured webhook URL, or `null` when none |
-| `webhook_public_key` | string or null | Base64-encoded 32-byte Ed25519 public key, or `null` when no webhook is configured |
+| `webhook_public_key` | string or null | Base64-encoded 32-byte Ed25519 public key, or `null` when the app has no webhook |
 
 **Errors:**
 
@@ -495,16 +497,16 @@ when you need to retrieve the response from `PUT /admin/app/webhook`.
 |--------|-----------|
 | `401` | Missing or invalid admin key |
 
-### Set Webhook URL
+### Set webhook URL
 
 ```
 PUT /api/v1/admin/app/webhook
 ```
 
 Registers or rotates the webhook URL for the authenticated app. Each
-call generates a fresh Ed25519 keypair; the response is the only
-opportunity to capture the public key for verification. Subsequent
-deliveries are signed with the corresponding private key. See
+call generates a fresh Ed25519 key pair; the response is the only
+opportunity to capture the public key for verification. Oyster signs
+subsequent deliveries with the corresponding private key. See
 [Webhooks](../guides/webhooks.mdx) for the signature format.
 
 **Request body:**
@@ -515,7 +517,7 @@ deliveries are signed with the corresponding private key. See
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `webhook_url` | string | yes | Receiver URL. Must be `https://`, ≤ 2048 chars, must not embed credentials, must have a host |
+| `webhook_url` | string | yes | Receiver URL. Must be `https://`, ≤ 2048 characters, must not embed credentials, must have a host |
 
 **Response** (`200 OK`): same shape as `GET /admin/app` above.
 
@@ -526,13 +528,13 @@ deliveries are signed with the corresponding private key. See
 | `400` | Webhook URL invalid (bad scheme, embedded credentials, oversize, host-less, malformed) |
 | `401` | Missing or invalid admin key |
 
-### Clear Webhook URL
+### Clear webhook URL
 
 ```
 DELETE /api/v1/admin/app/webhook
 ```
 
-Clears the webhook URL and discards the keypair. Subsequent
+Clears the webhook URL and discards the key pair. Subsequent
 extension failures do not deliver a webhook.
 
 **Response** (`200 OK`): the updated app row with all three webhook
@@ -544,12 +546,12 @@ fields nulled.
 |--------|-----------|
 | `401` | Missing or invalid admin key |
 
-## Server Commands
+## Server commands
 
 `oysterd` is the server binary. Besides the `oysterd app` subcommands below
 (for managing apps and admin keys), it runs the service itself.
 
-### Running the Server
+### Running the server
 
 ```bash
 oysterd serve     # run the HTTP + S3 server (default when no subcommand given)
@@ -566,18 +568,18 @@ secret from a file instead of the `PEARL_SERVICE_SECRET` environment variable,
 which is useful for mounting the secret as a file (for example, a Kubernetes secret). It applies
 to any `oysterd` invocation.
 
-Both services are otherwise configured through environment variables; see the
+Otherwise, you configure both services through environment variables; see the
 [README](https://github.com/MystenLabs/oyster#configuration) for the full
-env-var reference.
+environment variable reference.
 
-### Create App
+### Create app
 
 ```bash
 oysterd app new --name <NAME> --contact_email <EMAIL> [--no-key]
 ```
 
 Creates a new app, prints its UUID, and (by default) auto-issues a first
-admin key alongside. Webhook URLs are configured by the app builder
+admin key alongside. The app builder configures webhook URLs
 using the self-service `PUT /admin/app/webhook` endpoint above (or
 `oyster app webhook set <URL>`).
 
@@ -595,23 +597,23 @@ oysterd app new --name "my-app" --contact_email "admin@example.com"
 # 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 ```
 
-### Issue Admin Key
+### Issue admin key
 
 ```bash
 oysterd app issue-admin-key <app_id>
 ```
 
-Generates a fresh admin key for the given app. Multiple admin keys per
-app are supported with no cap; use this for AWS-style two-key rotation.
+Generates a fresh admin key for the given app. Oyster supports multiple admin
+keys per app with no cap; use this for AWS-style two-key rotation.
 
 **stdout** carries the raw admin key as a single line; this is the only
 machine-readable output, suitable for capturing in a variable or piping. The
-key id and 8-char prefix are **not** printed to stdout; they appear in a
+command does **not** print the key ID and 8-character prefix to stdout; they appear in a
 `tracing::info!` structured log line (fields `app_id`, `key_id`, `prefix`,
-message `issued admin key`) written to **stderr**. That line is emitted at the
-`info` level, so it shows with the default log filter but is suppressed if
-`RUST_LOG` raises the threshold above `info`. It is a human-readable log line,
-not a stable machine-readable string. To recover a key id reliably, use
+message `issued admin key`) written to **stderr**. `oysterd` emits that line at the
+`info` level, so it shows with the default log filter, but setting `RUST_LOG`
+to a threshold above `info` suppresses it. It is a human-readable log line,
+not a stable machine-readable string. To recover a key ID reliably, use
 [List Admin Keys](#list-admin-keys).
 
 **Example:**
@@ -622,13 +624,13 @@ oysterd app issue-admin-key 550e8400-e29b-41d4-a716-446655440000
 # stderr (info log): ... issued admin key app_id=550e8400-... key_id=<key_id> prefix=01234567
 ```
 
-The printed key can be used directly in the `Authorization` header:
+You can use the printed key directly in the `Authorization` header:
 
 ```bash
 curl -H "Authorization: Bearer $(oysterd app issue-admin-key $APP_ID)" ...
 ```
 
-### List Admin Keys
+### List admin keys
 
 ```bash
 oysterd app list-admin-keys <app_id>
@@ -647,14 +649,14 @@ b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e→01234567→2026-04-15T10:30:00Z→
 a1b2c3d4-e5f6-7890-abcd-ef0123456789→89abcdef→2026-03-01T08:00:00Z→2026-04-15T10:31:00Z
 ```
 
-### Revoke Admin Key
+### Revoke admin key
 
 ```bash
 oysterd app revoke-admin-key <key_id>
 ```
 
-Marks an admin key as revoked. Subsequent requests using that key are
-rejected with `401`. Revocation is by `key_id` (globally unique), not by
+Marks an admin key as revoked. Oyster rejects subsequent requests using that
+key with `401`. Revocation is by `key_id` (globally unique), not by
 the raw key value.
 
 **Example:**
@@ -663,7 +665,7 @@ the raw key value.
 oysterd app revoke-admin-key b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e
 ```
 
-### List Apps
+### List apps
 
 ```bash
 oysterd app list

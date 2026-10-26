@@ -1,12 +1,14 @@
 ---
 title: "Wallet"
+description: Get the Sui wallet address that the Pearl custodial wallet service associates with your Oyster account.
+keywords: [ wallet, Sui wallet address, Oyster, Pearl, custodial wallet, Walrus, API ]
 ---
 
-Each Oyster account has an associated **Sui wallet address**, derived from
-the account's identity by the Pearl custodial wallet service. This wallet
-is used for onchain operations when blobs are stored on Walrus.
+Each Oyster account has an associated **Sui wallet address**. The Pearl
+custodial wallet service derives this address from the account's identity.
+This wallet performs onchain operations for storing blobs on Walrus.
 
-## Get Wallet Address
+## Get wallet address
 
 ```
 GET /api/v1/account/wallet
