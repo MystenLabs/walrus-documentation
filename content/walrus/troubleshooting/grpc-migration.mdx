@@ -76,7 +76,7 @@ $ curl --create-dirs https://docs.wal.app/setup/client_config.yaml -o ~/.config/
 
 The optional `rpc_url` field in `sites-config.yaml` needs no change either, because `site-builder` reaches that same node over gRPC. For the full file, see the [Site Builder Reference](/docs/sites/getting-started/using-the-site-builder).
 
-Then rerun whatever failed. If it still fails against a public endpoint, you are running an older binary than `walrus --version` reports, so check your `PATH`.
+Then rerun whatever failed; a command that now succeeds against a public endpoint confirms the upgraded client is reaching Sui over gRPC at that same URL. If it still fails against a public endpoint, you are running an older binary than `walrus --version` reports, so check your `PATH`.
 
 ## Migration for full node operators
 
