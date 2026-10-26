@@ -8,9 +8,9 @@ keywords: [walrus, quickstart, python, http api, cli, store blob, read blob, blo
   prompt="Walk me through storing a file on Walrus, reading it back, and checking its status. Show me how to do each operation with the CLI, the HTTP API, and Python so I can compare them."
 />
 
-This quickstart shows the core blob operations, store, read, and check status, three ways: the Walrus CLI, the HTTP API, and Python. Each operation appears in all three so you can pick the surface that fits your stack, or compare them side by side.
+The core Walrus blob operations, store, read, and check status, work three ways: the Walrus CLI, the HTTP API, and Python. Each operation appears in all three so you can pick the surface that fits your stack, or compare them side by side.
 
-Walrus does not ship a dedicated Python SDK. A Python backend integrates with Walrus through the HTTP API, reading from an aggregator and writing to a publisher, or by driving the `walrus` CLI as a subprocess. This page uses the HTTP API for the Python examples because it needs nothing beyond the `requests` library.
+Walrus does not ship a dedicated Python SDK. A Python backend integrates with Walrus through the HTTP API, reading from an aggregator and writing to a publisher, or by driving the `walrus` CLI as a subprocess. The Python examples use the HTTP API because it needs nothing beyond the `requests` library.
 
 <div className="outlined-tabs">
 
@@ -18,7 +18,7 @@ Walrus does not ship a dedicated Python SDK. A Python backend integrates with Wa
 <TabItem value="prereq" label="Prerequisites">
 
 - [x] No API key required. The public Walrus aggregator and publisher endpoints are open.
-- [x] Set the endpoints you want to use. The examples below use the Testnet endpoints from the [Network Reference](/docs/network-reference#aggregators-and-publishers):
+- [x] Set the endpoints you want to use. The examples on this page use the Testnet endpoints from the [Network Reference](/docs/network-reference#aggregators-and-publishers):
 
 ```sh
 export AGGREGATOR=https://aggregator.walrus-testnet.walrus.space
@@ -37,7 +37,7 @@ export PUBLISHER=https://publisher.walrus-testnet.walrus.space
 
 :::caution Public endpoint limits
 
-Public aggregators and publishers limit requests to 10 MiB, and Walrus does not provide a public unauthenticated publisher on Mainnet. For larger blobs or production Mainnet writes, run your own publisher, use an upload relay, or drive the CLI. See the [Mainnet Publisher Production Guide](/docs/operator-guide/publishers/mainnet-production-guide).
+Public aggregators and publishers limit requests to 10MB, and Walrus does not provide a public unauthenticated publisher on Mainnet. For larger blobs or production Mainnet writes, run your own publisher, use an upload relay, or drive the CLI. See the [Mainnet Publisher Production Guide](/docs/operator-guide/publishers/mainnet-production-guide).
 
 :::
 
