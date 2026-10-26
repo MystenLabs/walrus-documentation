@@ -13,7 +13,7 @@ as final. Grounded in: contract/delegate-key-management, relayer/api-reference,
 sdk/api-reference, mcp/reference, getting-started/quick-start.
 */}
 
-This page collects the support questions that come up most often and the fastest way to resolve each one. Every entry lists the symptom you observe, the cause behind it, and the fix to apply.
+The most common Walrus Memory support questions each have a fast resolution. Every entry lists the symptom you observe, the cause behind it, and the fix to apply.
 
 If your issue is not here, set `MEMWAL_MCP_DEBUG=1` for the Model Context Protocol (MCP) server, or, if you use the `withMemWal()` AI middleware, pass `debug: true` in its options, to get verbose logs, then open an issue on the repository with that output.
 
@@ -26,35 +26,35 @@ Read this section first, because most authentication problems make sense once th
 3. The SDK or MCP client signs each request with the delegate private key.
 4. On every request, the relayer verifies the signature, then looks up that public key in your account's onchain `delegate_keys` list to resolve the owner.
 
-The key word is **registered**. A delegate key that exists locally but is not added to your account onchain, or is added to a different account, or is added on a different network, fails authentication. That single fact explains most `AUTH_REJECTED` reports.
+The key word is **registered**. A delegate key that exists locally fails authentication if the owner has not added it to your account onchain, added it to a different account, or added it on a different network. That single fact explains most `AUTH_REJECTED` reports.
 
 Every signed request also carries a timestamp with a 5-minute validity window and a one-time nonce for replay protection, which is the second most common source of unexpected rejections.
 
 ## Authentication and delegate keys
 
-This section covers credential and authorization errors.
+Credential and authorization errors have the following symptoms, causes, and fixes.
 
 ### 401 `AUTH_REJECTED` errors
 
-**Symptom:** You generated a delegate key, often from the dashboard, confirmed your account ID, and every authenticated call returns `AUTH_REJECTED` with HTTP status 401. A health check still succeeds, because the health endpoint needs no authentication, so the relayer is reachable but your signed requests are not accepted.
+**Symptom:** You generated a delegate key, often from the dashboard, confirmed your account ID, and every authenticated call returns `AUTH_REJECTED` with HTTP status 401. A health check still succeeds, because the health endpoint needs no authentication, so the relayer is reachable but it does not accept your signed requests.
 
-**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. The following causes are ordered by how often they apply to a freshly generated key, and each row pairs the check with its fix:
+**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. The following table orders the causes by how often they apply to a freshly generated key, and each row pairs the check with its fix:
 
 | **Cause** | **How to check** | **How to fix** |
 | --- | --- | --- |
-| The delegate key is not registered onchain yet, or its registration transaction is not indexed | Confirm the key appears under your account in the dashboard, and that any `addDelegateKey` call succeeded. | Register the public key onchain through the dashboard or `addDelegateKey`, then wait a few seconds for indexing and retry. |
+| The delegate key is not registered onchain yet, or the indexer has not yet processed its registration transaction | Confirm the key appears under your account in the dashboard, and that any `addDelegateKey` call succeeded. | Register the public key onchain through the dashboard or `addDelegateKey`, then wait a few seconds for indexing and retry. |
 | The account ID does not match the account that owns the key | Compare the `accountId` in your configuration against the account that lists this delegate key in the dashboard. A stale value in `localStorage` is a common source. | Use the account ID that you generated and that owns this delegate key, and do not reuse an account ID copied from another project. |
-| `accountId` is a Sui wallet address | A wallet address and a Walrus Memory account ID are both `0x` plus 64 hex characters. The relayer returns this same 401 when the id is not a Walrus Memory account, so the error text names the case instead of distinguishing it from a bad key. | Copy the account ID from the Walrus Memory dashboard. Do not paste the connected wallet address. |
+| `accountId` is a Sui wallet address | A wallet address and a Walrus Memory account ID are both `0x` plus 64 hex characters. The relayer returns this same 401 when the ID is not a Walrus Memory account, so the error text names the case instead of distinguishing it from a bad key. | Copy the account ID from the Walrus Memory dashboard. Do not paste the connected wallet address. |
 | The client points at a different network than the one where the account lives | Confirm your `serverUrl` or environment preset matches where you created the account. Production is `https://relayer.memory.walrus.xyz` and staging is `https://relayer-staging.memory.walrus.xyz`. | Point the client at the relayer for the correct network, or recreate the account and key in the environment you intend to use. |
 | The system clock is outside the 5-minute signing window | Confirm the machine clock is accurate and synchronized using the Network Time Protocol (NTP). | Synchronize the clock and retry. |
-| The delegate key is revoked, or the account is deactivated | Confirm the key is present and the account is active in the dashboard. | Re-add the delegate key, or reactivate the account, which only the owner can do. |
+| The owner revoked the delegate key or deactivated the account | Confirm the key is present and the account is active in the dashboard. | Re-add the delegate key, or reactivate the account, which only the owner can do. |
 
 :::tip
 To triage quickly, confirm 3 things in order: the key is listed under the correct account in the dashboard, your account ID matches that account exactly, and your relayer environment matches where you created the account.
 :::
 
 :::info
-A version mismatch is rarely the cause here. The relayer reports its minimum supported SDK version, which is TypeScript 0.0.4 at the time of writing, so 0.1.0 is supported. A true version mismatch surfaces as `MemWalCompatibilityError` rather than `AUTH_REJECTED`.
+A version mismatch is rarely the cause here. The relayer reports its minimum supported SDK version, which is TypeScript 0.0.4 at the time of writing, so the relayer supports 0.1.0. A true version mismatch surfaces as `MemWalCompatibilityError` rather than `AUTH_REJECTED`.
 :::
 
 ### Intermittent `isn't signed in` / `memwal_login` on recall
@@ -63,17 +63,17 @@ A version mismatch is rarely the cause here. The relayer reports its minimum sup
 
 **Cause:** The relayer re-checks the delegate key on Sui on every signed request. When Sui gRPC `GetObject` returns 429 or is otherwise unavailable, older relayers treated that as a revoked key, evicted the cache, and returned an empty HTTP 401. The SDK maps empty 401s to the login hint. The key is usually still registered.
 
-**Fix:** Retry. This is not a sign-in failure. Current relayers keep the cached mapping when Sui cannot be consulted, or return HTTP 503 `upstream unavailable` on a cache miss. A 503 from the SDK means "retry"; it does not mean call `memwal_login`. If every call 401s, including after a few minutes, then follow the `AUTH_REJECTED` checks above.
+**Fix:** Retry. This is not a sign-in failure. Current relayers keep the cached mapping when Sui cannot be consulted, or return HTTP 503 `upstream unavailable` on a cache miss. A 503 from the SDK means retry; it does not mean call `memwal_login`. If every call 401s, including after a few minutes, then follow the `AUTH_REJECTED` checks above.
 
-## MCP Connection issues
+## MCP connection issues
 
-This section covers problems that appear before the memory tools work.
+Some problems appear before the memory tools work.
 
 ### Only `memwal_login` appears
 
 **Symptom:** After you connect the MCP server, the agent sees only `memwal_login`, or the memory tools return an authentication-required error.
 
-**Cause:** No credentials file exists at `~/.memwal/credentials.json`. When an MCP host launches the package without credentials, it starts in an authentication-required mode. The tool list still advertises the core memory tools alongside `memwal_login`, but only `memwal_login` runs until you authenticate; the other tools return an authentication-required error when called, which is why it can look like `memwal_login` is the only tool available.
+**Cause:** No credentials file exists at `~/.memwal/credentials.json`. When an MCP host launches the package without credentials, it starts in an authentication-required mode. The tool list still advertises the core memory tools alongside `memwal_login`, but only `memwal_login` runs until you authenticate; the other tools return an authentication-required error when you call them, which is why it can look like `memwal_login` is the only tool available.
 
 **Fix:** Ask the agent to call `memwal_login`, which returns a one-time sign-in URL valid for 5 minutes, or run `npx -y @mysten-incubation/memwal-mcp login --prod` in your terminal. Sign in to the wallet you intend to use before you open the URL. If the URL expires, call the tool again to get a fresh one.
 
@@ -87,11 +87,11 @@ This section covers problems that appear before the memory tools work.
 
 ### Sign-in succeeds but credentials are not saved
 
-**Symptom:** The sign-in page confirms that your delegate key was registered, but says it could not hand the credentials back to your computer. The agent stays logged out and `~/.memwal/credentials.json` does not appear.
+**Symptom:** The sign-in page confirms that it registered your delegate key, but says it could not hand the credentials back to your computer. The agent stays logged out and `~/.memwal/credentials.json` does not appear.
 
 **Cause:** Signing in has two halves. Your browser registers a delegate key onchain, then sends that key back to a short-lived listener the MCP package runs on `127.0.0.1`. The key from this attempt is already on your account, and the MCP package saved its private half before it opened the sign-in page, so you can still use it. The usual reasons the hand-off fails:
 
-- The MCP client restarted, or the login command was cancelled, while the browser tab was still open.
+- The MCP client restarted, or you canceled the login command, while the browser tab was still open.
 - This tab is leftover from a sign-in that already finished, or the hand-off did not match what the app expected.
 - Local software such as a firewall, a VPN client, or a browser extension blocks requests from a website to `127.0.0.1`.
 
@@ -105,7 +105,7 @@ If it keeps failing, confirm that nothing blocks localhost traffic, then run `np
 
 ## Saving and timeouts
 
-This section covers slow or timed-out writes.
+Writes can run slowly or time out.
 
 ### `memwal_analyze` times out while recall works
 
@@ -129,7 +129,7 @@ A client-side timeout does not mean the save failed. The relayer accepts the wor
 
 **Symptom:** You save a memory, and an immediate recall finds nothing.
 
-**Cause:** MCP `memwal_remember` returns at accept by default (`job_id`). The fact is not on Walrus yet, so recall has nothing to find. Even after the write lands, embedding/indexing can lag a few seconds under load.
+**Cause:** MCP `memwal_remember` returns at accept by default (`job_id`). The fact is not on Walrus yet, so recall has nothing to find. Even after the write lands, embedding and indexing can lag a few seconds under load.
 
 **Fix:** Do not treat the accept reply as stored. Settle with `memwal_remember_status` (or wait until the tool returns a `blob_id`). Then retry recall. If a memory is missing from the search index later, `memwal_restore` rebuilds the index for that namespace from Walrus. `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` restores wait-for-`blob_id` on a client that raises the 60s tools/call ceiling.
 
@@ -151,13 +151,13 @@ Use these values for quick configuration and triage:
 
 ## Frequently asked questions
 
-These answers are written for the product page.
+These answers target the product page.
 
-### Is there a registration step after i generate a delegate key?
+### Is there a registration step after I generate a delegate key?
 
-Yes. Generating a delegate key creates the key pair, and it works only after the owner registers its public key on your account onchain, which the dashboard does when you create the key there. The relayer checks for that registration on every request, so a key that is generated but not registered, or registered on a different account or network, fails authentication.
+Yes. Generating a delegate key creates the key pair, and it works only after the owner registers its public key on your account onchain, which the dashboard does when you create the key there. The relayer checks for that registration on every request, so a key that you generate but do not register, or that you register on a different account or network, fails authentication.
 
-### Why do i get `AUTH_REJECTED` with a brand-new key?
+### Why do I get `AUTH_REJECTED` with a brand-new key?
 
 The cause is almost always one of 3 things: the key is not registered on the account yet or is still settling, your account ID does not match the account that owns the key, or your client points at a different network than the one where you created the account. Check those in that order. A skewed system clock can also cause it, because each request carries a timestamp with a 5-minute window.
 
@@ -165,18 +165,18 @@ The cause is almost always one of 3 things: the key is not registered on the acc
 
 No. Accounts and delegate keys are specific to each network. A key created on staging does not authenticate against the production relayer, and the reverse is also true. Confirm that your relayer environment matches where you created the account.
 
-### My save timed out, so did i lose the memory?
+### My save timed out, so did I lose the memory?
 
 Probably not. The relayer processes saves as background jobs and keeps working after the client times out. Do not save again right away, because that can duplicate the memory. Wait a few seconds and recall it to confirm. To save a single fact, use `memwal_remember` rather than `memwal_analyze`, which extracts and stores many facts at once and is the slowest operation.
 
 ### Why does recall feel instant while saving feels slow?
 
-Recall is one search request. A save embeds, encrypts, uploads to Walrus, and indexes the result, and `memwal_analyze` does that for every fact it extracts. Saves are expected to take longer, and they run in the background.
+Recall is one search request. A save embeds, encrypts, uploads to Walrus, and indexes the result, and `memwal_analyze` does that for every fact it extracts. Expect saves to take longer, and they run in the background.
 
 ### Score vs distance
 
 SDK `recall` returns cosine **distance** (lower = more similar), and `maxDistance` drops hits where `distance >= maxDistance`. MCP `memwal_recall` prints **score** as `1 - distance` (higher = more similar). Do not apply an SDK `maxDistance` to MCP scores. That inverts the filter.
 
-### How do i check whether the service is reachable?
+### How do I check whether the service is reachable?
 
 Run `memwal_health`. It does not require authentication, so it separates the question of whether the relayer is reachable from whether your credentials are valid.
