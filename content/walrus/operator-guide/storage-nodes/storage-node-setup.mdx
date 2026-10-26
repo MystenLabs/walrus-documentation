@@ -110,7 +110,7 @@ You can test your firewall setup by running `nc -l PORT_NUMBER` on the Walrus ho
 
 </div>
 
-## TLS setup {#tls-setup}
+## How to set up TLS {#tls-setup}
 
 The storage node handles TLS directly. If you deploy a reverse proxy in front of the storage node, you **must** disable TLS termination on the proxy or ensure it uses the same key as the storage node.
 
@@ -200,7 +200,7 @@ sudo systemctl status snap.certbot.renew.timer
 
 If you need to manually re-run the deploy hook, use `sudo certbot reconfigure --cert-name walrus-storage-node --run-deploy-hooks`.
 
-## Install `jemalloc` {#jemalloc}
+## How to install `jemalloc` {#jemalloc}
 
 It is **highly recommended** to install [jemalloc](https://jemalloc.net/) for improved memory allocation performance:
 
@@ -212,7 +212,7 @@ This is configured through `LD_PRELOAD` in the systemd service file below.
 
 The library path `/usr/lib/x86_64-linux-gnu/libjemalloc.so.2` is for x86_64 Ubuntu. If you use a different architecture, adjust the path accordingly.
 
-## Create the systemd service file {#systemd}
+## How to create the systemd service file {#systemd}
 
 Create a systemd service at `/etc/systemd/system/walrus-node.service`:
 
@@ -333,7 +333,7 @@ STAKING_OBJECT=$(awk '/^staking_object:/ {print $2}' $CLIENT_CONFIG)
 Set the remaining variables and run the setup command:
 
 ```sh
-NODE_CAPACITY=   # for example, 3.14TiBor 2.718TiB
+NODE_CAPACITY=   # for example, 3.14TiB or 2.718TiB
 NODE_NAME=""     # an arbitrary string identifying your node; include your entity name
 PUBLIC_PORT=9185 # change if you deviate from defaults or use a reverse proxy
 SUI_RPC_URL=     # URL of a Sui full node for the target network
@@ -432,7 +432,7 @@ Do not reuse any keys, wallets, or other secrets from Testnet or anywhere else. 
 
 :::
 
-## Register and start the node {#registration}
+## How to register and start the node {#registration}
 
 ##### Step 1: Fund the wallet.
 
@@ -489,10 +489,10 @@ Before the node is selected for the committee, you might see error messages like
 
 ##### Step 6: Check the health endpoint.
 
-Run the following command from a different machine to also verify the firewall setup:
+Run the following command from a different machine to also verify the firewall setup. On that machine, first set `SERVER_NAME` to your node's public hostname, as in the [TLS setup](#tls-setup) section:
 
 ```sh
-curl https://PUBLIC_ADDRESS:9185/v1/health | jq
+curl https://$SERVER_NAME:9185/v1/health | jq
 ```
 
 The storage node serves HTTPS only (it handles TLS directly). When checking from localhost, use `curl -k` to skip certificate verification:
