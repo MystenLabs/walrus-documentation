@@ -153,6 +153,8 @@ The PTB has two move calls:
 
 If your governance authorization is delegated to an object rather than an address, replace the first call with `walrus::auth::authenticate_with_object` and pass the controlling object as its argument.
 
+Before you run the commands, set `NODE_ID` to the `StakingPool` object ID of the node you operate and `CANDIDATE_NODE_ID` to the `StakingPool` object ID of the candidate. You can get both IDs from the sources in [Look up the candidate node ID](#look-up-the-candidate-node-id), such as the `walrus info all` command.
+
 <div className="outlined-tabs">
 
 <Tabs groupId="network">
@@ -245,6 +247,8 @@ If your wallet has already cast a vote but the proposal does not show your node 
 Once the accumulated voting weight has reached or exceeded the quorum threshold in the current epoch, anyone can finalize the slashing. The execute call does not take an `Authenticated` argument, so a plain `sui client call` works.
 
 Coordinate with the other operators so a single party submits the execute transaction. Multiple operators racing to execute waste gas on the losing transactions, which all abort with `ENoProposalForNode` after the first one succeeds.
+
+Set `CANDIDATE_NODE_ID` to the same `StakingPool` object ID that you used for the vote.
 
 <div className="outlined-tabs">
 
