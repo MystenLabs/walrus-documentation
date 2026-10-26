@@ -49,7 +49,7 @@ Blobs within a quilt are retrieved by a `QuiltPatchId`, not their standard `Blob
 
 Standard blob operations like `delete`, `extend`, or `share` cannot target individual blobs inside a quilt. You must apply them to the entire quilt.
 
-## Store files as a quilt
+## How do I store files as a quilt?
 
 To store all files from one or more directories recursively, use the `--paths` flag. The filename of each file is used as its unique identifier within the quilt. Regular expressions are supported for uploading from multiple paths.
 
@@ -68,11 +68,11 @@ $ walrus store-quilt \
     --epochs <EPOCHS>
 ```
 
-## Read blobs from a quilt
+## How do I read blobs from a quilt?
 
 You can retrieve individual blobs from a quilt without downloading the entire quilt. The `read-quilt` command allows you to query for specific blobs by their identifier, tags, or unique blob ID.
 
-To read blobs by their identifiers, use the `--identifiers` flag:
+To read blobs by their identifiers, use the `--identifiers` flag. Pass the identifiers you used when you stored the quilt. With `--paths`, the identifier is the file name, such as `walrus.jpg`. With `--blobs`, it is the custom `identifier` value, such as `walrus`.
 ```sh
 $ walrus read-quilt --out <DOWNLOAD_DIR> \
     --quilt-id 057MX9PAaUIQLliItM_khR_cp5jPHzJWf-CuJr1z1ik --identifiers walrus.jpg another-walrus.jpg
