@@ -190,16 +190,28 @@ Replace `<blob-object-id>` with the blob's Sui object ID that the `walrus store`
 
 Walrus allows a set of key-value attribute pairs to be associated with a Sui object. While the keys and their values can be arbitrary strings to accommodate any needs, specific keys are converted to HTTP headers when serving blobs through aggregators. Each aggregator can decide which headers it allows through the `--allowed-headers` CLI option. You can view the defaults through `walrus aggregator --help`.
 
-The following command sets attributes `key1` and `key2` to values `value1` and `value2`, respectively. The command `walrus get-blob-attribute <blob-object-id>` returns all attributes associated with a blob ID.
+The following command sets attributes `key1` and `key2` to values `value1` and `value2`, respectively.
 
 ```sh
 $ walrus set-blob-attribute <blob-object-id> --attr "key1" "value1" --attr "key2" "value2"
 ```
 
-The following command deletes the attributes with keys listed, separated by commas or spaces. All attributes of a Sui object can be deleted by the command `walrus remove-blob-attribute <blob-object-id>`.
+The following command returns all attributes associated with a blob ID:
+
+```sh
+$ walrus get-blob-attribute <blob-object-id>
+```
+
+The following command deletes the attributes with keys listed, separated by commas or spaces.
 
 ```sh
 $ walrus remove-blob-attribute-fields <blob-object-id> --keys "key1,key2"
+```
+
+The following command deletes all attributes of a Sui object:
+
+```sh
+$ walrus remove-blob-attribute <blob-object-id>
 ```
 
 Attributes are associated with Sui object IDs rather than the blobs themselves on Walrus. This means that gas for storage is reclaimed by deleting attributes and that the same blob contents can have different attributes for different Sui objects with the same blob ID.
