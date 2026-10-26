@@ -58,7 +58,7 @@ The Walrus upload relay lets browser apps store blobs without opening a connecti
 
 </div>
 
-## Run the app locally
+## How to run the app locally
 
 1. Clone the repository and install the dependencies:
 
@@ -100,7 +100,7 @@ To target Mainnet instead, set `network: "mainnet"`, create the `SuiClient` for 
 
 <ImportContent source="src/App.tsx" mode="code" org="MystenLabs" repo="walrus-sdk-relay-example-app" />
 
-## Upload flow
+## How does the upload flow work?
 
 The `useWalrusUpload` hook in [`src/hooks/useWalrusUpload.ts`](https://github.com/MystenLabs/walrus-sdk-relay-example-app/blob/main/src/hooks/useWalrusUpload.ts) orchestrates the store through the SDK's `writeFilesFlow` in four steps:
 
