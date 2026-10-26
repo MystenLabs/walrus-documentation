@@ -63,7 +63,7 @@ The complete, runnable example files live in the [`examples/python`](https://git
 
 </div>
 
-## Use the HTTP API
+## How to use the HTTP API
 
 The HTTP API is the lightest integration path: you store blobs with `PUT` requests to a publisher and read them with `GET` requests to an aggregator, with no Walrus-specific dependencies in your Python code. The example below talks to a local `walrus daemon`, which combines the publisher and aggregator roles on a single address. Start the daemon first, pointing it at your client configuration and an existing directory for its sub-wallets:
 
@@ -89,7 +89,7 @@ Download time: 0.51s
 
 To use public endpoints instead of a local daemon, send `PUT` requests to a Testnet publisher and `GET` requests to an aggregator from the [Network Reference](/docs/network-reference#aggregators-and-publishers). Note that public endpoints limit requests to 10 MiB, and Walrus has no public unauthenticated publisher on Mainnet.
 
-## Use the JSON API
+## How to use the JSON API
 
 The JSON API runs the `walrus` CLI as a subprocess and exchanges JSON on standard input and output. JSON mode covers every CLI command, which makes it the right path when you need operations the HTTP API does not expose, such as checking a blob's onchain certification. The example passes a JSON object that names the client configuration file and the command to run, for example:
 
@@ -109,7 +109,7 @@ The example stores a 1 MiB file, reads it back, and then checks the blob's certi
 
 <ImportContent source="examples/python/hello_walrus_jsonapi.py" mode="code" />
 
-## Track Walrus events
+## How to track Walrus events
 
 Walrus coordinates storage through smart contracts on Sui, and blob lifecycle operations emit Sui events such as `BlobRegistered` and `BlobCertified`. Tracking these events lets you monitor activity, for example to confirm certification of your own blobs or to index recent stores. The script needs no `walrus` binary at runtime; it only reads the system object ID from your client configuration file and queries a Sui full node over JSON-RPC.
 
