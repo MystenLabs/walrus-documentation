@@ -36,7 +36,7 @@ answer: >-
   requirements, resource loading, and common outbound linking patterns.
 ---
 
-Walrus Sites serves content stored on Walrus through a [portal](/docs/sites/portals/mainnet-testnet). All relative URLs in your site resolve against the onchain site object. Anything outside that object, such as third-party pages, APIs, CDN assets, other Walrus Sites, requires an absolute URL.
+Walrus Sites serves content stored on Walrus through a [portal](/docs/sites/portals/mainnet-testnet). All relative URLs in your site resolve against the onchain site object. Anything outside that object, such as third-party pages, APIs, CDN assets, and other Walrus Sites, requires an absolute URL.
 
 ## How to link to external pages
  
@@ -86,14 +86,14 @@ External assets such as images, fonts, and scripts must use absolute URLs.
 |---|---|---|
 | Relative (within site) | `/assets/logo.png` | Blob inside site object |
 | Absolute external | `https://cdn.example.com/logo.png` | External host |
-| Protocol-relative | `//cdn.example.com/logo.png` | Avoid — behavior depends on portal scheme |
+| Protocol-relative | `//cdn.example.com/logo.png` | Avoid (behavior depends on portal scheme) |
  
 Avoid protocol-relative URLs (`//example.com`). Their behavior depends on the scheme of the portal serving the site, which can produce unexpected results.
  
 The portal serves pages with standard browser security policies, so cross-origin resource sharing (CORS) restrictions apply. The external host must allow cross-origin requests for assets to load.
  
 :::caution
-Do not use relative paths to reference off-chain resources. A path like `../external/resource` resolves within the Walrus Site object and returns a 404 if the resource does not exist there.
+Do not use relative paths to reference offchain resources. A path like `../external/resource` resolves within the Walrus Site object and returns a 404 if the resource does not exist there.
 :::
  
 ## Common patterns

@@ -70,7 +70,7 @@ The action performs the following steps:
 1. Downloads the `site-builder` binary for the selected version.
 2. Writes the Sui keystore to the runner environment.
 3. Runs [`site-builder deploy`](/docs/sites/getting-started/publishing-your-first-site) against your `DIST` directory.
-4. If `GITHUB_TOKEN` is provided and [`ws-resources.json`](/docs/sites/configuration/site-configuration) changed, opens a pull request with the updated file.
+4. If you provide `GITHUB_TOKEN` and [`ws-resources.json`](/docs/sites/configuration/site-configuration) changed, opens a pull request with the updated file.
 
 ### Required inputs
 
@@ -80,8 +80,8 @@ The action performs the following steps:
 
 Only choose 1 of the following authentication methods. Providing more than 1 causes the action to fail.
 
-- **Method 1 (recommended for CI/CD):** `SUI_ADDRESS` and `SUI_KEYSTORE`. Both must be present. `SUI_ADDRESS` is read from a repository variable; `SUI_KEYSTORE` is read from an encrypted secret.
-- **Method 2:** `SUI_BECH32_PRIVATE_KEY`. Pass the bech32-encoded private key (starting with `suiprivkey`) directly as a secret. No address input is needed.
+- **Method 1 (recommended for CI/CD):** `SUI_ADDRESS` and `SUI_KEYSTORE`. Both must be present. The action reads `SUI_ADDRESS` from a repository variable and `SUI_KEYSTORE` from an encrypted secret.
+- **Method 2:** `SUI_BECH32_PRIVATE_KEY`. Pass the bech32-encoded private key (starting with `suiprivkey`) directly as a secret. You do not need an address input.
 - **Method 3:** `SUI_SECRET_PHRASE`. Pass the mnemonic recovery phrase as a secret. Use this method only when no other credential format is available.
 
 ### Optional inputs
@@ -100,23 +100,23 @@ Only choose 1 of the following authentication methods. Providing more than 1 cau
 
 The `site-builder` tool uses a file called `ws-resources.json` to track the Sui object ID of your deployed site. This file determines whether a deployment creates a new site or updates an existing one.
 
-**First deployment (no `ws-resources.json`):** The action creates a new Walrus Site object on Sui and writes `ws-resources.json` to your `DIST` directory. If `GITHUB_TOKEN` is provided with the correct permissions, the action opens a pull request containing this new file.
+**First deployment (no `ws-resources.json`):** The action creates a new Walrus Site object on Sui and writes `ws-resources.json` to your `DIST` directory. If you provide `GITHUB_TOKEN` with the correct permissions, the action opens a pull request containing this new file.
 
-**Subsequent deployments (existing `ws-resources.json`):** The action reads the `object_id` from the file and updates the same site in place. Only changed resources are re-uploaded.
+**Subsequent deployments (existing `ws-resources.json`):** The action reads the `object_id` from the file and updates the same site in place. The action re-uploads only changed resources.
 
 :::caution
 
-Merge the pull request from your first deployment before the next workflow run. If `ws-resources.json` is not committed, each run creates a new site object instead of updating the existing one. The action reads `ws-resources.json` from your `DIST` directory, so the committed file must be in your build output when the action runs.
+Merge the pull request from your first deployment before the next workflow run. If you do not commit `ws-resources.json`, each run creates a new site object instead of updating the existing one. The action reads `ws-resources.json` from your `DIST` directory, so the committed file must be in your build output when the action runs.
 
 :::
 
 To place the file in your repository so that it survives across builds, add it under your framework's `public/` directory (or equivalent). Most build tools copy everything in `public/` directly into the output directory, which makes the file available at `DIST/ws-resources.json` without any extra configuration.
 
-Once your site is deployed and you have its `object_id`, you can link it to a SuiNS name so that it is accessible at `<suins>.wal.app`. See [Setting a SuiNS Name](/docs/sites/custom-domains/setting-a-suins-name) for details.
+Once you deploy your site and have its `object_id`, you can link it to a SuiNS name so that it is accessible at `<suins>.wal.app`. See [Setting a SuiNS Name](/docs/sites/custom-domains/setting-a-suins-name) for details.
 
 ## Using `GITHUB_TOKEN` for pull request creation
 
-Providing `GITHUB_TOKEN` enables the action to open a pull request automatically when `ws-resources.json` changes. This is most useful for the initial deployment, when the file is first created.
+Providing `GITHUB_TOKEN` enables the action to open a pull request automatically when `ws-resources.json` changes. This is most useful for the initial deployment, when the action first creates the file.
 
 To enable this feature, add the `GITHUB_TOKEN` input and grant the workflow the required permissions:
 
@@ -138,7 +138,7 @@ A Walrus Sites workflow follows this general structure:
 4. Build steps (required for frameworks; skip for pre-built static sites).
 5. Deploy Walrus Site action.
 
-Create a file at `.github/workflows/deploy-walrus-site.yml` in your repository and adapt one of the examples below.
+Create a file at `.github/workflows/deploy-walrus-site.yml` in your repository and adapt one of the examples in [Example workflows](#example-workflows).
 
 ## Example workflows
 
@@ -178,7 +178,7 @@ Replace `./site` with the path to your static files directory.
 
 ### Framework site with build step (frameworks like Vite, React, Vue, Svelte, and others)
 
-Use this pattern when your site requires a compilation step before deployment. The example below uses a Vite + React + TypeScript setup but applies to any Node.js-based framework:
+Use this pattern when your site requires a compilation step before deployment. This example uses a Vite + React + TypeScript setup but applies to any Node.js-based framework:
 
 ```yaml
 name: Deploy to Walrus

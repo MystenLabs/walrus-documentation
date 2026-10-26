@@ -47,9 +47,9 @@ The `site-builder` can read a `ws-resources.json` configuration file, in which y
 
 ## What is the `ws-resources.json` file?
 
-This file is optionally placed in the root of the site directory, and it is neither uploaded to Walrus nor served to site visitors. 
+You can optionally place this file in the root of the site directory. The `site-builder` does not upload it to Walrus, and the portal does not serve it to site visitors. 
 
-If you do not want to use this default location, you can specify the path to the configuration file with the `--ws-resources` flag when running the [`deploy`, `publish` or `update` commands](/docs/sites/getting-started/using-the-site-builder).
+If you do not want to use this default location, you can specify the path to the configuration file with the `--ws-resources` flag when running the [`deploy`, `publish`, or `update` commands](/docs/sites/getting-started/using-the-site-builder).
 
 The file is JSON-formatted, and looks like the following:
 
@@ -92,7 +92,7 @@ The `ws-resources.json` file expects the field names to be in `snake_case`.
 
 ## Specifying HTTP headers
 
-The `headers` section lets you attach custom HTTP response headers to specific resources, controlling caching, content types, encoding, and download behaviour. Headers are specified per exact file path and override the portal's defaults. Refer to the [HTTP headers reference page](/docs/sites/configuration/specifying-http-headers) for more information.
+The `headers` section lets you attach custom HTTP response headers to specific resources, controlling caching, content types, encoding, and download behavior. You specify headers per exact file path, and they override the portal's defaults. Refer to the [HTTP headers reference page](/docs/sites/configuration/specifying-http-headers) for more information.
 
 ```json
 {
@@ -155,13 +155,13 @@ Refer to the [metadata reference page](/docs/sites/configuration/adding-metadata
 
 ## Site name
 
-You can set a name for your Walrus Site through the optional `site_name` field in the `ws-resources.json` file. If you have also provided a site name through the `--site-name` CLI flag, the CLI flag takes priority and will overwrite the `site_name` field in the `ws-resources.json`. If a site name is not provided at all, then a default name is used.
+You can set a name for your Walrus Site through the optional `site_name` field in the `ws-resources.json` file. If you have also provided a site name through the `--site-name` CLI flag, the CLI flag takes priority and overwrites the `site_name` field in the `ws-resources.json`. If you do not provide a site name at all, then the `site-builder` uses a default name.
 
 ## What is the site object ID?
 
-The optional `object_id` field in the `ws-resources.json` file stores the Sui object ID of your deployed Walrus Site. You can also set this field manually to target an existing site: if a valid `object_id` is present, `deploy` targets that site for modifications.
+The optional `object_id` field in the `ws-resources.json` file stores the Sui object ID of your deployed Walrus Site.
 
-The [`site-builder deploy` command](/docs/sites/getting-started/using-the-site-builder) primarily uses this field to identify an existing site for updates. If a valid `object_id` is present, `deploy` targets that site for modifications. If this field is missing and no `--object-id` CLI flag is used, `deploy` publishes a new site. If successful, then the command automatically populates this `object_id` field in your `ws-resources.json`.
+The [`site-builder deploy` command](/docs/sites/getting-started/using-the-site-builder) primarily uses this field to identify an existing site for updates. If a valid `object_id` is present, `deploy` targets that site for modifications. If this field is missing and you do not use the `--object-id` CLI flag, `deploy` publishes a new site. If successful, then the command automatically populates this `object_id` field in your `ws-resources.json`.
 
 :::caution
 
@@ -171,7 +171,7 @@ Preserve `ws-resources.json` after the first deployment. If the file is missing 
 
 ## How to ignore files during upload
 
-You can use the optional `ignore` field to exclude certain files or folders from being published. This is useful when you want to keep development files, secrets, or temporary assets out of the final build.
+You can use the optional `ignore` field to exclude certain files or folders when you publish your site. This is useful when you want to keep development files, secrets, or temporary assets out of the final build.
 
 The `ignore` field is a list of resource paths to skip. Each pattern must start with a `/`, and might end with a `*` to indicate a wildcard match.
 
@@ -187,13 +187,13 @@ For example:
 
 This configuration skips all files inside the `/private/` and `/images/tmp/` directories, as well as a specific file `/secret.txt`.
 
-Wildcards are only supported in the **last position** of the path, for example, `/foo/*` is valid, but `/foo/*/bar` is not.
+You can use wildcards only in the **last position** of the path, for example, `/foo/*` is valid, but `/foo/*/bar` is not.
 
 ## How to serve raw markdown {#markdown}
 
-You may wish to serve raw markdown files for better LLM ingestion. Generating these depends on your framework. Static site generators like Docusaurus and VitePress can output `.md` files through build scripts or plugins. Custom pipelines typically use a pre-build script to copy source files into a `/markdown` directory. 
+You might wish to serve raw markdown files for better ingestion by large language models (LLMs). Generating these depends on your framework. Static site generators like Docusaurus and VitePress can output `.md` files through build scripts or plugins. Custom pipelines typically use a pre-build script to copy source files into a `/markdown` directory. 
 
-Raw markdown files must exist in your build output before deploying using `site-builder`. To serve a file as raw markdown, two entries are required in `ws-resources.json`.
+Raw markdown files must exist in your build output before deploying using `site-builder`. To serve a file as raw markdown, you need two entries in `ws-resources.json`.
 
 Add a header definition (`content-type` **must** be lowercase):
 

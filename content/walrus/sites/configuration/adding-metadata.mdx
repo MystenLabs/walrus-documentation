@@ -32,7 +32,7 @@ questions:
 answer: Reference page for adding metadata to a Walrus Site.
 ---
 
-The `metadata` section of `ws-resources.json` lets you add human-readable information to your Walrus Site object. This data is stored onchain and is used by portals, explorers, wallets, and other tools to display information about your site.
+The `metadata` section of `ws-resources.json` lets you add human-readable information to your Walrus Site object. This data lives onchain, and portals, explorers, wallets, and other tools use it to display information about your site.
 
 ```json
 {
@@ -48,7 +48,7 @@ The `metadata` section of `ws-resources.json` lets you add human-readable inform
 
 The five fields correspond to the basic set of properties suggested by the [Sui Object Display standard](https://docs.sui.io/standards/display#display-properties).
 
-**All fields are optional.** You may include any combination of them, or omit the `metadata` block entirely.
+**All fields are optional.** You might include any combination of them, or omit the `metadata` block entirely.
 
 ## What metadata fields can you set?
 
@@ -57,7 +57,7 @@ The five fields correspond to the basic set of properties suggested by the [Sui 
 **Type:** `string` (URL)  
 **Purpose:** The canonical public URL of your Walrus Site.
 
-This is the URL through which users will access your site. It is used by portals and social preview tools as the primary link to represent the site.
+This is the URL through which users access your site. Portals and social preview tools use it as the primary link to represent the site.
 
 **Example:** SuiNS subdomain
 
@@ -94,7 +94,7 @@ This is the URL through which users will access your site. It is used by portals
 **Type:** `string` (URL)  
 **Purpose:** A URL pointing to a preview image for the site.
 
-This image is used as the thumbnail when your site is shared or listed in explorers and marketplaces. It should be a publicly accessible image hosted on a stable URL.
+This image serves as the thumbnail when someone shares your site or when explorers and marketplaces list it. It should be a publicly accessible image hosted on a stable URL.
 
 **Example:** Image hosted on the same Walrus site
 
@@ -133,7 +133,7 @@ This image is used as the thumbnail when your site is shared or listed in explor
 
 This appears in Sui explorers, portal listings, and social sharing previews, similar to the `<meta name="description">` HTML meta tag. You can use `description` to provide a one or two sentence summary of what your site is and does.
 
-**Example:** A simple app
+**Example:** A basic app
 
 ```json
 {
@@ -168,7 +168,7 @@ This appears in Sui explorers, portal listings, and social sharing previews, sim
 **Type:** `string` (URL)  
 **Purpose:** A URL pointing to the project's source code, homepage, or documentation.
 
-This is intended to provide a link to where users and developers can learn more about the project behind the site, such as a GitHub repository, a documentation site, or a marketing page. It is separate from `link`, which represents the site itself.
+Use this field to provide a link to where users and developers can learn more about the project behind the site, such as a GitHub repository, a documentation site, or a marketing page. It is separate from `link`, which represents the site itself.
 
 **Example:** A GitHub repository
 
@@ -205,7 +205,7 @@ This is intended to provide a link to where users and developers can learn more 
 **Type:** `string`  
 **Purpose:** Identifies the author or organization that created and deployed the site.
 
-This is a `string` shown in explorers and directory listings to indicate ownership or attribution. It can be an individual name, a team, an organization, or a handle.
+Explorers and directory listings show this `string` to indicate ownership or attribution. It can be an individual name, a team, an organization, or a handle.
 
 **Example:** Individual
 
