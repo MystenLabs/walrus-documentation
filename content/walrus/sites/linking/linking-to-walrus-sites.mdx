@@ -45,7 +45,7 @@ answer: >-
 
 A Walrus Site is addressed through a [portal](/docs/sites/portals/mainnet-testnet). The portal resolves the site from an onchain object and serves its content. To link to a Walrus Site from an external source, you construct a URL that the portal can resolve. There are 2 ways to identify a site in that URL: by its [SuiNS name](/docs/sites/custom-domains/setting-a-suins-name), or by its [Sui object ID](/docs/sites/getting-started/using-the-site-builder).
 
-## URL structure
+## What does a Walrus Sites URL look like?
  
 Walrus Sites URLs follow this pattern:
  
@@ -57,7 +57,7 @@ https://IDENTIFIER.PORTAL_HOST/PATH
 - `PORTAL_HOST`: The hostname of the portal serving the site. The default public mainnet portal is `wal.app`.
 - `PATH`: An optional path to a specific resource within the site.
  
-## Linking by SuiNS name
+## How to link by SuiNS name
  
 If a site owner has registered a SuiNS name and pointed it at their site object, you can link using that name as the subdomain.
  
@@ -77,7 +77,7 @@ SuiNS names are human-readable and stable as long as the registration is maintai
 SuiNS name resolution is performed onchain by the portal at request time. A name that is expired, not registered, or not pointed at a site object returns an error.
 :::
  
-## Linking by object ID
+## How to link by object ID
  
 Every Walrus Site has a Sui object ID. You can use the object ID as the subdomain in place of a SuiNS name. Because subdomain labels are case-insensitive and limited to 63 characters, the object ID must be encoded as Base36 rather than used as a hex string. The `site-builder` tool outputs the Base36-encoded subdomain URL for you when you deploy a site, and you can also convert a hex object ID to Base36 using the `site-builder convert` command.
  
@@ -97,7 +97,7 @@ Object ID links are permanent. They resolve to the same site object regardless o
 Prefer object ID links in any context where the URL is expected to remain valid long-term. SuiNS name links are more readable but depend on the name registration staying current.
 :::
  
-## Deep linking to a specific page or resource
+## How to link to a specific page or resource
  
 Append a path after the portal hostname to link directly to a resource within the site. The path resolves against the site object's stored resources.
  
@@ -119,7 +119,7 @@ https://BASE36_OBJECT_ID.wal.app/docs/getting-started
  
 The path must match a resource stored in the site object. If the path does not match any resource and the site does not define a custom 404 resource, the portal returns a default error.
  
-## Linking to a specific portal
+## How to link through a specific portal
  
 The public mainnet portal at `wal.app` is the default, but other portals exist and site owners might host their own. To link through a specific portal, replace `wal.app` with that portal's hostname.
  
@@ -129,7 +129,7 @@ https://IDENTIFIER.PORTAL_HOST
  
 The portal you link through does not change which site object is resolved. Any portal that supports Walrus Sites resolves the same onchain object for a given identifier. The choice of portal affects availability and trust, not content.
  
-## Constructing links programmatically
+## How to construct links programmatically
  
 When building applications or tools that generate links to Walrus Sites, use the object ID rather than a SuiNS name to avoid resolution failures caused by name changes.
  
@@ -143,14 +143,14 @@ function walrusSiteUrl(base36ObjectId, path = "") {
 }
  
 // Example: link to the /blog page of a site
-const url = walrusSiteUrl("BASE36_OBJECT_ID", "/blog");
+const url = walrusSiteUrl("58gr4pinoayuijgdixud23441t55jd94ugep68fsm72b8mwmq2", "/blog");
 ```
  
 If you want to support both identifiers, accept either a SuiNS name or an object ID as the subdomain segment and pass it through directly.
  
 ## Common patterns
  
-The following examples cover typical inbound linking scenarios.
+The following examples cover typical inbound linking scenarios. In these examples, replace `BASE36_OBJECT_ID` with the site's Base36 object ID (for example, `58gr4pinoayuijgdixud23441t55jd94ugep68fsm72b8mwmq2`) and `SUINS_NAME` with its SuiNS name (for example, `myproject`).
  
 ### Linking from a README
  
