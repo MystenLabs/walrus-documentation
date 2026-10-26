@@ -41,7 +41,7 @@ By default, [store blob](/docs/http-api/storing-blobs) requests are limited to 1
 
 If you host the aggregator or publisher on a third-party platform, ensure that any additional platform-imposed limits or constraints are compatible with your intended use case.
 
-## Configure nginx caching {#nginx-caching}
+## How to configure nginx caching {#nginx-caching}
 
 If you run a public aggregator, deploy a caching reverse proxy in front of it to reduce load on Walrus storage nodes. The aggregator acts as an origin server behind the cache.
 
@@ -109,7 +109,7 @@ http {
 
 ##### Step 3: Create a site configuration.
 
-Create a file at `/etc/nginx/sites-available/YOUR_HOSTNAME`:
+Create a file at `/etc/nginx/sites-available/YOUR_HOSTNAME`. The site is not active yet; you enable it with a symlink into `/etc/nginx/sites-enabled/` in Step 6:
 
 ```nginx
 server {
@@ -167,6 +167,6 @@ If you run the nginx reverse proxy on the **same host** as the storage node, cha
 
 :::
 
-## View daemon metrics
+## How to view daemon metrics
 
 Both the aggregator and publisher daemons export a metrics endpoint by default, accessible at `http://127.0.0.1:27182/metrics`. You can change the address using the `--metrics-address METRICS_ADDRESS` CLI option.
