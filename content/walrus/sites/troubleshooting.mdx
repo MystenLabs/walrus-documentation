@@ -31,7 +31,7 @@ questions:
 answer: Solutions to common errors when deploying and browsing Walrus Sites.
 ---
 
-Common Walrus Sites errors occur in 3 places: `site-builder` configuration, `site-builder deploy`, and browsing a site through a portal. Each entry names the error, its cause, and a solution.
+To fix a common Walrus Sites error, match the error message to its entry, then apply the solution. These errors occur in 3 places: `site-builder` configuration, `site-builder deploy`, and browsing a site through a portal. Each entry names the error, its cause, and a solution.
 
 Commands use uppercase placeholders, such as `EPOCHS`, `DIRECTORY`, `OBJECT_ID`, and `SITE_OBJECT_ID`. Replace each placeholder with your own value before you run the command.
 
@@ -125,7 +125,7 @@ $ sui client transfer --object-id SITE_OBJECT_ID --to NEW_WALLET_ADDRESS --gas-b
 
 **Cause:** The `deploy` command creates a new site object when it cannot find an existing object ID. It checks the `--object-id` flag first, then the `object_id` field in `ws-resources.json`. If neither is present, a new site is created.
 
-**Solution:** Pass the object ID of your existing site directly:
+**Solution:** Pass the object ID of your existing site directly. Replace `OBJECT_ID` with the object ID from the output of the `site-builder deploy` that first published your site:
 
 ```
 $ site-builder deploy --object-id OBJECT_ID --epochs EPOCHS DIRECTORY
@@ -171,7 +171,7 @@ Walrus Sites does not support server-side redirects. Redirect plugins used by fr
 
 :::
 
-#### HTTP 503 on route resolution with Content-Security-Policy headers
+#### Why do routes return HTTP 503 with Content-Security-Policy headers?
 
 **Cause:** Restrictive `Content-Security-Policy` headers in `ws-resources.json` (specifically `default-src 'none'` and `frame-ancestors 'none'`) conflict with the Walrus portal's request processing pipeline. Direct resource requests (for example, `/index.html`) bypass route resolution and return 200, but route redirects (for example, `/` to `/index.html`) fail with a 503 error.
 
