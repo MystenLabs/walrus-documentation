@@ -35,7 +35,7 @@ The Walrus Console developer API is at `api.console.walrus.xyz`. All folder crea
 </Tabs>
 </div>
 
-Every request below carries your API key as a bearer token:
+Every request in this quick start carries your API key as a bearer token:
 
 ```http
 Authorization: Bearer hbr_…
@@ -44,18 +44,18 @@ Authorization: Bearer hbr_…
 ## How to sign up and create an API key
 
 1. Visit the [Walrus Console app](https://console.walrus.xyz/) and sign in with Google or Apple. zkLogin provisions your account and a Personal Space automatically.
-2. Open **Integrations**, then click **Create API Key** in the top-right corner. Give the key a name and choose **API key**. The other type, **Management API key**, only mints further API keys programmatically through the CLI; it cannot upload, download, or manage assets, so the steps below need a plain API key. The choice is not permanent, so you can create a Management API key later if you need one.
+2. Open **Integrations**, then click **Create API Key** in the top-right corner. Give the key a name and choose **API key**. The other type, **Management API key**, only mints further API keys programmatically through the CLI; it cannot upload, download, or manage assets, so the encrypted folder and upload steps need a plain API key. The choice is not permanent, so you can create a Management API key later if you need one.
 3. On the reveal screen, copy both secrets. Console shows them once and cannot recover them afterward:
    - `hbr_…`, the API key you send as `Authorization: Bearer …` on every request.
-   - `suiprivkey1…`, the service private key: an Ed25519 secret in Sui keytool format, bound to this API key. Console stores only the derived public address, and it does not need a token balance. You use it to sign the finalize transaction and to authenticate decrypt sessions with Seal.
+   - `suiprivkey1…`, the service private key: an Ed25519 secret in Sui Keytool format, bound to this API key. Console stores only the derived public address, and it does not need a token balance. You use it to sign the finalize transaction and to authenticate decrypt sessions with Seal.
 
    Store both like cloud secret access keys. Paste them into your `.env` as `CONSOLE_API_KEY` and `CONSOLE_SERVICE_PRIVATE_KEY`, or into Postman. The reveal screen also shows a `CONSOLE_CREDENTIAL_BUNDLE` value, which the [MCP server](./mcp-server) installer accepts as a single paste.
 
-A `read_only` key (listing, status, and download only) is also available for downstream consumers that should not change your data; every write endpoint returns `403` with code `read_only_api_key` for those keys. The encrypted flow below needs a write-capable key and both secrets above.
+A `read_only` key (listing, status, and download only) is also available for downstream consumers that should not change your data; every write endpoint returns `403` with code `read_only_api_key` for those keys. The encrypted flow needs a write-capable key and both secrets from the reveal screen.
 
 ## How to create an encrypted folder and upload a file
 
-Private folders are encrypted client-side, so Console stores ciphertext only and never sees your plaintext or decryption material. With your key in hand, creation goes through a reserve, sign, and finalize handshake, then a local encrypt on upload and decrypt on download:
+You encrypt private folders client-side, so Console stores ciphertext only and never sees your plaintext or decryption material. After you have your key, creation goes through a reserve, sign, and finalize handshake, then a local encrypt on upload and decrypt on download:
 
 ```
 get space → reserve → sign → finalize → encrypt → upload → poll → download → decrypt
@@ -95,7 +95,7 @@ Response (`201`):
 
 ### The helper code
 
-The signing, encryption, and decryption steps below share two files. `config.ts` holds the Mainnet constants: the Console API host, the Sui full node, the bucket-policy package IDs, the bucket registry, and the Seal committee object. `seal.ts` wraps the signing and Seal encrypt and decrypt helpers. Put both in a working directory next to a `.env` file that sets `CONSOLE_API_KEY` and `CONSOLE_SERVICE_PRIVATE_KEY`.
+The signing, encryption, and decryption steps (steps 3, 5, and 8) share two files. `config.ts` holds the Mainnet constants: the Console API host, the Sui full node, the bucket-policy package IDs, the bucket registry, and the Seal committee object. `seal.ts` wraps the signing and Seal encrypt and decrypt helpers. Put both in a working directory next to a `.env` file that sets `CONSOLE_API_KEY` and `CONSOLE_SERVICE_PRIVATE_KEY`.
 
 ```ts title="config.ts"
 export const API_BASE = 'https://api.console.walrus.xyz';
