@@ -50,7 +50,9 @@ answer: >-
 
 When choosing a platform to store and verify data, you should consider reliability, uptime, availability, programmability, and price predictability. Walrus offers a fixed, USD-denominated storage cost of **$0.023/GB/month**, allowing you to budget and scale with confidence.
 
-Walrus bills on each blob's encoded size: the erasure-coded size of the blob, about 4.5x the original, plus a fixed 64 MB of metadata per blob. You pay for storage in WAL and for Sui transactions in SUI. To get a figure for your data, use the [Walrus Cost Calculator](https://costcalculator.wal.app/) or [estimate the cost by hand](#estimate-cost-by-hand).
+## How much does Walrus storage cost?
+
+Walrus storage costs a fixed **$0.023/GB/month**, billed on each blob's encoded size: the erasure-coded size of the blob, about 4.5x the original, plus a fixed 64 MB of metadata per blob. For example, keeping a 50 GB file for 1 year costs roughly $62. You pay for storage in WAL and for Sui transactions in SUI. To get a figure for your data, use the [Walrus Cost Calculator](https://costcalculator.wal.app/) or [estimate the cost by hand](#estimate-cost-by-hand).
 
 ## How to estimate storage costs
 
@@ -78,6 +80,8 @@ For command-line estimates, run `walrus info` to view current storage prices and
 
 Storage on Walrus is paid in WAL but priced at a fixed rate of **$0.023/GB/month**. The amount of WAL required adjusts automatically as the WAL token price changes.
 
+Walrus measures storage duration in epochs. On Mainnet, 1 epoch lasts 2 weeks.
+
 For Testnet, you can exchange Testnet SUI for Testnet WAL from [Exchange Testnet SUI for WAL](/docs/system-overview/available-networks#testnet-wal-faucet). Use the official exchange flow so the WAL package matches what the Walrus client expects.
 
 Behind the scenes, Walrus storage nodes track WAL prices from multiple sources and periodically update their onchain price vote to keep costs aligned with USD.
@@ -92,7 +96,7 @@ Walrus bills you on the blob's **encoded size**, not the size of your original f
 
 #### Estimate cost by hand
 
-For a quick estimate without the calculator, work in two steps. First find the encoded size, then apply the fixed monthly rate. All sizes below are expressed in GB, so the fixed 64 MB of per-blob metadata appears as 0.064 GB:
+For a quick estimate without the calculator, work in two steps. First find the encoded size, then apply the fixed monthly rate. The formula works in GB, where 64 MB equals 0.064 GB, so the fixed per-blob metadata appears as 0.064:
 
 ```text
 encoded_size_GB = 4.5 * original_size_GB + 0.064
@@ -111,7 +115,7 @@ The result is USD-denominated. Storage is paid in WAL, so the WAL amount changes
 
 The same formula explains why a batch of small files costs far more than its contents suggest. Take 600 files of 10 KiB each, roughly 6 MB of data altogether.
 
-If you store them as individual blobs, every file pays the fixed metadata overhead in full (64 MB per blob, shown below as 0.064 GB):
+If you store them as individual blobs, every file pays the fixed metadata overhead in full (64 MB per blob, which the formula shows as 0.064 GB):
 
 ```text
 per_blob_GB      = 4.5 * 0.00001 + 0.064, roughly 0.064
@@ -132,7 +136,7 @@ Measured runs agree with the shape of that estimate. The [cost comparison table]
 
 The advantage narrows as files grow, because the per-blob overhead stops dominating: the same table shows 13x at 1 MiB per file. To decide whether to batch a specific workload, work through the [decision guide](/docs/system-overview/quilt#decision-guide).
 
-## What you get for $0.023/GB/month
+## What do you get for $0.023/GB/month?
 
 At $0.023 per GB per month, Walrus is in line with centralized storage providers but includes additional capabilities and lower configuration requirements.
 
@@ -219,7 +223,7 @@ Use the [Walrus Cost Calculator](https://costcalculator.wal.app/) for interactiv
 
 - `walrus store --dry-run ...` outputs the encoded size used in WAL cost calculations without submitting any transactions.
 
-## Storage resource lifecycle
+## How does the storage resource lifecycle work?
 
 #### Acquiring storage
 
@@ -249,7 +253,7 @@ You can extend a certified blob's storage at any time by attaching a storage obj
 
 If a blob ID is not correctly encoded, an inconsistency proof certificate can be submitted onchain. This emits an inconsistent blob event, signaling that reads for that blob ID always return `None` and that storage nodes can delete its slivers (except for an indicator to return `None`).
 
-## Acquiring storage resources
+## How to acquire storage resources
 
 You can acquire storage resources through 3 methods:
 
