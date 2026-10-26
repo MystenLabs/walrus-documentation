@@ -72,7 +72,7 @@ The signed message is:
 {timestamp}.{method}.{path_and_query}.{body_sha256}.{nonce}.{account_id}
 ```
 
-For `GET` requests, `body_sha256` is the SHA-256 of an empty byte string. If a raw client omits `x-account-id`, it must sign the empty string in the final `account_id` position. Official SDKs send `x-account-id`. A cold delegate key with no account id is rejected with `401`. The relayer does not search `AccountRegistry`. A key already in the relayer's delegate-key cache, or a server with `MEMWAL_ACCOUNT_ID` set, can still authenticate without the header.
+For `GET` requests, `body_sha256` is the SHA-256 of an empty byte string. If a raw client omits `x-account-id`, it must sign the empty string in the final `account_id` position. Official SDKs send `x-account-id`. The relayer returns `401` for a cold delegate key with no account ID. The relayer does not search `AccountRegistry`. A key already in the relayer's delegate-key cache, or a server with `MEMWAL_ACCOUNT_ID` set, can still authenticate without the header.
 
 The relayer verifies the Ed25519 signature, then resolves the owner by looking up the public key in onchain `MemWalAccount.delegate_keys`.
 
@@ -82,15 +82,15 @@ These routes require no authentication.
 
 ### `GET /health`
 
-Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 200 means the process is running, not that writes are accepted.
+Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 200 means the process is running, not that the relayer accepts writes.
 
 `writes` is `"ok"`, `"degraded"`, or `"paused"`.
 
-- `"paused"` when `WRITES_PAUSED` is set (`1` / `true` / `yes`). That flag is write-path admission, not a health-only signal: `POST /api/remember`, `/api/remember/manual`, `/api/remember/bulk`, and `/api/analyze` then return HTTP 503 with `{"error":"writes are paused"}`. `/health` itself stays HTTP 200 with `status: "ok"` and `writes: "paused"`, so clients can distinguish an intentional pause from an integrator bug. Reads (`recall`, `restore`, remember job status) stay available.
+- `"paused"` when `WRITES_PAUSED` is set (`1`, `true`, or `yes`). That flag is write-path admission, not a health-only signal: `POST /api/remember`, `/api/remember/manual`, `/api/remember/bulk`, and `/api/analyze` then return HTTP 503 with `{"error":"writes are paused"}`. `/health` itself stays HTTP 200 with `status: "ok"` and `writes: "paused"`, so clients can distinguish an intentional pause from an integrator bug. Reads (`recall`, `restore`, remember job status) stay available.
 - `"degraded"` when recent durable writes (last 15 minutes) have **failed at least three times and none have landed**. The relayer still accepts and queues a write (`write_ready` stays `true`; HTTP 200), but Walrus is not storing it, expect the job to fail rather than queue more. A single success in that window keeps `"ok"` even if other writes failed: this is a total-outage detector, not a per-request verdict. `memwal_health` prints `writes=degraded` when this is set.
 - `"ok"` otherwise (including a quiet window with no finished writes).
 
-`write_ready` is `true` when the encryption sidecar process answered its own `/health` **and** Postgres can accept writes (cached a few seconds). Postgres is considered not writable when Neon cluster size (`pg_cluster_size`, not `pg_database_size` of this database) is at or within 1MB of `neon.max_cluster_size`. If `pg_cluster_size()` is missing (no `neon` extension), the probe falls back to `sum(pg_database_size)` against that GUC. Self-hosted Postgres without the GUC keeps the sidecar-only check. Probe errors and timeouts fail open (`write_ready` stays true) so CI is not blocked; timeouts log at warn. A sidecar outage or a disk/project-size write outage can still return HTTP 200 with `write_ready: false`. Use `writes`, not `write_ready`, for the pause or Walrus-outage signal. `write_ready: true` is not a guarantee that remember or analyze succeed.
+`write_ready` is `true` when the encryption sidecar process answered its own `/health` **and** Postgres can accept writes (cached a few seconds). Postgres counts as not writable when Neon cluster size (`pg_cluster_size`, not `pg_database_size` of this database) is at or within 1MB of `neon.max_cluster_size`. If `pg_cluster_size()` is missing (no `neon` extension), the probe falls back to `sum(pg_database_size)` against that GUC. Self-hosted Postgres without the GUC keeps the sidecar-only check. Probe errors and timeouts fail open (`write_ready` stays true) so they do not block CI; timeouts log at warn. A sidecar outage or a disk or project-size write outage can still return HTTP 200 with `write_ready: false`. Use `writes`, not `write_ready`, for the pause or Walrus-outage signal. `write_ready: true` is not a guarantee that remember or analyze succeed.
 
 **Response:**
 
@@ -126,7 +126,7 @@ Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 
 
 ### `GET /version`
 
-Stable relayer/API compatibility metadata.
+Stable relayer and API compatibility metadata.
 
 **Response:** the compatibility object documented in [Versioning and Compatibility](/walrus-memory/relayer/versioning-and-compatibility#runtime-metadata).
 
@@ -159,7 +159,7 @@ Prometheus metrics for scraping. See [Observability](/walrus-memory/relayer/obse
 
 ### `POST /sponsor`
 
-Proxy to the Seal/Walrus sidecar's `/sponsor` endpoint for sponsored transactions. The request must include `authTimestamp`, a UUID-v4 `authNonce`, and `authSignature`: a Sui personal-message signature over the sender, transaction-kind hash, timestamp, and nonce. Only one allowlisted Walrus Memory `account` call qualifies for sponsorship.
+Proxy to the Seal and Walrus sidecar's `/sponsor` endpoint for sponsored transactions. The request must include `authTimestamp`, a UUID-v4 `authNonce`, and `authSignature`: a Sui personal-message signature over the sender, transaction-kind hash, timestamp, and nonce. Only one allowlisted Walrus Memory `account` call qualifies for sponsorship.
 
 ### `POST /sponsor/execute`
 
@@ -179,7 +179,7 @@ An owner with no account returns HTTP 200:
 { "account_id": null, "keys": [] }
 ```
 
-Otherwise each onchain key is listed. `public_key` is 64 lowercase hex characters and has no `0x` prefix.
+Otherwise the response lists each onchain key. `public_key` is 64 lowercase hex characters and has no `0x` prefix.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
@@ -199,7 +199,7 @@ Otherwise each onchain key is listed. `public_key` is 64 lowercase hex character
 
 ### `GET /api/accounts/:owner/incident`
 
-Public answer for the owner in the path. The dashboard uses it to decide whether to show the quarantine banner. The response names no other owner. `affected_public_keys` lists only this account's current delegate public keys that are in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`. On Testnet, one preview owner is reported locked. When that list is empty, the preview response pins one current key whose label contains `migrat` for the life of the process. A non-empty list does not pin a replacement.
+Public answer for the owner in the path. The dashboard uses it to decide whether to show the quarantine banner. The response names no other owner. `affected_public_keys` lists only this account's current delegate public keys that are in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`. On Testnet, the relayer reports one preview owner as locked. When that list is empty, the preview response pins one current key whose label contains `migrat` for the life of the process. A non-empty list does not pin a replacement.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
@@ -213,13 +213,13 @@ Public answer for the owner in the path. The dashboard uses it to decide whether
 }
 ```
 
-`affected` is true when the owner is listed in `MEMWAL_AFFECTED_OWNERS`, a current delegate public key is listed in `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS`, or the account is `admin_quarantined`. With both lists empty, `affected` follows the onchain flag. An owner with no account still returns HTTP 200: `account_id` is null, `quarantined` and `active` are false, and `affected` is true only when that owner is in `MEMWAL_AFFECTED_OWNERS`.
+`affected` is true when `MEMWAL_AFFECTED_OWNERS` lists the owner, `MEMWAL_LEAKED_DELEGATE_PUBLIC_KEYS` lists a current delegate public key, or the account is `admin_quarantined`. With both lists empty, `affected` follows the onchain flag. An owner with no account still returns HTTP 200: `account_id` is null, `quarantined` and `active` are false, and `affected` is true only when that owner is in `MEMWAL_AFFECTED_OWNERS`.
 
 ### `POST /api/accounts/:owner/unblock-requests`
 
 The owner signs a Sui personal message. The relayer stores one request. Clearing quarantine stays an `AdminCap` transaction. After an operator clears it, the owner calls `reactivate_account`. One `reactivate_account` call is on the sponsored-transaction allowlist.
 
-The signed text uses the lowercased owner and the account id read from chain, not a value from the body:
+The signed text uses the lowercased owner and the account ID read from chain, not a value from the body:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
@@ -265,7 +265,7 @@ The motivating use is rebuilding local credentials: a client that holds a workin
 }
 ```
 
-The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account id returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account id cannot recover it from this route.
+The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account ID returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account ID cannot recover it from this route.
 
 ### `POST /api/remember`
 
@@ -283,7 +283,7 @@ Submit text as an encrypted memory job. The relayer returns after creating a bac
 }
 ```
 
-`namespace` defaults to `"default"` if omitted and is limited to 255 UTF-8 bytes. `idempotency_key` is an optional string (up to 255 UTF-8 bytes); when supplied, repeated calls with the same key collapse onto the existing job row.
+`namespace` defaults to `"default"` if omitted and has a limit of 255 UTF-8 bytes. `idempotency_key` is an optional string (up to 255 UTF-8 bytes); when supplied, repeated calls with the same key collapse onto the existing job row.
 
 **Response:** `202 Accepted`
 
@@ -316,7 +316,7 @@ Poll a remember job. `status` is one of `pending`, `running`, `uploaded`, `done`
 
 ### `POST /api/remember/bulk`
 
-Submit up to 20 memories in one request. `job_ids[i]` corresponds to `items[i]`. This route accepts request bodies up to 2 MB.
+Submit up to 20 memories in one request. `job_ids[i]` corresponds to `items[i]`. This route accepts request bodies up to 2MB.
 
 **Request:**
 
@@ -332,7 +332,7 @@ Submit up to 20 memories in one request. `job_ids[i]` corresponds to `items[i]`.
 }
 ```
 
-`idempotency_key` is an optional string (up to 255 UTF-8 bytes). When provided, each item in the batch is assigned `bulk:{idempotency_key}:{i}`, so repeated requests with the same batch key collapse onto the original jobs.
+`idempotency_key` is an optional string (up to 255 UTF-8 bytes). When provided, the relayer assigns each item in the batch `bulk:{idempotency_key}:{i}`, so repeated requests with the same batch key collapse onto the original jobs.
 
 **Response:** `202 Accepted`
 
@@ -397,9 +397,9 @@ Search for memories matching a natural language query. Returns decrypted plainte
 
 `limit` defaults to `10`; the server caps it at `100`. `namespace` defaults to `"default"`. `scoring_weights` takes an optional object; omit it to keep the plain cosine-distance order.
 
-`sort` is optional: `"relevance"` (the cosine order, and the behaviour when omitted) or `"recent"` (the newest among the semantic matches). An explicit `sort`, `"relevance"` included, is the order, and the relayer ignores `scoring_weights` for that request.
+`sort` is optional: `"relevance"` (the cosine order, and the behavior when omitted) or `"recent"` (the newest among the semantic matches). An explicit `sort`, `"relevance"` included, is the order, and the relayer ignores `scoring_weights` for that request.
 
-`deadline_ms` is optional: how long the caller waits for this response, in milliseconds. When set, the relayer stops about one second before it, counting from when the request arrived, and answers `504` with the step that was still running, so the caller learns where the recall stalled instead of timing out blind. A short deadline still gets at least 2 seconds of work; if the whole deadline went on authentication before the recall started, the relayer answers at once with stage `auth`. Values above `600000` are capped. Omit it to let the recall run to completion. The TypeScript SDK sends `14000`, a second under the 15s it aborts `recall()` at: the relayer's own margin runs from arrival, so it covers the reply's trip back but not the connect the caller's timer already started on.
+`deadline_ms` is optional: how long the caller waits for this response, in milliseconds. When set, the relayer stops about one second before it, counting from when the request arrived, and answers `504` with the step that was still running, so the caller learns where the recall stalled instead of timing out blind. A short deadline still gets at least 2 seconds of work; if the whole deadline went on authentication before the recall started, the relayer answers at once with stage `auth`. The relayer caps values above `600000`. Omit it to let the recall run to completion. The TypeScript SDK sends `14000`, a second under the 15s it aborts `recall()` at: the relayer's own margin runs from arrival, so it covers the reply's trip back but not the connect the caller's timer already started on.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/api-reference.md" target="_blank" className="code-source-link">Source: relayer/api-reference.md</a>
 
@@ -514,7 +514,7 @@ Search with a precomputed query vector. Returns index hits only; the client hand
 
 ### `POST /api/analyze`
 
-Extract facts from text using an LLM, then enqueue each fact as a separate memory job.
+Extract facts from text using a large language model (LLM), then enqueue each fact as a separate memory job.
 
 **Request:**
 
@@ -549,7 +549,7 @@ Extract facts from text using an LLM, then enqueue each fact as a separate memor
 
 ### `POST /api/embed`
 
-Return an embedding vector for `text` without storing a memory. Uses the same model and width as remember, recall, and analyze. Requires signed-header auth.
+Return an embedding vector for `text` without storing a memory. Uses the same model and width as remember, recall, and analyze. Requires signed-header authentication.
 
 **Request:**
 
@@ -561,7 +561,7 @@ Return an embedding vector for `text` without storing a memory. Uses the same mo
 }
 ```
 
-`text` must be non-empty and at most 64 KiB.
+`text` must be non-empty and at most 64KB.
 
 **Response:**
 
@@ -642,7 +642,7 @@ Rebuild missing vector entries for one namespace. Queries onchain blobs by owner
 }
 ```
 
-`skipped` is onchain blobs already in the local success index. `failed` is permanent decrypt/UTF-8 failures on this onchain page (negative-cache hits plus new permanent failures this call), so it never exceeds `total`. Transient download, decrypt, or embed errors are not counted in `failed`; when a page yields only those, `truncated` is true so the caller retries.
+`skipped` is onchain blobs already in the local success index. `failed` is permanent decrypt or UTF-8 failures on this onchain page (negative-cache hits plus new permanent failures this call), so it never exceeds `total`. `failed` does not count transient download, decrypt, or embed errors; when a page yields only those, `truncated` is true so the caller retries.
 
 `truncated=true` means this restore is **known-retryable-incomplete**: more missing blobs than `limit` allowed this call to restore, **or** the sidecar's owner-wide candidate fetch hit its cap **and** raising `limit` can still expand that fetch (`limit < 20`). Once the sidecar cap is saturated (`limit >= 20`, cap pinned at 100), truncation follows this call's missing-blob page length, not onchain `total`. A fully restored namespace does not loop. `truncated=false` is **not** proof the sidecar saw every onchain blob; blobs beyond the owner-wide sidecar candidate cap can still be missing. WALM-451 tracks a `sourceCapped` field for that case ([WALM-451](https://linear.app/mysten-labs/issue/WALM-451)). Relayers older than WALM-319 omit `truncated`; SDKs default it to `false`.
 
@@ -705,6 +705,6 @@ Return the memory count and stored byte total for one namespace, scoped to the a
 }
 ```
 
-## MCP Transports
+## MCP transports
 
 The relayer also proxies Model Context Protocol traffic to its Node sidecar. `GET`, `POST`, `DELETE`, and `OPTIONS` on `/api/mcp` serve the Streamable HTTP transport, and `GET /api/mcp/sse` plus `POST /api/mcp/messages` serve the legacy SSE transport. These routes use bearer authentication instead of signed headers. See [Reference](/walrus-memory/mcp/reference) for transport details and client configuration.
