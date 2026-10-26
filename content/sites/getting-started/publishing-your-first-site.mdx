@@ -58,6 +58,8 @@ walrus-snake/
 ├── walrus.svg
 └── ws-resources.json
 ```
+
+The `ws-resources.json` file holds site configuration, such as headers and routes. The `deploy` command also saves the site object ID to this file.
  
 You can find additional examples in the [Walrus Sites example repository](https://github.com/MystenLabs/example-walrus-sites).
 <div className="outlined-tabs">
@@ -85,7 +87,7 @@ If your `site-builder` configuration file is in a different location, use the `-
 </div>
 
 
-## Deploy an example site
+## How to deploy an example site
 
 To demonstrate publishing and updating a Walrus Site, clone and deploy the `walrus-snake` game from the Walrus Sites example repository.
 
@@ -102,7 +104,7 @@ $ site-builder --context=testnet deploy ./walrus-snake --epochs 1
 ```
 
 On Walrus Testnet, the duration of an epoch is 1 day, meaning this site will only be available for up to 24 hours. To make it available for longer, specify a larger number of epochs using the `--epochs` flag.
-## View your deployed site
+## How do you view your deployed site?
 
 How you access your site depends on the network you deploy to:
 
@@ -141,7 +143,7 @@ This output shows the following:
 - A Walrus Site object is created on Sui. Use the printed object ID to view the site's object information through a network explorer. This site object is what you will link to a SuiNS name for sites deployed to Mainnet. The `deploy` command saves the site object ID to the local file `ws-resources.json`.
 - The URL where you can browse the site.
 
-## Update the site
+## How to update the site
 
 When a site is updated, all site resources are deleted and re-uploaded together as a single quilt, even resources that have not changed. 
 
@@ -156,7 +158,7 @@ $ site-builder --context=testnet deploy --epochs 1 ./walrus-snake
 The `deploy` command uses the site object ID stored in `ws-resources.json` from the initial deployment to identify which site to update. If you want to update a different site than the one in `ws-resources`, you can specify a different object ID using the `--object-id <OBJECT_ID>` flag.
 
 ```sh
-$ site-builder --context=testnet deploy --object-ids 0x617221edd060dafb4070b73160ebf535e1516bf7f246890ed35190eba786d7ac --epochs 1 ./walrus-snake
+$ site-builder --context=testnet deploy --object-id 0x617221edd060dafb4070b73160ebf535e1516bf7f246890ed35190eba786d7ac --epochs 1 ./walrus-snake
 ```
 
 Additionally, the wallet you are using must be the owner of the Walrus Site object to be able to update it.
@@ -190,7 +192,7 @@ Site object ID: 0x4a1be0fb330215c532d74c70d34bc35f185cc7ce025e04b9ad42bc4ac8eda5
             or find third-party hosted testnet portals.
 ```
 
-## Using a web framework
+## How to deploy a site built with a web framework
 
 If you are building a Walrus Site using a web framework (such as Create React App, Vue CLI, or Next.js), ensure
 you point the `site-builder` to your site's build output folder when running the `deploy`
@@ -247,7 +249,7 @@ Different frameworks use different names for their build output:
 |-----------|---------------|
 | Vite | `dist/` |
 | Create React App | `build/` |
-| Next.js | `out/` |
+| Next.js (static export) | `out/` |
 | Vue CLI | `dist/` |
 | Docusaurus | `build/` |
 
@@ -260,7 +262,7 @@ Once your site is built, deploy using the `site-builder` pointed at the output f
 $ site-builder --context=testnet deploy --epochs 1 my-website/dist
 ```
 
-### Redirects
+### Does Walrus Sites support redirects?
 
 Walrus Sites does not support dynamic redirects. Unlike traditional web servers or hosting platforms
 that can intercept requests and resolve routes at runtime, Walrus Sites serves static files directly. There is no server-side logic to handle URL resolution. 
@@ -269,7 +271,7 @@ This means that redirect plugins **do not work on Walrus Sites**. For example, i
 
 There are workarounds for simulating redirect behavior in the browser. For more information, see the [routing documentation](/docs/sites/linking/redirects).
 
-## Exporting markdown
+## How to serve exported markdown files
 
 If you have a script that generates pure markdown files from your site's pages for ingestion by agents, you must configure `ws-resources.json` to serve those files correctly. Two things are required: a header entry and a route entry.
 

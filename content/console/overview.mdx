@@ -1,7 +1,20 @@
 ---
 title: What is Walrus Console?
 description: What Walrus Console is, how it relates to Walrus, and the core concepts you work with (spaces, folders, files, and asset types).
-keywords: [walrus console, spaces, folders, files, asset types, zklogin, api keys, seal]
+keywords:
+  - walrus console
+  - spaces
+  - folders
+  - files
+  - asset types
+  - zklogin
+  - api keys
+  - seal
+  - pearl wallet
+  - walrus memory
+  - storage epochs
+  - personal space
+  - encryption
 ---
 
 Walrus Console is the developer-first interface for interacting with the Walrus network. It gives you a hosted place to store, manage, and serve data without running your own Walrus client or handling wallets and tokens directly. You sign in and upload your first file in minutes, then manage everything from one place; when you want programmatic access, you mint an API key.
@@ -31,6 +44,10 @@ On Walrus, anyone who has a blob ID can read the bytes of a stored blob. Do not 
 :::
 
 Console private folders solve this by encrypting every file client-side with [Seal](/docs/data-security) before upload. Console stores ciphertext only and never sees your plaintext or your decryption keys. Setting up a private folder uses a short reserve, sign, and finalize handshake that provisions the folder's Seal access policy onchain. Encryption on upload and decryption on download both happen on your machine.
+
+### Can my application read files stored in Console?
+
+Yes. Every folder is private, so Console holds your files only as ciphertext, but you are not limited to the encrypted bytes. An application you write against the API uses an API key to access your files and the service private key to authenticate its decrypt session with Seal, so decryption happens on the machine running your application. See [API keys and roles](#api-keys-and-roles).
 
 ## Asset types
 

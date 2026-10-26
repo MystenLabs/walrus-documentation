@@ -1,6 +1,6 @@
 ---
 title: Walrus release notes
-description: Release notes for the Walrus decentralized storage platform.
+description: Versioned release notes for the Walrus platform, covering storage node, aggregator, publisher, daemon, and CLI changes across Mainnet and Testnet releases.
 displayed_sidebar: null
 hide_table_of_contents: true
 questions:
@@ -13,6 +13,18 @@ answer: Release notes for the Walrus decentralized storage platform.
 ### Walrus v1.59.0
 
 `Testnet` | October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.59.0)
+
+Storage nodes on the public testnet now attest their blob info snapshot on chain at each epoch
+boundary, because `blob_info_snapshot.certify` defaults to `true` on testnet. To opt out, set
+`blob_info_snapshot: {certify: false}` in the node config. The default on mainnet and other networks
+is unchanged. Certification requires the version-4 system contract. On an older contract,
+attestations fail and are counted, and nothing else changes. The node creates the
+`blob_info_snapshot_publication` RocksDB column family automatically on first start. New
+`blob_info_snapshot_*` metrics report durations, errors, and the latest certified epoch.
+
+Peak memory for encoding the snapshot drops from about 5.5 to about 1.7 times the snapshot size.
+Nodes and the CLI no longer read `WALRUS_GRPC_MIGRATION_LEVEL` and always use Sui gRPC, so you can
+remove that variable from your environment.
 
 #### Changes
 
@@ -28,6 +40,13 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Mainnet` | October 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.58.1)
 
+This release adds the `blob_info_snapshot.certify` config flag for storage nodes. The flag defaults
+to `false`.
+
+The storage node also uses a new RocksDB column family, `blob_info_snapshot_publication`, which it
+creates automatically on the first start after you upgrade. New `blob_info_snapshot_*` metrics are
+available for monitoring. No operator action is required.
+
 #### Changes
 
 - [adds the `blob_info_snapshot.certify` config flag (default `false`), a new RocksDB column family `blob_info_snapshot_publication` (created automatically on the first start), and `blob_info_snapshot_*` metrics. No operator action is required.](https://github.com/MystenLabs/walrus/pull/3835)
@@ -38,11 +57,17 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Mainnet` | September 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.57.0)
 
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
+
 ---
 
 ### Walrus v1.56.1
 
 `Testnet` | September 17, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.56.1)
+
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
@@ -50,11 +75,21 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Mainnet` | September 16, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.56.0)
 
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
+
 ---
 
 ### Walrus v1.55.2
 
 `Mainnet` | September 2, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.55.2)
+
+This release adds one storage node metric, `node_recovery_baseline_invalidations_total`. It counts
+the sync-and-recovery info publications that invalidate the node-recovery baseline and supersede
+in-flight node-recovery runs. If you operate a storage node, you can add this counter to your
+monitoring to track how often in-progress node-recovery runs are superseded. The release body
+describes no other changes to storage node behavior, configuration, or client-facing APIs. The same
+change ships in both the Mainnet and Testnet releases of this version.
 
 #### Changes
 
@@ -66,6 +101,14 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Testnet` | August 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.55.1)
 
+This Testnet release adds one metric to the storage node. The
+`node_recovery_baseline_invalidations_total` metric counts sync-and-recovery info publications that
+invalidate the node-recovery baseline. Each publication it counts also supersedes any in-flight
+node-recovery runs.
+
+If you operate a storage node, this metric shows how often baseline invalidations supersede
+in-flight node-recovery runs.
+
 #### Changes
 
 - [Adds a `node_recovery_baseline_invalidations_total` metric counting sync-and-recovery info publications that invalidate the node-recovery baseline and supersede in-flight node-recovery runs.](https://github.com/MystenLabs/walrus/pull/3643)
@@ -75,6 +118,14 @@ answer: Release notes for the Walrus decentralized storage platform.
 ### Walrus v1.54.0
 
 `Mainnet` | August 19, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.54.0)
+
+The aggregator now returns 404 `BLOB_NOT_FOUND` within about a second for requests for quilt patches
+of expired or nonexistent quilts. Previously, these requests returned 503 `BLOB_UNAVAILABLE` after a
+10 to 20 second fan-out to storage nodes.
+
+In the CLI, `walrus read-quilt` now fails immediately with "the blob ID does not exist" when you
+read an expired or never-certified quilt. Previously, the command timed out against the storage
+nodes.
 
 #### Changes
 
@@ -87,11 +138,17 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Mainnet` | August 5, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.53.0)
 
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
+
 ---
 
 ### Walrus v1.52.1
 
 `Mainnet` | July 22, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.52.1)
+
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
@@ -99,11 +156,21 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Testnet` | July 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.52.0)
 
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
+
 ---
 
 ### Walrus v1.51.2
 
 `Mainnet` | July 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.51.2)
+
+This release adds a `--commission-receivers` flag to the `walrus info committee` command. When you
+pass the flag, the CLI prints the commission receiver of every node in the previous, current, and
+next committees in CSV format. For nodes whose commission receiver is an object, the output also
+includes the address that owns that object.
+
+The paired Testnet release of this version includes the same change.
 
 #### Changes
 
@@ -114,6 +181,11 @@ answer: Release notes for the Walrus decentralized storage platform.
 ### Walrus v1.51.1
 
 `Mainnet` | July 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.51.1)
+
+The `walrus info committee` command now accepts a `--commission-receivers` flag. When you set it,
+the CLI prints the commission receiver of every node in the previous, current, and next committees
+in CSV format. For nodes whose commission receiver is an object, the output also includes the
+address that owns that object. This release includes the same change on Mainnet and Testnet.
 
 #### Changes
 
@@ -248,6 +320,12 @@ to 16, and adds the opt-in `garbage_collection.enable_immediate_data_deletion` p
 
 `Mainnet` | March 19, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.44.2)
 
+Walrus 1.44.2 is a Mainnet release that contains a single storage node fix. It resolves an issue
+that caused storage nodes to crash because of outdated epoch state.
+
+If you operate a Mainnet storage node, this release addresses that crash. The release lists no other
+changes to storage nodes, clients, or other components.
+
 #### Changes
 
 - [Fixed an issue that crashed storage nodes due to outdated epoch state.](https://github.com/MystenLabs/walrus/pull/3005)
@@ -257,6 +335,13 @@ to 16, and adds the opt-in `garbage_collection.enable_immediate_data_deletion` p
 ### Walrus v1.44.1
 
 `Testnet` | March 11, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.44.1)
+
+This patch release for Testnet addresses a stability problem in the storage node. Previously,
+storage nodes could crash when they encountered outdated epoch state. Version 1.44.1 fixes this
+issue, so nodes no longer crash for this reason.
+
+If you operate a storage node on Testnet, this release applies to you. The release notes describe no
+other changes for developers or for client-side tooling.
 
 #### Changes
 
