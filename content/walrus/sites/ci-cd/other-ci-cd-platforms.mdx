@@ -65,7 +65,7 @@ Because there is no pre-built action for non-GitHub platforms, each pipeline mus
 4. **Build the site:** Compile or bundle your site output (skip for repositories that already contain deployable static files).
 5. **Run `site-builder deploy`:** Upload the static output directory to Walrus.
 
-## Storing credentials on your platform
+## How to store credentials on your platform
 
 Every platform stores secrets differently. In all cases, you need 2 values:
 
@@ -137,13 +137,15 @@ Set the following environment variables before running the script:
 - `EPOCHS`: Number of storage epochs (default `5`; maximum `53`). On Mainnet, 1 epoch is 14 days. On Testnet, 1 epoch is 1 day.
 - `DIST`: Path to your build output directory, for example `dist` or `build`.
 
+Each example in [Platform examples](#platform-examples) sets these variables in its pipeline file: a `variables` block for GitLab CI/CD, an `environment` block for CircleCI, and `export` lines for Bitbucket Pipelines. Your platform's secret store supplies `SUI_KEYSTORE` and `SUI_ADDRESS`.
+
 :::caution
 
 Always point `site-builder deploy` at your build output directory, not your repository root. Uploading the project root includes source files, `node_modules/`, and other artifacts that significantly increase upload time and storage costs.
 
 :::
 
-## Understanding `ws-resources.json` in pipelines
+## How does `ws-resources.json` work in pipelines?
 
 The `site-builder deploy` command writes a [`ws-resources.json`](/docs/sites/configuration/site-configuration) file to your `DIST` directory after the first deployment. This file stores the Sui object ID of your deployed site. On subsequent runs, `site-builder` reads that ID to update the same site rather than creating a new one.
 
@@ -334,7 +336,7 @@ Store `SUI_KEYSTORE` and `SUI_ADDRESS` under **Repository settings** → **Repos
  
 Create `bitbucket-pipelines.yml`:
  
-```shell
+```yaml
 image: node:lts
  
 definitions:
@@ -398,7 +400,7 @@ For static sites with no build step, remove `*build-step` from the `main` branch
 </Tabs>
 </div>
  
-## Adapting to any other platform
+## How to adapt the pipeline to any other platform
  
 Any CI/CD platform that provides Linux runners can deploy Walrus Sites using the same pattern. The following table maps the concepts from the 3 examples above to their equivalents on other platforms:
  
