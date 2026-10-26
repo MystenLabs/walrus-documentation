@@ -64,7 +64,7 @@ For production Mainnet usage, run a private publisher with authentication enable
 
 Do not rely on community publishers for production uploads. Community endpoints can change, go offline, add restrictions, or expose different cost and reliability expectations.
 
-## Protect the publisher wallet
+## How to protect the publisher wallet
 
 A publisher performs onchain actions and pays storage costs. Treat its wallet as production infrastructure:
 
@@ -74,7 +74,7 @@ A publisher performs onchain actions and pays storage costs. Treat its wallet as
 - Restrict access to the host, configuration files, and sub-wallet directory.
 - Review [sub-wallet behavior](/docs/operator-guide/publishers/operating-publisher#sub-wallets-concurrency) and [sub-wallet refills](/docs/operator-guide/publishers/operating-publisher#manage-sub-wallets).
 
-## Control access and cost exposure
+## How to control access and cost exposure
 
 A private publisher should reject uploads from unauthorized clients before it spends tokens.
 
