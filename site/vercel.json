@@ -833,7 +833,7 @@
     },
     {
       "source": "/docs/usage/started",
-      "destination": "/docs/getting-started",
+      "destination": "/oyster/getting-started",
       "permanent": true
     },
     {
@@ -1063,7 +1063,7 @@
     },
     {
       "source": "/usage/started",
-      "destination": "/docs/getting-started",
+      "destination": "/oyster/getting-started",
       "permanent": true
     },
     {
@@ -1528,12 +1528,12 @@
     },
     {
       "source": "/usage/started.html",
-      "destination": "/docs/getting-started",
+      "destination": "/oyster/getting-started",
       "permanent": true
     },
     {
       "source": "/usage/started/index",
-      "destination": "/docs/getting-started",
+      "destination": "/oyster/getting-started",
       "permanent": true
     },
     {
