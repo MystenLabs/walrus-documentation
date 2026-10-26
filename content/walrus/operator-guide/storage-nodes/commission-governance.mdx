@@ -44,7 +44,7 @@ You should designate secure wallets for these operations that are not stored on 
 
 This page explains how to update the entities authorized for governance (contract upgrade) and commission operations, and how to perform these operations.
 
-## Update the commission receiver and entity authorized for governance
+## How to update the commission receiver and governance authorization
 
 You can either designate an arbitrary object for governance and commission operations, or designate an address to be authorized.
 
@@ -88,7 +88,7 @@ Go to the [operator panel on the staking app](https://stake-wal.wal.app/node-ope
 
 You can verify that the authorization was set correctly by looking up your node `StakingPool` object on [Suiscan](https://suiscan.xyz). The object ID is your node ID. Check the `Commission receiver` and `Governance authorized` fields to confirm they match the addresses or objects you configured.
 
-## Collect commission
+## How to collect commission
 
 You can collect your commission using the CLI or the web interface.
 
@@ -105,7 +105,7 @@ $ walrus node-admin --node-id $NODE_ID collect-commission
 
 Go to the [operator panel on the staking app](https://stake-wal.wal.app/node-operations), connect your wallet, and select your node through the drop-down menu or by pasting your node ID. Then select **Collect Commission** and follow the steps to send the transaction.
 
-## Manage contract upgrades
+## How to manage contract upgrades
 
 Contract upgrades in Walrus are managed through a quorum-based voting system. This ensures that upgrades are only applied after sufficient consensus among node operators. The process requires computing a digest of the proposed upgrade and voting on it.
 
