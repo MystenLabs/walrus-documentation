@@ -25,9 +25,9 @@ import matter from 'gray-matter';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const CONTENT_ROOT = path.resolve(__dirname, '..', '..', '..', 'content');
-const REPO_ROOT = path.resolve(CONTENT_ROOT, '..', '..');
-const CONCEPT_MAP_PATH = path.resolve(CONTENT_ROOT, '..', 'concept-map.yaml');
+const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
+const CONTENT_ROOT = path.join(REPO_ROOT, 'content', 'walrus');
+const CONCEPT_MAP_PATH = path.join(REPO_ROOT, 'scripts', 'audit', 'concept-map.yaml');
 
 // ─── Helpers ────────────────────────────────────────
 
@@ -148,7 +148,7 @@ function checkBrokenInternalLinks(body, docPaths, filePath) {
     if (target.startsWith('mailto:')) continue;
     if (/\.\w+$/.test(target) && !target.endsWith('.mdx') && !target.endsWith('.md')) continue;
     // Walrus Memory pages come from a separate plugin instance sourced from
-    // docs/walrus-memory-content, and docPaths only indexes docs/content. This
+    // content/walrus-memory, and docPaths only indexes content/walrus. This
     // checker cannot resolve those targets, so reporting them as broken is a
     // false positive. Docusaurus validates them at build time instead.
     if (target === '/walrus-memory' || target.startsWith('/walrus-memory/')) continue;

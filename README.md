@@ -5,7 +5,7 @@ Developer documentation for Walrus, Walrus Oyster, and Walrus Memory, built with
 
 This repository holds every page the site serves. The Oyster and Walrus Memory
 docs used to be fetched from their product repositories at build time; they now
-live here under `oyster-content/` and `walrus-memory-content/`, and a change to
+live here under `content/oyster/` and `content/walrus-memory/`, and a change to
 them is a pull request here.
 
 ## Quick start
@@ -31,25 +31,28 @@ only network access is fetching a few embedded source files from the
 
 ```text
 .
-├── blog/                  # Blog posts (MDX)
-├── content/               # Walrus documentation pages (MDX), served under /docs
-│   ├── getting-started/   # Onboarding and quickstart guides
-│   ├── system-overview/   # Architecture and design
-│   ├── walrus-client/     # CLI and client usage
-│   ├── typescript-sdk/    # TypeScript SDK reference
-│   ├── http-api/          # HTTP API reference
-│   ├── operator-guide/    # Storage node operator docs
-│   ├── sites/             # Walrus Sites documentation
-│   ├── examples/          # Example code and tutorials
-│   ├── snippets/          # Reusable MDX snippets
-│   └── ...
-├── oyster-content/        # Walrus Oyster docs, served under /oyster
-├── walrus-memory-content/ # Walrus Memory docs, served under /walrus-memory
+├── content/
+│   ├── walrus/            # Walrus documentation pages (MDX), served under /docs
+│   │   ├── getting-started/   # Onboarding and quickstart guides
+│   │   ├── system-overview/   # Architecture and design
+│   │   ├── walrus-client/     # CLI and client usage
+│   │   ├── typescript-sdk/    # TypeScript SDK reference
+│   │   ├── http-api/          # HTTP API reference
+│   │   ├── operator-guide/    # Storage node operator docs
+│   │   ├── sites/             # Walrus Sites documentation
+│   │   ├── examples/          # Example code and tutorials
+│   │   ├── snippets/          # Reusable MDX snippets
+│   │   └── ...
+│   ├── oyster/            # Walrus Oyster docs, served under /oyster
+│   ├── walrus-memory/     # Walrus Memory docs, served under /walrus-memory
+│   └── blog/              # Blog posts (MDX), served under /blog
 ├── data/                  # YAML data files (portals list, etc.)
 ├── editorial/             # Release notes source files
 ├── examples/              # Standalone example projects (Move, JS, Python, shell)
-├── fundamentals/          # Supplementary architecture content
-├── scripts/cache-inference/ # Weekly aggregator cache measurement (operators.json)
+├── scripts/
+│   ├── audit/             # Concept map and prompts for the docs audit scripts
+│   ├── cache-inference/   # Weekly aggregator cache measurement (operators.json)
+│   └── network-reference/ # Network reference page generator
 └── site/                  # Docusaurus project root
     ├── docusaurus.config.js
     ├── sidebars.js                # Walrus sidebar
@@ -90,7 +93,7 @@ These components are globally available and do not need to be imported.
 
 ### Snippets
 
-Reusable content fragments live in `content/snippets/`. Import them into pages with the
+Reusable content fragments live in `content/walrus/snippets/`. Import them into pages with the
 `import` statement for MDX.
 
 ### Embedding source files
@@ -130,8 +133,8 @@ Everything the site shows from other repositories is tracked in this one and
 changes only through a pull request, so a push elsewhere can neither break a
 build nor publish unreviewed pages:
 
-- The Oyster and Walrus Memory docs are source here, under `oyster-content/`
-  and `walrus-memory-content/`.
+- The Oyster and Walrus Memory docs are source here, under `content/oyster/`
+  and `content/walrus-memory/`.
 - `site/src/data/skills.json` (from
   [`MystenLabs/walrus-skills`](https://github.com/MystenLabs/walrus-skills)),
   the release notes pages and `site/src/data/changelog.json` (from GitHub

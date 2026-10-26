@@ -1,7 +1,7 @@
 // Copyright (c) Walrus Foundation
 // SPDX-License-Identifier: Apache-2.0
 //
-// Generates sidebarsWalrusMemory.js from the transformed walrus-memory-content
+// Generates sidebarsWalrusMemory.js from the content/walrus-memory
 // directory. Explicit page lists control ordering; autoDirs auto-discover new
 // pages so upstream additions appear without manual sidebar edits.
 //
@@ -12,7 +12,7 @@ const fs = require("fs");
 const path = require("path");
 
 const SITE_ROOT = path.resolve(__dirname, "../../");
-const CONTENT_DIR = path.resolve(SITE_ROOT, "../walrus-memory-content");
+const CONTENT_DIR = path.resolve(SITE_ROOT, "../content/walrus-memory");
 const SIDEBAR_OUT = path.join(SITE_ROOT, "sidebarsWalrusMemory.js");
 
 // ── Exclusions ──────────────────────────────────────────────────────────
