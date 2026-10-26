@@ -37,7 +37,7 @@ The recommended default client. The relayer handles embeddings, Seal encryption,
 
 1. The SDK signs each request with your delegate key
 2. The relayer verifies delegate access
-3. `remember` returns an accepted job while the relayer encrypts, uploads, and indexes in the background
+3. `remember(text)` takes the memory text and returns an accepted job whose `job_id` you pass to `waitForRememberJob()`, while the relayer encrypts, uploads, and indexes in the background
 4. `recall` searches by Memory Space and returns decrypted matches
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
@@ -77,7 +77,7 @@ await memwal.health();
 
 ## Restore
 
-Rebuild missing indexed entries for one namespace. Incremental, namespace-scoped, and meant to
+Rebuild missing indexed entries for one namespace. `restore()` takes the namespace as its first argument and returns a result object. Incremental, namespace-scoped, and meant to
 repair PostgreSQL vector state from Walrus-backed memory.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>

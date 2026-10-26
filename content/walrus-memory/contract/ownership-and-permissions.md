@@ -74,7 +74,7 @@ Seal derives one *reusable* key per identity, so an identity fixed at `BCS(owner
 
 Two rules follow, and clients must respect both:
 
-- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable, so owners keep access to their history.
+- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable, so owners keep access to their history, but a removed delegate who already fetched an older key keeps the copy in their hands and can still decrypt memories written under that counter; retracting those requires re-encryption.
 - **Read the counter fresh from chain immediately before encrypting**, never cache it, never accept it from a request body. Encrypting under a stale counter hands the data straight back to the delegate you just removed.
 
 Rotation is forward-only: memories already written under an older counter stay readable with the older key. Retracting those requires re-encryption.

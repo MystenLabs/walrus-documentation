@@ -40,7 +40,7 @@ Use this first.
 
 - relayer-backed
 - best path for most teams
-- main methods: `remember`, `recall`, `analyze`, `restore`, `health`
+- main methods: `remember`, `recall`, `analyze`, `ask`, `restore`, `health`
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
 

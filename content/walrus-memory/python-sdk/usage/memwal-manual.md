@@ -38,7 +38,7 @@ answer: >-
 ---
 
 :::note
-Unlike the TypeScript SDK there is **no separate `MemWalManual` class** in Python. The Python SDK is relayer-backed for the standard `remember` / `recall` flow. The "manual" methods are lower-level entry points on the same `MemWal` / `MemWalSync` client for callers that already have a vector and Seal-encrypted bytes.
+Unlike the TypeScript SDK there is **no separate `MemWalManual` class** in Python. The Python SDK is relayer-backed for both the standard `remember` / `recall` flow and the manual methods: `remember_manual` still goes through the relayer, which uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping. The "manual" methods are lower-level entry points on the same `MemWal` / `MemWalSync` client for callers that already have a vector and Seal-encrypted bytes.
 :::
 
 Use these when you want to control indexing or do your own vector math. For the standard flow, prefer [`remember` / `recall`](/walrus-memory/python-sdk/usage/memwal).

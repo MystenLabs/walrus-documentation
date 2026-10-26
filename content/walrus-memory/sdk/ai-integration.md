@@ -31,7 +31,7 @@ answer: >-
   The withMemWal middleware wraps a Vercel AI SDK model to add automatic memory. Before generation it recalls relevant memories and injects them into the prompt. After generation it optionally runs analyze() to extract and save facts asynchronously. Use direct SDK calls when you need precise control over storage timing, text analysis, or recall filtering.
 ---
 
-Walrus Memory includes an AI SDK integration for applications that already use model middleware.
+Walrus Memory includes an AI SDK integration, exported from `@mysten-incubation/memwal/ai`, for applications that already use model middleware.
 
 ## `withMemWal`
 

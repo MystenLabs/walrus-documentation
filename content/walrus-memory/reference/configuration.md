@@ -118,7 +118,7 @@ Walrus and network fields:
 - `MemWalManual` now defaults to `mainnet` network settings unless you pass `suiNetwork: "testnet"`.
 - `sealServerConfigs` takes priority over `sealKeyServers`; `sealKeyServers` remains supported for legacy independent key server lists.
 - Relayer/sidecar Seal defaults use Mysten's initial committee aggregator on `testnet`. `mainnet` keeps the legacy independent key server pair until an official Mainnet committee aggregator is available.
-- `MemWalManual` keeps the legacy independent Testnet default for compatibility. Pass `sealServerConfigs` to use a committee aggregator manually.
+- Because `MemWalManual` defaults to `mainnet`, it keeps the legacy independent Seal key server pair by default for compatibility. Pass `sealServerConfigs` to use a committee aggregator manually.
 - Use `sealServerConfigs` to override the built-in default with another committee by providing `objectId`, `weight`, and `aggregatorUrl`.
 
 ## Relayer configuration
