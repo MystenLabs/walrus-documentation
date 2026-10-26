@@ -96,7 +96,7 @@ Only choose 1 of the following authentication methods. Providing more than 1 cau
 | `GITHUB_TOKEN` | Enables automatic pull request creation when resources change | (none) |
 | `SITE_BUILDER_VERSION` | Site-builder version: `v1` or `v2` | `v2` |
 
-## Understanding `ws-resources.json`
+## What does `ws-resources.json` do?
 
 The `site-builder` tool uses a file called `ws-resources.json` to track the Sui object ID of your deployed site. This file determines whether a deployment creates a new site or updates an existing one.
 
@@ -106,7 +106,7 @@ The `site-builder` tool uses a file called `ws-resources.json` to track the Sui 
 
 :::caution
 
-Merge the pull request from your first deployment before the next workflow run. If `ws-resources.json` is not committed, each run creates a new site object instead of updating the existing one.
+Merge the pull request from your first deployment before the next workflow run. If `ws-resources.json` is not committed, each run creates a new site object instead of updating the existing one. The action reads `ws-resources.json` from your `DIST` directory, so the committed file must be in your build output when the action runs.
 
 :::
 
@@ -128,7 +128,7 @@ permissions:
 
 Without `GITHUB_TOKEN`, the action still deploys your site but does not open pull requests.
 
-## Workflow structure
+## How is a Walrus Sites workflow structured?
 
 A Walrus Sites workflow follows this general structure:
 
@@ -237,7 +237,7 @@ To target Testnet instead of Mainnet, set `SUI_NETWORK` to `testnet`. Make sure 
           EPOCHS: '5'
 ```
 
-## Trigger strategies
+## Which trigger should you use?
 
 GitHub Actions supports several trigger types. Choose the one that fits your release process:
 
@@ -245,5 +245,13 @@ GitHub Actions supports several trigger types. Choose the one that fits your rel
 - `workflow_dispatch`: Trigger manually from the Actions tab. Useful for controlled or infrequent releases.
 - **Tag push:** Deploy only on tagged releases by adding `tags: ['v*']` under `push`. Suitable for versioned sites.
 - **Pull request (dry run):** Combine with a separate job that builds and validates the site without deploying, so you can catch build errors before merging.
+
+To deploy only on tagged releases, use this trigger definition:
+
+```yaml
+on:
+  push:
+    tags: ['v*']
+```
 
 Most projects use `push` on `main` combined with `workflow_dispatch` so that both automatic and manual deployments are available.
