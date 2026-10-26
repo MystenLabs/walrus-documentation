@@ -98,6 +98,6 @@ Erasure coding and upload processing add memory overhead per blob. Running too m
 
 - Limit concurrent upload workers based on available RAM.
 
-- Estimate total memory as: `blob_size × encoding_overhead × concurrent_uploads`.
+- Estimate total memory as: `blob_size × encoding_overhead × concurrent_uploads`, where `encoding_overhead` is approximately 4.5.
 
 - Scale horizontally across multiple machines rather than increasing concurrency on a single host.
