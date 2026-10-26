@@ -1,8 +1,8 @@
 ---
 title: "Memory Space"
 description: >-
-  The isolated unit of storage in Walrus Memory. A memory space is uniquely identified by
-  owner address, namespace, and app ID, ensuring full isolation between users, apps, and
+  The isolated unit of storage in Walrus Memory. The owner address, namespace, and app ID
+  uniquely identify a memory space, ensuring full isolation between users, apps, and
   deployments.
 keywords:
   - Walrus Memory
@@ -12,9 +12,6 @@ keywords:
   - app ID
   - isolation
   - scoping
-  - owner address
-  - Sui
-  - multi-agent
 goal:
   description: Use namespaces to scope agent memory within an account, prevent cross-namespace data leakage, and design a namespace strategy for multi-agent or multi-user deployments.
   requires:
@@ -46,7 +43,7 @@ Each user can own as many memory spaces as they want.
 
 ## What defines a memory space?
 
-Every memory space is uniquely identified by three values:
+Three values uniquely identify every memory space:
 
 | Component | What it is |
 |-----------|-----------|
@@ -58,14 +55,14 @@ Together, `owner + namespace + app_id` form the boundary, no two memory spaces c
 
 ## Namespace
 
-A namespace is simply a name you give to group related memories. One user can have multiple namespaces to separate different kinds of data.
+A namespace is a name you give to group related memories. One user can have multiple namespaces to separate different kinds of data.
 
 For example:
 - `personal`, store personal preferences, notes, and context
 - `work`, store work-related knowledge and conversations
 - `research`, store research findings and references
 
-Namespaces are set in the SDK when you create a client:
+You set namespaces in the SDK when you create a client:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/fundamentals/concepts/memory-space.md" target="_blank" className="code-source-link">Source: fundamentals/concepts/memory-space.md</a>
 
@@ -80,9 +77,9 @@ const memwal = MemWal.create({
 
 ## App ID
 
-The **app ID** is the Walrus Memory package ID deployed on Sui (`MEMWAL_PACKAGE_ID`). Each relayer deployment is tied to a single package ID, which is used for Seal encryption key derivation and Walrus blob metadata.
+The **app ID** is the Walrus Memory package ID deployed on Sui (`MEMWAL_PACKAGE_ID`). Each relayer deployment ties to a single package ID. Seal encryption key derivation and Walrus blob metadata use this package ID.
 
-Two separate Walrus Memory deployments can each have a user with a `personal` namespace, and their memories will never mix, because the app ID (package ID) is different. This means the vector database scopes queries by `owner + namespace`, while the encryption and blob discovery layer provides an additional isolation boundary through the package ID.
+Two separate Walrus Memory deployments can each have a user with a `personal` namespace, and their memories never mix, because the app ID (package ID) is different. This means the vector database scopes queries by `owner + namespace`, while the encryption and blob discovery layer provides an additional isolation boundary through the package ID.
 
 ## How it works in practice
 
@@ -96,9 +93,9 @@ flowchart TD
     User --> S3["personal @ app-2"]
 ```
 
-In this example, `app-1` and `app-2` are shorthand labels for two distinct Walrus Memory package IDs (`MEMWAL_PACKAGE_ID`), since each relayer deployment is tied to a single package ID. One user has three separate memory spaces:
+In this example, one user has three separate memory spaces:
 - **personal** memories in **app-1**
 - **work** memories in **app-1**
-- **personal** memories in **app-2** (a completely different deployment, with a different package ID)
+- **personal** memories in **app-2** (a completely different deployment)
 
 Each is fully isolated, storing into one never affects the others, and recall only searches within the specified memory space.
