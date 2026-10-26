@@ -7,12 +7,12 @@ const path = require("path");
 // ---------------------------------------------------------------------------
 // Adjust these paths to match your project layout
 // ---------------------------------------------------------------------------
-const DOCS_DIR = path.resolve(__dirname, "../../../../content");
+const DOCS_DIR = path.resolve(__dirname, "../../../../content/walrus");
 const GENERATED_MAP_PATH = path.resolve(
   __dirname,
   "../../.generated/ImportContentMap",
 );
-const SNIPPETS_DIR = path.resolve(__dirname, "../../../../content/snippets");
+const SNIPPETS_DIR = path.resolve(__dirname, "../../../../content/walrus/snippets");
 const UTILS_PATH = path.resolve(
   __dirname,
   "../components/ImportContent/utils",

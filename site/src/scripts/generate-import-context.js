@@ -21,7 +21,7 @@ const path = require("path");
 
 const SITE_ROOT = path.resolve(__dirname, "../.."); // docusaurus site root
 const REPO_ROOT = path.resolve(SITE_ROOT, ".."); // repository root is one level up from site
-const CONTENT_ROOT = path.resolve(REPO_ROOT, "content"); // content folder
+const CONTENT_ROOT = path.resolve(REPO_ROOT, "content", "walrus"); // content folder
 const OUT_FILE = path.join(SITE_ROOT, "src/.generated/ImportContentMap.ts");
 
 const LOCAL_ROOTS = new Set(["examples", "data"]);

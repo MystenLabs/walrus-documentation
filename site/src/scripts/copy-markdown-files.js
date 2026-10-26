@@ -329,7 +329,7 @@ function copyMarkdownFiles(dir, baseDir = dir) {
   });
 }
 
-const blogDir = path.join(__dirname, '../../../blog');
+const blogDir = path.join(__dirname, '../../../content/blog');
 
 console.log('📝 Starting markdown export...');
 console.log(`Source: ${contentDir}`);
@@ -368,7 +368,7 @@ if (fs.existsSync(blogDir)) {
 }
 
 // Copy Walrus Memory docs (external content, read directly from transformed source)
-const walrusMemoryDir = path.join(__dirname, '../../../walrus-memory-content');
+const walrusMemoryDir = path.join(__dirname, '../../../content/walrus-memory');
 const walrusMemoryOutputDir = path.join(outputDir, 'walrus-memory');
 if (fs.existsSync(walrusMemoryDir)) {
   console.log('\n📝 Exporting Walrus Memory docs...');
@@ -406,7 +406,7 @@ if (fs.existsSync(walrusMemoryDir)) {
 }
 
 // Copy Oyster docs (external content, read directly from transformed source)
-const oysterDir = path.join(__dirname, '../../../oyster-content');
+const oysterDir = path.join(__dirname, '../../../content/oyster');
 const oysterOutputDir = path.join(outputDir, 'oyster');
 if (fs.existsSync(oysterDir)) {
   console.log('\n📝 Exporting Oyster docs...');

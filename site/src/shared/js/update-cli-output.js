@@ -32,7 +32,7 @@ const COMMANDS = [
 /** Root for snippet outputs (kept identical to the workflow paths). */
 const SNIPPETS_DIR = path.join(
   __dirname,
-  "../../../content/snippets/console-output",
+  "../../../content/walrus/snippets/console-output",
 );
 
 function ensureDir(p) {

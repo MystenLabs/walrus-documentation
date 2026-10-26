@@ -28,7 +28,7 @@ indent_size = 2
 max_line_length = 150
 
 # Ignore paths
-[{.git/**/*,**/*.lock,site/pnpm-lock.yaml,**/Move.toml,LICENSE,.editorconfig,venv/**/*,site/src/components/ImportContent/utils.js,site/static/glossary.json,site/static/llms.txt,site/static/llms-full.txt,site/static/walrus-memory/llms.txt,site/static/walrus-memory/llms-full.txt,site/static/oyster/**/*,site/static/diagrams/*.html,site/src/data/changelog.json,site/sidebarsOyster.js,oyster-content/**/*,walrus-memory-content/**/*}]
+[{.git/**/*,**/*.lock,site/pnpm-lock.yaml,**/Move.toml,LICENSE,.editorconfig,venv/**/*,site/src/components/ImportContent/utils.js,site/static/glossary.json,site/static/llms.txt,site/static/llms-full.txt,site/static/walrus-memory/llms.txt,site/static/walrus-memory/llms-full.txt,site/static/oyster/**/*,site/static/diagrams/*.html,site/src/data/changelog.json,site/sidebarsOyster.js,content/oyster/**/*,content/walrus-memory/**/*}]
 charset = unset
 end_of_line = unset
 indent_size = unset

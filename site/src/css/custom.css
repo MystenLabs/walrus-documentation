@@ -55,8 +55,8 @@
 @import "tailwindcss/utilities" layer(utilities);
 
 @source "../**/*.{js,jsx,ts,tsx,mdx}";
-@source "../../../content/**/*.{md,mdx}";
-@source "../../../blog/**/*.{md,mdx}";
+@source "../../../content/walrus/**/*.{md,mdx}";
+@source "../../../content/blog/**/*.{md,mdx}";
 
 /* ══════════════════════════════════════════════
 Infima — Light mode

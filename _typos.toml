@@ -10,7 +10,7 @@ unparseable = "unparseable"
 extend-exclude = [
   "*.svg",
   # Generated from GitHub release bodies, which are quoted verbatim.
-  "content/release-notes/",
+  "content/walrus/release-notes/",
   "site/src/data/changelog.json",
   "site/src/plugins/askcookbook/index.js",
   "site/src/scripts/audit-docs.mjs",

@@ -18,8 +18,8 @@ const path = require("path");
 const https = require("https");
 
 const EDITORIAL_DIR = path.resolve(__dirname, "../../../editorial");
-const OUTPUT_DIR = path.resolve(__dirname, "../../../content/release-notes");
-const OUTPUT_HUB = path.resolve(__dirname, "../../../content/release-notes.mdx");
+const OUTPUT_DIR = path.resolve(__dirname, "../../../content/walrus/release-notes");
+const OUTPUT_HUB = path.resolve(__dirname, "../../../content/walrus/release-notes.mdx");
 const OUTPUT_WALRUS = path.resolve(OUTPUT_DIR, "walrus-platform.mdx");
 const OUTPUT_MEMORY = path.resolve(OUTPUT_DIR, "walrus-memory.mdx");
 const OUTPUT_SITES = path.resolve(OUTPUT_DIR, "walrus-sites.mdx");

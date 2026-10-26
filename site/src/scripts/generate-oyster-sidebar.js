@@ -1,7 +1,7 @@
 // Copyright (c) Walrus Foundation
 // SPDX-License-Identifier: Apache-2.0
 //
-// Generates sidebarsOyster.js from the transformed oyster-content directory.
+// Generates sidebarsOyster.js from the content/oyster directory.
 // Parses the upstream SUMMARY.md to preserve ordering, then appends the
 // generated API reference page.
 //
@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 const SITE_ROOT = path.resolve(__dirname, "../../");
-const CONTENT_DIR = path.resolve(SITE_ROOT, "../oyster-content");
+const CONTENT_DIR = path.resolve(SITE_ROOT, "../content/oyster");
 const SIDEBAR_OUT = path.join(SITE_ROOT, "sidebarsOyster.js");
 
 // ── Sidebar structure ───────────────────────────────────────────────

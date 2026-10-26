@@ -206,7 +206,7 @@ const config = {
                 {
                   test: /\.mdx?$/,
                   enforce: "pre",
-                  include: [path.resolve(__dirname, "../content")],
+                  include: [path.resolve(__dirname, "../content/walrus")],
                   use: [
                     {
                       loader: path.resolve(
@@ -221,7 +221,7 @@ const config = {
             resolve: {
               alias: {
                 "@repo": path.resolve(__dirname, "../../"),
-                "@docs": path.resolve(__dirname, "../content/"),
+                "@docs": path.resolve(__dirname, "../content/walrus/"),
               },
             },
           };
@@ -235,7 +235,7 @@ const config = {
           return {
             resolve: {
               alias: {
-                "@docs": path.resolve(__dirname, "../content"),
+                "@docs": path.resolve(__dirname, "../content/walrus"),
               },
             },
           };
@@ -249,7 +249,7 @@ const config = {
       "@docusaurus/plugin-content-docs",
       {
         id: "oyster",
-        path: "../oyster-content",
+        path: "../content/oyster",
         routeBasePath: "oyster",
         sidebarPath: "./sidebarsOyster.js",
         remarkPlugins: [remarkMath],
@@ -260,7 +260,7 @@ const config = {
       "@docusaurus/plugin-content-docs",
       {
         id: "walrus-memory",
-        path: "../walrus-memory-content",
+        path: "../content/walrus-memory",
         routeBasePath: "walrus-memory",
         sidebarPath: "./sidebarsWalrusMemory.js",
         exclude: ["contributing/**"],
@@ -276,7 +276,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').Options} */
     ({
       docs: {
-        path: "../content",
+        path: "../content/walrus",
         sidebarPath: "./sidebars.js",
         editUrl: "https://github.com/MystenLabs/walrus-documentation/tree/main/site/",
         remarkPlugins: [
@@ -301,7 +301,7 @@ const config = {
         ],
       },
       blog: {
-        path: "../blog",
+        path: "../content/blog",
         postsPerPage: "ALL",
         blogSidebarTitle: "All posts",
         blogSidebarCount: "ALL",

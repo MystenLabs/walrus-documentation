@@ -9,7 +9,7 @@ import React from "react";
  * Docusaurus (Webpack 5) supports require.context at build time.
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const req = require.context("../../../../content/snippets", true, /\.mdx$/);
+const req = require.context("../../../../content/walrus/snippets", true, /\.mdx$/);
 
 type SnippetModule = { default: React.ComponentType<any> };
 

@@ -81,7 +81,7 @@ jobs:
 
             Review the summaries under `editorial/` as you would any docs page: they were
             drafted from the GitHub release bodies, and the rendered pages under
-            `content/release-notes/` in this pull request are what docs.wal.app serves
+            `content/walrus/release-notes/` in this pull request are what docs.wal.app serves
             after the merge. The run summary on the workflow page lists which releases
             were drafted and which were skipped.
           branch: "editorial/release-summaries"

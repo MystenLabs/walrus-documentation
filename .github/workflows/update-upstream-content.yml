@@ -8,7 +8,7 @@
 # walrus ref, then opens a pull request with the diff when there is one.
 #
 #   site/src/data/skills.json            from MystenLabs/walrus-skills (gen:skills)
-#   content/release-notes*.mdx           from GitHub releases of walrus, MemWal,
+#   content/walrus/release-notes*.mdx           from GitHub releases of walrus, MemWal,
 #   site/src/data/changelog.json         and walrus-sites (gen:release-notes)
 #   site/upstream.json                   the walrus ref that <ImportContent>
 #                                        embeds are fetched from (gen:import)
@@ -87,7 +87,7 @@ jobs:
             Scheduled refresh of the content this site shows from other repositories.
 
             - `site/src/data/skills.json` from MystenLabs/walrus-skills
-            - `content/release-notes*.mdx` and `site/src/data/changelog.json` from GitHub releases
+            - `content/walrus/release-notes*.mdx` and `site/src/data/changelog.json` from GitHub releases
             - `site/upstream.json` pinned to the latest walrus mainnet release
 
             Review the rendered diff, not the upstream commits: the pages in this
