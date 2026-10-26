@@ -43,7 +43,7 @@ Instead of your application making many requests to different storage nodes, you
 
 ## Automatic retry logic
 
-The relay implements server-side retry logic, including automatic retries for failed node connections, timeout handling for slow nodes, quorum management to ensure enough nodes store the data, and error recovery without client intervention.
+The relay implements server-side retry logic, including automatic retries for failed node connections, timeout handling for slow nodes, quorum management to ensure enough nodes store the data, and error recovery without client intervention. A quorum is the share of storage nodes, measured by shard weight, that must confirm they store a blob before the upload succeeds.
 
 When the relay receives a blob, it reuses the same uploader that the Walrus TypeScript SDK client uses for direct uploads, so the server inherits all quorum tracking and retry behavior. Within that helper, the SDK concurrently writes to each node, counts failures by shard weight, and keeps retrying until quorum is satisfied (or aborts with `NotEnoughBlobConfirmationsError` if it cannot reach quorum).
 
@@ -69,7 +69,7 @@ Paid relays only accept uploads that include the advertised tip, so your request
 
 Web apps running in unprivileged browsers benefit the most because the relay removes the need to maintain dozens of outbound connections. Instead of orchestrating per-node uploads in the browser, the relay exposes a single POST to `/v1/blob-upload-relay` that handles encoding, sliver uploads, and certificate collection on your behalf.
 
-The same constraints apply on low-powered devices. Mobile devices and low-powered laptops are a primary motivation for the relay, as are clients with limited bandwidth or networking capability, such as mobile apps or browsers.
+The same constraints apply to low-powered devices. The relay is primarily designed for mobile devices, low-powered laptops, and other clients with limited bandwidth or networking capability, such as mobile apps or browsers.
 
 #### High-volume uploads
 
