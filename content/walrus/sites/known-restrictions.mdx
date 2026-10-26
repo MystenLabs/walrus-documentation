@@ -45,7 +45,7 @@ answer: >-
 
 You can use Walrus Sites to deploy almost any form of traditional static Web2 website built for modern browsers. There are, however, a number of restrictions that developers should keep in mind when creating or porting a website to Walrus Sites.
 
-## Static sites only
+## Can Walrus Sites run server-side code?
 
 Walrus Sites store all site resources (HTML, CSS, JS, images, fonts) as blobs on Walrus, with metadata managed by a [Sui smart contract](https://docs.sui.io/guides/developer/packages/package-overview). There is no server-side runtime. As a consequence:
 
@@ -53,7 +53,7 @@ Walrus Sites store all site resources (HTML, CSS, JS, images, fonts) as blobs on
 - **No server-side logic:** There are no endpoints, no request handlers, and no databases. Operations that would normally be handled by a backend (such as form processing, authentication sessions, or database queries) must be implemented using client-side code integrated with external APIs or Sui smart contracts.
 - **No runtime redirects:** Redirect plugins that execute at serve time (for example, the Docusaurus redirect plugin that routes `/old-path` to `/new-path` at the server level) do not function as expected. Client-side redirect workarounds must be used instead. See [Redirects](/docs/sites/linking/redirects) for supported approaches.
 
-## No secret values
+## Can a site store secret values?
 
 All content stored on Walrus Sites is fully public. Site files are stored as blobs on Walrus, and site metadata is stored on Sui. Because there is no private execution environment, developers must not embed secret values anywhere in a site's source files. This includes:
 
@@ -64,7 +64,7 @@ All content stored on Walrus Sites is fully public. Site files are stored as blo
 
 Any backend-specific operations that require secrets (such as authentication flows or privileged API calls) must be handled through integration with Sui smart contracts and a [Sui-compatible wallet](https://docs.sui.io/guides/developer/wallets/what-is-a-wallet), keeping secrets out of the deployed site assets entirely.
 
-## Maximum redirect depth
+## What is the maximum redirect depth?
 
 The number of consecutive redirects a Walrus Site can perform is capped by the [portal](/docs/sites/portals/mainnet-testnet). This prevents infinite redirect loops during site loading.
 
@@ -100,7 +100,7 @@ Service workers cannot be loaded inside in-app browsers on iOS due to a limitati
 
 **Recommended mitigation:** If using a service-worker portal as your primary access point, redirect iOS wallet users to a server-side portal (for example, `https://wal.app`). This allows the wallet interaction to function correctly via the `<site_name>.wal.app` server-side endpoint.
 
-### Progressive web apps are not supported
+### Are progressive web apps supported?
 
 Service-worker portals are fundamentally incompatible with Progressive Web Apps (PWA) due to two structural conflicts:
 
