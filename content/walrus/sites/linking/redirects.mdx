@@ -43,13 +43,13 @@ answer: >-
   Site.
 ---
 
-Walrus Sites supports 3 kinds of redirects: internal routing redirects, HTTP redirects, and object redirects. Internal routing redirects map URL paths within your site to specific resources. HTTP redirects return 3xx responses to send the client to a different URL. Object redirects allow arbitrary Sui objects to point to a Walrus Site. These work differently and serve different use cases.
+Walrus Sites supports 3 kinds of redirects: internal routing redirects, HTTP redirects, and object redirects. Internal routing redirects map URL paths within your site to specific resources and serve them without changing the URL. HTTP redirects return 3xx responses to send the client to a different URL. Object redirects allow arbitrary Sui objects to point to a Walrus Site. These work differently and serve different use cases.
 
 ## Internal routing redirects
 
-Define routing rules in your site's [`ws-resources.json` configuration file](/docs/sites/configuration/site-configuration). These rules map incoming URL path patterns to specific resources stored in the site object. The portal applies these rules when resolving requests.
+Define routing rules in your site's `ws-resources.json` configuration file. These rules map incoming URL path patterns to specific resources stored in the site object. The portal applies these rules when resolving requests.
 
-### Defining routes
+### How to define routes
 
 The `routes` field in `ws-resources.json` maps path patterns to resource paths. Place the `ws-resources.json` file in the root of your site directory before deploying.
 
@@ -161,7 +161,7 @@ To redirect an entire directory:
 }
 ```
 
-## Redirecting Sui objects to a Walrus Site
+## How to redirect Sui objects to a Walrus Site
 
 Any Sui object can point to a Walrus Site through its [`Display`](https://docs.sui.io/standards/display#sui-utility-objects) property. When a portal resolves an object ID that is not itself a Walrus Site, it checks the object's `Display` for the `walrus site address` key. If that key is present, the portal fetches and renders the Walrus Site at the address stored in that key.
 
@@ -178,7 +178,7 @@ When a user browses the object ID of an NFT through a portal, the portal perform
 
 The URL in the browser retains the NFT's object ID as the subdomain. This means the Walrus Site being served can read its own origin in JavaScript, extract the subdomain (the NFT's object ID), fetch that object's onchain data, and use its properties to personalize the page.
 
-### Setting up the redirect in Move
+### How to set up the redirect in Move
 
 When creating the `Display` for your object type, include the `walrus site address` key pointing to the object ID of your Walrus Site:
 
@@ -190,7 +190,7 @@ display.add(b"walrus site address".to_string(), VISUALIZATION_SITE.to_string());
 
 Replace `@0x901fb0...` with the actual object ID of the Walrus Site you want to serve for objects of this type.
 
-### Personalizing the page per object
+### How to personalize the page per object
 
 The Walrus Site at `VISUALIZATION_SITE` is a single shared site, but it can render differently for each NFT. Because the portal keeps the NFT's object ID as the subdomain in the URL, the site's JavaScript can check its `origin`, use the subdomain to identify the NFT, fetch it from chain, and use its internal fields to modify what is displayed. To personalize the page:
 
