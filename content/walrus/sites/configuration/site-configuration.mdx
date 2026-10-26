@@ -45,7 +45,7 @@ In its base configuration, a Walrus Site serves static assets through a portal. 
 
 The `site-builder` can read a `ws-resources.json` configuration file, in which you can directly specify these advanced features.
 
-## The `ws-resources.json` file
+## What is the `ws-resources.json` file?
 
 This file is optionally placed in the root of the site directory, and it is neither uploaded to Walrus nor served to site visitors. 
 
@@ -137,7 +137,7 @@ The `redirects` section allows you to specify server-side redirects for your sit
 
 For full syntax, matching rules, and framework examples, refer to the [redirects reference page](/docs/sites/linking/redirects).
 
-## Adding metadata
+## How to add metadata
 
 You can enhance the display of your Site object on Sui explorers and wallets by using the `metadata` field. This field allows you to add human-readable information about the site, such as a link to your site's homepage, an image of your site's logo, and so on.
 
@@ -157,7 +157,7 @@ Refer to the [metadata reference page](/docs/sites/configuration/adding-metadata
 
 You can set a name for your Walrus Site through the optional `site_name` field in the `ws-resources.json` file. If you have also provided a site name through the `--site-name` CLI flag, the CLI flag takes priority and will overwrite the `site_name` field in the `ws-resources.json`. If a site name is not provided at all, then a default name is used.
 
-## Site object ID
+## What is the site object ID?
 
 The optional `object_id` field in the `ws-resources.json` file stores the Sui object ID of your deployed Walrus Site.
 
@@ -169,7 +169,7 @@ Preserve `ws-resources.json` after the first deployment. If the file is missing 
 
 :::
 
-## Ignoring files from being uploaded
+## How to ignore files during upload
 
 You can use the optional `ignore` field to exclude certain files or folders from being published. This is useful when you want to keep development files, secrets, or temporary assets out of the final build.
 
@@ -189,7 +189,7 @@ This configuration skips all files inside the `/private/` and `/images/tmp/` dir
 
 Wildcards are only supported in the **last position** of the path, for example, `/foo/*` is valid, but `/foo/*/bar` is not.
 
-## Serving raw markdown {#markdown}
+## How to serve raw markdown {#markdown}
 
 You may wish to serve raw markdown files for better LLM ingestion. Generating these depends on your framework. Static site generators like Docusaurus and VitePress can output `.md` files through build scripts or plugins. Custom pipelines typically use a pre-build script to copy source files into a `/markdown` directory. 
 
