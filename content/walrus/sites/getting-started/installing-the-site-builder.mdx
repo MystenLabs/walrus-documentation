@@ -52,7 +52,7 @@ The `site-builder` is a CLI tool that lets you create, edit, and publish Walrus 
 </Tabs>
 </div>
 
-## Installation
+## How to install `site-builder`
 
 :::warning
 
@@ -192,9 +192,9 @@ You can now run `site-builder` using the following command in PowerShell (note t
 site-builder
 ```
 
-## Configuration {#configuration}
+## How to configure `site-builder` {#configuration}
 
-To use `site-builder` commands to deploy Walrus Sites, the `site-builder` tool must be configured. Configuration is done using the [`sites-config.yaml` configuration file](/docs/sites/getting-started/using-the-site-builder). You can download the `sites-config.yaml` using the following command:
+To use `site-builder` commands to deploy Walrus Sites, the `site-builder` tool must be configured. You configure `site-builder` with the `sites-config.yaml` configuration file. Set `$NETWORK` to either `testnet` or `mainnet` before you run the download command. You can download the `sites-config.yaml` using the following command:
 
 ```sh
 $ curl https://raw.githubusercontent.com/MystenLabs/walrus-sites/refs/heads/$NETWORK/sites-config.yaml -o ~/.config/walrus/sites-config.yaml
