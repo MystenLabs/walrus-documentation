@@ -58,9 +58,9 @@ $ CANDIDATE_NODE_ID=0xCANDIDATE_NODE_ID   # Replace with the real candidate ID.
 $ NODE_ID=0xYOUR_NODE_ID                  # Replace with your own StakingPool ID.
 ```
 
-## Day 1 of epoch N: first vote creates the proposal
+## Day 1 of epoch N: how to cast the first vote
 
-The first operator to act submits the vote PTB from their `governance_authorized` wallet. The PTB constructs an `Authenticated` value tied to the sender, then passes it to `vote_for_slashing`.
+The first operator to act submits the vote PTB from the wallet that is `governance_authorized` on their storage node's `StakingPool`. The PTB constructs an `Authenticated` value tied to the sender, then passes it to `vote_for_slashing`.
 
 ```sh
 $ sui client ptb \
@@ -81,13 +81,13 @@ $ sui client object $SLASHING_MANAGER --json
 
 The JSON output contains a `slashing_candidates` table. Look for an entry whose key matches `$CANDIDATE_NODE_ID`.
 
-## Days 1 to 10 of epoch N: collect quorum
+## Days 1 to 10 of epoch N: how to collect quorum
 
 Other operators repeat the same vote PTB from their own governance wallets. Each new vote adds the voter's shard count to `voting_weight` and appends the voter's node ID to the `voters` set. The contract aborts with `EDuplicateVote` if an operator tries to vote twice on the same proposal in the same epoch.
 
 Operators can monitor progress by re-running the read command above and observing `voting_weight` climb toward 667 (the quorum on a 1000-shard committee).
 
-## Quorum reached: finalize the slashing
+## How to execute the slashing after quorum
 
 As soon as `voting_weight >= 667`, the proposal is finalizable. Operators pick one party to submit the execute call so the others do not waste gas on aborted races. The execute call does not take an `Authenticated` argument, so a plain `sui client call` works.
 
@@ -116,7 +116,7 @@ $ sui client object $SLASHING_MANAGER --json
 
 You should see the candidate's `commission` field at zero, the WAL `total_supply` reduced by the burned amount, and the candidate's entry removed from `slashing_candidates`.
 
-## Cleanup of dangling proposals from prior epochs
+## How to clean up dangling proposals from prior epochs
 
 If the operators do not reach 667 votes by the end of epoch `N`, the next vote in epoch `N+1` resets the proposal: the first vote in `N+1` creates a fresh proposal with `voting_weight` starting from zero, and all prior voters are discarded. The vote must start over.
 
@@ -134,7 +134,7 @@ $ sui client call \
 
 The function removes only proposals whose stored epoch is strictly less than the current epoch. Active proposals are left untouched, and an entry that does not exist is silently skipped.
 
-## Recap
+## Which functions cover the slashing lifecycle?
 
 The same three primitives cover the full lifecycle:
 
