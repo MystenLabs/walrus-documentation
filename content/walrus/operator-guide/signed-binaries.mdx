@@ -54,9 +54,9 @@ Walrus release binaries and Docker images are signed using [Cosign](https://gith
 
 </div>
 
-## Use the verification script
+## How to verify binaries with the script
 
-The easiest way to download and verify binaries is to use the provided script. See also the [Storage Node Setup](/docs/operator-guide/storage-nodes/storage-node-setup#binaries) guide for standard binary downloads without verification.
+The easiest way to download and verify binaries is to use the provided script. See also the Storage Node Setup guide for standard binary downloads without verification.
 
 ```bash
 # Download the script
@@ -70,8 +70,10 @@ chmod +x download_and_verify_binary.sh
 
 The command takes 2 arguments:
 
-- `ref`: A git reference (branch, tag, or commit SHA)
-- `binary_name`: The full binary name with platform suffix
+- `ref`: A git reference (branch, tag, or commit SHA), for example `v1.0.0`
+- `binary_name`: The full binary name with platform suffix, for example `walrus-ubuntu-x86_64`
+
+To build `binary_name`, combine a binary from [Available binaries](#available-binaries) with a suffix from [Available platforms](#available-platforms).
 
 For example:
 
@@ -99,7 +101,7 @@ This downloads the binary and signature, then verifies the signature using the p
 | `walrus-node` | The Walrus storage node |
 | `walrus-upload-relay` | The Walrus upload relay service |
 
-## Verify manually
+## How to verify binaries manually
 
 If you prefer to verify manually without the script, first download the signed binaries from Google Cloud Storage:
 
@@ -153,7 +155,7 @@ cosign verify-blob \
   walrus
 ```
 
-## Verify Docker images
+## How to verify Docker images
 
 Signed Docker images are published to Docker Hub with the `-signed` suffix.
 
