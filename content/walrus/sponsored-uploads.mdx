@@ -8,7 +8,7 @@ keywords: [walrus, sponsored, walletless, publisher, upload relay, backend, gas,
   prompt="Help me choose the right pattern for letting users upload to Walrus without holding SUI or WAL. Compare the backend publisher, upload relay, and direct SDK approaches for my use case."
 />
 
-Most users do not hold SUI or WAL, and most apps do not want to ask them to. To build an app where your backend pays for Walrus storage and users upload without managing a wallet, you need to choose among several patterns. The sections below compare those patterns, show a reference architecture, and document the operational pitfalls teams hit when a single wallet funds many uploads.
+Most users do not hold SUI or WAL, and most apps do not want to ask them to. To build an app where your backend pays for Walrus storage and users upload without managing a wallet, you need to choose among several patterns. [Which upload pattern should you choose?](#which-upload-pattern-should-you-choose) compares those patterns, [How does an app backend sponsor storage?](#how-does-an-app-backend-sponsor-storage) shows a reference architecture, and [Operational pitfalls](#operational-pitfalls) documents the issues teams hit when a single wallet funds many uploads.
 
 For the step-by-step operator instructions, see [Operate a Publisher](/docs/operator-guide/publishers/operating-publisher), [Use the Authenticated Publisher](/docs/operator-guide/publishers/auth-publisher), and [Operate an Upload Relay](/docs/operator-guide/upload-relay).
 
@@ -26,10 +26,10 @@ Walrus has no built-in gas-sponsorship primitive that lets a user sign a store w
 Every store spends real resources, so sponsorship always means one of your wallets pays for the following onchain steps:
 
 1. **Reserve storage:** The store buys storage space for a number of epochs. This costs WAL (a storage fee that scales with blob size and duration) plus SUI gas.
-2. **Register the blob:** The store creates the onchain `Blob` object. This costs WAL (a write fee) plus SUI gas. In practice, reserve and register are usually combined into a single transaction, so the first transaction spends both WAL and SUI.
+2. **Register the blob:** The store creates the onchain `Blob` object. This costs WAL (a write fee) plus SUI gas. In practice, the store usually combines reserve and register into a single transaction, so the first transaction spends both WAL and SUI.
 3. **Certify the blob:** After the slivers reach a quorum of storage nodes, the store certifies the blob onchain. This second transaction costs SUI gas only.
 
-There is no free storage tier. Sponsorship changes only who pays, not whether WAL and SUI are spent. Keep both a WAL balance and a SUI balance funded on whichever wallet performs the store. Where a network configures an onchain storage subsidy, the subsidy can offset part of the WAL cost, but it does not change who signs the store or who pays the SUI gas.
+There is no free storage tier. Sponsorship changes only who pays, not whether the store spends WAL and SUI. Keep both a WAL balance and a SUI balance funded on whichever wallet performs the store. Where a network configures an onchain storage subsidy, the subsidy can offset part of the WAL cost, but it does not change who signs the store or who pays the SUI gas.
 
 For the full onchain lifecycle, see [Operations](/docs/system-overview/operations).
 
@@ -47,7 +47,7 @@ A [publisher](/docs/operator-guide/publishers/operating-publisher) is an HTTP se
 
 The publisher exposes `PUT /v1/blobs` with query parameters that control the resulting blob, including `epochs`, `permanent`, `deletable`, and `send_object_to`. To hand ownership to a walletless user, pass their Sui address as `send_object_to`. The publisher then stores the blob and sends the resulting `Blob` object to that address. See [Storing blobs with the HTTP API](/docs/http-api/storing-blobs).
 
-On Mainnet, never run an open, unauthenticated publisher, because anyone who reaches it can spend your wallet's SUI and WAL. Put an authentication and cost-control boundary in front of it. The [Authenticated Publisher](/docs/operator-guide/publishers/auth-publisher) verifies a JWT on each request and can cap the epochs and blob size a token is allowed to store. The [Mainnet Publisher Production Guide](/docs/operator-guide/publishers/mainnet-production-guide) covers running one safely.
+On Mainnet, never run an open, unauthenticated publisher, because anyone who reaches it can spend your wallet's SUI and WAL. Put an authentication and cost-control boundary in front of it. The [Authenticated Publisher](/docs/operator-guide/publishers/auth-publisher) verifies a JWT on each request and can cap the epochs and blob size a token can store. The [Mainnet Publisher Production Guide](/docs/operator-guide/publishers/mainnet-production-guide) covers running one safely.
 
 ### Upload relay
 
@@ -80,7 +80,7 @@ Decide up front who owns the stored blob and for how long:
 
 ## Operational pitfalls
 
-The issues below are the ones teams most often hit when one wallet funds many uploads.
+Teams most often hit the following issues when one wallet funds many uploads.
 
 ### Do not sign many concurrent stores from one wallet
 

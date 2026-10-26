@@ -41,7 +41,7 @@ During this sunset period, you must:
 
 - Take note of the Tusky sunsetting window.
 
-- Request your encryption keys from Tusky if you use the password protected keys stored by them.
+- Request your encryption keys from Tusky if you use the password protected keys they store.
 
 - Begin downloading your datasets. [Refer to the Tusky documentation for more information](https://docs.tusky.io/tusky-shutdown/tusky-shutting-down-how-to-retrieve-your-data) or view the [video tutorial](https://www.youtube.com/watch?v=2cur04QKUCA).
 
@@ -56,9 +56,9 @@ During this sunset period, you must:
 ## Immediate first steps 
 
 1. Take note of the sunset window.
-   - You have until March 19, 2026 of guaranteed read access via Tusky from the date of their shut down announcement.
+   - You have until March 19, 2026 of guaranteed read access through Tusky from the date of their shut down announcement.
    - **Do not wait until the last week of this window**.
-2. Take inventory of your data. Having an inventory of your data will help determine which migration option fits best.
+2. Take inventory of your data. Having an inventory of your data helps determine which migration option fits best.
    - Make a list of:
      - [Vaults and buckets](https://docs.tusky.io/http-api#tag/vaults/get/vaults)
      - [Blob IDs or file paths](https://docs.tusky.io/http-api#tag/blobs/get/blobs)
@@ -69,11 +69,11 @@ During this sunset period, you must:
 
 ## Important note on encryption (applies to all migration options)
 
-Tusky supports self-hosted keys and keys supplied by the user but [stored encrypted on Tusky and password protected](https://github.com/tusky-io/ts-sdk?tab=readme-ov-file#encryption). All encryption and decryption of blobs happens on the client side and is handled by Tusky SDK.
+Tusky supports self-hosted keys and keys supplied by the user but [stored encrypted on Tusky and password protected](https://github.com/tusky-io/ts-sdk?tab=readme-ov-file#encryption). All encryption and decryption of blobs happens on the client side, and Tusky SDK handles it.
 
-**This means once you download your data from Tusky via SDK, it should already be decrypted.**
+**This means once you download your data from Tusky through SDK, it should already be decrypted.**
 
-Based on your needs for data management going forward, you can choose to encrypt your data using an alternative mechanism as mentioned in the migration options. If you request the Tusky-stored encryption keys from them before they shut down the service, you may choose to reuse those keys with the relevant alternatives.
+Based on your needs for data management going forward, you can choose to encrypt your data using an alternative mechanism as mentioned in the migration options. If you request the Tusky-stored encryption keys from them before they shut down the service, you might choose to reuse those keys with the relevant alternatives.
 
 ## Migration option 1: Download from Tusky → decrypt → re-upload to Walrus
 
@@ -101,11 +101,11 @@ Based on your needs for data management going forward, you can choose to encrypt
   - [Walrus Quilt](/docs/system-overview/quilt)
 
 3. Validate integrity and availability of the data.
-    - Blobs fetched directly from Walrus do not pass through the Tusky SDK, so unlike data downloaded from Tusky via SDK (which should already be decrypted), any encrypted data must be decrypted by you using encryption keys retrieved from Tusky. Make sure you request these **before** their service is shut down.
+    - Blobs fetched directly from Walrus do not pass through the Tusky SDK, so unlike data downloaded from Tusky through SDK (which should already be decrypted), you must decrypt any encrypted data using encryption keys retrieved from Tusky. Make sure you request these **before** they shut down their service.
 
 4. Update your application or workflows to reference Walrus directly going forward.
 
-## Migration option 3: Migrate to another Walrus-compatible interface (Managed UX)
+## Migration option 3: migrate to another Walrus-compatible interface (managed UX)
 
 Available options:
 
@@ -114,7 +114,7 @@ Available options:
   - [Pawtato](https://pawtato.app/board/walrus/upload)
 
 :::tip
-More managed UX options coming soon.
+More managed UX options are coming soon.
 :::
 
 1. Export data from Tusky
