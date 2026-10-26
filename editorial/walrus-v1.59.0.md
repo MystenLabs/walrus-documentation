@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.59.0"
-description: "Testnet storage nodes now attest their blob info snapshot on chain at each epoch boundary by default, and snapshot encoding uses less memory."
+description: >-
+  Testnet storage nodes now attest their blob info snapshot on chain at each epoch boundary by
+  default, and snapshot encoding uses less memory.
 keywords: ["walrus", "release notes", "changelog", "testnet"]
 ---
 

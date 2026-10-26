@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.7"
-description: "MemWal SDK 0.1.7 reports permanent decrypt failures from `restore()` and removes a Node builtin import that crashed browser builds."
+description: >-
+  MemWal SDK 0.1.7 reports permanent decrypt failures from `restore()` and removes a Node builtin
+  import that crashed browser builds.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.10"
-description: "The MCP server sends proactive memory instructions in the `initialize` handshake and returns a retryable error for orphaned tool calls."
+description: >-
+  The MCP server sends proactive memory instructions in the `initialize` handshake and returns a
+  retryable error for orphaned tool calls.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

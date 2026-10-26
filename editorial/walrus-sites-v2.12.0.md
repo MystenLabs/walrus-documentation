@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.12.0"
-description: "The portal adds an optional glob-based route and redirect matcher, and the site-builder stops using JSON-RPC-only client methods."
+description: >-
+  The portal adds an optional glob-based route and redirect matcher, and the site-builder stops
+  using JSON-RPC-only client methods.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

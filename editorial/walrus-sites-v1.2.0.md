@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v1.2.0"
-description: "Walrus Sites 1.2.0 switches `ws-resources.json` header and ignore matching to glob patterns and extends experimental quilt support."
+description: >-
+  Walrus Sites 1.2.0 switches `ws-resources.json` header and ignore matching to glob patterns and
+  extends experimental quilt support.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.6"
-description: "Walrus Memory MCP 0.0.6 requires a localhost preflight handshake before accepting delegate-key login callbacks and fixes request authentication."
+description: >-
+  Walrus Memory MCP 0.0.6 requires a localhost preflight handshake before accepting delegate-key
+  login callbacks and fixes request authentication.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

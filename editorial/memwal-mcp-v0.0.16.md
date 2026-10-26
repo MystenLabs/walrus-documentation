@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.16"
-description: "Walrus Memory MCP 0.0.16 updates the MCP SDK to 1.32.1 and blocks redirects on authenticated SSE requests to the relayer."
+description: >-
+  Walrus Memory MCP 0.0.16 updates the MCP SDK to 1.32.1 and blocks redirects on authenticated SSE
+  requests to the relayer.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

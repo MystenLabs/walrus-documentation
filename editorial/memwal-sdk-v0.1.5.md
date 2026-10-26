@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.5"
-description: "`rememberManual` now sends base64 SEAL ciphertext as `encryptedData` instead of a `blobId`, and `recall()` reports `dropped_count`."
+description: >-
+  `rememberManual` now sends base64 SEAL ciphertext as `encryptedData` instead of a `blobId`, and
+  `recall()` reports `dropped_count`.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

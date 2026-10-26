@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory OpenClaw v0.0.7"
-description: "Pins `memory_search` and `memory_store` to the calling agent's namespace and limits `${ENV_VAR}` interpolation to `privateKey`."
+description: >-
+  Pins `memory_search` and `memory_store` to the calling agent's namespace and limits `${ENV_VAR}`
+  interpolation to `privateKey`.
 keywords: ["memwal-openclaw", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.10.0"
-description: "The portal bounds each aggregator attempt with a timeout and sizes Bun's `idleTimeout` from the retry budget so it can return its own error page."
+description: >-
+  The portal bounds each aggregator attempt with a timeout and sizes Bun's `idleTimeout` from the
+  retry budget so it can return its own error page.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

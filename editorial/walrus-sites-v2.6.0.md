@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.6.0"
-description: "The Walrus Sites portal now loads its configuration from a YAML file, and environment variables still work as overrides."
+description: >-
+  The Walrus Sites portal now loads its configuration from a YAML file, and environment variables
+  still work as overrides.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

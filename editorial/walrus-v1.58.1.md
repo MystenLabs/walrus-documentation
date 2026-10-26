@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.58.1"
-description: "Storage nodes gain the `blob_info_snapshot.certify` config flag, a new RocksDB column family, and `blob_info_snapshot_*` metrics."
+description: >-
+  Storage nodes gain the `blob_info_snapshot.certify` config flag, a new RocksDB column family, and
+  `blob_info_snapshot_*` metrics.
 keywords: ["walrus", "release notes", "changelog", "mainnet"]
 ---
 

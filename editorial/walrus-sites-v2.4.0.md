@@ -1,6 +1,7 @@
 ---
 title: "Walrus Sites v2.4.0"
-description: "The Walrus Sites portal now handles aggregator 403 and 404 errors with clearer messaging."
+description: >-
+  The Walrus Sites portal now handles aggregator 403 and 404 errors with clearer messaging.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.7.0"
-description: "The site builder no longer fails with `InsufficientGas` on large sites and retries deploys after transient Sui object version conflicts."
+description: >-
+  The site builder no longer fails with `InsufficientGas` on large sites and retries deploys after
+  transient Sui object version conflicts.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

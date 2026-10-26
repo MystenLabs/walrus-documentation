@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.13"
-description: "Walrus Memory MCP 0.0.13 fixes misleading retry advice, reports relayer auth and rate-limit errors clearly, and repairs in-session `memwal_login`."
+description: >-
+  Walrus Memory MCP 0.0.13 fixes misleading retry advice, reports relayer auth and rate-limit errors
+  clearly, and repairs in-session `memwal_login`.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

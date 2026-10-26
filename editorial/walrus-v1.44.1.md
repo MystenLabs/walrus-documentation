@@ -1,6 +1,7 @@
 ---
 title: "Walrus v1.44.1"
-description: "Walrus 1.44.1 on Testnet fixes an issue where outdated epoch state could crash storage nodes."
+description: >-
+  Walrus 1.44.1 on Testnet fixes an issue where outdated epoch state could crash storage nodes.
 keywords: ["walrus", "release notes", "changelog", "testnet"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.12.1"
-description: "Walrus Sites 2.12.1 updates the site-builder to build against Walrus `testnet-v1.58.1` and Sui `testnet-v1.81.0`."
+description: >-
+  Walrus Sites 2.12.1 updates the site-builder to build against Walrus `testnet-v1.58.1` and Sui
+  `testnet-v1.81.0`.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

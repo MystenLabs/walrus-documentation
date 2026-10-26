@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.8"
-description: "Pre-login tool discovery now returns human-readable tool titles and explicit `readOnlyHint` and `destructiveHint` metadata."
+description: >-
+  Pre-login tool discovery now returns human-readable tool titles and explicit `readOnlyHint` and
+  `destructiveHint` metadata.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

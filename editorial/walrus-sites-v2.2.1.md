@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.2.1"
-description: "The site-builder now uploads only new and modified files into new Quilts during site updates, so unchanged files are no longer re-uploaded."
+description: >-
+  The site-builder now uploads only new and modified files into new Quilts during site updates, so
+  unchanged files are no longer re-uploaded.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

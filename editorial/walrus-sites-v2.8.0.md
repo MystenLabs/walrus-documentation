@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.8.0"
-description: "Walrus Sites 2.8.0 adds server-side redirects, configured in `ws-resources.json` and stored on-chain through a `walrus_site` Move package upgrade."
+description: >-
+  Walrus Sites 2.8.0 adds server-side redirects, configured in `ws-resources.json` and stored on-
+  chain through a `walrus_site` Move package upgrade.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

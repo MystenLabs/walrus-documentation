@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.11.0"
-description: "The Walrus Sites portal now reads from Sui over gRPC instead of JSON-RPC, ahead of the JSON-RPC deprecation."
+description: >-
+  The Walrus Sites portal now reads from Sui over gRPC instead of JSON-RPC, ahead of the JSON-RPC
+  deprecation.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

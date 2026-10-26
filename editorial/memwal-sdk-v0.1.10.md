@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.10"
-description: "The SDK rejects non-finite scoring weights and whitespace-only text before signing, and reports malformed 2xx responses with clear errors."
+description: >-
+  The SDK rejects non-finite scoring weights and whitespace-only text before signing, and reports
+  malformed 2xx responses with clear errors.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

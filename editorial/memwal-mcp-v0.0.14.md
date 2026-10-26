@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.14"
-description: "The MCP plugin launches a trusted install instead of `npx`, adds opt-in Streamable HTTP, and returns writes at accept by default."
+description: >-
+  The MCP plugin launches a trusted install instead of `npx`, adds opt-in Streamable HTTP, and
+  returns writes at accept by default.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

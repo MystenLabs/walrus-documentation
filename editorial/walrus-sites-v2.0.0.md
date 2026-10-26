@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.0.0"
-description: "The `site-builder` CLI now stores all site data in Quilts, which reduces publishing cost and time, and requires Walrus CLI v1.35.0 or later."
+description: >-
+  The `site-builder` CLI now stores all site data in Quilts, which reduces publishing cost and time,
+  and requires Walrus CLI v1.35.0 or later.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.9.2"
-description: "Walrus Sites 2.9.2 fixes portal SuiNS resolution so that lookups for names that do not exist no longer count as failures."
+description: >-
+  Walrus Sites 2.9.2 fixes portal SuiNS resolution so that lookups for names that do not exist no
+  longer count as failures.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v1.3.1"
-description: "Adds a `DeployQuilts` command to site-builder behind the `quilts-experimental` feature flag and fixes several Quilts-related bugs."
+description: >-
+  Adds a `DeployQuilts` command to site-builder behind the `quilts-experimental` feature flag and
+  fixes several Quilts-related bugs.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

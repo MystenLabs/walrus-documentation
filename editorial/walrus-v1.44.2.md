@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.44.2"
-description: "Walrus 1.44.2 fixes an issue on Mainnet that caused storage nodes to crash because of outdated epoch state."
+description: >-
+  Walrus 1.44.2 fixes an issue on Mainnet that caused storage nodes to crash because of outdated
+  epoch state.
 keywords: ["walrus", "release notes", "changelog", "mainnet"]
 ---
 

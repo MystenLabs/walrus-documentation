@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.54.0"
-description: "Requests for expired or nonexistent quilts now fail fast with a not-found error instead of timing out against storage nodes."
+description: >-
+  Requests for expired or nonexistent quilts now fail fast with a not-found error instead of timing
+  out against storage nodes.
 keywords: ["walrus", "release notes", "changelog", "mainnet"]
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory OpenClaw v0.0.6"
-description: "Fixes `openclaw plugins install`, adds relayer timeouts through `requestTimeoutMs`, and stops ordinary statements being flagged as prompt injection."
+description: >-
+  Fixes `openclaw plugins install`, adds relayer timeouts through `requestTimeoutMs`, and stops
+  ordinary statements being flagged as prompt injection.
 keywords: ["memwal-openclaw", "release notes", "changelog"]
 ---
 

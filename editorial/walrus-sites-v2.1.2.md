@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.1.2"
-description: "Walrus Sites 2.1.2 fixes the site-builder so you can destroy sites that contain more than 1000 resources."
+description: >-
+  Walrus Sites 2.1.2 fixes the site-builder so you can destroy sites that contain more than 1000
+  resources.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

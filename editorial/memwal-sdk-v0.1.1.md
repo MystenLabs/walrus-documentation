@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.1"
-description: "Walrus Memory SDK 0.1.1 adds `flush()` for pending `withMemWal` auto-saves and a `truncated` field on restore results."
+description: >-
+  Walrus Memory SDK 0.1.1 adds `flush()` for pending `withMemWal` auto-saves and a `truncated` field
+  on restore results.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

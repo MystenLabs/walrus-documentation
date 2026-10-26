@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v1.2.1"
-description: "Walrus Sites 1.2.1 fixes site-builder transaction construction, dry runs for quilt publishing, and argument passing in portal logging."
+description: >-
+  Walrus Sites 1.2.1 fixes site-builder transaction construction, dry runs for quilt publishing, and
+  argument passing in portal logging.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

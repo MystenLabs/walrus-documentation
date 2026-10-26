@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.3.0"
-description: "Walrus Sites 2.3.0 refines `deploy --dry-run` output with Sui gas estimates and fixes site updates when a site has expired blobs."
+description: >-
+  Walrus Sites 2.3.0 refines `deploy --dry-run` output with Sui gas estimates and fixes site updates
+  when a site has expired blobs.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

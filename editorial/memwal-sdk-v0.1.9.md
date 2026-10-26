@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.9"
-description: "Restores the default Sui client, adds automatic bulk idempotency keys, and tightens input validation and remember-job waits in the MemWal SDK."
+description: >-
+  Restores the default Sui client, adds automatic bulk idempotency keys, and tightens input
+  validation and remember-job waits in the MemWal SDK.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

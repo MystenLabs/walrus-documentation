@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.3"
-description: "Adds client-side token estimation and recall token budgets, and changes the default relayer URL to `https://relayer.memory.walrus.xyz`."
+description: >-
+  Adds client-side token estimation and recall token budgets, and changes the default relayer URL to
+  `https://relayer.memory.walrus.xyz`.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

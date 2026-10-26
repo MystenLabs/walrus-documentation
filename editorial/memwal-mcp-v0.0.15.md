@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.15"
-description: "A project-local `.memwal/credentials.json` now takes effect only after you approve it with `memwal-mcp approve-project`."
+description: >-
+  A project-local `.memwal/credentials.json` now takes effect only after you approve it with
+  `memwal-mcp approve-project`.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

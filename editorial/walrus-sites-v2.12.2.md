@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.12.2"
-description: "Portal Docker images move to the `oven/bun:1.4.3` (Debian 13) base image, so you can build the server-portal image again."
+description: >-
+  Portal Docker images move to the `oven/bun:1.4.3` (Debian 13) base image, so you can build the
+  server-portal image again.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

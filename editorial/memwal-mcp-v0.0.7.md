@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.7"
-description: "Walrus Memory MCP 0.0.7 reloads credentials after browser login without a client restart and tightens handshake and restore handling."
+description: >-
+  Walrus Memory MCP 0.0.7 reloads credentials after browser login without a client restart and
+  tightens handshake and restore handling.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

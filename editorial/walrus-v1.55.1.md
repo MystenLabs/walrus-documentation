@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.55.1"
-description: "Storage nodes expose a new `node_recovery_baseline_invalidations_total` metric that tracks invalidations of the node-recovery baseline."
+description: >-
+  Storage nodes expose a new `node_recovery_baseline_invalidations_total` metric that tracks
+  invalidations of the node-recovery baseline.
 keywords: ["walrus", "release notes", "changelog", "testnet"]
 ---
 

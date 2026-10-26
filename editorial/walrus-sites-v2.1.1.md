@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.1.1"
-description: "Walrus Sites 2.1.1 fixes the server portal so that only 5xx responses from an aggregator count as aggregator failures."
+description: >-
+  Walrus Sites 2.1.1 fixes the server portal so that only 5xx responses from an aggregator count as
+  aggregator failures.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

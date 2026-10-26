@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.4"
-description: "Empty-body 401 errors now tell first-time MCP callers to run `memwal_login` instead of showing `<no message>`."
+description: >-
+  Empty-body 401 errors now tell first-time MCP callers to run `memwal_login` instead of showing
+  `<no message>`.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

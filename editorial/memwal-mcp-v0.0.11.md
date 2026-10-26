@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.11"
-description: "Fixes SSE connection, login, and session-reporting bugs in the Walrus Memory MCP server, including a crash on Windows."
+description: >-
+  Fixes SSE connection, login, and session-reporting bugs in the Walrus Memory MCP server, including
+  a crash on Windows.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

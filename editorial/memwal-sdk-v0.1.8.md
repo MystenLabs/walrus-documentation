@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.8"
-description: "Every relayer request now has a deadline, configurable with `requestTimeoutMs`, and generated idempotency keys derive from content."
+description: >-
+  Every relayer request now has a deadline, configurable with `requestTimeoutMs`, and generated
+  idempotency keys derive from content.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

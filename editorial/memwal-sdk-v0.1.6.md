@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.6"
-description: "`recall()` results now include `created_at`, and `RecallOptions` adds `sort` and `scoringWeights` for ordering memories by recency or relevance."
+description: >-
+  `recall()` results now include `created_at`, and `RecallOptions` adds `sort` and `scoringWeights`
+  for ordering memories by recency or relevance.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

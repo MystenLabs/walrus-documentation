@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.1.0"
-description: "The site-builder supports files larger than `--max-quilt-size`, and the portal returns 503 and 500 responses for service and unhandled errors."
+description: >-
+  The site-builder supports files larger than `--max-quilt-size`, and the portal returns 503 and 500
+  responses for service and unhandled errors.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

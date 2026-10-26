@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.9.0"
-description: "The site builder fetches resource dynamic fields in one batched `multi_get` call, and `sitemap` now uses the active wallet environment."
+description: >-
+  The site builder fetches resource dynamic fields in one batched `multi_get` call, and `sitemap`
+  now uses the active wallet environment.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

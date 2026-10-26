@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory MCP v0.0.12"
-description: "Adds a `maxDistance` cutoff to `memwal_recall`, forwards MCP client identity to the relayer, and adds a `MEMWAL_CREDS_DIR` override."
+description: >-
+  Adds a `maxDistance` cutoff to `memwal_recall`, forwards MCP client identity to the relayer, and
+  adds a `MEMWAL_CREDS_DIR` override.
 keywords: ["memwal-mcp", "release notes", "changelog"]
 ---
 

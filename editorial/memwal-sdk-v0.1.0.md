@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.0"
-description: "Treats recalled AI memory as untrusted, nonce-delimited data and adds sponsor authorization helpers and migration-aware configuration."
+description: >-
+  Treats recalled AI memory as untrusted, nonce-delimited data and adds sponsor authorization
+  helpers and migration-aware configuration.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 

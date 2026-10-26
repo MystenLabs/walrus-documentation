@@ -1,6 +1,8 @@
 ---
 title: "Walrus v1.51.1"
-description: "`walrus info committee` adds a `--commission-receivers` flag that prints the commission receiver of each committee node as CSV."
+description: >-
+  `walrus info committee` adds a `--commission-receivers` flag that prints the commission receiver
+  of each committee node as CSV.
 keywords: ["walrus", "release notes", "changelog", "mainnet"]
 ---
 

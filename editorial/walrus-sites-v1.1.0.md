@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v1.1.0"
-description: "Walrus Sites adds experimental quilt-based publishing through `site-builder publish-quilts`, which reduces site publishing costs."
+description: >-
+  Walrus Sites adds experimental quilt-based publishing through `site-builder publish-quilts`, which
+  reduces site publishing costs.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

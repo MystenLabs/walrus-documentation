@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v1.3.0"
-description: "Walrus Sites 1.3.0 adds directory listing support to the site-builder when you deploy with quilts, and fixes two quilt and blob handling bugs."
+description: >-
+  Walrus Sites 1.3.0 adds directory listing support to the site-builder when you deploy with quilts,
+  and fixes two quilt and blob handling bugs.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

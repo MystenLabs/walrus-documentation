@@ -1,6 +1,8 @@
 ---
 title: "Walrus Sites v2.9.1"
-description: "Walrus Sites 2.9.1 fixes the portal request counter and lets the site-builder auto-resolve the Walrus package ID from the staking object."
+description: >-
+  Walrus Sites 2.9.1 fixes the portal request counter and lets the site-builder auto-resolve the
+  Walrus package ID from the staking object.
 keywords: ["walrus-sites", "release notes", "changelog"]
 ---
 

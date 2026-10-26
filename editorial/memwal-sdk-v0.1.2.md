@@ -1,6 +1,8 @@
 ---
 title: "Walrus Memory TypeScript SDK v0.1.2"
-description: "Walrus Memory SDK 0.1.2 adds offline mock clients for credential-free tests and idempotency keys that collapse retries onto one paid remember job."
+description: >-
+  Walrus Memory SDK 0.1.2 adds offline mock clients for credential-free tests and idempotency keys
+  that collapse retries onto one paid remember job.
 keywords: ["memwal-sdk", "release notes", "changelog"]
 ---
 
