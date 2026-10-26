@@ -30,13 +30,13 @@ questions:
 answer: >-
   Connect your wallet to the Walrus Memory dashboard, navigate to the Delete memories panel,
   preview individual memories, select them using checkboxes, and delete them. Deletion is
-  permanent and cannot be undone. Verify by checking the Deleted count and state in the panel.
+  permanent and you cannot undo it. Verify by checking the Deleted count and state in the panel.
 ---
 
 ## Overview
 
-As part of ongoing security improvements, we're giving you the option to review and remove
-memories you no longer want stored on Walrus Memory. This guide shows you how to preview
+As part of ongoing security improvements, you can review and remove
+memories you no longer want stored on Walrus Memory. You can preview
 your memories and delete any you'd like to clear.
 
 :::warning

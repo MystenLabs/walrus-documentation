@@ -42,7 +42,7 @@ answer: >-
   through the plugin.
 ---
 
-You already have memory on this machine: facts an agent saved locally, standing instructions it reads every session, and the transcript of the session you are in. Walrus Memory starts empty until you write those facts through it. The steps below copy the durable ones across, in batches, so the next session recalls what you already had.
+You already have memory on this machine: facts an agent saved locally, standing instructions it reads every session, and the transcript of the session you are in. Walrus Memory starts empty until you write those facts through it. The following steps copy the durable ones across, in batches, so the next session recalls what you already had.
 
 Connect Walrus Memory in the client first, and sign in, so the upload and the later recall use the same account. See [MCP](/walrus-memory/mcp/overview) for Claude Code, Codex, Cursor, and Antigravity.
 
@@ -66,9 +66,9 @@ The MCP tools strip obvious credentials before a write. Treat that as a last che
 
 ## Where the files are
 
-Paths below are the ones these clients write on a developer machine. The project directory is encoded by turning `/` into `-`. Claude Code turns the leading `/` into a leading `-`, so `/Users/me/app` becomes `-Users-me-app`. Cursor drops the leading slash, so the same path becomes `Users-me-app`. A folder named `empty-window` is a Cursor window with no project open. Transcripts for a project stay under its encoded path.
+The following paths are the ones these clients write on a developer machine. Each client encodes the project directory by turning `/` into `-`. Claude Code turns the leading `/` into a leading `-`, so `/Users/me/app` becomes `-Users-me-app`. Cursor drops the leading slash, so the same path becomes `Users-me-app`. A folder named `empty-window` is a Cursor window with no project open. Transcripts for a project stay under its encoded path.
 
-### Claude code
+### Claude Code
 
 Local memory for one project lives in `~/.claude/projects/<encoded-cwd>/memory/`.
 
@@ -105,7 +105,7 @@ See [Antigravity](/walrus-memory/mcp/antigravity).
 
 ## Ask the agent to upload
 
-Once `memwal_remember_bulk` and `memwal_analyze` are available, paste this into the client that already holds the session. The agent can see the current conversation, and it can read the files above.
+Once `memwal_remember_bulk` and `memwal_analyze` are available, paste this into the client that already holds the session. The agent can see the current conversation, and it can read the files listed in the Where the files are section.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/import-existing-memory.md" target="_blank" className="code-source-link">Source: guides/import-existing-memory.md</a>
 
@@ -134,11 +134,11 @@ On hosted Mainnet, requests per minute, requests per hour, and delegate-key requ
 | `analyze` | 5, plus 1 per extracted fact |
 | Status poll | 1 |
 
-Send one chunk, wait until it settles, then send the next. On HTTP 429, wait for the `Retry-After` header before retrying the call that was refused. The hourly refusal asks for 300 seconds. The hourly account cap is what stops a long import.
+Send one chunk, wait until it settles, then send the next. On HTTP 429, wait for the `Retry-After` header before retrying the call the relayer refused. The hourly refusal asks for 300 seconds. The hourly account cap is what stops a long import.
 
-`rememberBulk` and `memwal_remember_bulk` send no idempotency key. Running the script a second time stores each bulk fact again. `analyze` collapses onto the copy already stored only when the extracted fact text is the same for that owner and namespace. A reworded sentence is stored again.
+`rememberBulk` and `memwal_remember_bulk` send no idempotency key. Running the script a second time stores each bulk fact again. `analyze` collapses onto the copy already stored only when the extracted fact text is the same for that owner and namespace. `analyze` stores a reworded sentence again.
 
-Pass `occurredAt` as the session time for a transcript. Leave it unset for a memory file. The extractor writes that date into the fact text, which is how a relative date such as `yesterday` in an old transcript stays attached to the day it was said. Walrus Memory does not keep a separate event-time field you can filter on.
+Pass `occurredAt` as the session time for a transcript. Leave it unset for a memory file. The extractor writes that date into the fact text, which is how a relative date such as `yesterday` in an old transcript stays attached to the day someone said it. Walrus Memory does not keep a separate event-time field you can filter on.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/import-existing-memory.md" target="_blank" className="code-source-link">Source: guides/import-existing-memory.md</a>
 
@@ -340,7 +340,7 @@ if (!dialogue) {
 }
 ```
 
-The sample splits the accept from the wait. `rememberBulk` and `analyze` throw on HTTP 429, and that call was not stored, so the sample sleeps for `Retry-After` and retries the same call. A 429 after job ids have come back, or a `timeout` while a congested upload is still running (about 25 minutes), polls those ids again. Sending them again pays for a second blob. `waitForRememberJobs` itself stops after 120 seconds, which is shorter than the hourly `Retry-After` of 300 seconds, so the sample sleeps that long on its own.
+The sample splits the accept from the wait. `rememberBulk` and `analyze` throw on HTTP 429, and the relayer did not store that call, so the sample sleeps for `Retry-After` and retries the same call. A 429 after job ids have come back, or a `timeout` while a congested upload is still running (about 25 minutes), polls those ids again. Sending them again pays for a second blob. `waitForRememberJobs` itself stops after 120 seconds, which is shorter than the hourly `Retry-After` of 300 seconds, so the sample sleeps that long on its own.
 
 The Python SDK has the same split: `remember_bulk` or `analyze`, then `wait_for_remember_jobs`. Wrapping `remember_bulk_and_wait` or `analyze_and_wait` in a retry resubmits the batch when the 429 came after the relayer had already accepted it. `occurred_at` is the session time. See the [Python API reference](/walrus-memory/python-sdk/api-reference).
 
