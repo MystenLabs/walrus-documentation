@@ -1,15 +1,23 @@
 ---
 title: Data Security
 description: >-
-  Security guarantees and best practices for Walrus including data availability
-  and integrity.
+  Security guarantees and best practices for Walrus, covering data availability,
+  integrity, confidentiality, sovereignty and residency limitations, and the
+  Nautilus trusted execution environment framework.
 keywords:
   - walrus
   - data security
   - availability
   - integrity
+  - confidentiality
+  - encryption
+  - data sovereignty
+  - data residency
+  - erasure coding
+  - Nautilus
+  - trusted execution environment
 goal:
-  description: Reader can explain how Walrus protects data availability and integrity, and apply the recommended practices for confidentiality
+  description: Reader can explain how Walrus protects data availability and integrity, apply the recommended practices for confidentiality, understand the data sovereignty and residency limitations, and identify when to use Nautilus for secure offchain computation.
   requires:
     - has_frontmatter:
         - title
@@ -45,7 +53,7 @@ Walrus that you are not willing to make public.
 
 :::
 
-## Data availability
+## How does Walrus guarantee data availability?
 
 The encoding mechanisms applied by Walrus guarantee that blobs can be written and remain
 available as long as 2/3 of the shards are operated by storage nodes that act honestly.
@@ -62,14 +70,14 @@ inconsistency proofs generated for them.
 You can learn more in the [whitepaper](/walrus.pdf) and in the [Walrus fundamentals
 documentation](/docs/system-overview/core-concepts).
 
-## Data integrity
+## How does Walrus protect data integrity?
 
 Walrus guarantees that any data read corresponds to what the user who uploaded the data
 intended. Because the encoding is done by the client, it is possible that this encoding is
 incorrect, either by mistake or on purpose. Walrus handles this through consistency checks
 and inconsistency proofs.
 
-## Data confidentiality
+## How do you keep data confidential?
 
 Walrus does not provide native encryption for data. By default, all blobs stored in Walrus
 are public and discoverable by everyone. To keep data confidential, encrypt it on the
@@ -77,7 +85,7 @@ client before you store it, for example with [Seal](https://github.com/MystenLab
 treat the blob ID as public. Encryption is your responsibility. Walrus stores and serves
 whatever bytes you upload.
 
-## Data sovereignty and residency
+## Can you choose where Walrus stores data?
 
 Walrus does not let you choose which storage nodes or geographic regions hold your data.
 When you store a blob, Walrus erasure-codes it into slivers and distributes them across all
@@ -90,9 +98,10 @@ storing it, keep the plaintext and any keys off Walrus, and store only what you 
 to make permanently public. For the distribution and encoding details, see
 [Core Concepts](/docs/system-overview/core-concepts) and [Red Stuff](/docs/system-overview/red-stuff).
 
-## Nautilus: Secure and verifiable offchain computation on Sui
+## What is Nautilus?
 
-Nautilus is a framework for secure and verifiable offchain computation on Sui. It enables
+Nautilus is a Sui framework for secure and verifiable offchain computation. It is not a
+Walrus component. It enables
 you to delegate sensitive or resource-intensive tasks to a self-managed trusted execution
 environment (TEE) while using smart contract verification to preserve trust onchain.
 
@@ -100,7 +109,7 @@ Use Nautilus for hybrid apps that require private data handling, complex computa
 integration with external Web2 systems. The framework makes computations
 tamper-resistant, isolated, and cryptographically verifiable.
 
-Nautilus is a Sui framework rather than a Walrus component, and it currently supports self-managed AWS Nitro Enclave TEEs. You can verify AWS-signed
+Nautilus currently supports self-managed AWS Nitro Enclave TEEs. You can verify AWS-signed
 enclave attestations onchain using Move smart contracts. See the [GitHub
 repository](https://github.com/MystenLabs/nautilus) for the reproducible build template.
 
