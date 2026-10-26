@@ -40,9 +40,9 @@ answer: >-
   Site.
 ---
 
-This reference page provides details on `site-builder` configuration and CLI commands.
+The `site-builder` CLI publishes and updates Walrus Sites. Use `site-builder deploy` to publish a new site or update an existing one, and configure the tool with a `sites-config.yaml` file.
 
-## Configuration file
+## How to configure `site-builder`
 
 The `site-builder` tool requires a configuration file `sites-config.yaml` in one of the following default locations:
 
@@ -117,7 +117,7 @@ If no ID is found, `deploy` publishes a new site. The new site's `object_id` is 
 | `--object-id <OBJECT_ID>` | The object ID of an existing site to update. |
 | `--list-directory` | Generates an index page for browsing uploaded files. Useful when deploying raw files without an `index.html`. |
 
-#### Migrating from `publish` and `update`
+#### How to migrate from `publish` and `update`
 
 <div className="outlined-tabs">
 
@@ -193,7 +193,7 @@ site-builder update-resource --id <OBJECT_ID> <RESOURCE_PATH>
 
 ### `destroy`
 
-Permanently destroys the a site's object. 
+Permanently destroys a site's object.
 
 :::warning
 This action is irreversible. Ensure you no longer need the site before running this command.
