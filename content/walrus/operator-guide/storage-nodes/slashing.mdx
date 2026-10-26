@@ -38,9 +38,9 @@ answer: >-
   burns the offender's accumulated commission.
 ---
 
-Walrus protects the network from misbehaving storage nodes through an onchain slashing mechanism. Committee members vote against a candidate node, and when a quorum of voting weight is reached, anyone can finalize the slashing to burn the candidate's accumulated commission. The penalty is paid by the operator and never by the delegators staking with that pool.
+Walrus protects the network from misbehaving storage nodes through an onchain slashing mechanism. Committee members vote against a candidate node, and when their votes reach a quorum of voting weight, anyone can finalize the slashing to burn the candidate's accumulated commission. The operator pays the penalty, never the delegators staking with that pool.
 
-The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#manage-contract-upgrades). Both actions are gated by the same `governance_authorized` entity on the node's staking pool, both use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
+The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#manage-contract-upgrades). The same `governance_authorized` entity on the node's staking pool gates both actions, both use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
 
 :::warning
 
@@ -50,9 +50,9 @@ Slashing is a serious action that permanently destroys WAL by burning the commis
 
 ## How slashing works
 
-The `walrus::slashing` module on Sui owns a shared `SlashingManager` object that holds an onchain table of open proposals. Each proposal is keyed by the candidate's node ID, which is the object ID of the candidate's `StakingPool`. A proposal tracks three pieces of state:
+The `walrus::slashing` module on Sui owns a shared `SlashingManager` object that holds an onchain table of open proposals. The `SlashingManager` keys each proposal by the candidate's node ID, which is the object ID of the candidate's `StakingPool`. A proposal tracks three pieces of state:
 
-1. The epoch in which the proposal was created or last refreshed. The proposal is only valid for execution in this epoch.
+1. The epoch in which a vote created or last refreshed the proposal. The proposal is only valid for execution in this epoch.
 2. The accumulated voting weight, expressed in shards. The current Walrus deployment has 1000 shards, so the quorum threshold is 667.
 3. The set of voter node IDs that have already cast a vote. The same node cannot vote twice for the same proposal.
 
@@ -62,28 +62,28 @@ The workflow has three stages:
 
 2. **Execute.** Once the accumulated voting weight meets the quorum threshold, anyone (not only voters) can call `slashing::execute_slashing` to burn the candidate's commission balance. The transaction removes the proposal from the table and atomically extracts and burns the WAL.
 
-3. **Cleanup (optional).** Stale proposals from past epochs remain in the `SlashingManager` table until they are explicitly removed. Anyone can call `slashing::cleanup_slashing_proposals` to clear them, which slightly reduces onchain state.
+3. **Cleanup (optional).** Stale proposals from past epochs remain in the `SlashingManager` table until someone explicitly removes them. Anyone can call `slashing::cleanup_slashing_proposals` to clear them, which slightly reduces onchain state.
 
 ### Quorum and voting weights
 
-A node's voting weight is its current shard count, which is stored on the staking pool and refreshed each epoch through committee selection. Both Mainnet and Testnet use 1000 shards, so a slashing proposal reaches quorum when at least 667 shards' worth of votes have been recorded against it. The Move source computes this through the formula `3 * weight >= 2 * n_shards + 1`, which is the same threshold the rest of the Walrus protocol uses for finality.
+A node's voting weight is its current shard count, which the staking pool stores and committee selection refreshes each epoch. Both Mainnet and Testnet use 1000 shards, so a slashing proposal reaches quorum when the votes recorded against it total at least 667 shards. The Move source computes this through the formula `3 * weight >= 2 * n_shards + 1`, which is the same threshold the rest of the Walrus protocol uses for finality.
 
 There is no separate supermajority-of-stake requirement beyond the shard quorum. Because Walrus assigns shards to nodes in proportion to their stake (subject to the active-set caps), a quorum of shards is a faithful proxy for a quorum of honest operators.
 
 ### Epoch-bound proposals
 
-A proposal must collect a quorum and be executed within a single epoch. When the epoch advances, the next vote on an existing proposal replaces it with a fresh one for the new epoch: the voting weight resets to zero and the prior voters are cleared. The execute path checks the proposal's stored epoch against the staking object's current epoch and aborts if they differ.
+You must collect a quorum for a proposal and execute it within a single epoch. When the epoch advances, the next vote on an existing proposal replaces it with a fresh one for the new epoch: the voting weight resets to zero and the set of prior voters becomes empty. The execute path checks the proposal's stored epoch against the staking object's current epoch and aborts if they differ.
 
 This design has two important consequences:
 
-1. Votes you collect near the end of an epoch are wasted if the epoch boundary passes before quorum is reached. On Mainnet, epochs are two weeks long, so there is generous time. On Testnet, epochs are one day, so coordinate quickly.
-2. The same proposal can be re-opened in the next epoch, but the voting starts from scratch. Operators who voted in the previous epoch must vote again.
+1. Votes you collect near the end of an epoch go to waste if the epoch boundary passes before the proposal reaches quorum. On Mainnet, epochs are two weeks long, so there is generous time. On Testnet, epochs are one day, so coordinate quickly.
+2. You can re-open the same proposal in the next epoch, but the voting starts from scratch. Operators who voted in the previous epoch must vote again.
 
 If you are coordinating a vote, plan to gather a quorum well before the end of the epoch and announce a target execute time so a single party submits the finalization transaction.
 
 ### What gets burned
 
-`execute_slashing` calls into the slashed node's staking pool, extracts the full accumulated commission balance, and burns it through `wal::ProtectedTreasury`. The total WAL supply visible on the `ProtectedTreasury` object decreases by exactly that amount. The slashing affects only the operator's commission. Staked WAL belonging to delegators is not touched, withdrawals continue to be honored, and the node remains a member of the committee until it is deactivated through the normal lifecycle.
+`execute_slashing` calls into the slashed node's staking pool, extracts the full accumulated commission balance, and burns it through `wal::ProtectedTreasury`. The total WAL supply visible on the `ProtectedTreasury` object decreases by exactly that amount. The slashing affects only the operator's commission. Slashing does not touch staked WAL belonging to delegators, the protocol continues to honor withdrawals, and the node remains a member of the committee until the normal lifecycle deactivates it.
 
 Because the penalty is bounded by the accumulated commission, the deterrent grows with how long an operator has gone without collecting commission. Operators who collect frequently have less at risk, but the slashing event is still public and signals operator quality to delegators.
 
@@ -95,7 +95,7 @@ Before you submit a vote, confirm three things:
 
 2. The wallet holds enough SUI for gas. The vote and execute transactions are small, so a few SUI is more than enough.
 
-3. The Sui CLI is configured for the correct network. Run `sui client switch --env mainnet` or `sui client switch --env testnet` and verify with `sui client active-env`.
+3. The Sui CLI uses the correct network. Run `sui client switch --env mainnet` or `sui client switch --env testnet` and verify with `sui client active-env`.
 
 ### Look up the candidate node ID
 
@@ -107,7 +107,7 @@ The candidate node ID is the object ID of the candidate's `StakingPool`. You can
 
 ## Walrus onchain object IDs
 
-The IDs in the table below are the live shared objects on each network. You can substitute them into the commands later on this page directly. The values are stable across contract upgrades because the `SlashingManager`, `Staking`, and `ProtectedTreasury` are shared objects rather than packages. The system object, staking object, and original Walrus package IDs also appear in the [Network Reference](/docs/network-reference#system-and-staking-object-ids).
+The following table lists the live shared objects on each network. You can substitute these IDs directly into the commands in [Vote on a slashing proposal](#vote-on-a-slashing-proposal), [Execute the slashing](#execute-the-slashing), and [Clean up stale proposals](#clean-up-stale-proposals). The values are stable across contract upgrades because the `SlashingManager`, `Staking`, and `ProtectedTreasury` are shared objects rather than packages. The system object, staking object, and original Walrus package IDs also appear in the [Network Reference](/docs/network-reference#system-and-staking-object-ids).
 
 <div className="outlined-tabs">
 
@@ -144,14 +144,14 @@ The Walrus package ID changes after every contract upgrade. To get the latest pa
 
 ## Vote on a slashing proposal
 
-There is no dedicated `walrus node-admin` subcommand for slashing, so you submit the vote directly through the Sui CLI as a programmable transaction block (PTB). A PTB is required because `vote_for_slashing` takes an `Authenticated` argument that must be constructed onchain in the same transaction. You cannot pass an `Authenticated` value from the command line.
+There is no dedicated `walrus node-admin` subcommand for slashing, so you submit the vote directly through the Sui CLI as a programmable transaction block (PTB). You need a PTB because `vote_for_slashing` takes an `Authenticated` argument that the same transaction must construct onchain. You cannot pass an `Authenticated` value from the command line.
 
 The PTB has two move calls:
 
 1. `walrus::auth::authenticate_sender` constructs an `Authenticated` value tied to the transaction sender.
 2. `walrus::slashing::vote_for_slashing` consumes that value, checks it against your pool's `governance_authorized`, and records the vote.
 
-If your governance authorization is delegated to an object rather than an address, replace the first call with `walrus::auth::authenticate_with_object` and pass the controlling object as its argument.
+If you delegated your governance authorization to an object rather than an address, replace the first call with `walrus::auth::authenticate_with_object` and pass the controlling object as its argument.
 
 Before you run the commands, set `NODE_ID` to the `StakingPool` object ID of the node you operate and `CANDIDATE_NODE_ID` to the `StakingPool` object ID of the candidate. You can get both IDs from the sources in [Look up the candidate node ID](#look-up-the-candidate-node-id), such as the `walrus info all` command.
 
@@ -196,11 +196,11 @@ $ sui client ptb \
 
 </div>
 
-If the transaction succeeds, your vote has been recorded. The Sui CLI prints the transaction digest, which you should share with other operators so they can confirm the vote landed.
+If the transaction succeeds, the contract has recorded your vote. The Sui CLI prints the transaction digest, which you should share with other operators so they can confirm the vote landed.
 
 ### Voting through an authorizing object
 
-If your `governance_authorized` is set to an object (for example, a multisig admin cap held in a secure wallet), replace the first move call. The example below assumes a generic object of type `T` that you own; substitute the concrete type tag for your authorizing object.
+If you set your `governance_authorized` to an object (for example, a multisig admin cap held in a secure wallet), replace the first move call. The following example assumes a generic object of type `T` that you own; substitute the concrete type tag for your authorizing object.
 
 ```sh
 $ AUTH_OBJECT=        # The object ID that authorizes governance for your pool.
@@ -222,13 +222,13 @@ The vote transaction aborts cleanly when something is wrong with the request. Th
 |------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | 0    | `ENotAuthorized`  | The sender (or authorizing object) does not match the `governance_authorized` set on your pool. Check the pool on Suiscan.           |
 | 1    | `EDuplicateVote`  | Your node already voted on the current proposal. If you intended to revoke and re-cast, wait for the next epoch to refresh.          |
-| 2    | `ENoProposalForNode` | Only emitted by `execute_slashing` or `cleanup_slashing_proposals`. You should not see this from a vote transaction.              |
+| 2    | `ENoProposalForNode` | Only `execute_slashing` or `cleanup_slashing_proposals` emits this code. You should not see this from a vote transaction.         |
 
-Sui prints the abort code along with the module name in the failure output, so you can match the value above directly. The error names live in `walrus-sui/types/move_errors.rs`, where the constants are auto-generated from the Move source.
+Sui prints the abort code along with the module name in the failure output, so you can match the value against this table directly. The error names live in `walrus-sui/types/move_errors.rs`, which contains constants auto-generated from the Move source.
 
 ### Monitoring the proposal
 
-You can inspect the live state of the proposal at any time by reading the `SlashingManager` object. Either look it up directly on [Suiscan](https://suiscan.xyz) using the object ID from the table above, or call `sui client object` from a shell:
+You can inspect the live state of the proposal at any time by reading the `SlashingManager` object. Either look it up directly on [Suiscan](https://suiscan.xyz) using the object ID from [Walrus onchain object IDs](#walrus-onchain-object-ids), or call `sui client object` from a shell:
 
 ```sh
 $ sui client object 0xfe343f7b72f67a1eca9bfc9dff0dac0520e11dca3bda5a0ea32816af6f722109 --json
@@ -236,9 +236,9 @@ $ sui client object 0xfe343f7b72f67a1eca9bfc9dff0dac0520e11dca3bda5a0ea32816af6f
 
 The object exposes a `slashing_candidates` table. Each entry is a `SlashingProposal` with `epoch`, `node_id`, `voting_weight`, and `voters` fields. You can confirm:
 
-- Whether a proposal for the candidate exists in the current epoch.
-- How many shards have voted so far, and how far from the 667-shard quorum.
-- Which voter node IDs have already cast a vote.
+- Whether a proposal for the candidate exists in the current epoch
+- How many shards have voted so far, and how far from the 667-shard quorum
+- Which voter node IDs have already cast a vote
 
 If your wallet has already cast a vote but the proposal does not show your node ID in `voters`, the transaction might have aborted silently in your wallet UI. Re-check the digest on Suiscan to confirm.
 
@@ -295,8 +295,8 @@ $ sui client call \
 
 | Code | Name                 | Meaning                                                                                                                  |
 |------|----------------------|--------------------------------------------------------------------------------------------------------------------------|
-| 2    | `ENoProposalForNode` | No open proposal exists for the candidate. The proposal might have been executed already, or no votes have been cast.    |
-| 3    | `EWrongEpoch`        | The proposal was created in a past epoch and no fresh vote has been recorded in the current epoch. Restart the vote.     |
+| 2    | `ENoProposalForNode` | No open proposal exists for the candidate. Someone might have already executed the proposal, or no one has cast a vote.  |
+| 3    | `EWrongEpoch`        | A vote created the proposal in a past epoch, and no one has cast a fresh vote in the current epoch. Restart the vote.     |
 | 4    | `ENotEnoughVotes`    | The accumulated voting weight is below 667. Collect more votes before retrying.                                          |
 
 ### Verify the result
@@ -305,13 +305,13 @@ After the execute transaction lands, confirm three things:
 
 1. The slashed pool's `commission` balance is zero. Look up the candidate's `StakingPool` object on Suiscan and read the `commission` field, or run `sui client object <CANDIDATE_NODE_ID> --json` and grep for `commission`.
 2. The total WAL supply has decreased by the burned amount. Read the `ProtectedTreasury` object on Suiscan, or call the read-only `wal::wal::total_supply` function.
-3. The proposal has been removed from the `SlashingManager` table. The candidate's entry should no longer appear in `slashing_candidates`.
+3. The `SlashingManager` table no longer contains the proposal. The candidate's entry should no longer appear in `slashing_candidates`.
 
 Sui also emits standard transaction effects for the execute call, so an offchain indexer that monitors the `SlashingManager` object's transaction history can correlate the digest with the slashing event. There is no dedicated event type for slashing in the current contract.
 
 ## Clean up stale proposals
 
-Proposals from previous epochs remain in the `SlashingManager` table until they are explicitly removed. Cleanup is permissionless: any wallet can call `cleanup_slashing_proposals` with a batch of candidate node IDs. The function removes only proposals whose stored epoch is strictly less than the current epoch. Active proposals in the current epoch are left untouched. Calling cleanup on a node ID that has no entry is a no-op.
+Proposals from previous epochs remain in the `SlashingManager` table until someone explicitly removes them. Cleanup is permissionless: any wallet can call `cleanup_slashing_proposals` with a batch of candidate node IDs. The function removes only proposals whose stored epoch is strictly less than the current epoch. The function leaves active proposals in the current epoch untouched. Calling cleanup on a node ID that has no entry is a no-op.
 
 Batching reduces gas. You can include any number of candidate IDs in the same call, subject to Sui's per-transaction gas budget.
 
@@ -360,12 +360,12 @@ For a worked walkthrough that ties the vote, execute, and cleanup commands into 
 
 Treat slashing as a coordination problem with onchain enforcement. The contract enforces quorum and authorization, but the social process around it is what keeps the network healthy. The following practices help keep that process predictable:
 
-- **Use a dedicated governance wallet.** The hot wallet on your storage node machine should not be authorized for governance. If you have not yet set this up, the [commission and governance page](/docs/operator-guide/storage-nodes/commission-governance) walks through it. The same authorization is used for contract upgrade votes and slashing votes.
+- **Use a dedicated governance wallet.** Do not authorize the hot wallet on your storage node machine for governance. If you have not yet set this up, the [commission and governance page](/docs/operator-guide/storage-nodes/commission-governance) walks through it. Contract upgrade votes and slashing votes use the same authorization.
 - **Coordinate in advance.** Reach out to other operators in the Walrus operator channels before voting. A slashing event is high-impact and operators expect to discuss evidence before voting.
 - **Give the candidate a chance to respond.** Many apparent misbehavior signals (a node returning stale data, missing shards, refusing reads) have benign explanations like a crashloop or a misconfigured upgrade. A quick message often resolves the issue.
 - **Aim for a single execute.** Once you and your peers agree quorum is reached, choose one operator to submit the execute transaction so the others do not waste gas on aborted races.
 - **Plan around the epoch boundary.** On Mainnet, epochs are two weeks long, so timing is rarely tight. On Testnet, epochs are one day, so a slashing vote must move quickly or restart at the boundary.
-- **Document the rationale.** Slashing is public and permanent. A short post-mortem describing what was observed, what was tried, and what was decided helps the community understand the event and build trust in the process.
+- **Document the rationale.** Slashing is public and permanent. A short post-mortem describing what you observed, what you tried, and what you decided helps the community understand the event and build trust in the process.
 
 ## Frequently asked questions
 
@@ -373,11 +373,11 @@ The following answers cover the questions operators ask most often when preparin
 
 ### Can a node revoke its own vote?
 
-No. Once a vote is cast, it remains until the epoch advances and the proposal is refreshed (or replaced by a new one). If you cast a vote in error, your only recovery is to wait for the next epoch.
+No. Once you cast a vote, it remains until the epoch advances and a new vote refreshes the proposal (or replaces it with a new one). If you cast a vote in error, your only recovery is to wait for the next epoch.
 
 #### What happens if the candidate's commission balance is empty?
 
-`execute_slashing` still succeeds. It extracts whatever balance is currently in the commission pool, including zero, and burns it. The proposal is removed from the table. In this case the onchain WAL supply does not decrease, but the slashing event has still been recorded by the transaction effect, and the social signal stands.
+`execute_slashing` still succeeds. It extracts whatever balance is currently in the commission pool, including zero, and burns it. The function removes the proposal from the table. In this case the onchain WAL supply does not decrease, but the transaction effect still records the slashing event, and the social signal stands.
 
 #### Does slashing affect the candidate's stake or delegators?
 
@@ -393,11 +393,11 @@ The current contract does not emit a dedicated event for slashing. The transacti
 
 #### What stops malicious operators from spamming slashing votes?
 
-Votes are gated by `governance_authorized`, which means a vote can only come from an existing committee member's governance wallet. A malicious minority can create proposals, but they cannot reach quorum without honest operators joining. Stale proposals occupy a small amount of onchain storage and can be cleaned up permissionlessly.
+The `governance_authorized` check gates votes, which means a vote can only come from an existing committee member's governance wallet. A malicious minority can create proposals, but they cannot reach quorum without honest operators joining. Stale proposals occupy a small amount of onchain storage, and anyone can clean them up permissionlessly.
 
 #### Can I see slashing activity in the staking app?
 
-Not at the time of writing. A staking app surface for slashing is planned once the mechanism is exercised more broadly. For now, use Suiscan and the `sui client object` command to inspect the `SlashingManager` directly.
+Not at the time of writing. Plans exist for a staking app surface for slashing once operators exercise the mechanism more broadly. For now, use Suiscan and the `sui client object` command to inspect the `SlashingManager` directly.
 
 ## Reference
 

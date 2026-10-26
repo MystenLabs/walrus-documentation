@@ -38,7 +38,7 @@ answer: >-
 
 A worked example of a slashing event on Mainnet, with the concrete vote, execute, and cleanup commands operators run end to end.
 
-This page walks through a hypothetical slashing event on Mainnet so you can see how the pieces fit together. It assumes you have already read [Slashing](/docs/operator-guide/storage-nodes/slashing) for the conceptual model and the object IDs. The commands below are the ones operators actually run, with the live Mainnet object IDs filled in.
+A hypothetical slashing event on Mainnet shows how the pieces fit together. Read [Slashing](/docs/operator-guide/storage-nodes/slashing) first for the conceptual model and the object IDs. The commands below are the ones operators actually run, using the live Mainnet object IDs.
 
 The scenario:
 
@@ -47,7 +47,7 @@ The scenario:
 - The current epoch is `N`. Mainnet epochs are two weeks long, so there is generous time to collect votes.
 - The voting operator's storage node has `StakingPool` ID `$NODE_ID` and shard count `W`.
 
-The Mainnet object IDs you'll reference throughout:
+The Mainnet object IDs you reference throughout:
 
 ```sh
 $ WALRUS_PACKAGE=0x98da433aa0139512c210597b1c5e3df6cd121d8d77f8652691bb66fadfc8aa1b
@@ -60,7 +60,7 @@ $ NODE_ID=0xYOUR_NODE_ID                  # Replace with your own StakingPool ID
 
 ## Day 1 of epoch N: how to cast the first vote
 
-The first operator to act submits the vote PTB from the wallet that is `governance_authorized` on their storage node's `StakingPool`. The PTB constructs an `Authenticated` value tied to the sender, then passes it to `vote_for_slashing`.
+The first operator to act submits the vote programmable transaction block (PTB) from the wallet that is `governance_authorized` on their storage node's `StakingPool`. The PTB constructs an `Authenticated` value tied to the sender, then passes it to `vote_for_slashing`.
 
 ```sh
 $ sui client ptb \
@@ -114,13 +114,13 @@ $ sui client object $TREASURY_OBJECT --json
 $ sui client object $SLASHING_MANAGER --json
 ```
 
-You should see the candidate's `commission` field at zero, the WAL `total_supply` reduced by the burned amount, and the candidate's entry removed from `slashing_candidates`.
+You see the candidate's `commission` field at zero, the WAL `total_supply` lower by the burned amount, and no entry for the candidate in `slashing_candidates`.
 
 ## How to clean up dangling proposals from prior epochs
 
-If the operators do not reach 667 votes by the end of epoch `N`, the next vote in epoch `N+1` resets the proposal: the first vote in `N+1` creates a fresh proposal with `voting_weight` starting from zero, and all prior voters are discarded. The vote must start over.
+If the operators do not reach 667 votes by the end of epoch `N`, the next vote in epoch `N+1` resets the proposal: the first vote in `N+1` creates a fresh proposal with `voting_weight` starting from zero, and the contract discards all prior voters. The vote must start over.
 
-If a proposal was abandoned and the operators chose not to restart it in the new epoch, the entry remains in the `SlashingManager` table until an explicit cleanup. Anyone can clear stale entries:
+If the operators abandoned a proposal and chose not to restart it in the new epoch, the entry remains in the `SlashingManager` table until an explicit cleanup. Anyone can clear stale entries:
 
 ```sh
 $ CANDIDATES='["0xCANDIDATE_NODE_ID","0xANOTHER_ID"]'
@@ -132,7 +132,7 @@ $ sui client call \
     --gas-budget 100000000
 ```
 
-The function removes only proposals whose stored epoch is strictly less than the current epoch. Active proposals are left untouched, and an entry that does not exist is silently skipped.
+The function removes only proposals whose stored epoch is strictly less than the current epoch. It leaves active proposals untouched and silently skips an entry that does not exist.
 
 ## Which functions cover the slashing lifecycle?
 

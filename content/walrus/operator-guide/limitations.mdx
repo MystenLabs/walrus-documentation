@@ -37,7 +37,7 @@ answer: >-
   Walrus aggregators and publishers.
 ---
 
-By default, [store blob](/docs/http-api/storing-blobs) requests are limited to 10 MiB. You can increase this limit through the `--max-body-size` option. [Store quilt](/docs/http-api/quilt-http-apis#storing-quilts) requests are limited to 100 MiB by default, and you can increase them using the `--max-quilt-body-size` option.
+By default, [store blob](/docs/http-api/storing-blobs) requests have a limit of 10MB. You can increase this limit through the `--max-body-size` option. [Store quilt](/docs/http-api/quilt-http-apis#storing-quilts) requests have a default limit of 100MB, and you can increase it using the `--max-quilt-body-size` option.
 
 If you host the aggregator or publisher on a third-party platform, ensure that any additional platform-imposed limits or constraints are compatible with your intended use case.
 
@@ -87,14 +87,14 @@ sudo snap install --classic certbot --channel=edge
 
 To configure the nginx cache, follow these steps:
 
-##### Step 1: Set permissions on the cache directory.
+##### Step 1: Set permissions on the cache directory
 
 ```sh
 sudo chown www-data:www-data /cache
 sudo chmod 755 /cache
 ```
 
-##### Step 2: Add a cache path directive.
+##### Step 2: Add a cache path directive
 
 Add the following to the `http` block in `/etc/nginx/nginx.conf`:
 
@@ -107,7 +107,7 @@ http {
 }
 ```
 
-##### Step 3: Create a site configuration.
+##### Step 3: Create a site configuration
 
 Create a file at `/etc/nginx/sites-available/YOUR_HOSTNAME`. The site is not active yet; you enable it with a symlink into `/etc/nginx/sites-enabled/` in Step 6:
 
@@ -143,17 +143,17 @@ server {
 }
 ```
 
-##### Step 4: Validate the configuration.
+##### Step 4: Validate the configuration
 
 Run `sudo nginx -t`.
 
-##### Step 5: Obtain a TLS certificate.
+##### Step 5: Obtain a TLS certificate
 
 ```sh
 sudo certbot --nginx -d YOUR_HOSTNAME
 ```
 
-##### Step 6: Enable the site and start nginx.
+##### Step 6: Enable the site and start nginx
 
 ```sh
 sudo ln -s /etc/nginx/sites-available/YOUR_HOSTNAME /etc/nginx/sites-enabled/
@@ -163,7 +163,7 @@ sudo systemctl restart nginx
 
 :::caution
 
-If you run the nginx reverse proxy on the **same host** as the storage node, change `standalone` to `nginx` in `/etc/letsencrypt/renewal/walrus-storage-node.conf`. This ensures certbot uses the nginx plugin for renewal instead of trying to bind to **port 80** directly. See the [Storage Node Setup TLS section](/docs/operator-guide/storage-nodes/storage-node-setup#tls-setup) to learn more about how certbot is configured for the storage node.
+If you run the nginx reverse proxy on the **same host** as the storage node, change `standalone` to `nginx` in `/etc/letsencrypt/renewal/walrus-storage-node.conf`. This ensures certbot uses the nginx plugin for renewal instead of trying to bind to **port 80** directly. See the [Storage Node Setup TLS section](/docs/operator-guide/storage-nodes/storage-node-setup#tls-setup) to learn more about how to configure certbot for the storage node.
 
 :::
 
