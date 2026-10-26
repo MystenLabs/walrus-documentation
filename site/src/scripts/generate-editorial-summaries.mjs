@@ -98,6 +98,14 @@ function yamlString(value) {
   return JSON.stringify(value);
 }
 
+// A description longer than the editorconfig line limit is emitted as a folded
+// YAML scalar (`>-`) wrapped at the house width, like the hand-written files.
+function yamlDescription(value) {
+  const line = `description: ${yamlString(value)}`;
+  if (line.length <= WRAP) return line;
+  return "description: >-\n" + wrap(value, WRAP - 2).split("\n").map((l) => "  " + l).join("\n");
+}
+
 function productKeyword(entry) {
   // Mirrors the keyword check-editorial-coverage.js puts in its drafts.
   const slug = path.basename(entry.editorialFile, ".md");
@@ -125,7 +133,7 @@ function renderFile(entry, description, summary) {
   return [
     "---",
     `title: ${yamlString(title)}`,
-    `description: ${yamlString(description)}`,
+    yamlDescription(description),
     `keywords: [${keywords.map(yamlString).join(", ")}]`,
     "---",
     "",
