@@ -46,7 +46,7 @@ When you read through a CDN-fronted aggregator immediately after certification, 
 
 :::
 
-## Reading by blob ID
+## How to read a blob by blob ID
 
 The following `curl` command reads a blob and writes it to an output file:
 
@@ -66,7 +66,7 @@ Modern browsers attempt to sniff the content type for these resources and genera
 
 :::
 
-## Reading by object ID
+## How to read a blob by object ID
 
 You can also read blobs by using the object ID of a Sui blob object or a shared blob. The following `curl` command downloads the blob corresponding to a Sui object ID:
 
@@ -76,6 +76,6 @@ $ curl "$AGGREGATOR/v1/blobs/by-object-id/<OBJECT_ID>" -o <FILE_NAME>
 
 Downloading blobs by object ID allows setting HTTP headers. The aggregator recognizes the following attribute keys and returns the values in the corresponding HTTP headers when present: `content-disposition`, `content-encoding`, `content-language`, `content-location`, `content-type`, and `link`.
 
-## Consistency checks
+## How to control consistency checks
 
 The consistency checks performed by the aggregator are the same as those [performed by the CLI](/docs/walrus-client/reading-blobs#check-consistency). For special use cases, you can enable the strict consistency check by adding a query parameter `strict_consistency_check=true` (starting with `v1.35`). If the writer of the blob is known and trusted, you can disable the consistency check by adding a query parameter `skip_consistency_check=true` (starting with `v1.36`).
