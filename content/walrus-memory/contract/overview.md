@@ -28,7 +28,7 @@ questions:
   - "What are the key objects in the Walrus Memory onchain account model?"
   - "What entry functions does the Walrus Memory Move module expose?"
 answer: >-
-  The Walrus Memory smart contract (memwal::account) is a Move module on Sui that manages onchain identity, delegate key authorization, SEAL access control, and account lifecycle (activation/deactivation). Key objects include AccountRegistry (prevents duplicate accounts), MemWalAccount (stores owner, delegate keys, and active status), and DelegateKey (Ed25519 public key with label and derived Sui address).
+  The Walrus Memory smart contract (memwal::account) is a Move module on Sui that manages onchain identity, delegate key authorization, SEAL access control, and account lifecycle (activation and deactivation). Key objects include AccountRegistry (prevents duplicate accounts), MemWalAccount (stores owner, delegate keys, and active status), and DelegateKey (Ed25519 public key with label and derived Sui address).
 ---
 
 The smart contract (`memwal::account`) defines the onchain account model for Walrus Memory. It is a Move module deployed on Sui.
@@ -37,7 +37,7 @@ The smart contract (`memwal::account`) defines the onchain account model for Wal
 
 These are the onchain IDs for the current public Walrus Memory deployments:
 
-### Staging (testnet)
+### Staging (Testnet)
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/contract/overview.md" target="_blank" className="code-source-link">Source: contract/overview.md</a>
 
@@ -47,7 +47,7 @@ MEMWAL_PACKAGE_ID=0x0a625e2db2af6f591a4c80a3d8551ddf11656089cc3a20c5e9e7f8fb75b9
 MEMWAL_REGISTRY_ID=0x736aef9906798fca4460490ccdf8e8502ef170122dc26ecae32111b78c6b42dd
 ```
 
-### Production (mainnet)
+### Production (Mainnet)
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/contract/overview.md" target="_blank" className="code-source-link">Source: contract/overview.md</a>
 
@@ -61,12 +61,12 @@ For relayer setup and environment variable usage, see [Self-Hosting](/walrus-mem
 
 ## What it manages
 
-- **Ownership**, who owns a Walrus Memory account
-- **Delegate keys**, which Ed25519 keys are authorized to act through the relayer
-- **Seal access control**, who can decrypt encrypted memories through `seal_approve`
-- **Account lifecycle**, activation and deactivation (freeze/unfreeze)
+- **Ownership:** Who owns a Walrus Memory account
+- **Delegate keys:** Which Ed25519 keys are authorized to act through the relayer
+- **Seal access control:** Who can decrypt encrypted memories through `seal_approve`
+- **Account lifecycle:** Activation and deactivation (freeze and unfreeze)
 
-The contract does not store memory content, it only manages identity, permissions, and access control.
+The contract does not store memory content. It only manages identity, permissions, and access control.
 
 
 ### `AccountRegistry`
@@ -81,7 +81,7 @@ A shared object representing a single user's account. It stores:
 | ------------------- | --------------------- | ------------------------------------------------------ |
 | `owner`             | `address`             | The Sui wallet address that owns this account          |
 | `delegate_keys`     | `vector<DelegateKey>` | List of authorized Ed25519 delegate keys               |
-| `created_at`        | `u64`                 | Timestamp when the account was created (epoch ms)      |
+| `created_at`        | `u64`                 | Account creation timestamp (epoch ms)                  |
 | `active`            | `bool`                | Whether the account is active (false = frozen)         |
 | `admin_quarantined` | `bool`                | Whether AdminCap containment blocks owner reactivation |
 
@@ -93,12 +93,12 @@ A struct stored inside `MemWalAccount.delegate_keys`:
 | ------------- | ------------ | ------------------------------------------- |
 | `public_key`  | `vector<u8>` | Ed25519 public key (32 bytes)               |
 | `sui_address` | `address`    | Sui address derived from this Ed25519 key   |
-| `label`       | `String`     | Human-readable label (for example, , "MacBook Pro")  |
-| `created_at`  | `u64`        | Timestamp when the key was added (epoch ms) |
+| `label`       | `String`     | Human-readable label (for example, MacBook Pro) |
+| `created_at`  | `u64`        | Key addition timestamp (epoch ms)           |
 
 ## Limits
 
-- **Maximum delegate keys per account**: 20
+- **Maximum delegate keys per account:** 20
 
 ## Error codes
 
@@ -124,7 +124,7 @@ A struct stored inside `MemWalAccount.delegate_keys`:
 | 21   | `EMigrationImportCountMismatch` | Imported totals differ from the pinned manifest totals    |
 | 22   | `EInvalidCompletionEvidence`    | Finalization digest or evidence lifetime is invalid       |
 | 23   | `ECompletionEvidenceExpired`    | Completion evidence expired before execution              |
-| 24   | `EAllowlistRepinAfterImport`    | Root/counts cannot be changed after any import            |
+| 24   | `EAllowlistRepinAfterImport`    | Root and counts cannot change after any import            |
 | 100  | `ENoAccess`                     | Seal access denied, caller is neither owner nor delegate |
 
 ## Entry functions
@@ -132,7 +132,7 @@ A struct stored inside `MemWalAccount.delegate_keys`:
 | Function                                                         | Description                                                                                              |
 | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `create_account(registry, clock)`                                | Create a new MemWalAccount (one per address)                                                             |
-| `add_delegate_key(account, registry, public_key, label, clock)`  | Add a delegate key; its Sui address is derived from the public key (owner only)                          |
+| `add_delegate_key(account, registry, public_key, label, clock)`  | Add a delegate key; the contract derives its Sui address from the public key (owner only)                |
 | `remove_delegate_key(account, registry, public_key)`             | Remove a delegate key (owner only)                                                                       |
 | `deactivate_account(account, registry)`                          | Freeze the account, Seal access and new delegate keys denied; removals remain available (owner only)    |
 | `reactivate_account(account, registry)`                          | Unfreeze the account unless Admin quarantine is active (owner only)                                      |
