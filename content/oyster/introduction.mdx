@@ -1,14 +1,16 @@
 ---
 title: "Introduction"
 slug: /
+description: Oyster is a Web2-friendly object storage service backed by Walrus and Sui that offers familiar HTTP and S3-compatible APIs.
+keywords: [ Oyster, object storage, Walrus, Sui, S3-compatible API, JSON API, buckets, blobs, API keys ]
 ---
 
 Oyster is a Web2-friendly object storage service backed by
 [Walrus](https://walrus.xyz/) (decentralized blob storage) and
 [Sui](https://sui.io/) (onchain state). It gives you familiar HTTP and S3
-APIs while your data is stored on a decentralized network.
+APIs while a decentralized network stores your data.
 
-## Core Concepts
+## Core concepts
 
 ### Accounts
 
@@ -17,16 +19,16 @@ issues you an initial API key (Bearer token). With that token you can create
 additional API keys, manage buckets and blobs, and generate S3-compatible
 access keys.
 
-### API Keys
+### API keys
 
-An API key is a Bearer token used to authenticate JSON API requests. You
+An API key is a Bearer token that authenticates JSON API requests. You
 include it in the `Authorization` header:
 
 ```
 Authorization: Bearer <your-api-key>
 ```
 
-The plaintext key is shown exactly once, at creation time. Store it securely.
+Oyster shows the plaintext key exactly once, at creation time. Store it securely.
 
 ### Buckets
 
@@ -43,24 +45,24 @@ unique** and follow S3-style naming rules:
 
 A blob is a binary object stored inside a bucket, identified by a
 user-chosen **key** (like a file path, for example `images/photo.png`). Blobs are
-**content-addressed**: identical content is stored once and can be referenced
-by multiple keys.
+**content-addressed**: Oyster stores identical content once, and multiple
+keys can reference it.
 
 Key properties of blobs:
 
-- **Public reads**: anyone can download a blob by bucket name and key, or
-  by its content-addressed blob ID. No authentication is needed for reads.
-- **Authenticated writes**: uploading, deleting, and listing blobs requires
+- **Public reads:** anyone can download a blob by bucket name and key, or
+  by its content-addressed blob ID. Reads need no authentication.
+- **Authenticated writes:** uploading, deleting, and listing blobs require
   a valid API key or S3 credentials.
-- **Overwrite semantics**: uploading to an existing key replaces the blob.
-- **Reference-counted deletion**: deleting a key removes the reference;
-  the underlying data is only removed when no other keys point to it.
-- **Expiration**: blobs share their account's `StoragePool` lifetime
+- **Overwrite semantics:** uploading to an existing key replaces the blob.
+- **Reference-counted deletion:** deleting a key removes the reference;
+  Oyster removes the underlying data only when no other keys point to it.
+- **Expiration:** blobs share their account's `StoragePool` lifetime
   rather than expiring individually. A background extension service
   renews each pool before it expires; see
   [Blob Lifecycle](guides/blob-lifecycle.mdx) for details.
 
-## Two API Surfaces
+## Two API surfaces
 
 Oyster exposes two ways to interact with your data:
 
@@ -68,20 +70,20 @@ Oyster exposes two ways to interact with your data:
 
 A RESTful HTTP API under `/api/v1/`. Use it with `curl`, any HTTP client, or
 the `oyster-cli` command-line tool. Responses are JSON. This API covers
-everything: account management, bucket/blob CRUD, S3 access key management,
-wallet info, and more.
+everything: account management, bucket and blob CRUD, S3 access key management,
+wallet information, and more.
 
-### S3-Compatible API
+### S3-compatible API
 
 An [AWS S3-compatible](https://docs.aws.amazon.com/s3/) interface that speaks
 the same protocol as Amazon S3. Use the AWS CLI, `boto3`, the AWS SDK for
 JavaScript, or any S3-compatible client. Authenticate with S3 access keys
-(created through the JSON API) using standard AWS Signature Version 4.
+(which you create through the JSON API) using standard AWS Signature Version 4.
 
-Both APIs share the same underlying storage and database. Changes made
+Both APIs share the same underlying storage and database. Changes you make
 through one are immediately visible in the other.
 
-## What's Next
+## What's next
 
 - **[Getting Started](getting-started.mdx)**: set up credentials and make
   your first API calls.
