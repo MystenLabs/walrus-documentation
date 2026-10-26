@@ -28,10 +28,10 @@ questions:
   - How do I batch writes with rememberBulk in Walrus Memory?
   - How do I confirm a memory write landed before depending on it?
 answer: >-
-  The agent storage loop has four stages: set up the client from environment variables, batch many small writes using rememberBulkAndWait (up to 20 items per call backed by Walrus Quilt), confirm each write reached a durable done state, and recall the stored context by semantic similarity. Client-managed encryption via MemWalManual is available when the agent must hold its own keys.
+  The agent storage loop has four stages: set up the client from environment variables, batch many small writes using rememberBulkAndWait (up to 20 items per call backed by Walrus Quilt), confirm each write reached a durable done state, and recall the stored context by semantic similarity. Client-managed encryption through MemWalManual is available when the agent must hold its own keys.
 ---
 
-This guide walks an autonomous agent through the complete storage loop on Testnet: set up the client with no interactive steps, batch many small writes, encrypt agent state, confirm each write landed before depending on it, then recall. Every step uses the real SDK surface, so you can lift the final script straight into a server or agent runtime.
+An autonomous agent's complete storage loop on Testnet sets up the client with no interactive steps, batches many small writes, encrypts agent state, confirms each write landed before depending on it, then recalls. Every step uses the real SDK surface, so you can lift the final script straight into a server or agent runtime.
 
 The loop has four stages:
 
@@ -69,7 +69,7 @@ await memwal.health();
 ```
 
 :::note
-Read every credential from the environment. Never hardcode an account ID copied from docs or another project: recall is scoped per **account plus namespace**, so a shared ID puts your agent's memories in a space other readers can see.
+Read every credential from the environment. Never hardcode an account ID copied from docs or another project: recall scopes results per **account plus namespace**, so a shared ID puts your agent's memories in a space other readers can see.
 :::
 
 The `MemWal.create` config takes four fields:
@@ -81,9 +81,9 @@ The `MemWal.create` config takes four fields:
 | `serverUrl` | `string` | No | Relayer URL for your network |
 | `namespace` | `string` | No | Default namespace, falls back to `"default"` |
 
-## Batch many small writes with quilt
+## Batch many small writes with Quilt
 
-Agents tend to produce many small state blobs: observations, intermediate results, per-step notes. Writing them one at a time means a separate round trip and Sui transaction set for each. The SDK batches them instead, backed by Walrus Quilt under the hood.
+Agents tend to produce many small state blobs: observations, intermediate results, per-step notes. Writing them one at a time means a separate round trip and Sui transaction set for each. The SDK batches them instead, backed by Walrus Quilt.
 
 `rememberBulk` accepts up to 20 items per call. The relayer embeds and Seal-encrypts every item concurrently and uploads them to Walrus in parallel, so the whole batch shares far fewer Sui transactions than writing each item on its own would. For an agent writing dozens of small memories a minute, that is the difference between a workable cost profile and an unworkable one.
 
@@ -110,7 +110,7 @@ All blobs on Walrus are public, so you must encrypt private agent state. There a
 
 1. **Relayer-managed encryption (default):** With the standard `MemWal` client used above, the relayer encrypts every item with Seal before it reaches Walrus. You do not manage keys, and this is the right default for most agents.
 
-2. **Client-managed encryption.** When the agent must hold its own keys and never delegate decryption to the relayer, use the manual entry point. `MemWalManual` performs Seal encryption client-side, so plaintext never leaves the agent process.
+2. **Client-managed encryption:** When the agent must hold its own keys and never delegate decryption to the relayer, use the manual entry point. `MemWalManual` performs Seal encryption client-side, so plaintext never leaves the agent process.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/agent-storage-loop.md" target="_blank" className="code-source-link">Source: sdk/agent-storage-loop.md</a>
 
@@ -135,7 +135,7 @@ await manual.rememberManual("Private: internal risk score for account 0xabc is 0
 ```
 
 :::warning
-Client-managed encryption means the agent is responsible for its key material. If the delegate key is lost, you cannot recover the encrypted memories. Treat the key as you would any production secret, and rotate it through the dashboard if it might be exposed.
+Client-managed encryption means the agent is responsible for its key material. If you lose the delegate key, you cannot recover the encrypted memories. Treat the key as you would any production secret, and rotate it through the dashboard if it might have leaked.
 :::
 
 For the full client-managed flow, including local embeddings and recall, see [MemWalManual](/walrus-memory/sdk/usage/memwal-manual).
@@ -182,7 +182,7 @@ for (const memory of recalled.results) {
 }
 ```
 
-Recall is scoped to the client's namespace by default. Pass `namespace` to read from a different one, and `limit` to cap how many memories return.
+Recall uses the client's namespace by default. Pass `namespace` to read from a different one, and `limit` to cap how many memories return.
 
 ## The full loop
 
