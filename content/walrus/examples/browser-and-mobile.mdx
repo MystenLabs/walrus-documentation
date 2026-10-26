@@ -54,7 +54,7 @@ For the upload path tradeoffs, see [Choose your upload path](/docs/getting-start
 
 ## Why do client apps use an upload relay?
 
-An upload relay accepts a single request, encodes the blob, distributes the slivers to the storage nodes, and returns one certificate. Asset management onchain still happens on the client, so the client keeps control of registration, payment, and certification while the relay absorbs the network fan-out. Browsers and mobile devices benefit the most, since both have limited bandwidth and cannot hold many outbound connections open. See the [upload relay](/docs/system-overview/relay) overview for the design, and [Operate an Upload Relay](/docs/operator-guide/upload-relay) for the endpoints and tip mechanism.
+An upload relay accepts a single request, encodes the blob, distributes the slivers to the storage nodes, and returns one certificate. Asset management onchain still happens on the client, so the client keeps control of registration, payment, and certification while the relay absorbs the network fan-out. Browsers and mobile devices benefit the most, because both have limited bandwidth and cannot hold many outbound connections open. See the [upload relay](/docs/system-overview/relay) overview for the design, and [Operate an Upload Relay](/docs/operator-guide/upload-relay) for the endpoints and tip mechanism.
 
 :::tip
 
@@ -63,7 +63,7 @@ Mysten Labs runs public upload relays you can point a client at directly:
 - **Testnet:** `https://upload-relay.testnet.walrus.space`
 - **Mainnet:** `https://upload-relay.mainnet.walrus.space`
 
-These are also listed in the [Network Reference](/docs/network-reference#upload-relays).
+The [Network Reference](/docs/network-reference#upload-relays) also lists these.
 
 :::
 
@@ -139,14 +139,14 @@ After `listFiles` returns, confirm the blob is durable before you depend on it. 
 
 ## How do browser and mobile apps differ?
 
-The flow above runs unchanged in any JavaScript runtime. Two parts of the surrounding app differ by platform.
+The `writeFilesFlow` steps run unchanged in any JavaScript runtime. Two parts of the surrounding app differ by platform.
 
 - **Reading file bytes.** A browser reads bytes from a `File` with `arrayBuffer`. A React Native app reads them from the device file system or image picker and converts the result to a `Uint8Array` before calling `WalrusFile.from`.
 - **Signing transactions.** A browser app signs the `register` and `certify` transactions through a wallet connector. A mobile app signs through its wallet integration, such as a deep-linked wallet or an embedded signer. The transactions the flow produces are identical either way.
 
 :::caution `WalrusFile` buffer error
 
-If `WalrusFile.from` throws `Cannot read properties of undefined (reading 'buffer')`, it received something other than a typed array for `contents`. The SDK expects a `Uint8Array`, not a `File`, `Blob`, or raw `ArrayBuffer`. Read the bytes first and wrap them, as in the example above: `new Uint8Array(await file.arrayBuffer())`. In a React Native app, convert the bytes you read from the file system or image picker to a `Uint8Array` before you call `WalrusFile.from`.
+If `WalrusFile.from` throws `Cannot read properties of undefined (reading 'buffer')`, it received something other than a typed array for `contents`. The SDK expects a `Uint8Array`, not a `File`, `Blob`, or raw `ArrayBuffer`. Read the bytes first and wrap them, as the example in [How to store a file through the relay](#how-to-store-a-file-through-the-relay) does: `new Uint8Array(await file.arrayBuffer())`. In a React Native app, convert the bytes you read from the file system or image picker to a `Uint8Array` before you call `WalrusFile.from`.
 
 :::
 
@@ -191,7 +191,7 @@ The [Walrus TypeScript SDK documentation](https://sdk.mystenlabs.com/walrus) cov
 `flow.register` and `flow.certify` return Sui `Transaction` objects; the flow never signs anything itself. The `signAndExecuteTransaction` in the example stands for any function with this shape: it accepts `{ transaction }`, executes the transaction on Sui, and resolves with an object that includes the transaction `digest`.
 
 - In a browser app, the `useSignAndExecuteTransaction` hook from `@mysten/dapp-kit` matches this shape directly, and the connected wallet signs.
-- In a server or script context, sign with a keypair instead: `suiClient.signAndExecuteTransaction({ signer: keypair, transaction })`.
+- In a server or script context, sign with a key pair instead: `suiClient.signAndExecuteTransaction({ signer: keypair, transaction })`.
 
 Either way, pass the digest of the **register** transaction to `flow.upload({ digest })`; the relay uses it to verify the registration before accepting sliver data.
 
@@ -219,13 +219,13 @@ The Walrus TypeScript SDK (`@mysten/walrus`) runs both in the browser and in ser
 | --- | --- | --- |
 | Encoding | Local, through the SDK's WebAssembly module | Same |
 | Store path | Upload relay (browsers cannot hold the direct-store fan-out) | Direct store or relay |
-| Signing | Wallet connector, for example `@mysten/dapp-kit` | Keypair signer |
+| Signing | Wallet connector, for example `@mysten/dapp-kit` | Key pair signer |
 | Reading bytes | `File` → `arrayBuffer` → `Uint8Array` | `fs.readFile` returns a usable buffer |
 | Reads | `fetch` against an aggregator, subject to CORS | Any HTTP client, no CORS |
 
 ## How to read through a CDN-backed aggregator
 
-Reads are plain HTTPS GET requests, so a browser or mobile client reads a blob with `fetch` and no SDK. Put a CDN in front of an aggregator so repeated reads of popular blobs are served from a nearby edge cache, which matters most for mobile clients on slow or metered networks. Set the aggregator base URL from an endpoint in the [Network Reference](/docs/network-reference#aggregators-and-publishers). The read examples on this page use the Testnet aggregator from the CORS example:
+Reads are plain HTTPS GET requests, so a browser or mobile client reads a blob with `fetch` and no SDK. Put a CDN in front of an aggregator so a nearby edge cache serves repeated reads of popular blobs, which matters most for mobile clients on slow or metered networks. Set the aggregator base URL from an endpoint in the [Network Reference](/docs/network-reference#aggregators-and-publishers). The read examples on this page use the Testnet aggregator from the CORS example:
 
 ```ts
 const AGGREGATOR = "https://aggregator.walrus-testnet.walrus.space";

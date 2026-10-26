@@ -95,7 +95,7 @@ Then build and run the example:
    cargo run --release -p walrus-sui-archival -- run --config config/testnet_local_config.yaml
    ```
 
-4. Open the web interface at the REST API bind address from your configuration (`http://localhost:9185` when the default `0.0.0.0:9185` is used) to view archival statistics, browse archived blobs, and look up checkpoints. To confirm that the service is running, send a request to the `GET /v1/health` endpoint, which returns `200 OK`. See [How to query the API](#how-to-query-the-api).
+4. Open the web interface at the REST API bind address from your configuration (`http://localhost:9185` when you use the default `0.0.0.0:9185`) to view archival statistics, browse archived blobs, and look up checkpoints. To confirm that the service is running, send a request to the `GET /v1/health` endpoint, which returns `200 OK`. See [How to query the API](#how-to-query-the-api).
 
 ## How to query the API
 
@@ -128,6 +128,6 @@ cargo run --release -p walrus-sui-archival -- inspect-blob \
 
 ## How to read the archival code
 
-Running the example needs nothing beyond the steps above. Read the source when you want to adapt the pattern to your own data: [`archival.rs`](https://github.com/MystenLabs/walrus-sui-archival/blob/main/crates/walrus-sui-archival/src/archival.rs) wires together the downloader, monitor, publisher, extender, snapshot creator, and REST API server described above, and is the file to start from.
+Running the example needs nothing beyond the steps in [How to build and run the example](#how-to-build-and-run-the-example). Read the source when you want to adapt the pattern to your own data: [`archival.rs`](https://github.com/MystenLabs/walrus-sui-archival/blob/main/crates/walrus-sui-archival/src/archival.rs) wires together the downloader, monitor, publisher, extender, snapshot creator, and REST API server described in [How does the Sui archival example work?](#how-does-the-sui-archival-example-work), and is the file to start from.
 
 [View the application's full code on GitHub](https://github.com/MystenLabs/walrus-sui-archival).

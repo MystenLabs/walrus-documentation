@@ -65,7 +65,7 @@ The complete, runnable example files live in the [`examples/python`](https://git
 
 ## How to use the HTTP API
 
-The HTTP API is the lightest integration path: you store blobs with `PUT` requests to a publisher and read them with `GET` requests to an aggregator, with no Walrus-specific dependencies in your Python code. The example below talks to a local `walrus daemon`, which combines the publisher and aggregator roles on a single address. Start the daemon first, pointing it at your client configuration and an existing directory for its sub-wallets:
+The HTTP API is the lightest integration path: you store blobs with `PUT` requests to a publisher and read them with `GET` requests to an aggregator, with no Walrus-specific dependencies in your Python code. The following example talks to a local `walrus daemon`, which combines the publisher and aggregator roles on a single address. Start the daemon first, pointing it at your client configuration and an existing directory for its sub-wallets:
 
 ```sh
 walrus --config <PATH_TO_CLIENT_CONFIG> daemon \
@@ -87,7 +87,7 @@ Upload time: 4.25s
 Download time: 0.51s
 ```
 
-To use public endpoints instead of a local daemon, send `PUT` requests to a Testnet publisher and `GET` requests to an aggregator from the [Network Reference](/docs/network-reference#aggregators-and-publishers). Note that public endpoints limit requests to 10 MiB, and Walrus has no public unauthenticated publisher on Mainnet.
+To use public endpoints instead of a local daemon, send `PUT` requests to a Testnet publisher and `GET` requests to an aggregator from the [Network Reference](/docs/network-reference#aggregators-and-publishers). Public endpoints limit requests to 10 MiB, and Walrus has no public unauthenticated publisher on Mainnet.
 
 ## How to use the JSON API
 
