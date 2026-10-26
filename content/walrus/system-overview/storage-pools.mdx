@@ -45,6 +45,8 @@ answer: >-
 
 A storage pool is a single storage reservation that many blobs share. In the standard flow, every blob you store owns its own storage resource, bought for that blob's exact size and lifetime. With a storage pool, you instead reserve a block of encoded capacity for a range of epochs once, then register any number of blobs against it. Each registration pays only the one-off write fee, and deleting a deletable blob frees its capacity for the next blob to reuse. This makes pools a good fit for workloads that continuously write and retire blobs against a stable amount of total storage.
 
+Storage pools have no separate pricing. For the fees each pool operation pays, see [How much does a storage pool cost?](#how-much-does-a-storage-pool-cost).
+
 :::warning
 
 Storage pools are a preview feature. They are currently available through the Rust SDK (`walrus-sdk` and `walrus-sui` crates) and the Move contracts. The `walrus` CLI, the HTTP publisher and aggregator APIs, and the TypeScript SDK do not expose storage pool operations yet. Reading pooled blobs, however, works everywhere, because pooled blobs have regular blob IDs.
@@ -134,7 +136,7 @@ Use the following matrix to decide whether a storage pool fits your workload. A 
 
 Deletability determines whether you get the capacity-reuse benefit. Register blobs as deletable if you want to reuse their capacity; permanent pooled blobs pin their capacity until the pool expires.
 
-## Pool operations
+## What operations does a storage pool support?
 
 The `walrus::system` Move module exposes the full set of pool operations, and `SuiContractClient` in the `walrus-sui` crate provides Rust bindings for the most common ones.
 
@@ -150,7 +152,7 @@ The `walrus::system` Move module exposes the full set of pool operations, and `S
 | `burn_expired_pooled_blob` | Cleans up blob objects after the pool expires, regardless of deletability (Move only). | None |
 | `destroy` | Destroys an empty pool and returns its underlying storage resource (Move only). | None |
 
-## Use storage pools with the Rust SDK
+## How to use storage pools with the Rust SDK
 
 The examples in this section use a `WalrusNodeClient<SuiContractClient>` from the `walrus-sdk` crate, backed by a Sui wallet that holds SUI for gas and WAL for storage and write fees. The pool-specific APIs are the `StoreBlobsInStoragePoolApi` trait in `walrus_sdk::node_client` and the pool methods on `SuiContractClient` in the `walrus-sui` crate.
 
@@ -263,7 +265,7 @@ Reading requires nothing pool-specific. A pooled blob's blob ID works with every
 $ walrus read <BLOB_ID>
 ```
 
-## Call the Move contracts directly
+## How to call the Move contracts directly
 
 All pool operations are public functions on the `walrus::system` module, so you can compose them in programmable transaction blocks. The main entry points are:
 
@@ -341,7 +343,7 @@ Storage pool activity emits the following Sui events, which indexers and monitor
 
 Capacity increases and decreases, burning expired blobs, and destroying a pool do not emit events, so reconcile capacity from `storage_pool_status` rather than from the event stream.
 
-## Constraints and considerations
+## What are the constraints on storage pools?
 
 - A blob ID can be registered only once per pool. Registering the same content in two pools creates two independent `PooledBlob` objects with the same blob ID, and the data remains readable until the last certified reference expires or is deleted.
 - Blobs registered as permanent cannot be deleted while the pool is active; their capacity is only reclaimable after the pool expires. Register blobs as deletable if you want to reuse their capacity.
