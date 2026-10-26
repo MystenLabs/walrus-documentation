@@ -43,7 +43,7 @@ Run a Walrus aggregator to expose the [HTTP API](/docs/http-api/storing-blobs). 
 $ walrus aggregator --bind-address "127.0.0.1:31415"
 ```
 
-## Start a local daemon {#local-daemon}
+## How to start a local daemon {#local-daemon}
 
 Run a local Walrus daemon through the `walrus` binary using one of the following commands:
 
@@ -56,7 +56,7 @@ If you run the aggregator without a reverse proxy, open **port 9000** on your fi
 
 :::
 
-## Download the client configuration {#client-config}
+## How to download the client configuration {#client-config}
 
 The aggregator requires a client configuration file. If you run the aggregator on the same host as a [storage node](/docs/operator-guide/storage-nodes/storage-node-setup#binaries), the configuration is already available at `/opt/walrus/config/client_config.yaml`. Otherwise, download it (the `/opt/walrus/` paths used throughout this guide are a convention; adjust them to match your own deployment layout):
 
@@ -87,7 +87,7 @@ For the canonical configuration snippets and the object IDs they contain, see th
 
 The following example shows an aggregator node that hosts an HTTP endpoint you can use to fetch data from Walrus over the web.
 
-Run the aggregator process through the `walrus` client binary using a `systemd` service. Create the service file at `/etc/systemd/system/walrus-aggregator.service`:
+Run the aggregator process through the `walrus` client binary using a `systemd` service. Create the service file at `/etc/systemd/system/walrus-aggregator.service`, then reload the systemd daemon and enable the service so that the unit's `[Install]` section (`WantedBy=multi-user.target`) takes effect and the aggregator starts at boot:
 
 ```ini
 [Unit]
@@ -106,11 +106,11 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 ```
 
-## Support large files
+## How to support large files {#support-large-files}
 
 As of Walrus `v1.38.0`, the aggregator can concatenate multiple blobs through the `/v1alpha/blobs/concat` endpoint. This endpoint enables delivery of very large files that would otherwise be unsupported because of individual blob size restrictions.
 
-The `walrus-store-sliced.sh` script below shows how to slice and upload a very large file to Walrus. After you upload the slices, your downstream users can read the full file in 2 ways:
+The `walrus-store-sliced.sh` script below shows how to slice and upload a very large file to Walrus. After you upload the slices, note the blob ID of each slice in order, because both of the following read paths require those IDs. Your downstream users can then read the full file in 2 ways:
 
 - Construct a `GET` URL that lists the blob slices in the query parameters
 - Send a `POST` request with a JSON body listing the IDs
