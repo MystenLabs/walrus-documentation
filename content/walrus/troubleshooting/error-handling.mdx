@@ -33,11 +33,9 @@ questions:
 answer: Best practices for handling Walrus errors.
 ---
 
-Best practices for handling Walrus errors.
+Handle Walrus errors in your applications by retrying transient failures with exponential backoff, verifying onchain state after timeouts, and using strict consistency checks for critical data. For a reference of specific error messages and their solutions, see [Troubleshooting Common Errors](/docs/troubleshooting/network-errors).
 
-This page covers how to handle Walrus errors programmatically in your applications. For a reference of specific error messages and their solutions, see [Troubleshooting Common Errors](/docs/troubleshooting/network-errors).
-
-## Error categories
+## Which errors can you retry?
 
 Not all errors are equal. Some are safe to retry, some require you to check on-chain state (an operation might have succeeded on-chain even though the client did not receive a confirmation), and some require you to fix your input before trying again. The following table summarizes the most common failure types:
 
@@ -57,7 +55,7 @@ For transaction timeouts, always check on-chain state before retrying. A timed-o
 
 :::
 
-## Implement retry logic with exponential backoff
+## How to retry with exponential backoff
 
 Transient errors such as network timeouts and temporary node unavailability are common in distributed systems. Use exponential backoff to avoid overwhelming the network with retries.
 
@@ -97,7 +95,7 @@ const result = await retryWithBackoff(() =>
 
 Only retry errors that are transient. Errors such as insufficient funds, invalid blob IDs, or blobs that are too large do not benefit from retries.
 
-## Verify on-chain state after timeouts
+## How to verify onchain state after a timeout
 
 When an upload or transaction times out, the operation might have succeeded on-chain even though the client did not receive a confirmation. Always check before retrying.
 
@@ -137,7 +135,7 @@ const client = new SuiGrpcClient({
 
 This does not change the behavior of the operation. Uploads still succeed if enough nodes respond. The `onError` callback provides visibility into which nodes are failing and why.
 
-## Use strict consistency checks for critical data
+## How to check consistency for critical data
 
 By default, Walrus reads reconstruct the blob from slivers and verify the blob ID. For data where integrity is critical (for example, financial records or credentials), you can request a stricter consistency check that validates each individual sliver against the Merkle tree.
 
