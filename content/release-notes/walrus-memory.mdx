@@ -31,13 +31,34 @@ redirects to reach the relayer, configure the final relayer URL directly.
 
 October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.15)
 
+A project-local `.memwal/credentials.json` is ignored until you approve that exact project path,
+account, delegate key, and relayer with `memwal-mcp approve-project`. Approvals are stored in
+`~/.memwal/project-approvals.json`, and any change to the destination requires approving again.
+Until then, the global credentials are used and a stderr line names the skipped file.
+`memwal_health` now reports `account=` beside `relayer=`.
+
+`MEMWAL_CREDS_DIR` must now be an absolute path outside the current project. Other values are
+refused with an error, and an empty value means unset. The login write-ahead record moves out of the
+repository to `~/.memwal/login-pending/`. `memwal_login` with `freshKey: true` now closes the
+previous listener and names the abandoned public key and address so you can remove them from the
+dashboard.
+
 ---
 
 ### Walrus Memory MCP v0.0.14
 
 September 22, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.14)
 
-Unreleased. The plugin's launcher installs `@mysten-incubation/memwal-mcp@0.0.14-dev.0`, named by `mcpPackageVersion` in `plugin/plugin.json`, until `0.0.14` is on npm; drop that key in that release.
+The plugin no longer starts the MCP server through `npx`, which could run a package planted in the
+open project. Every launch site now runs `plugin/scripts/launch_mcp.mjs`. It installs the pinned
+version under `~/.memwal/runtime` and fails rather than falling back. `MEMWAL_MCP_RUNTIME_DIR`
+relocates that directory and must be an absolute path.
+
+`memwal_remember` and `memwal_remember_bulk` now return a `job_id` at accept by default. Set
+`MEMWAL_MCP_REMEMBER_WAIT_MS=90000` to wait for a `blob_id`. Set `MEMWAL_MCP_TRANSPORT=http` to use
+Streamable HTTP, though replayed writes might duplicate. Timeouts report the cause and relayer
+health. The bridge honors `retry_after`, `memwal_remember_status` accepts `job_ids`, and delegate
+keypairs persist before browser sign-in.
 
 #### Changes
 
@@ -48,6 +69,17 @@ Unreleased. The plugin's launcher installs `@mysten-incubation/memwal-mcp@0.0.14
 ### Walrus Memory MCP v0.0.13
 
 September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.13)
+
+Timed-out writes from `memwal_remember`, `memwal_remember_bulk`, and `memwal_analyze` now warn that
+the write might have completed and tell you to check with `memwal_recall` before re-saving, which
+avoids duplicate paid copies. The bridge reports a rejected delegate key immediately and points to
+`memwal_login`. It backs off on HTTP 429 using `Retry-After`. It fails requests stuck behind a
+failing handshake after 90s, which you can override with `MEMWAL_MCP_STALLED_HANDSHAKE_MS`.
+
+After an in-session `memwal_login`, the bridge keeps reading stdin and confirms the sign-in. The CLI
+writes credentials as a new `0600` file, warns about unrecognized options, and lists network presets
+in `--help`. `memwal_health` now reports the relayer URL, and `memwal_restore` retries a page after
+a transient failure.
 
 #### Changes
 
@@ -65,6 +97,16 @@ September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releas
 
 September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.12)
 
+`memwal_recall` accepts an optional `maxDistance` cosine-distance cutoff, which must be 0 or
+greater. It drops hits with `distance >= maxDistance`, and result lines now show both `score` and
+`distance`. The server forwards the client's `initialize.clientInfo` to the relayer as
+`x-memwal-client` and `x-memwal-client-version`, so sidecar logs name the coding agent.
+
+The credential directory now resolves on every access, and `MEMWAL_CREDS_DIR` overrides it. This
+fixes a Windows problem where the test suite overwrote `~/.memwal/credentials.json` and its delegate
+key. `memwal_restore` now clarifies that `truncated=true` is retryable and that `truncated=false`
+does not guarantee completeness.
+
 #### Changes
 
 - [Optional `maxDistance` on `memwal_recall`: cosine-distance cutoff (low = similar, must be >= 0). Hits with `distance >= maxDistance` are dropped. Result lines now include both `score` (`1 − cosine distance`) and `distance`.](https://github.com/MystenLabs/MemWal/pull/373)
@@ -76,11 +118,34 @@ September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/release
 
 August 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.11)
 
+This release fixes MCP bridge reliability. The SSE handshake socket no longer aborts on HTTP 429,
+401, or a bad content-type, which crashed on Windows. Outbound MCP POSTs are serialized, and the
+bridge reconnects when the SSE handle is gone. A burst of `memwal_recall` calls no longer breaks it
+until restart.
+
+`login` without a TTY exits with code 1 instead of reporting success. Concurrent `memwal_login`
+calls reuse the in-flight listener and URL rather than starting a second flow that can hang later
+remember and recall calls. A login timeout warns that an on-chain delegate key might already exist
+if the browser approved after the listener expired. Session occupancy caps are reported as
+concurrent limits rather than a 30-second cooldown.
+
 ---
 
 ### Walrus Memory MCP v0.0.10
 
 August 20, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.10)
+
+The MCP server now sends proactive-usage instructions in the MCP `initialize` handshake. The model
+knows when to save and recall memories even when your client lazily loads tool descriptions. The
+bridge carries these instructions at cold start. Signed-out sessions get guidance pointing at
+`memwal_login` and a conservative `tools/list`. `memwal_recall` is advertised as read-only. The
+UserPromptSubmit hook lets the agent choose between remember and recall from meaning rather than
+keywords.
+
+Tool calls whose upstream response never arrives return a retryable error after
+`MEMWAL_MCP_CALL_TIMEOUT_MS` (default 240s) instead of hanging. `memwal_remember_bulk` uses your
+configured namespace (`--namespace` / `MEMWAL_NAMESPACE`) when a call omits one.
+`serverInfo.version` reports the real package version.
 
 #### Changes
 
@@ -94,17 +159,38 @@ August 20, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/
 
 August 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.8)
 
+The Walrus Memory MCP server now includes human-readable titles for its tools during pre-login tool
+discovery. Each tool also carries explicit `readOnlyHint` and `destructiveHint` metadata at that
+stage. This metadata matches what the remote relayer provides to Claude connectors, so clients that
+inspect tools before login get the same titles and hints as they would from the relayer.
+
 ---
 
 ### Walrus Memory MCP v0.0.7
 
 August 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.7)
 
+This release contains three fixes. After you log in through the browser, the MCP server now reloads
+your credentials, so you no longer need to restart the MCP client.
+
+Handshake handling is stricter. The server rejects stale handshakes and prevents requests from being
+replayed across account changes.
+
+Restores now report when results are truncated, and the server enforces the relayer's bounded
+restore limit.
+
 ---
 
 ### Walrus Memory MCP v0.0.6
 
 July 31, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.6)
+
+This release tightens the delegate-key login flow. Before it accepts a login callback, the MCP
+server now requires a localhost preflight handshake that proves the exact state, public key, and
+relayer. The server also takes the canonical login label from the verified local flow and no longer
+trusts the label that the browser callback supplies.
+
+MCP SSE POST messages and replayed requests now authenticate with the delegate credentials.
 
 ---
 
@@ -179,6 +265,18 @@ throw `MemWalRememberJobNotFoundError`.
 
 October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.9)
 
+`createAccount`, `addDelegateKey`, `removeDelegateKey`, and `MemWalManual` work again without a
+`suiClient`. The default is now `SuiGrpcClient` against the public fullnode for `suiNetwork`.
+`rememberBulk` and `rememberBulkAsync` send a derived idempotency key, so a retry within 30 minutes
+returns the same jobs. `listMemories()` pages stored memories as metadata without a similarity
+query.
+
+Remember-job waits back off toward a 5s cap. On timeout they raise `MemWalRememberJobTimeout` with
+`lastStatus` and `serverError`, and they raise `MemWalRateLimited` when status reads stay
+rate-limited. Many methods reject invalid input before signing, including bad `limit`,
+`maxDistance`, job ids, and blank text. Package subpaths now resolve in Next.js, Turbopack, and Node
+`require(esm)`, and `/manual` no longer imports `@mysten/walrus`.
+
 #### Changes
 
 - [`rememberBulk` and `rememberBulkAsync` send an idempotency key derived from the batch (a 30-minute bucket plus each item's namespace and text). A retry inside that window returns the same jobs instead of storing the batch again. An explicit `idempotencyKey` still wins.](https://github.com/MystenLabs/MemWal/pull/1080)
@@ -206,11 +304,31 @@ October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases
 
 September 22, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.8)
 
+All relayer requests now carry a deadline, so one stalled request no longer runs past `timeoutMs`.
+Requests default to 30 seconds, and you can change this with `requestTimeoutMs` on `MemWal.create`.
+`restore` and `analyze` each use 60 seconds. An expired request raises `MemWalRequestTimeout` with
+`status: 504`, which the existing poll handling retries.
+
+Generated idempotency keys now derive from the namespace, the text, and a 30-minute bucket. A replay
+from a new client therefore no longer creates a duplicate paid Walrus blob. Explicit
+`idempotencyKey` values are unaffected. `recall()` also sends `deadline_ms`. Relayers that read it
+return a 504 with `serverCode` `RECALL_TIMEOUT` that names the stuck step.
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.7
 
 September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.7)
+
+`restore()` results now include a `failed` count for permanent decrypt or UTF-8 failures. These were
+previously folded into `skipped` or dropped silently. The field is required, like `truncated`, and
+the SDK defaults it to `0` when omitted.
+
+Request body hashing now uses `@noble/hashes` instead of WebCrypto with a `node:crypto` fallback.
+Browser apps built with Vite no longer crash on the first remember or recall. The package now
+declares `engines.node >= 20.0.0`. Empty-body 401 responses return the AUTH_REJECTED troubleshooting
+message instead of suggesting `memwal_login`. Transactions in `account.ts` and `manual.ts` now use
+typed `tx.pure` helpers that work with modern `@mysten/sui`.
 
 ---
 
@@ -218,11 +336,29 @@ September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releas
 
 September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.6)
 
+`recall()` results include an optional `created_at` field with the RFC3339 write-time of the stored
+fact. `RecallOptions` accepts `sort: "relevance" | "recent"` and `scoringWeights`. With `sort:
+"recent"`, the SDK over-fetches semantic candidates (5x `limit`, capped at 50), orders them by
+write-time descending, and then truncates the results to `limit`.
+
+The SDK now reports an HTTP 503 with `x-auth-error: AUTH_UPSTREAM_UNAVAILABLE` as a retryable
+credential-verification outage instead of a sign-in failure. Other 503 responses keep the generic
+sanitized body, and empty-body 401 responses still point you to `memwal_login`.
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.5
 
 August 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.5)
+
+`rememberManual` now sends `encryptedData`, a base64 SEAL ciphertext, instead of a pre-uploaded
+`blobId`, matching `POST /api/remember/manual`. `recall()` results include `dropped_count` when the
+relayer omits matches that fail to download or decrypt. `health()` surfaces an optional
+`write_ready` field when the relayer reports write-path sidecar liveness.
+
+Manual recall now decodes SEAL object IDs with `hexToBytes`. This removes the risk of coercing `NaN`
+to `0` or throwing on empty input. HTTP error messages and remember-job error strings no longer
+expose `localhost` or `127.0.0.1` URLs to callers.
 
 ---
 
@@ -230,11 +366,26 @@ August 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/
 
 August 24, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.4)
 
+This release improves the error message for empty-body 401 responses. If you are calling through MCP
+for the first time and receive an empty-body 401, the SDK now tells you to run `memwal_login`.
+Previously it showed `<no message>`, which gave no indication of what to do next.
+
+Credential 401s keep their existing behavior and still point you to the AUTH_REJECTED
+troubleshooting guide.
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.3
 
 August 20, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.3)
+
+The SDK now estimates tokens on the client side and supports token budgets for recall. When recalled
+content exceeds a budget, you can choose how the SDK truncates it by setting one of the configurable
+truncation strategies.
+
+This release also changes the default SDK relayer URL to `https://relayer.memory.walrus.xyz`. If
+your application relies on the default relayer rather than setting one explicitly, it uses the new
+URL after you upgrade.
 
 ---
 
@@ -242,17 +393,38 @@ August 20, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/
 
 August 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.2)
 
+This release adds deterministic offline mock clients, so you can run tests without credentials. It
+also adds idempotency keys, which collapse retries onto a single paid remember job.
+
+Fixes isolate foreign manual-recall blobs and safely encode large encrypted payloads. The SDK now
+supports both Zod 3 and Zod 4 as peer dependencies.
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.1
 
 August 7, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.1)
 
+This release adds `flush()`, which you can call to handle pending auto-saves from `withMemWal`.
+Restore results now include a `truncated` field that indicates when a recovery is incomplete, so
+your code can detect partial restores.
+
+`AUTH_REJECTED` errors now link to troubleshooting guidance, giving you a direct path to resolving
+authentication rejections.
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.0
 
 July 31, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.0)
+
+Recalled AI memory now arrives as nonce-delimited, explicitly untrusted data instead of content
+injected directly into the system role.
+
+This release adds sponsor authorization helpers for sponsored transaction flows. It also adds
+migration-aware account and manual configuration, including registry support and support for current
+Sui transaction results. Account transaction result handling and failure diagnostics improve across
+both legacy and current Sui response shapes.
 
 ---
 
@@ -328,75 +500,84 @@ commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.2.0
+### Walrus Memory Python SDK v0.2.0
 
 October 23, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.0)
 
-Release memwal Python SDK v0.2.0
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.12
+### Walrus Memory Python SDK v0.1.12
 
 October 21, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.12)
 
-Release memwal Python SDK v0.1.12
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.11
+### Walrus Memory Python SDK v0.1.11
 
 September 22, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.11)
 
-Release memwal Python SDK v0.1.11
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.10
+### Walrus Memory Python SDK v0.1.10
 
 September 15, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.10)
 
-Release memwal Python SDK v0.1.10
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.9
+### Walrus Memory Python SDK v0.1.9
 
 September 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.9)
 
-Release memwal Python SDK v0.1.9
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.8
+### Walrus Memory Python SDK v0.1.8
 
 August 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.8)
 
-Release memwal Python SDK v0.1.8
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.7
+### Walrus Memory Python SDK v0.1.7
 
 August 14, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.7)
 
-Release memwal Python SDK v0.1.7
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.6
+### Walrus Memory Python SDK v0.1.6
 
 August 7, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.6)
 
-Release memwal Python SDK v0.1.6
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
-### Walrus Memory python v0.1.5
+### Walrus Memory Python SDK v0.1.5
 
 July 31, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.5)
 
-Release memwal Python SDK v0.1.5
+A maintenance release with no user-facing changes documented in the release notes; see the full
+commit log for internal updates.
 
 ---
 
@@ -436,17 +617,33 @@ Initial release of the Walrus Memory Python SDK.
 
 <TabItem value="openclaw" label="OpenClaw">
 
-### Walrus Memory SDK v0.0.7
+### Walrus Memory OpenClaw v0.0.7
 
 October 2, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.7)
 
+`memory_search` and `memory_store` now operate only within the calling agent's namespace. If you
+omit the namespace, the tools use that agent's namespace rather than the main namespace. A namespace
+that the model supplies is rejected unless it matches the agent's namespace or its legacy namespace.
+
+Configuration interpolation of `${ENV_VAR}` now applies only to `privateKey`. All other fields,
+including `serverUrl`, are read literally, so a secret cannot end up in `serverUrl`.
+
 ---
 
-### Walrus Memory SDK v0.0.6
+### Walrus Memory OpenClaw v0.0.6
 
 August 20, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.6)
 
-and `serverUrl` as required in `configSchema`, so OpenClaw rejected the config entry the
+`openclaw plugins install` now succeeds, and the plugin declares `contracts.tools`, so
+`memory_search` and `memory_store` register. Config validation happens at register time with
+per-field errors and leaves the gateway running. Every relayer call now has a deadline, set with
+`requestTimeoutMs` (default 10000, range 1000 to 60000). A hung relayer no longer blocks the agent
+turn.
+
+The prompt-injection filter no longer silently drops ordinary statements such as "I run the deploy
+command every Friday." The docs now cover `hooks.allowConversationAccess`, which auto-capture
+requires. They also correct the config key: both `plugins.slots.memory` and the `plugins.entries`
+key use `memory-memwal`.
 
 ---
 
