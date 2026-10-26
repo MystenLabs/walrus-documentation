@@ -10,6 +10,8 @@ keywords:
   - Walrus Memory
   - plugin
   - automatic memory
+  - lifecycle hooks
+  - memwal_login
 goal:
   description: Add Walrus Memory to Antigravity as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify the connection with a test recall.
   requires:
