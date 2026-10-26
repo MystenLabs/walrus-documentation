@@ -123,7 +123,7 @@ After the transaction executes, the client keeps the transaction ID `tx_id`, the
 
 The relay enforces a freshness check on the transaction that paid the tip. The default threshold is 1 hour, but each relay can independently configure this value.
 
-### Send data to the upload relay
+### How to send data to the upload relay
 
 See the full OpenAPI specification for the upload relay in the file `upload_relay_openapi.html`, located in the `crates/walrus-upload-relay` subdirectory of the Walrus repository on [GitHub](https://github.com/MystenLabs/walrus).
 
@@ -137,7 +137,7 @@ You must specify the following parameters in the query string of the URL:
 - `deletable_blob_object`: Required if the blob is registered as deletable. The object ID of the blob as a hexadecimal string. If you store the blob as a permanent one, do not specify this parameter. Example: `deletable_blob_object=0x56ae1c86e17db174ea002f8340e28880bc8a8587c56e8604a4fa6b1170b23a60`
 - `encoding_type`: Optional. The encoding type to be used for the blob. The default value (and currently the only value) is `RS2`.
 
-## Receive the certificate
+## How does the client receive the certificate?
 
 After the relay finishes storing the blob, it collects the confirmation certificate from the storage nodes.
 
