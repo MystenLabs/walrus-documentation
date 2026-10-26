@@ -18,7 +18,7 @@ answer: >-
 
 Intermittent upload failures usually mean storage nodes are unreachable, not that your client is misconfigured. Query the committee first, then compare the result against the thresholds below:
 
-## Query the committee
+## How to check which storage nodes are reachable
 
 ```sh
 walrus health --committee
@@ -71,7 +71,7 @@ You can select a different set of nodes instead:
 | `--node-ids <ID>...` | Specific nodes by object ID |
 | `--node-urls <URL>...` | Specific nodes by URL |
 
-## Fault tolerance thresholds
+## How many shards can be down before uploads fail?
 
 Walrus tolerates faults as a fraction of shards, not of nodes, and one node can own many shards. For the write threshold, use the following command to get tolerated fault thresholds:
 
@@ -98,7 +98,7 @@ For a 1,000-shard network:
 
 Run `walrus info committee` to get the shard count for the network you are on, then apply the same arithmetic for the read threshold.
 
-## Decide whether to upload
+## Should you upload now?
 
 Compare the healthy shard count against the write threshold:
 
