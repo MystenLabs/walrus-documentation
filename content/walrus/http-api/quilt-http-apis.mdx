@@ -132,24 +132,24 @@ If successful, the response contains the blob object details and the stored quil
 
 You can retrieve blobs from a quilt through the aggregator APIs using their quilt patch ID or their quilt ID and unique identifier. Currently, only 1 blob can be retrieved per request. Bulk retrieval of multiple blobs from a quilt in a single request is not yet supported.
 
-### Retrieving by quilt patch ID
+### How to retrieve by quilt patch ID
 
 Each blob in a quilt has a unique patch ID. Retrieve a specific blob using its patch ID:
 
 ```sh
 # Retrieve a blob using its quilt patch ID:
-$ curl "$AGGREGATOR/v1/blobs/by-quilt-patch-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3PjlBuKoBAQDQAA" \
+$ curl "$AGGREGATOR/v1/blobs/by-quilt-patch-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3PjlBuKoBAQDQAA"
 ```
 
 You can obtain quilt patch IDs from the store quilt output (the `quiltPatchId` field of each entry in `storedQuiltBlobs`) or by using the [`list-patches-in-quilt`](/docs/walrus-client/quilts#read-blobs-from-a-quilt) CLI command.
 
-### Retrieving by quilt ID and identifier
+### How to retrieve by quilt ID and identifier
 
 You can also retrieve a blob using the quilt ID and the blob's identifier. The quilt ID is the `blobId` value in the store response:
 
 ```sh
 # Retrieve a blob with identifier `walrus.jpg` from the quilt:
-$ curl "$AGGREGATOR/v1/blobs/by-quilt-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3PjlBuKo/walrus.jpg" \
+$ curl "$AGGREGATOR/v1/blobs/by-quilt-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3PjlBuKo/walrus.jpg"
 ```
 
 ### Response headers
