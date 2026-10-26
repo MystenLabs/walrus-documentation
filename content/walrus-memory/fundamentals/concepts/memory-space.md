@@ -93,9 +93,9 @@ flowchart TD
     User --> S3["personal @ app-2"]
 ```
 
-In this example, one user has three separate memory spaces:
+In this example, `app-1` and `app-2` are shorthand labels for two distinct Walrus Memory package IDs (`MEMWAL_PACKAGE_ID`), since each relayer deployment is tied to a single package ID. One user has three separate memory spaces:
 - **personal** memories in **app-1**
 - **work** memories in **app-1**
-- **personal** memories in **app-2** (a completely different deployment)
+- **personal** memories in **app-2** (a completely different deployment, with a different package ID)
 
 Each is fully isolated, storing into one never affects the others, and recall only searches within the specified memory space.

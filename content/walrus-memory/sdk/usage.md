@@ -41,8 +41,8 @@ Walrus Memory exposes three entry points:
 
 ## Namespace rules
 
-- Set a default namespace in `create(...)` when one app or agent uses one boundary
-- Pass `namespace` per call when one client needs multiple boundaries
+- Set a default namespace in `create(...)` when one app or agent uses one boundary; this client config value is what every call that omits `namespace` falls back to
+- Pass `namespace` per call when one client needs multiple boundaries; a per-call namespace takes precedence over the client config value
 - If omitted, namespace falls back to client config, then to `"default"`
 
 Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing.

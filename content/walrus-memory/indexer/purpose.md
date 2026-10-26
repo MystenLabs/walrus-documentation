@@ -80,4 +80,4 @@ $ cd services/indexer
 $ cargo run
 ```
 
-The indexer is recommended for production but optional for development, the relayer can fall back to onchain resolution without it.
+The indexer is recommended for production but optional for development. If the indexer stops or falls behind, the `accounts` table lags onchain state, so the existence check and owner-token lookup that read it will not see recently created accounts until it catches up; delegate-key auth resolution is unaffected, because the indexed `accounts` table is not part of that chain (a cold key still needs a signed `x-account-id` or `MEMWAL_ACCOUNT_ID`, otherwise it gets a `401`).

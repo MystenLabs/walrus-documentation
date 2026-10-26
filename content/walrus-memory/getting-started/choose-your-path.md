@@ -38,7 +38,7 @@ answer: >-
   control, and MCP Clients for tool-use agents like Cursor and Claude Desktop.
 ---
 
-Walrus Memory supports several integration modes depending on how much control you need. Pick the one that fits your use case.
+Walrus Memory supports several integration modes depending on how much control you need. Pick the one that fits your trust model, tech stack, and control requirements: the Default SDK and managed relayer are the fastest starting point for most teams, the manual client flow and a self-hosted relayer minimize trust in the relayer, and the AI Middleware and MCP Clients match your stack if you already use the AI SDK or an MCP-aware agent.
 
 :::tip
 These paths aren't mutually exclusive. You can combine them - for example, use the **Default SDK** with the **AI Middleware**, or start with the **Managed Relayer** and move to **Self-Hosting** later. They all share the same backend and data layer.
@@ -85,7 +85,7 @@ Go to: [AI Integration](/walrus-memory/sdk/usage/with-memwal)
 
 ## 5. Self-host the relayer
 
-Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data.
+Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data. This is the self-hosted deployment option of the relayer described in path 2, not a different backend: all paths share the same backend and data layer.
 
 Go to: [Self-Hosting](/walrus-memory/relayer/self-hosting)
 

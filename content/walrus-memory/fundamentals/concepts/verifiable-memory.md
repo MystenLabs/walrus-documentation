@@ -66,11 +66,11 @@ The encrypted blobs live on Walrus, which stores data across a decentralized net
 
 ## Verify it yourself
 
-You can check all three properties yourself. Inspect each one directly:
+You can check all three properties yourself with a spot-check against a real memory entry. Store a memory with `rememberAndWait`, note the `blob_id` it returns, then work through the three checks below in order: availability, integrity, ownership:
 
 - **Availability:** Call `health()` to confirm the relayer is reachable before you rely on it. This is an unauthenticated liveness check, not a validation of your credentials.
 - **Integrity:** Read the `blob_id` off a `recall` result. It is a content-addressed handle to the exact stored ciphertext, so a blob ID that resolves confirms that encrypted blob is intact and unchanged. This is blob-level integrity, and the plaintext inside is protected by Seal encryption, not by content-addressing.
-- **Ownership:** Take your `MemWalAccount` object ID and open it in a Sui explorer. The account, its owner, and its delegate authorizations are public onchain state that anyone can inspect, independent of the relayer.
+- **Ownership:** Take your `MemWalAccount` object ID and search for it in a Sui explorer. The account, its owner, and its delegate authorizations are public onchain state that anyone can inspect, independent of the relayer, so confirm that the owner address is yours and that only delegate keys you authorized are listed.
 
 :::note
 A dedicated `verify()` helper that reconstructs a memory from its onchain blob object is on the roadmap. Until it ships, verifiability comes from the three properties above: content-addressed blob IDs, onchain-enforced ownership you can inspect on a Sui explorer, and durability backed by Walrus. It is a property of the architecture, not a single SDK call.
