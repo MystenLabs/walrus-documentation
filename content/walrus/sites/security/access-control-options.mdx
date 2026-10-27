@@ -66,7 +66,7 @@ Integrity verification and access control are separate concerns. Authentication 
 
 ## How to keep files out of the deployment
 
-The most direct form of access control is not publishing a file at all. The `ignore` field in [`ws-resources.json`](/docs/sites/configuration/site-configuration#ignoring-files-from-being-uploaded) excludes files and folders from the upload, which keeps development files, drafts, and temporary assets out of the published site:
+The most direct form of access control is not publishing a file at all. The `ignore` field in [`ws-resources.json`](/docs/sites/configuration/site-configuration#how-to-ignore-files-during-upload) excludes files and folders from the upload, which keeps development files, drafts, and temporary assets out of the published site:
 
 ```json
 "ignore": [
@@ -79,14 +79,14 @@ The most direct form of access control is not publishing a file at all. The `ign
 This only controls what `site-builder` uploads. Anything you have already published remains readable for its full storage period, so review your build output before you deploy, not after.
 
 :::caution
-Never embed secret values (API keys, tokens, private keys, credentials) anywhere in a site's source files. Site files and their metadata are fully public. See [Known Restrictions](/docs/sites/known-restrictions#no-secret-values).
+Never embed secret values (API keys, tokens, private keys, credentials) anywhere in a site's source files. Site files and their metadata are fully public. See [Known Restrictions](/docs/sites/known-restrictions#can-a-site-store-secret-values).
 :::
 
 ## How to encrypt application data
 
 Site resources themselves (the HTML, CSS, and JavaScript that the portal serves) reach the browser as plaintext so that it can render them, even if you bundle or minify them first. Confidential data that your site's application code reads and writes as blobs is a different matter: encrypt it on the client before storing it on Walrus, and treat the blob ID as public. Your application then fetches the ciphertext and decrypts it locally for users who hold the necessary keys.
 
-[Seal](https://github.com/MystenLabs/seal) supports this pattern. Your application owns key management and encryption: Walrus stores and serves whatever bytes you upload. See [Data Security](/docs/data-security#data-confidentiality) for the underlying guarantees.
+[Seal](https://github.com/MystenLabs/seal) supports this pattern. Your application owns key management and encryption: Walrus stores and serves whatever bytes you upload. See [Data Security](/docs/data-security#how-do-you-keep-data-confidential) for the underlying guarantees.
 
 ## How to serve private content outside Walrus
 

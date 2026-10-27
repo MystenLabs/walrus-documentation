@@ -169,7 +169,7 @@ $ walrus remove-blob-attribute-fields <BLOB_OBJECT_ID> --keys "key1"
 
 This example walks through the full lifecycle of a blob: store it for a chosen period, confirm it is stored, extend it before it expires, and delete it to reclaim storage.
 
-1. Store the blob for a set number of epochs. Choose `--permanent` when the data must remain for the full period, or keep the default deletable blob when you want the option to delete and reclaim storage early. See [Blob lifetimes](/docs/walrus-client/storing-blobs#blob-lifetimes) and [Blob permanence](/docs/walrus-client/storing-blobs#blob-permanence).
+1. Store the blob for a set number of epochs. Choose `--permanent` when the data must remain for the full period, or keep the default deletable blob when you want the option to delete and reclaim storage early. See [Blob lifetimes](/docs/walrus-client/storing-blobs#how-do-i-set-a-blob-lifetime) and [Blob permanence](/docs/walrus-client/storing-blobs#is-a-stored-blob-deletable-or-permanent).
 
 ```sh
 $ walrus store <FILE> --epochs <EPOCHS>

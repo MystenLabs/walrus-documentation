@@ -109,7 +109,7 @@ The `useWalrusUpload` hook in [`src/hooks/useWalrusUpload.ts`](https://github.co
 3. **Upload:** `flow.upload({ digest })` sends the file data to the relay in a single request. The relay distributes the slivers to the storage nodes and collects a confirmation certificate.
 4. **Certify:** `flow.certify()` returns a transaction that certifies the blob on Sui. After the wallet executes it, `flow.listFiles()` returns the blob ID and Sui object ID of the stored file.
 
-Because the user's own wallet registers, pays for, and certifies the blob, the user keeps ownership of the resulting Sui object; the relay only fans out the data. For the same flow as copy-pasteable standalone code, see [Browser and Mobile Apps](/docs/examples/browser-and-mobile#store-a-file-through-the-relay).
+Because the user's own wallet registers, pays for, and certifies the blob, the user keeps ownership of the resulting Sui object; the relay only fans out the data. For the same flow as copy-pasteable standalone code, see [Browser and Mobile Apps](/docs/examples/browser-and-mobile#how-to-store-a-file-through-the-relay).
 
 ## Troubleshooting
 
