@@ -471,7 +471,7 @@ GET /api/v1/admin/app
 
 Returns the authenticated app, including the current webhook URL and
 the base64-encoded Ed25519 public key paired with it. Use this endpoint
-when you need to retrieve the response from `PUT /admin/app/webhook`.
+when you need to retrieve the response from `PUT /api/v1/admin/app/webhook`.
 
 **Response** (`200 OK`):
 
@@ -580,7 +580,7 @@ oysterd app new --name <NAME> --contact_email <EMAIL> [--no-key]
 
 Creates a new app, prints its UUID, and (by default) auto-issues a first
 admin key alongside. The app builder configures webhook URLs
-using the self-service `PUT /admin/app/webhook` endpoint above (or
+using the self-service `PUT /api/v1/admin/app/webhook` endpoint above (or
 `oyster app webhook set <URL>`).
 
 | Flag | Required | Description |

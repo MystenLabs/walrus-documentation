@@ -52,6 +52,7 @@ All errors return a JSON body with a single `error` field:
 | `304` | Not Modified: `If-None-Match` matched on a GET request |
 | `400` | Bad Request: invalid input or validation failure |
 | `401` | Unauthorized: missing or invalid API key |
+| `402` | Payment Required: the Pearl-derived wallet lacks WAL or SUI to fund the onchain action (see [Cross-cutting error contracts](#cross-cutting-error-contracts)) |
 | `404` | Not Found: resource doesn't exist or your account doesn't own it |
 | `409` | Conflict: resource already exists or limit reached |
 | `412` | Precondition Failed: `If-Match` or `If-None-Match` condition not met |
