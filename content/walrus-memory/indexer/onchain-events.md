@@ -5,7 +5,6 @@ description: >-
   uses them to update local backend state, including current coverage details.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - onchain events
   - Sui events
   - indexer

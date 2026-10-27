@@ -6,7 +6,6 @@ description: >-
   deployments.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - memory space
   - namespace
   - app ID

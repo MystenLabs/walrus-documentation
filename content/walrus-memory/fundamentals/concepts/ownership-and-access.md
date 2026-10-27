@@ -6,7 +6,6 @@ description: >-
   services, and how access control is enforced onchain by Sui smart contracts.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - ownership
   - delegates
   - access control
