@@ -121,7 +121,7 @@ Then, the client creates a [programmable transaction block (PTB)](https://docs.s
 
 After the transaction executes, the client keeps the transaction ID `tx_id`, the `nonce`, and the `blob_id`, which the next phase requires.
 
-The relay enforces a freshness check on the transaction that paid the tip. The default threshold is 1 hour, but each relay can independently configure this value.
+The relay enforces a freshness check on the transaction that paid the tip. The default threshold is 1 hour, but each relay can independently configure this value with the `tx_freshness_threshold_secs` setting in its relay configuration file.
 
 ### How to send data to the upload relay
 

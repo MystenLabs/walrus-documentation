@@ -99,7 +99,7 @@ Configure the publisher at startup using the following command line arguments:
 
 - `--jwt-decode-secret`: The secret key used to verify JWT signatures. If set, the publisher only stores blobs with valid JWTs.
 - `--jwt-algorithm`: The algorithm used for JWT verification (defaults to HS256).
-- `--jwt-expiring-sec`: Duration in seconds after which the JWT is considered expired.
+- `--jwt-expiring-sec`: Duration in seconds after which the JWT is considered expired. If set and greater than 0, the publisher checks expiration based on the issued-at (`iat`) value in the JWT token.
 - `--jwt-verify-upload`: Enables verification of upload parameters against JWT claims.
 
 ### Set the JWT decode secret
@@ -149,7 +149,7 @@ The current authenticated publisher implementation does not provide a way to gen
 
 ### Optional fields
 
-- `iat` (issued at): Optional timestamp when the token was issued.
+- `iat` (issued at): Timestamp when the token was issued. This claim is required when the publisher is started with `--jwt-expiring-sec` set to a value greater than 0, because the expiration check is based on the `iat` value.
 - `send_object_to`: Optional Sui address where the newly created `Blob` object should be sent.
 - `epochs`: Optional exact number of epochs the blob should be stored for.
 - `max_epochs`: Optional maximum number of epochs the blob can be stored for.

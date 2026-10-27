@@ -145,7 +145,7 @@ A [portal](/docs/sites/portals/mainnet-testnet) resolves and serves a Walrus Sit
 
 1. Resolves the subdomain to a Sui object ID, either through a SuiNS name lookup or by decoding the Base36-encoded object ID directly from the subdomain.
 2. Reads the site object's [dynamic fields](https://docs.sui.io/concepts/dynamic-fields) from Sui to get the resource map.
-3. Fetches the resource from Walrus using the `blob_id` from that map.
+3. Fetches the resource from Walrus, using the file's `QuiltPatchID` to locate it within the quilt.
 4. Returns the resource to the browser with the appropriate headers.
 
 This process repeats for every resource the browser requests, such as linked CSS files, scripts, and images.

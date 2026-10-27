@@ -142,7 +142,7 @@ When you read a blob immediately after certifying it, a public aggregator can br
 
 ## How to check a blob's status
 
-Check whether a blob is available and its registered onchain information.
+Check whether a blob is available and its registered onchain information. Note that a read-based check only distinguishes a transient `404` from a final one by context: a `404` immediately after you certified the blob is usually transient on public, CDN-fronted aggregators, so retry with backoff, but a `404` for a blob you did not just write is final, so treat the `"retry"` result returned by the Python example as final in that case.
 
 <Tabs>
 <TabItem label="CLI" value="cli">
