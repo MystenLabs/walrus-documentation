@@ -12,6 +12,10 @@ keywords:
   - smart contract
   - AccountCreated
   - DelegateKeyAdded
+  - DelegateKeyRemoved
+  - AccountDeactivated
+  - AccountReactivated
+  - AccountQuarantined
 goal:
   description: List the onchain events emitted by the Walrus Memory contract, identify which ones the indexer currently processes, and understand the gap for events not yet covered.
   requires:
