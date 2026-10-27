@@ -39,7 +39,7 @@ answer: >-
 
 ## Permanent registry design intent
 
-The `AccountRegistry` shared object in Walrus Memory is a permanent append-only mapping of `owner_address -> account_id`. Even if you deactivate or delete your account, your address remains in the registry.
+The `AccountRegistry` shared object in Walrus Memory is a permanent append-only mapping of `owner_address -> account_id`. Even if you deactivate or delete your account, your address remains in the registry, because deletion is treated as deactivation (freezing) rather than true erasure.
 
 ## Security and architecture rationale
 1. **Preventing duplicate Sybil accounts:**

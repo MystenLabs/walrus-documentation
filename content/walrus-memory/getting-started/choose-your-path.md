@@ -87,7 +87,7 @@ Use `@mysten-incubation/memwal/ai` when you already use the AI SDK and want reca
 
 Go to: [AI Integration](/walrus-memory/sdk/usage/with-memwal)
 
-## 5. Self-host the relayer
+## 5. Self-host the relayer (deployment option of path 2)
 
 Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data. This is the self-hosted deployment option of the relayer described in path 2, not a different backend: all paths share the same backend and data layer.
 

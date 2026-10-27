@@ -62,7 +62,7 @@ import { MemWalManual } from "@mysten-incubation/memwal/manual";
 
 ### `@mysten-incubation/memwal/ai`
 
-Use this when you already use the AI SDK.
+Use this when you already use the AI SDK: `withMemWal` is AI SDK middleware.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/overview.md" target="_blank" className="code-source-link">Source: sdk/overview.md</a>
 

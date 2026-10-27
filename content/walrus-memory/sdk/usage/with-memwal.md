@@ -61,7 +61,7 @@ Before generation:
 
 - Reads the last user message
 - Runs `recall()` against Walrus Memory
-- Filters by relevance
+- Filters by relevance, returning at most the `maxMemories` set in the options (`maxMemories: 5` in the example above)
 - Injects memory context into the prompt
 
 After generation:

@@ -52,7 +52,7 @@ Walrus Memory stores memories as encrypted blobs on Walrus and records ownership
 
 Your agent needs two things, whatever its language or chain:
 
-1. **An Ed25519 delegate key registered on a Walrus Memory account.** The account owner registers the public key onchain, which grants the agent permission to read and write that account's memory. See [Ownership and Delegates](/walrus-memory/fundamentals/concepts/ownership-and-access).
+1. **An Ed25519 delegate key registered on a Walrus Memory account.** Generate an Ed25519 keypair for the agent, then have the account owner add the 32-byte public key to the Sui account object's onchain delegate keys, which grants the agent permission to read and write that account's memory. On each request the relayer verifies the signature and resolves the owner by looking up that public key in the account's onchain delegate keys. See [Ownership and Delegates](/walrus-memory/fundamentals/concepts/ownership-and-access).
 2. **Network access to a relayer.** The relayer performs the encryption, storage, and indexing work, so your agent needs no Sui node, Walrus node, or WAL tokens.
 
 Your agent needs no Sui wallet of its own, no bridge, no wrapped token, and no change to how it transacts on its own chain.
