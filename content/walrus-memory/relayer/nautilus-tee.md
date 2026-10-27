@@ -264,7 +264,7 @@ Run a remember/recall smoke test through the TEE endpoint:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/nautilus-tee.md" target="_blank" className="code-source-link">Source: relayer/nautilus-tee.md</a>
 
-```bash
+```typescript
 TEE_RELAYER_URL=https://tee-relayer.example.com \
 MEMWAL_DELEGATE_KEY=... \
 MEMWAL_ACCOUNT_ID=0x... \
