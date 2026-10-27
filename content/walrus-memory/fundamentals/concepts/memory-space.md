@@ -6,12 +6,13 @@ description: >-
   deployments.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - memory space
   - namespace
   - app ID
   - isolation
   - scoping
+  - owner address
+  - multi-user
 goal:
   description: Use namespaces to scope agent memory within an account, prevent cross-namespace data leakage, and design a namespace strategy for multi-agent or multi-user deployments.
   requires:

@@ -6,12 +6,15 @@ description: >-
   services, and how access control is enforced onchain by Sui smart contracts.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - ownership
   - delegates
   - access control
   - permissions
   - Sui smart contract
+  - delegate key
+  - MemWalAccount
+  - encryption
+  - relayer
 goal:
   description: Distinguish account ownership from delegate access, determine the right key type for each use case, and apply the access model to restrict or share memory across agents and apps.
   requires:

@@ -9,6 +9,9 @@ keywords:
   - store and recall
   - analyze
   - AI middleware
+  - rememberManual
+  - recallManual
+  - research app pattern
 goal:
   description: Run working SDK examples for storing, recalling, analyzing, and using AI middleware, and adapt them as starting points for your own integration.
   requires:

@@ -9,6 +9,12 @@ keywords:
   - Prometheus metrics
   - monitoring
   - logging
+  - Grafana
+  - alerting
+  - request correlation
+  - x-request-id
+  - TypeScript sidecar
+  - structured logs
 goal:
   description: Instrument a Walrus Memory relayer with Prometheus metrics, build a Grafana dashboard to track request rates and latency, and configure alerts for production anomalies.
   requires:
