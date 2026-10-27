@@ -587,6 +587,7 @@ async function main() {
   const hub = `---
 title: Release Notes
 description: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
+keywords: [ walrus, release notes, walrus memory, walrus sites, changelog ]
 displayed_sidebar: null
 hide_table_of_contents: true
 questions:
@@ -596,13 +597,13 @@ questions:
 answer: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
 ---
 
-# Release Notes
+## Release notes
 
-- [**Walrus**](release-notes/walrus-platform) — Release notes from [Walrus](https://github.com/MystenLabs/walrus/releases).
-- [**Walrus Memory**](release-notes/walrus-memory) — Release notes from
+- **Walrus:** [Release notes](release-notes/walrus-platform) from [Walrus](https://github.com/MystenLabs/walrus/releases).
+- **Walrus Memory:** [Release notes](release-notes/walrus-memory) from
   [Walrus Memory](https://github.com/MystenLabs/MemWal/releases),
   including the MCP server, TypeScript SDK, Python SDK, and OpenClaw.
-- [**Walrus Sites**](release-notes/walrus-sites) — Release notes from
+- **Walrus Sites:** [Release notes](release-notes/walrus-sites) from
   [Walrus Sites](https://github.com/MystenLabs/walrus-sites/releases).
 `;
 
@@ -610,9 +611,12 @@ answer: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
   console.log(`\nWrote ${OUTPUT_HUB}`);
 
   // ── Walrus page ──
+  const walrusDescription =
+    "Versioned release notes for the Walrus platform, covering storage node, aggregator, " +
+    "publisher, daemon, and CLI changes across Mainnet and Testnet releases.";
   let walrusMdx = `---
 title: Walrus release notes
-description: Release notes for the Walrus decentralized storage platform.
+description: ${walrusDescription}
 displayed_sidebar: null
 hide_table_of_contents: true
 questions:
