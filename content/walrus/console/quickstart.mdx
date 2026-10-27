@@ -91,7 +91,7 @@ Response (`201`):
 }
 ```
 
-`bytes` is the sponsored Sui transaction that creates the folder's Seal access policy, with your service key's address as the sender. Console has already attached the gas sponsor's signature, so your service key only needs to add its own. `digest` is the sponsor digest, which Console uses at finalize to look up the sponsored transaction. The folder stays in `pending_policy` until finalize succeeds. Until then, the file endpoints return `404` for it.
+`bytes` is the sponsored Sui transaction that creates the folder's [Seal](/docs/data-security) access policy, with your service key's address as the sender. Console has already attached the gas sponsor's signature, so your service key only needs to add its own. `digest` is the sponsor digest, which Console uses at finalize to look up the sponsored transaction. The folder stays in `pending_policy` until finalize succeeds. Until then, the file endpoints return `404` for it.
 
 ### The helper code
 
