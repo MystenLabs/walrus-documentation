@@ -91,7 +91,7 @@ blob size and with how long you store the data, so the levers below are where yo
   later if needed. The upper bound is 53 epochs, which is about 2 years on Mainnet.
 - **Choose permanence by need.** Deletable blobs let the owner reclaim the storage resource when the
   owner no longer needs the data. You cannot remove permanent blobs before expiry. See
-  [blob permanence](/docs/walrus-client/storing-blobs#blob-permanence).
+  [blob permanence](/docs/walrus-client/storing-blobs#is-a-stored-blob-deletable-or-permanent).
 - **Let the client deduplicate.** When Walrus already stores the content as a permanent blob for enough
   epochs, the client skips re-storing it and reuses existing storage resources where possible. Avoid
   forcing a fresh store unless you need a separate object.

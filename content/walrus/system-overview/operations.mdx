@@ -74,7 +74,7 @@ When you run this command, the client executes the following steps:
 
 1. Apply erasure coding to the blob, then compute the blob ID from the encoded data. The blob ID is a `u256` value typically encoded as a URL-safe base64 string. You can perform the remaining steps yourself or delegate them to a publisher.
 
-1. Interact with Sui to update a storage resource and register the blob ID with the desired size and lifetime. This emits an event that storage nodes receive; the upload continues after event confirmation. Metadata is the only blob element ever exposed to Sui or [its validators](https://docs.sui.io/guides/operator/validator-index), because Walrus storage nodes and caches always store the content of blobs offchain. The storage nodes or caches do not need to overlap with any Sui infrastructure components (such as validators), and the [storage epochs](/docs/system-overview/system-constraints#epoch-transitions) can have different lengths and timing than [Sui epochs](https://docs.sui.io/concepts/sui-architecture/epochs).
+1. Interact with Sui to update a storage resource and register the blob ID with the desired size and lifetime. This emits an event that storage nodes receive; the upload continues after event confirmation. Metadata is the only blob element ever exposed to Sui or [its validators](https://docs.sui.io/guides/operator/validator-index), because Walrus storage nodes and caches always store the content of blobs offchain. The storage nodes or caches do not need to overlap with any Sui infrastructure components (such as validators), and the [storage epochs](/docs/system-overview/system-constraints#how-do-epoch-transitions-affect-retrieval) can have different lengths and timing than [Sui epochs](https://docs.sui.io/concepts/sui-architecture/epochs).
 
 1. Send blob metadata to all storage nodes. Send each sliver to the storage node managing its corresponding shard.
 
@@ -98,7 +98,7 @@ A publisher that accepts and publishes blobs through HTTP also performs these st
 
 #### Maximum blob size
 
-You can query the maximum blob size through the [`walrus info`](/docs/system-overview/view-system-info#walrus-info) CLI command. The maximum blob size is currently 13.3&nbsp;GiB. You can store larger blobs by splitting them into smaller chunks.
+You can query the maximum blob size through the [`walrus info`](/docs/system-overview/view-system-info#how-to-view-system-information-with-walrus-info) CLI command. The maximum blob size is currently 13.3&nbsp;GiB. You can store larger blobs by splitting them into smaller chunks.
 
 Walrus stores blobs for the number of epochs you specify when you store them. Walrus storage nodes ensure the blob is available through the number of epochs specified. Mainnet uses an epoch duration of 2 weeks.
 

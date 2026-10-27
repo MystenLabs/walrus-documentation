@@ -78,11 +78,11 @@ Burning a blob removes the blob's corresponding Sui object, which reclaims most 
 - Does not refund the WAL you paid for storage.
 - Forfeits lifecycle control of the blob, so you can no longer extend a permanent blob or extend or delete a deletable blob.
 
-See [Burn blobs](/docs/walrus-client/managing-blobs#burn-blobs) for the CLI workflow, and [Storage Costs](/docs/system-overview/storage-costs#manage-blob-object-lifecycle) for when burning saves money.
+See [Burn blobs](/docs/walrus-client/managing-blobs#how-to-burn-blobs) for the CLI workflow, and [Storage Costs](/docs/system-overview/storage-costs#manage-blob-object-lifecycle) for when burning saves money.
 
 ### Why is storage priced in dollars but paid in WAL?
 
-Pricing storage at a fixed **$0.023/GB/month** gives you predictable, budgetable costs regardless of WAL price movement. Storage nodes track the WAL price from multiple sources and periodically update an onchain price vote, so the WAL amount charged for a given store adjusts to keep the USD-denominated price stable. See [How pricing works](/docs/system-overview/storage-costs#how-pricing-works).
+Pricing storage at a fixed **$0.023/GB/month** gives you predictable, budgetable costs regardless of WAL price movement. Storage nodes track the WAL price from multiple sources and periodically update an onchain price vote, so the WAL amount charged for a given store adjusts to keep the USD-denominated price stable. See [How pricing works](/docs/system-overview/storage-costs#how-does-walrus-pricing-work).
 
 ## References
 

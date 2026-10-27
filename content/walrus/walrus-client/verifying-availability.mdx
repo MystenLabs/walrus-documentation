@@ -158,9 +158,9 @@ layers give you that guarantee:
   it returns are consistent with the blob's encoding before serving the bytes. The default check is
   sufficient for most cases. For a full check, add the query parameter `strict_consistency_check=true`.
   Only add `skip_consistency_check=true` when the writer is known and trusted. See
-  [reading blobs over HTTP](/docs/http-api/reading-blobs#consistency-checks).
+  [reading blobs over HTTP](/docs/http-api/reading-blobs#how-to-control-consistency-checks).
 - **Binding to the onchain object.** Read the bytes
-  [by object ID](/docs/http-api/reading-blobs#reading-by-object-id), so the data you fetch is tied to
+  [by object ID](/docs/http-api/reading-blobs#how-to-read-a-blob-by-object-id), so the data you fetch is tied to
   the specific `Blob` object whose certification and storage period you verified, not just to any
   certificate that happens to exist for the content.
 

@@ -74,7 +74,7 @@ walrus --config <PATH_TO_CLIENT_CONFIG> daemon \
     --n-clients 1
 ```
 
-The script then uploads 1 MiB of random data with `PUT /v1/blobs?epochs=5` and reads it back with `GET /v1/blobs/<blob_id>`. A first-time store returns a `newlyCreated` JSON object that carries the blob ID; storing data that already exists on Walrus returns an `alreadyCertified` object instead. See [Storing Blobs](/docs/http-api/storing-blobs#understanding-the-response) for both response shapes.
+The script then uploads 1 MiB of random data with `PUT /v1/blobs?epochs=5` and reads it back with `GET /v1/blobs/<blob_id>`. A first-time store returns a `newlyCreated` JSON object that carries the blob ID; storing data that already exists on Walrus returns an `alreadyCertified` object instead. See [Storing Blobs](/docs/http-api/storing-blobs#what-does-a-store-request-return) for both response shapes.
 
 <ImportContent source="examples/python/hello_walrus_webapi.py" mode="code" />
 

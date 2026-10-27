@@ -40,7 +40,7 @@ answer: >-
 
 Walrus protects the network from misbehaving storage nodes through an onchain slashing mechanism. Committee members vote against a candidate node, and when their votes reach a quorum of voting weight, anyone can finalize the slashing to burn the candidate's accumulated commission. The operator pays the penalty, never the delegators staking with that pool.
 
-The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#manage-contract-upgrades). The same `governance_authorized` entity on the node's staking pool gates both actions, both use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
+The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#how-to-manage-contract-upgrades). The same `governance_authorized` entity on the node's staking pool gates both actions, both use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
 
 :::warning
 
@@ -91,7 +91,7 @@ Because the penalty is bounded by the accumulated commission, the deterrent grow
 
 Before you submit a vote, confirm three things:
 
-1. Your `governance_authorized` wallet is the one you intend to use. The vote checks the transaction sender (or a controlling object) against the `governance_authorized` field on your pool. If you have not yet designated a dedicated governance wallet, follow [Update the commission receiver and entity authorized for governance](/docs/operator-guide/storage-nodes/commission-governance#update-the-commission-receiver-and-entity-authorized-for-governance) first. The hot wallet on the storage node machine should not hold this authorization.
+1. Your `governance_authorized` wallet is the one you intend to use. The vote checks the transaction sender (or a controlling object) against the `governance_authorized` field on your pool. If you have not yet designated a dedicated governance wallet, follow [Update the commission receiver and entity authorized for governance](/docs/operator-guide/storage-nodes/commission-governance#how-to-update-the-commission-receiver-and-governance-authorization) first. The hot wallet on the storage node machine should not hold this authorization.
 
 2. The wallet holds enough SUI for gas. The vote and execute transactions are small, so a few SUI is more than enough.
 

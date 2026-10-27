@@ -83,7 +83,7 @@ Use `--rpc-url <URL>` to specify a Sui RPC node instead of the currently configu
 
 With the `--json` flag, or in [JSON mode](/docs/walrus-client/json-mode), the `read` command prints a JSON object containing the blob ID and, when no output file is set, the blob content as a Base64-encoded string.
 
-To read individual blobs stored inside a quilt, use the `read-quilt` command instead. See [quilts](/docs/walrus-client/quilts#read-blobs-from-a-quilt) for details.
+To read individual blobs stored inside a quilt, use the `read-quilt` command instead. See [quilts](/docs/walrus-client/quilts#how-do-i-read-blobs-from-a-quilt) for details.
 
 ## How do I verify blob consistency?
 
@@ -97,4 +97,4 @@ $ walrus read <BLOB_ID> --out <FILE> --strict-consistency-check
 
 You can disable consistency checks completely with the `--skip-consistency-check` flag. Only use this if the writer of the blob is known and trusted. Skipping the consistency check does not affect the authentication checks for data received from storage nodes, which the client always performs. The two flags conflict, so pass at most one of them.
 
-When reading through an aggregator instead of the CLI, the equivalent query parameters are `strict_consistency_check=true` and `skip_consistency_check=true`. See [consistency checks over HTTP](/docs/http-api/reading-blobs#consistency-checks).
+When reading through an aggregator instead of the CLI, the equivalent query parameters are `strict_consistency_check=true` and `skip_consistency_check=true`. See [consistency checks over HTTP](/docs/http-api/reading-blobs#how-to-control-consistency-checks).

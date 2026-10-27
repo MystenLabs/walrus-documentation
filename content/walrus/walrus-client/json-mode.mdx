@@ -80,7 +80,7 @@ $ walrus json \
     }'
 ```
 
-If you omit `config`, the client searches for `client_config.yaml` (or `client_config.yml`) in the [default locations](/docs/walrus-client/walrus-cli#configuration): the current directory, `$XDG_CONFIG_HOME/walrus/`, `~/.config/walrus/`, and `~/.walrus/`. If the specified path is invalid, the command fails with an error. JSON mode uses no separate authentication: commands that create or modify Sui objects sign transactions with the configured Sui wallet, which you can override with the `wallet` key.
+If you omit `config`, the client searches for `client_config.yaml` (or `client_config.yml`) in the [default locations](/docs/walrus-client/walrus-cli#how-to-configure-the-walrus-cli): the current directory, `$XDG_CONFIG_HOME/walrus/`, `~/.config/walrus/`, and `~/.walrus/`. If the specified path is invalid, the command fails with an error. JSON mode uses no separate authentication: commands that create or modify Sui objects sign transactions with the configured Sui wallet, which you can override with the `wallet` key.
 
 ## How do I pass input through stdin?
 

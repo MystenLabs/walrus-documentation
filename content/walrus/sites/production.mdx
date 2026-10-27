@@ -67,7 +67,7 @@ The public portal resolves sites at `<name>.wal.app` from the SuiNS name that po
 
 There is no built-in watch mode; the supported path to update-on-push is running `site-builder deploy` from your CI pipeline on every push to your production branch. The [GitHub Actions workflow guide](/docs/sites/ci-cd/github-actions-workflow) walks through the setup, including [preparing deployment credentials](/docs/sites/ci-cd/preparing-deployment-credentials) so the pipeline signs with a dedicated wallet.
 
-One trap decides whether redeploys update your site or duplicate it: `site-builder` records your site's object ID in `ws-resources.json` inside the deploy directory, and CI recreates that directory on every run. Commit `ws-resources.json` to your framework's `public/` directory so builds carry it into the output, or pass `--object-id` explicitly; otherwise every pipeline run creates a new site object and pays for it. See [`ws-resources.json` in pipelines](/docs/sites/ci-cd/other-ci-cd-platforms#understanding-ws-resourcesjson-in-pipelines).
+One trap decides whether redeploys update your site or duplicate it: `site-builder` records your site's object ID in `ws-resources.json` inside the deploy directory, and CI recreates that directory on every run. Commit `ws-resources.json` to your framework's `public/` directory so builds carry it into the output, or pass `--object-id` explicitly; otherwise every pipeline run creates a new site object and pays for it. See [`ws-resources.json` in pipelines](/docs/sites/ci-cd/other-ci-cd-platforms#how-does-ws-resourcesjson-work-in-pipelines).
 
 ## Keep the toolchain small
 
