@@ -46,12 +46,12 @@ Use:
 
 ## Analyze
 
-Use `analyze()` when you want the relayer to extract facts from longer text and store them as
+Use `analyze()` when you want the relayer to extract structured facts from long content and store them as
 memories.
 
 ## AI Middleware
 
-Use `withMemWal` when you want:
+Wire up the `withMemWal` middleware for automatic recall in AI generation pipelines when you want:
 
 - recall before generation
 - optional auto-save after generation

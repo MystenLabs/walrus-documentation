@@ -31,14 +31,14 @@ answer: >-
   The default Walrus Memory client is the recommended entry point where the relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing. It provides remember() for storing memories, recall() for semantic search, analyze() for fact extraction, and restore() for rebuilding missing index entries.
 ---
 
-The recommended default client. The relayer handles embeddings, Seal encryption, Walrus upload, and vector indexing.
+The recommended default client. The relayer handles embeddings, SEAL encryption, Walrus upload, and vector indexing.
 
 ## How it works
 
 1. The SDK signs each request with your delegate key
 2. The relayer verifies delegate access
 3. `remember(text)` takes the memory text and returns an accepted job whose `job_id` you pass to `waitForRememberJob()`, while the relayer encrypts, uploads, and indexes in the background
-4. `recall` searches by Memory Space and returns decrypted matches
+4. `recall` searches within the configured namespace and returns decrypted matches
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
 
