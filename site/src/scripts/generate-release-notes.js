@@ -611,9 +611,12 @@ answer: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
   console.log(`\nWrote ${OUTPUT_HUB}`);
 
   // ── Walrus page ──
+  const walrusDescription =
+    "Versioned release notes for the Walrus platform, covering storage node, aggregator, " +
+    "publisher, daemon, and CLI changes across Mainnet and Testnet releases.";
   let walrusMdx = `---
 title: Walrus release notes
-description: Versioned release notes for the Walrus platform, covering storage node, aggregator, publisher, daemon, and CLI changes across Mainnet and Testnet releases.
+description: ${walrusDescription}
 displayed_sidebar: null
 hide_table_of_contents: true
 questions:
