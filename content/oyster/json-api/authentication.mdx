@@ -13,7 +13,7 @@ token, distinguished by which routes they unlock; both share the same
 
 | Route pattern | Auth mode | Purpose |
 |---|---|---|
-| Bucket CRUD; blob write, list, and delete; wallet | API key | Data operations |
+| Bucket CRUD; blob write, list, and delete; wallet | API key | Data operations (blob reads are public: see the next row) |
 | `GET .../blobs/{key}`, `GET /blobs/by-blob-id/...` | Public | Blob reads |
 | `POST /accounts`, key management under `/accounts/{id}/...` | Admin key | Admin operations |
 | `/health`, `/ready`, `/metrics`, `/api/docs` | Public | Infrastructure |

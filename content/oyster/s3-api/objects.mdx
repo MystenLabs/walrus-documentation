@@ -209,7 +209,7 @@ DeleteObject supports `If-Match` for safe deletion:
 - `If-Match: "<etag>"`: Delete only if the object's ETag matches.
   Returns `412 PreconditionFailed` on mismatch.
 
-**Errors:**
+**Errors:** (`NoSuchKey` is absent by design, because deleting a missing key still returns success.)
 
 | S3 error code | Condition |
 |---------------|-----------|

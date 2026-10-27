@@ -14,7 +14,7 @@ The S3 API runs on the **same HTTP port** as the JSON API. Oyster routes any
 request that doesn't match `/api/v1/`, `/health`, `/ready`, `/metrics`, or
 `/api/docs` to the S3-compatible handler.
 
-This means you point your S3 client at the same `$OYSTER_URL`, with no separate
+This means you set your S3 client's endpoint URL to `$OYSTER_URL` itself, the same base URL used for the JSON API, with no separate
 port or endpoint needed.
 
 ## Supported operations
