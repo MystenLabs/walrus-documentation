@@ -52,6 +52,7 @@ All errors return a JSON body with a single `error` field:
 | `304` | Not Modified: `If-None-Match` matched on a GET request |
 | `400` | Bad Request: invalid input or validation failure |
 | `401` | Unauthorized: missing or invalid API key |
+| `402` | Payment Required: the Pearl-derived wallet lacks WAL or SUI to fund the onchain action (see [Cross-cutting error contracts](#cross-cutting-error-contracts)) |
 | `404` | Not Found: resource doesn't exist or your account doesn't own it |
 | `409` | Conflict: resource already exists or limit reached |
 | `412` | Precondition Failed: `If-Match` or `If-None-Match` condition not met |
@@ -60,7 +61,7 @@ All errors return a JSON body with a single `error` field:
 | `501` | Not Implemented: endpoint exists but isn't functional yet |
 | `503` | Service Unavailable: a dependent service is unreachable |
 
-The `402` code is covered under [Cross-cutting error contracts](#cross-cutting-error-contracts): the Pearl-derived wallet doesn't hold enough WAL or SUI to fund the onchain action. Only 3 account stubs currently return `501`. The routes exist, but no
+Only 3 account stubs currently return `501`. The routes exist, but no
 implementation backs them yet: `PUT /account/billing`, `GET /account/report`, and
 `POST /account/transfer`. The per-endpoint reference intentionally omits them
 until they are functional.
