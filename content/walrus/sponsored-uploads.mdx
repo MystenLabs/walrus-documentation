@@ -53,7 +53,7 @@ On Mainnet, never run an open, unauthenticated publisher, because anyone who rea
 
 An [upload relay](/docs/operator-guide/upload-relay) lets a client avoid opening a connection to every storage node, which makes it the right fit for browsers and low-powered devices. The relay distributes slivers and returns a confirmation certificate, but it does not perform onchain operations: the client still registers the blob before the upload and certifies it after.
 
-Because the client does the onchain work, the upload relay is walletless only when your app manages the signing and funding for the user, for example through a backend signer. A paid relay also requires a tip, which the client's payment transaction provides. See the [tip mechanism](/docs/system-overview/relay#tip-mechanism) for how to configure and pay the tip.
+Because the client does the onchain work, the upload relay is walletless only when your app manages the signing and funding for the user, for example through a backend signer. If the relay is configured to charge a tip, the client's payment transaction must also provide that tip. See the [tip mechanism](/docs/system-overview/relay#tip-mechanism) for how to configure and pay the tip.
 
 ### Direct SDK
 

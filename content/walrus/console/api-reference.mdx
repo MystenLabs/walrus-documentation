@@ -327,9 +327,9 @@ Marks the file as `deleting` and enqueues a background job to remove the underly
 
 `GET /api/v1/buckets/{id}/files/{fileId}/status`
 
-Polls the state of an in-flight upload after the upload endpoint returns `202`.
+Polls the state of the in-flight upload job after the upload endpoint returns `202`. The job state reported here in `data.state` is a separate field from the file `status` returned by [Get file metadata](#get-file-metadata), which is one of `pending`, `uploading`, `active`, `deleting`, `failed`, or `deleted`.
 
-Returns `200` with `data.state`, one of `queued`, `active`, `completed`, or `failed`. When the worker reports it, `data.progress` gives fractional progress from 0 to 1. When the state is `failed`, `data.error` includes a `code` and `message`. Completed and failed jobs stay readable for a while, then Console evicts them and this endpoint returns `404`. A `404` does not mean the upload failed. If you get a `404` after uploading, read the file metadata endpoint and treat a file status of `active` as success.
+Returns `200` with `data.state`, one of `queued`, `active`, `completed`, or `failed`. These are job states, not file statuses: a job state of `completed` is the point at which the file status becomes `active`. When the worker reports it, `data.progress` gives fractional progress from 0 to 1. When the state is `failed`, `data.error` includes a `code` and `message`. Completed and failed jobs stay readable for a while, then Console evicts them and this endpoint returns `404`. A `404` does not mean the upload failed. If you get a `404` after uploading, read the file metadata endpoint and treat a file status of `active` as success.
 
 ### Download a file
 

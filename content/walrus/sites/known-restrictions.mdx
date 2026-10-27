@@ -107,7 +107,7 @@ Service-worker portals are fundamentally incompatible with progressive web apps 
 1. The portal must register its own service worker for the site to work at all. This prevents the browser from loading the PWA manifest correctly.
 2. There can only be one service worker registered per origin. Registering a PWA's service worker would overwrite the portal's service worker, breaking the site entirely.
 
-The server-side portal does not share these limitations. However, because Walrus Sites must be compatible with both portal types and must therefore target the more restrictive service-worker feature set, you cannot currently deploy PWAs to Walrus Sites while maintaining full portal compatibility.
+The server-side portal does not share these limitations: these PWA conflicts apply only to portals based on service workers. If your site must remain usable through a service-worker portal, avoid PWA features; otherwise, serve the site through a server-side portal (for example, `https://wal.app`), where PWA service workers are not in conflict with the portal.
 
 ## Domain and naming constraints
 

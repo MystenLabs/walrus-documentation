@@ -44,7 +44,7 @@ Walrus exposes three HTTP services. Callers send requests to the wrong one more 
 | --- | --- | --- | --- | --- |
 | Aggregator | Read | Nobody, reads cost nothing | Not applicable | No |
 | Publisher | Write | The publisher, from its own wallet | The publisher, unless the caller passes `send_object_to` | No |
-| Upload relay | Write | The client | The client, always | Yes |
+| Upload relay | Write | The client | The client, which registers, certifies, and pays on Sui itself | Yes |
 
 The wallet column decides most integrations. A caller that cannot hold SUI and WAL needs a publisher. A caller that holds a wallet but cannot open hundreds of connections, such as a browser, needs a relay.
 
