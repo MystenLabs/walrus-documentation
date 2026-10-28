@@ -39,7 +39,7 @@ answer: >-
 
 The recommended default client. The relayer handles embeddings, Seal encryption, Walrus upload, and vector indexing. The SDK only signs requests and sends text.
 
-## How it works
+## How does the client work?
 
 1. The SDK signs each request with your delegate key (Ed25519 through PyNaCl)
 2. The relayer verifies delegate access
@@ -61,7 +61,7 @@ memwal = MemWal.create(
 
 `MemWalSync.create(...)` takes the same arguments for synchronous code.
 
-## Core methods
+## How to store, recall, and query memories
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal.md</a>
 
@@ -91,7 +91,7 @@ await memwal.health()
 
 Every memory method accepts an optional `namespace=` override that wins over the client default for that call.
 
-## Restore
+## How to restore missing indexed entries
 
 Rebuild missing indexed entries for one namespace from Walrus. Incremental and namespace-scoped, meant to repair PostgreSQL vector state from Walrus-backed memory.
 
@@ -111,7 +111,7 @@ Use these when you already have a vector or Seal-encrypted bytes. See [Manual me
 - `embed(text)`, embedding vector only, no storage
 - `get_public_key_hex()`, the delegate public key
 
-## Errors
+## What errors does the SDK raise?
 
 | Exception | Raised when |
 | --- | --- |
