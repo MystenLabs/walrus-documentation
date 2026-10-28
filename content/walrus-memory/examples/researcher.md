@@ -10,7 +10,7 @@ The researcher example (`apps/researcher`) is a research assistant that works in
 
 Researcher composes each sprint into one structured report and stores it with `remember`, then generates recall queries from sprint metadata to rebuild context:
 
-<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/researcher.md" target="_blank" className="code-source-link">Source: examples/researcher.md</a>
+<a href="https://github.com/MystenLabs/MemWal/tree/main/apps/researcher" target="_blank" className="code-source-link">Source: apps/researcher</a>
 
 ```ts
 const fullText =
