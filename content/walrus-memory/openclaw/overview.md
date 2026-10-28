@@ -104,6 +104,8 @@ Optional `memory_search` and `memory_store` tools for explicit LLM control
 
 ## Get started
 
+To install, configure, and verify the plugin, follow [Quick Start](/walrus-memory/openclaw/quick-start). For the architecture, message flow, and how hooks compare with tools, see [How It Works](/walrus-memory/openclaw/how-it-works). For hooks, tools, CLI commands, configuration, and troubleshooting, see [Reference](/walrus-memory/openclaw/reference).
+
 <Cards>
   <Card title="Quick Start" href="/walrus-memory/openclaw/quick-start">
     Install, configure, and verify the plugin in minutes
