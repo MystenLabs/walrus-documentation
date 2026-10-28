@@ -95,7 +95,9 @@ for page in paginator.paginate(Bucket="my-bucket", MaxKeys=100):
 s3.delete_object(Bucket="my-bucket", Key="hello.txt")
 ```
 
-### Delete a bucket (delete all of its objects first)
+### Delete a bucket
+
+Delete every object in the bucket first. Oyster rejects `delete_bucket` while the bucket still holds objects.
 
 ```python
 s3.delete_bucket(Bucket="my-bucket")
