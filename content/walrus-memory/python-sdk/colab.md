@@ -35,7 +35,17 @@ answer: >-
   troubleshooting. It defaults to staging for test credentials.
 ---
 
-Use the runnable [Walrus Memory Python SDK Colab](https://colab.research.google.com/drive/1SaKjkSp0DXnM_nktWSiEC-l9qGtVr6ph) when you want a notebook-first walkthrough.
+The [Walrus Memory Python SDK Colab](https://colab.research.google.com/drive/1SaKjkSp0DXnM_nktWSiEC-l9qGtVr6ph) is a runnable notebook that walks you through installing, configuring, and calling the Walrus Memory Python SDK from Google Colab. It defaults to `staging` for test credentials. Use it when you want a notebook-first walkthrough, or as an interactive reference before you integrate the SDK into your own project.
+
+## How to run the notebook
+
+To run the notebook:
+
+1. Open the [Walrus Memory Python SDK Colab](https://colab.research.google.com/drive/1SaKjkSp0DXnM_nktWSiEC-l9qGtVr6ph).
+2. Load your credentials through Colab Secrets or hidden prompts.
+3. Run each cell to store and recall memories.
+
+## What does the notebook cover?
 
 The notebook covers:
 
