@@ -30,7 +30,7 @@ The structured report format matters: because the whole sprint lives in one memo
 
 From the repo root:
 
-<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/researcher.md" target="_blank" className="code-source-link">Source: examples/researcher.md</a>
+<a href="https://github.com/MystenLabs/MemWal/tree/main/apps/researcher" target="_blank" className="code-source-link">Source: apps/researcher</a>
 
 ```bash
 $ pnpm install
@@ -41,7 +41,7 @@ Fill in the required values in `apps/researcher/.env`: `OPENROUTER_API_KEY`, `PO
 
 With the environment configured, apply the database migrations and start the app:
 
-<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/researcher.md" target="_blank" className="code-source-link">Source: examples/researcher.md</a>
+<a href="https://github.com/MystenLabs/MemWal/tree/main/apps/researcher" target="_blank" className="code-source-link">Source: apps/researcher</a>
 
 ```bash
 $ pnpm --filter researcher db:migrate

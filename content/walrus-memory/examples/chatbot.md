@@ -48,4 +48,4 @@ $ pnpm --filter chatbot db:migrate
 $ pnpm dev:chatbot
 ```
 
-The app runs on [localhost:3001](http://localhost:3001). The [chatbot source](https://github.com/MystenLabs/MemWal/tree/main/apps/chatbot) documents each variable.
+The app runs on [localhost:3001](http://localhost:3001). To exercise memory end to end, open the app, enable Walrus Memory in the UI, and supply the delegate key and account ID so the UI passes them to the chat API. The [chatbot source](https://github.com/MystenLabs/MemWal/tree/main/apps/chatbot) documents each variable.

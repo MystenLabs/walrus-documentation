@@ -104,6 +104,6 @@ Use this when you want to store structured research findings and recall them in 
 
 1. Submit a structured summary with `remember()` and wait for completion when immediate recall is needed
 2. Generate targeted queries later
-3. Use `recall()` to pull relevant findings back into context
+3. Use `recall()` with a `query` and `limit`, as in the basic example, to pull plaintext results for the same namespace back into context
 
 Structured summaries usually recall better than raw transcripts because they keep the signal high.

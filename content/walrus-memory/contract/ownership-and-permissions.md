@@ -39,7 +39,7 @@ The owner is the Sui wallet address recorded by the `MemWalAccount`. The owner c
 - Deactivate (freeze) and reactivate the account when no Admin quarantine is active
 - Decrypt any memory encrypted under their address through Seal
 
-Each Sui address can only create **one** MemWalAccount (enforced by the `AccountRegistry`).
+Each Sui address can only create **one** MemWalAccount: the `AccountRegistry` enforces this limit, so an attempt to create a second account from an address that already owns one is rejected instead of producing another account.
 
 ## Delegate
 

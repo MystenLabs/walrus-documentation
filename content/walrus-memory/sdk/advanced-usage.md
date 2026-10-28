@@ -46,7 +46,7 @@ Use:
 
 ## Analyze
 
-Use `analyze()` when you want the relayer to extract structured facts from long content and store them as
+Use `analyze()` for LLM-based fact extraction when you want the relayer to extract structured facts from longer text and store them as
 memories.
 
 ## AI Middleware

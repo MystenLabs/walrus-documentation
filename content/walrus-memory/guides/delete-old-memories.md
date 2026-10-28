@@ -35,7 +35,7 @@ answer: >-
 
 ## Overview
 
-As part of ongoing security improvements, you can review and remove
+Using the dashboard's **Delete memories** panel, you can review and remove
 memories you no longer want stored on Walrus Memory. You can preview
 your memories and delete any you'd like to clear.
 
