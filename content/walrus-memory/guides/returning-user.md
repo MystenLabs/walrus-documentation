@@ -10,33 +10,33 @@ Your memories live on Walrus and your account lives on Sui, so they persist no m
 **Post-GA:** Walrus Memory ships the full returning-user onboarding experience after GA. The delegate-key recovery flow below works today and matches the current dashboard behavior. The wider existing-user experience, including console visibility for existing Walrus assets, is on the near-term product roadmap.
 :::
 
-## Your account is not tied to one device
+## Is your account tied to one device?
 
 Walrus Memory stores your memories as encrypted blobs on Walrus and records your account and its permissions on Sui. Neither depends on your browser. When you connect the same wallet again, whether a week later or on a different machine, the same account and the same memories are still yours.
 
 The one thing that stays local is the delegate key. A delegate key is a keypair your account authorizes to read and write memory on your behalf. The dashboard keeps it in the browser you created it in, so a new browser starts without it. Expect this; recovering takes a single step.
 
-## First sign-in on a new device
+## How to sign in on a new device
 
 When you connect your wallet on a device where you have not yet created a delegate key, the dashboard checks Sui for your account and shows you one of two states.
 
-### The dashboard finds your existing account
+##### Step 1: The dashboard finds your existing account
 
-    If your wallet already owns a Walrus Memory account, the dashboard tells you the account is active but this browser does not hold a delegate key. Your memories are safe. You just need a key on this device to reach them.
+If your wallet already owns a Walrus Memory account, the dashboard tells you the account is active but this browser does not hold a delegate key. Your memories are safe. You just need a key on this device to reach them.
 
-  ### Create a new delegate key
+##### Step 2: Create a new delegate key
 
-    Create a new delegate key from the dashboard. It generates a fresh keypair and registers it to your existing account onchain, so the new key joins the account rather than replacing it. Save the private key somewhere secure, because the dashboard shows it only once.
+Create a new delegate key from the dashboard. It generates a fresh keypair and registers it to your existing account onchain, so the new key joins the account rather than replacing it. Save the private key somewhere secure, because the dashboard shows it only once.
 
-  ### Reach your existing memories
+##### Step 3: Reach your existing memories
 
-    Because your account's owner and delegates enforce access control onchain, the account decrypts its memories with any delegate key it registers. The new key you just created reads the memories you wrote with the old one. You do not need to recover the old key.
+Because your account's owner and delegates enforce access control onchain, the account decrypts its memories with any delegate key it registers. The new key you just created reads the memories you wrote with the old one. You do not need to recover the old key.
 
 :::note
 Losing a delegate key does not lose your memories. The key is a credential for reaching your account, not the account itself. Create a new one and your memories are still there. If someone else might now hold a key you lost, remove that key from your account on the dashboard so it can no longer act on your behalf.
 :::
 
-### Recall already reaches your memories
+### Do you need to restore your memories?
 
 The search index lives in the relayer's database, not your browser, scoped to your account and namespace. Once you have a delegate key on the new device, recall reaches your existing memories straight away, with nothing to rebuild.
 
@@ -49,13 +49,13 @@ const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
 
-Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of your namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, rerun restore with a progressively higher `limit` until `restored` stops increasing. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
+Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of your namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call: because restore has no cursor, rerunning it only re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob has been covered. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
 
-## Walrus Memory does not migrate existing data
+## Does Walrus Memory migrate existing Walrus data?
 
 If you already store files on Walrus directly, expect a clear boundary: Walrus Memory does not import those blobs as memories. There is no migration step, by design. The console does not yet show existing Walrus assets either; surfacing them there is on the near-term product roadmap.
 
-A memory is not just a blob. When Walrus Memory stores a memory, it encrypts the content with Seal, attaches namespace metadata, and generates a vector embedding so recall can match the memory by meaning. An arbitrary blob you uploaded to Walrus through another tool has none of that structure, so Walrus Memory cannot treat it as a memory or return it from recall.
+A memory is not just a blob. When Walrus Memory stores a memory, it encrypts the content with Seal so that only your account's owner and delegates can decrypt it, attaches namespace metadata, and generates a vector embedding so recall can match the memory by meaning. An arbitrary blob you uploaded to Walrus through another tool has none of that structure, so Walrus Memory cannot treat it as a memory or return it from recall.
 
 To bring existing content into Walrus Memory, write it through the SDK, which produces a proper memory:
 
@@ -71,7 +71,7 @@ Re-uploading is not a loss of ownership. You still own the original Walrus blobs
 
 This boundary runs the other way too. Deleting a memory in Walrus Memory does not touch any separate Walrus blob you uploaded elsewhere, because they are different objects with different owners and lifecycles.
 
-## Onchain privacy
+## What does your wallet reveal onchain?
 
 Walrus Memory keeps your content private but your ownership public. Know which is which before you rely on it.
 
