@@ -140,7 +140,7 @@ sequenceDiagram
     end
 ```
 
-## Hooks vs tools
+## What is the difference between hooks and tools?
 
 The plugin has two mechanisms for memory operations. They serve different purposes:
 
@@ -156,7 +156,7 @@ The plugin has two mechanisms for memory operations. They serve different purpos
 
 **Tools are secondary.** They give the LLM additional control when it needs it, targeted searches, explicit stores. But since OpenClaw's default `coding` profile instructs agents to use file-based memory, the LLM rarely calls plugin tools unless they're explicitly allowlisted.
 
-## Auto-recall in detail
+## How does auto-recall work?
 
 The `before_prompt_build` hook fires before the prompt is assembled for the LLM:
 
@@ -169,7 +169,7 @@ The `before_prompt_build` hook fires before the prompt is assembled for the LLM:
 
 `memory_search` and `memory_store` are pinned to the calling agent's namespace inside the plugin. The note is not what enforces isolation. An omitted namespace uses that agent. A supplied namespace is rejected unless it is that namespace or the agent's legacy namespace.
 
-## Auto-capture in detail
+## How does auto-capture work?
 
 The `agent_end` hook fires after the LLM's response is delivered to the user:
 
@@ -186,7 +186,7 @@ The `agent_end` hook fires after the LLM's response is delivered to the user:
 
 Capture runs **after** the response is sent, the user never waits for it.
 
-## Multi-agent isolation
+## How does multi-agent isolation work?
 
 Each OpenClaw agent gets its own memory namespace, derived from the session key:
 
