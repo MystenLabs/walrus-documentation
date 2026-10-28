@@ -65,7 +65,7 @@ sequenceDiagram
     Note over Contract,DB: Indexer syncs contract events → DB
 ```
 
-## SDK
+## What does the SDK do?
 
 The TypeScript SDK is the main entry point for developers. It wraps all Walrus Memory operations into a basic client that your app calls directly.
 
@@ -88,7 +88,7 @@ const job = await memwal.remember("User prefers dark mode.");
 await memwal.waitForRememberJob(job.job_id);
 ```
 
-## Relayer
+## How does the relayer work?
 
 The relayer is the backend service that processes all SDK requests. It abstracts all Web3 complexity behind a familiar REST API, developers interact with Walrus Memory using standard HTTP calls, while the relayer handles blockchain transactions, encryption, and decentralized storage behind the scenes.
 
@@ -110,7 +110,7 @@ Because the relayer handles encryption and plaintext data, you are placing trust
 
 You can use the [managed relayer](/walrus-memory/relayer/public-relayer) to get started, [self-host](/walrus-memory/relayer/self-hosting) your own, or use the manual client flow for full client-side control.
 
-## Walrus Memory smart contract
+## What role does the smart contract play?
 
 The Sui smart contract is the source of truth for ownership and access control.
 
@@ -122,7 +122,7 @@ The Sui smart contract is the source of truth for ownership and access control.
 
 The contract doesn't store memory content, it only manages identity and permissions.
 
-## Indexer
+## What does the indexer do?
 
 The indexer keeps the backend in sync with onchain state so the relayer doesn't need to query the blockchain on every request.
 
@@ -131,7 +131,7 @@ The indexer keeps the backend in sync with onchain state so the relayer doesn't 
 - Syncs account and delegate data into the indexed database
 - Enables fast lookups for the relayer during request verification
 
-## Walrus
+## What does Walrus store?
 
 Walrus is the decentralized storage layer where encrypted memory payloads live.
 
@@ -142,7 +142,7 @@ Walrus is the decentralized storage layer where encrypted memory payloads live.
 
 Walrus is an external protocol, Walrus Memory uses it as infrastructure, not as something you interact with directly.
 
-## Indexed database
+## What does the indexed database do?
 
 PostgreSQL with the [pgvector](https://github.com/pgvector/pgvector) extension serves as the local search and sync layer.
 
