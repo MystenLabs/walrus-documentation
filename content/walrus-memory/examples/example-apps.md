@@ -39,9 +39,9 @@ answer: >-
 
 The repo includes ready-to-run apps in `apps/` that show different Walrus Memory integration patterns. Start here for app-level patterns; [Quick Start](/walrus-memory/sdk/quick-start) and [Walrus Memory Usage](/walrus-memory/sdk/usage/memwal) cover the basic SDK flow.
 
-## Run locally
+## How to run the apps locally
 
-Each app needs its own environment file and database setup before it starts; the chatbot, noter, and researcher pages below cover the exact steps. After configuring an app, run it from the repo root:
+Each app needs its own environment file and database setup before it starts; the chatbot, noter, and researcher pages linked under [The demo apps](#the-demo-apps) cover the exact steps, so open the page for the app you want and follow its setup and run instructions first. After configuring an app, run it from the repo root:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/example-apps.md" target="_blank" className="code-source-link">Source: examples/example-apps.md</a>
 
@@ -52,9 +52,11 @@ $ pnpm dev:noter
 $ pnpm dev:researcher
 ```
 
+`pnpm dev:app` starts the Playground, `pnpm dev:chatbot` starts the Chatbot, `pnpm dev:noter` starts the Noter, and `pnpm dev:researcher` starts the Researcher.
+
 ## [Playground](https://github.com/MystenLabs/MemWal/tree/main/apps/app)
 
-Dashboard, playground, and interactive demo for Walrus Memory.
+Dashboard, playground, and interactive demo for Walrus Memory. It lives in `apps/app`, which the `pnpm dev:app` command starts.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/example-apps.md" target="_blank" className="code-source-link">Source: examples/example-apps.md</a>
 
