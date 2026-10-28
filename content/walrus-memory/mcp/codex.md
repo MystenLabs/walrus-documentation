@@ -1,7 +1,16 @@
 ---
 title: Codex
 description: Add portable Walrus Memory to OpenAI Codex as a full plugin with automatic-memory hooks via the plugin marketplace, or as a plain MCP server.
-keywords: [MCP, Codex, Walrus Memory, Walrus Memory, plugin, automatic memory, marketplace]
+keywords:
+  - MCP
+  - Codex
+  - Walrus Memory
+  - Walrus Memory
+  - plugin
+  - automatic memory
+  - marketplace
+  - lifecycle hooks
+  - memwal_login
 goal:
   description: Add Walrus Memory to Codex as an automatic memory plugin via the marketplace or MCP-only server, authenticate with your account credentials, and confirm persistent memory is working across sessions.
   requires:
