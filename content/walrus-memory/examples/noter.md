@@ -20,7 +20,7 @@ export const extractMemories = async (text: string): Promise<string[]> => {
 };
 ```
 
-Because `analyze` stores each extracted fact as its own memory, later recall returns the specific fact that matches a query instead of a whole note. The server-side client reads its delegate key and account from the `MEMWAL_PRIVATE_KEY` and `MEMWAL_ACCOUNT_ID` environment variables.
+Because `analyze` stores each extracted fact as its own memory, later recall returns the specific fact that matches a query instead of a whole note. The user configures the delegate key and account at runtime.
 
 ## Run it locally
 
