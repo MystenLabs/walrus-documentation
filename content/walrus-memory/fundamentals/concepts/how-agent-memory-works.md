@@ -56,9 +56,11 @@ It helps to think of an agent as having two layers of memory, much as people do.
 
 ## How long-term memory works
 
-Long-term memory for agents is usually semantic, which means the agent stores and retrieves by meaning rather than by exact keywords. The mechanism behind it is embeddings and vector search. When you store a piece of text, an embedding model converts it into a vector, a list of numbers that captures its meaning, so that two texts about the same idea end up close together even when they share no words. The store saves that vector alongside the original text. Later, when the agent needs context, it embeds the query the same way, and the store returns the entries whose vectors sit closest to the query, ranked by similarity. The agent adds those retrieved memories to its context window and answers with them in hand, which is the retrieve-then-answer pattern at the core of retrieval-augmented generation.
+Long-term memory for agents is usually semantic, which means the agent stores and retrieves by meaning rather than by exact keywords. The mechanism behind it is embeddings and vector search. When you store a piece of text, an embedding model converts it into a vector, a list of numbers that captures its meaning, so that two texts about the same idea end up close together even when they share no words. The store saves that vector alongside the original text. Later, when the agent needs context, it embeds the query the same way, and the store returns the entries whose vectors sit closest to the query, ranked by similarity. The agent adds those retrieved memories to its context window and answers with them in hand. This retrieve-then-answer step is the core of the broader retrieval-augmented generation (RAG) pattern.
 
 ### Writing a memory
+
+When you write a memory, an embedding model converts the text into a vector, and the vector store saves that vector alongside the original text.
 
 <figure>
   <iframe src="/diagrams/interactive_agent-memory-write_v1.html"
@@ -66,11 +68,13 @@ Long-term memory for agents is usually semantic, which means the agent stores an
     title="Writing a memory: an embedding model converts the text into a vector. The vector store keeps that vector alongside the original text, so the store can search the vector by meaning and the agent can read the text back."
     loading="lazy"></iframe>
   <figcaption>
-    Writing a memory: an embedding model converts the text into a vector, a list of numbers representing its meaning. The vector goes into a vector store that finds nearest neighbors quickly, and the store keeps the original text alongside it. You search the vector, but the agent reads the text.
+    Writing a memory: an embedding model converts the text into a vector, a list of numbers representing its meaning. The vector goes into a vector store that quickly finds nearest neighbors (the stored vectors closest to a query vector). The store keeps the original text alongside the vector. You search the vector, but the agent reads the text.
   </figcaption>
 </figure>
 
 ### Recalling a memory
+
+When the agent recalls a memory, the same embedding model converts the question into a vector, and the store returns the stored entries whose vectors sit closest to it.
 
 <figure>
   <iframe src="/diagrams/interactive_agent-memory-recall_v1.html"
