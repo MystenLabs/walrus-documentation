@@ -5,7 +5,6 @@ description: >-
   the Walrus Memory Python SDK. Covers Walrus Memory, MemWalSync, middleware, and authentication.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - Python SDK
   - API reference
   - method signatures
