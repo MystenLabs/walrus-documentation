@@ -32,7 +32,7 @@ answer: >-
   The OpenClaw Walrus Memory plugin reference covers auto-recall (before_prompt_build hook with configurable maxRecallResults and minRelevance), auto-capture (agent_end hook with captureMaxMessages), two LLM tools (memory_search and memory_store, requiring tools.allow configuration), CLI commands (openclaw memwal search and openclaw memwal stats), full configuration options (privateKey, accountId, serverUrl, defaultNamespace, and tuning parameters), multi-agent namespace isolation, prompt injection protection, and troubleshooting for common issues.
 ---
 
-Complete reference for every plugin capability.
+The `@mysten-incubation/oc-memwal` plugin connects OpenClaw agents to Walrus Memory through hooks, LLM tools, CLI commands, and configuration options in `openclaw.json`. It also scopes memory to each agent's namespace and protects against prompt injection.
 
 ## Hooks
 
@@ -253,6 +253,11 @@ Full list of config options for `openclaw.json`:
 | `captureMaxMessages` | number | `10` | No | Recent messages window for capture |
 | `requestTimeoutMs` | number | `10000` | No | Per-request deadline (ms) for every relayer call, 1000–60000 |
 
+To read the private key from an environment variable, set `privateKey` to `${MEMWAL_PRIVATE_KEY}`.
+
+## How to troubleshoot the plugin
+
+Each problem has a list of checks to run.
 
 ### Plugin not loading
 
