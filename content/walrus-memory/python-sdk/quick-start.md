@@ -43,7 +43,7 @@ The Walrus Memory Python SDK (`memwal` on PyPI) gives your agents portable memor
 | `MemWalSync` | `from memwal import MemWalSync` | Scripts, notebooks, and non-async apps, same API, runs through `asyncio.run()` |
 | `with_memwal_langchain` / `with_memwal_openai` | `from memwal import ...` | You already use LangChain or the OpenAI SDK and want memory as middleware |
 
-## Installation
+## How do I install the Python SDK?
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/quick-start.md" target="_blank" className="code-source-link">Source: python-sdk/quick-start.md</a>
 
@@ -89,7 +89,7 @@ $ pip install memwal[all]
 
 Requires a supported, patched Python 3.11+ runtime: 3.11.17, 3.12.15, 3.13.17, or 3.14.9 and newer patches in those series. Version 0.2.0 drops Python 3.9/3.10 support. The SDK requires patched `certifi` and `anyio` alongside `httpx` and `PyNaCl`. Update pip separately to 26.2.2+ in every venv; see Security updates.
 
-## Configuration
+## How do I configure the client?
 
 Before wiring the SDK into your app:
 
@@ -121,9 +121,9 @@ Instead of hardcoding a URL, pass `env`. The public docs and Colab example use `
 
 Precedence: any explicit `server_url` wins, including the hosted default. `env` applies only when `server_url` is omitted (`None`). An unknown preset raises `ValueError`.
 
-## First memory
+## How do I store and recall a memory?
 
-`remember` returns as soon as the relayer accepts the job (~500ms); the upload + onchain commit run in the background. Use `remember_and_wait` to block until it is fully persisted.
+`remember` returns as soon as the relayer accepts the job (~500ms); the upload + onchain commit run in the background. Use `remember_and_wait` to block until it is fully persisted. The following example calls `remember_and_wait` to block until the memory persists, then calls `recall`.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/quick-start.md" target="_blank" className="code-source-link">Source: python-sdk/quick-start.md</a>
 
