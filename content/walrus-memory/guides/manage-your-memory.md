@@ -26,7 +26,7 @@ Connect your wallet to open the dashboard:
 | Mainnet | [memory.walrus.xyz](https://memory.walrus.xyz) |
 | Testnet | [staging.memory.walrus.xyz](https://staging.memory.walrus.xyz) |
 
-## Browse and search
+## How to search your memories
 
 You do not browse memories by name or folder. You search them by meaning: give a natural language query, and recall returns the closest matches, scoped to your memory space. Recall works the same whether an agent runs it or you run it to check what you stored.
 
@@ -49,7 +49,7 @@ Each result carries a `distance`, where a smaller number means a closer match. R
 
 From code, `recall` returns the decrypted `text` of each match, so you can read stored content programmatically. Preview a memory before deleting it, because deletion cannot be undone; the [Delete old memories](/walrus-memory/guides/delete-old-memories) guide covers previewing content in the dashboard delete flow.
 
-## Organize with namespaces
+## How to organize memories with namespaces
 
 A namespace is a label you assign to group related memories. One account can hold many namespaces, and each one is a separate memory space that recall and restore treat independently.
 
@@ -78,7 +78,7 @@ Storing into one namespace never affects another, and recall in `personal` never
 Choose namespaces before you write at scale. Because recall and restore match a namespace exactly, splitting or merging memories across namespaces later means re-writing them. A small, stable set of namespaces is easier to manage than many overlapping ones.
 :::
 
-## Renew memories
+## How to renew memories
 
 A memory persists on Walrus for the number of epochs you paid for. An epoch is about 2 weeks on Mainnet and about 1 day on Testnet. When the epochs run out, Walrus drops the blob and the memory disappears. Renewal extends the memory's underlying Walrus `Blob` object for more epochs: the blob keeps its blob ID and its place in the relayer's index, and only its expiry epoch moves forward, so renewal never re-uploads the content.
 
@@ -91,7 +91,7 @@ Renewal covers two cases:
 Renew before the expiry epoch, not after. Once a blob lapses, you cannot recover its content, and you cannot renew a lapsed memory. Track expiry epochs and renew with a margin to spare.
 :::
 
-## Delete memories
+## How to delete memories
 
 Deletion permanently removes a memory from Walrus Memory. You cannot undo it, so preview a memory before you delete it. Delete from the dashboard or from code:
 
@@ -102,7 +102,7 @@ Deletion permanently removes a memory from Walrus Memory. You cannot undo it, so
 Both deletion paths are permanent. Start with a preview in the dashboard or a dry run in the API, review every blob ID, and only then delete.
 :::
 
-## Rebuild the index
+## How to rebuild the search index
 
 The search index lives in the relayer's database, not in your browser, so switching devices does not lose it. If recall does not return memories you know you stored, the relayer's index might lack rows for those blobs, for example after a database loss or reset, or when you point a fresh self-hosted relayer at your account. Walrus holds the permanent record, so restore rebuilds the index from it.
 
