@@ -37,16 +37,17 @@ answer: >-
   Schedule it with `gh workflow run` or an ops cron that dispatches that workflow.
 ---
 
-## Seal Cross-account synthetic
+## What is the Seal cross-account synthetic?
 
-COMG-715 adds a production-safe **negative** synthetic on top of the Move unit
-test `test_seal_approve_delegate_requires_matching_owner`. The unit test covers
-the contract in isolation. This check would **alert** if a live identity from
-account A can authorize account B's Seal key.
+The Seal cross-account synthetic alerts if a live identity from account A can
+authorize account B's Seal key. It is a production-safe **negative** check on
+top of the Move unit test `test_seal_approve_delegate_requires_matching_owner`.
+The unit test covers the contract in isolation.
 
 The script is **read-only**. It never calls remember, never fetches Seal
 decryption keys, and never executes a transaction. It `devInspect`s
-`account::seal_approve` only.
+`account::seal_approve` only. `devInspect` dry-runs the call without executing
+a transaction.
 
 ## When it runs
 
@@ -55,7 +56,7 @@ only. It does **not** run on pull requests, so a PR without production secrets
 cannot page and cannot touch chain.
 
 If the two account ids and two delegate keys are unset, the script prints
-`skip` and exits 0.
+`skip` and exits 0. A skipped run is green but checked nothing, so confirm the log does not say `skip` before counting a passing job as coverage.
 
 ## Secrets and variables
 
@@ -86,8 +87,9 @@ $ gh workflow run synthetic-seal-cross-account.yml --ref main
 
 Or Actions → **Synthetic Seal cross-account** → **Run workflow**.
 
-To cron it, add `on.schedule` to that workflow once the two-account secrets
-are in place (left off by default so an empty repo cannot false-green or page):
+To cron it, add `on.schedule` to `.github/workflows/synthetic-seal-cross-account.yml`
+once the two-account secrets are in place (left off by default so an empty repo
+cannot false-green or page):
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/synthetic-seal-cross-account.md" target="_blank" className="code-source-link">Source: relayer/synthetic-seal-cross-account.md</a>
 
@@ -100,4 +102,4 @@ on:
 
 Point the workflow failure at on-call. A red job whose log contains
 `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` means live `seal_approve` allowed a
-cross-account identity. That is a Seal policy regression, not a flake.
+cross-account identity. That is a Seal policy regression, not a flake. Conversely, a green run whose log contains neither `skip` nor `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` is the real passing result: the secrets exist and live `seal_approve` rejected the cross-account identity.
