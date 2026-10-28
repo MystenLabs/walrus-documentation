@@ -20,15 +20,15 @@ The one thing that stays local is the delegate key. A delegate key is a keypair 
 
 When you connect your wallet on a device where you have not yet created a delegate key, the dashboard checks Sui for your account and shows you one of two states.
 
-##### Step 1: The dashboard finds your existing account
+### Step 1: The dashboard finds your existing account
 
 If your wallet already owns a Walrus Memory account, the dashboard tells you the account is active but this browser does not hold a delegate key. Your memories are safe. You just need a key on this device to reach them.
 
-##### Step 2: Create a new delegate key
+### Step 2: Create a new delegate key
 
 Create a new delegate key from the dashboard. It generates a fresh keypair and registers it to your existing account onchain, so the new key joins the account rather than replacing it. Save the private key somewhere secure, because the dashboard shows it only once.
 
-##### Step 3: Reach your existing memories
+### Step 3: Reach your existing memories
 
 Because your account's owner and delegates enforce access control onchain, the account decrypts its memories with any delegate key it registers. The new key you just created reads the memories you wrote with the old one. You do not need to recover the old key.
 
