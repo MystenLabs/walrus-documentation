@@ -34,7 +34,7 @@ answer: >-
   x-account-id or MEMWAL_ACCOUNT_ID. A key already cached resolves without either.
 ---
 
-The indexer keeps the backend in sync with onchain state so the relayer can resolve accounts quickly.
+The indexer keeps the backend in sync with onchain state so the relayer can serve the account existence check and owner-token lookup from PostgreSQL instead of onchain RPC calls. It does not feed delegate-key auth resolution, which follows a separate priority chain.
 
 ## Why it exists
 
@@ -58,7 +58,7 @@ When the relayer receives a signed request, it resolves the delegate key's accou
 2. **Signed `x-account-id`**, or **`MEMWAL_ACCOUNT_ID`** when the header is absent, one account object, not a registry walk
 3. Otherwise **`401`**. A cold key with no account id is not looked up onchain
 
-After a successful resolution, the mapping is cached in `delegate_key_cache`. The indexed `accounts` table is not part of this chain.
+After a successful resolution, the mapping is cached in `delegate_key_cache`. The indexed `accounts` table is not part of this chain; the indexer fills it for the existence check and owner-token lookup instead.
 
 ## Configuration
 

@@ -99,4 +99,4 @@ In this example, one user has three separate memory spaces:
 - **work** memories in **app-1**
 - **personal** memories in **app-2** (a completely different deployment)
 
-Each is fully isolated, storing into one never affects the others, and recall only searches within the specified memory space.
+Each is fully isolated. All three spaces share the same owner address, the Sui wallet address that owns the memory, so here it is the namespace and app ID that separate them. Storing into one never affects the others, and recall only searches within the specified memory space.
