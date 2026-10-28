@@ -179,7 +179,7 @@ and `GET /api/v1/admin/app`. See [Admin API](../json-api/admin.mdx).
 
 Verify each delivery against the public key returned at registration.
 Compute the verification over the exact request body bytes. Do not
-re-serialize the JSON.
+re-serialize the JSON. The fingerprint header carries hex of the first 8 bytes of the public key, so compare it against the hex encoding of your configured key rather than against raw key bytes.
 
 ### Node.js (tweetnacl)
 

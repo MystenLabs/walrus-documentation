@@ -100,8 +100,8 @@ fly, so after the flip they report the new one.
    left behind and that nothing else is operating on.
 
 6. **Flip the active version** so new accounts land on the new seed:
-   `PEARL_ACTIVE_KEY_VERSION=2` on Pearl, then restart Oyster (it reads
-   the active version from Pearl at startup).
+   `PEARL_ACTIVE_KEY_VERSION=2` on Pearl, then restart Oyster so new accounts
+   use it (Oyster reads the active version from Pearl at startup).
 
 7. **Sweep window.** Integrators that copied a funding address rather
    than reading it from the `funding_required` webhook keep paying
