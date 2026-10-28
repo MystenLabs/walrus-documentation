@@ -70,7 +70,7 @@ Anyone can independently verify memory integrity without centralized trust
 </div>
 </Cards>
 
-## Motivation
+## Why do agents need Walrus Memory?
 
 AI agents today lose context between sessions: every conversation starts from scratch. When memory does exist, vendors lock it inside platform-specific databases that the user doesn't control. Walrus Memory solves this by giving agents:
 
@@ -79,7 +79,7 @@ AI agents today lose context between sessions: every conversation starts from sc
 - **Agent coordination:** Shared memory spaces help agents coordinate across long-running and multi-step workflows.
 - **Verifiable integrity:** Anyone can independently verify memory integrity without centralized trust.
 
-## Features
+## What are the core features of Walrus Memory?
 
 Walrus Memory groups its features into memory operations, ownership and access control, and infrastructure.
 
@@ -90,7 +90,7 @@ Walrus Memory groups its features into memory operations, ownership and access c
 
 **Remember**
 
-Store memories with semantic understanding. The relayer generates vector embeddings so your data is searchable by meaning, not just keywords.
+Store memories with semantic understanding. The [relayer](/walrus-memory/relayer/overview), the service that handles storage and retrieval behind a basic API, generates vector embeddings so your data is searchable by meaning, not just keywords.
 
 </div>
   <div className="feature-card">
@@ -163,13 +163,13 @@ Drop-in memory for Vercel AI SDK apps. Automatically saves and recalls context a
 
 ## What's included
 
-- **TypeScript SDK:** Integrate memory into any app with a few lines of code.
+- **TypeScript SDK:** [Integrate memory](/walrus-memory/sdk/quick-start) into any app with a few lines of code.
 - **Relayer:** Handles storage and retrieval behind a basic API.
-- **Smart Contract:** Enforces ownership and delegate access onchain.
-- **Indexer:** Keeps onchain state synced for fast lookups.
+- **Smart Contract:** [Enforces ownership and delegate access](/walrus-memory/contract/overview) onchain.
+- **Indexer:** [Keeps onchain state synced](/walrus-memory/indexer/purpose) for fast lookups.
 - **Dashboard:** Manage accounts, memory, and delegate keys visually.
 
-## Use cases
+## What can you build with Walrus Memory?
 
 Walrus Memory fits any app where agents need memory that travels with them:
 
@@ -179,7 +179,7 @@ Walrus Memory fits any app where agents need memory that travels with them:
 - **Cross-app memory:** Let users carry their memory between different apps and services instead of binding them to a single provider.
 - **Note-taking and knowledge tools:** Save user insights, summaries, and references as portable, verifiable memory.
 
-Check out the example apps below to see Walrus Memory in action.
+The [example apps](#example-apps) show Walrus Memory in action.
 
 ## Example apps
 
