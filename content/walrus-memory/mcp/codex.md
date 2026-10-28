@@ -40,7 +40,7 @@ Add Walrus Memory to Codex so it recalls context and saves durable facts as you 
 
 </div>
 
-## Installation
+## How to install Walrus Memory in Codex
 
 <Tabs groupId="code">
   <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
@@ -52,8 +52,9 @@ Add Walrus Memory to Codex so it recalls context and saves durable facts as you 
         codex plugin marketplace add MystenLabs/MemWal
         codex plugin add memwal@memwal-plugins
         codex plugin list
-        ```
-        This registers the Walrus Memory plugin, which bundles the MCP server and the lifecycle hooks together as plugin-scoped resources. It does not write a `[mcp_servers.memwal]` block to `~/.codex/config.toml`.
+```
+
+This registers the Walrus Memory plugin, which bundles the MCP server and the lifecycle hooks together as plugin-scoped resources. It does not write a `[mcp_servers.memwal]` block to `~/.codex/config.toml`.
 
       ### Trust the plugin hooks
 
@@ -85,7 +86,7 @@ Older Codex CLI builds without `codex plugin` support can still get the hooks fr
 </Tabs>
 
 :::warning
-Do not combine options: the plugin bundles the memwal MCP server on its own. Do not also add a manual `[mcp_servers.memwal]` block, which duplicates the server. (The cloned-repo fallback installer does write `[mcp_servers.memwal]` directly, so that one warning doesn't apply if you used it instead.)
+Do not combine the plugin with a manual `[mcp_servers.memwal]` block. The plugin bundles the memwal MCP server on its own, so a manual block duplicates the server. This warning does not apply if you used the cloned-repo fallback installer instead of the plugin, because that installer writes `[mcp_servers.memwal]` directly.
 :::
 
 ## What the plugin includes
@@ -119,9 +120,19 @@ See [Reference](/walrus-memory/mcp/reference) for full parameters.
 | User prompt | `UserPromptSubmit` | Injects a decision rubric so the agent chooses recall vs save from meaning (any language or spelling). |
 | Post-tool | `PostToolUse` (Bash) | When a command errors, reminds the agent to recall prior fixes and save the resolution. |
 
-## Verify
+## How to verify the installation
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools, including `memwal_remember_bulk` and `memwal_health`. Then state a durable fact and confirm the agent saves it with `memwal_remember`.
+Ask the agent what MCP tools it has available. You can use this prompt:
+
+```text
+What MCP tools do you have available?
+```
+
+You should see the `memwal_*` tools, including `memwal_remember_bulk` and `memwal_health`. Then state a durable fact and confirm the agent saves it with `memwal_remember`. For example:
+
+```text
+Remember that I prefer TypeScript for new projects.
+```
 
 ## Troubleshooting
 
