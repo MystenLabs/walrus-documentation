@@ -37,7 +37,7 @@ answer: >-
 
 The indexer syncs account data into PostgreSQL so the relayer can resolve ownership quickly without hitting the blockchain on every request.
 
-## Database
+## What database tables does the indexer use?
 
 Both the relayer and the indexer connect to the same PostgreSQL instance (with the `pgvector` extension enabled). Migrations run automatically on boot.
 
@@ -90,16 +90,16 @@ Tracks the indexer's cursor position so it can resume from where it left off aft
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `key` | `TEXT` (PK) | State key (for example, , `"event_cursor"`) |
+| `key` | `TEXT` (PK) | State key (for example, `"event_cursor"`) |
 | `value` | `TEXT` | JSON-serialized cursor (`txDigest` + `eventSeq`) |
 
-## How it helps
+## Why does the indexer sync data to PostgreSQL?
 
 - **Constant-time account lookup**, the relayer checks `delegate_key_cache` and `accounts` instead of scanning the onchain registry
 - **Resumable event polling**, the indexer stores its cursor in `indexer_state`, so it picks up where it left off after restarts without re-processing old events
 - **Reactive cleanup**, when Walrus returns 404 for an expired blob during recall, the relayer deletes the corresponding `vector_entries` rows automatically
 
-## Similarity search
+## How does similarity search work?
 
 Recall queries use pgvector's cosine distance operator (`<=>`) against the HNSW index:
 
