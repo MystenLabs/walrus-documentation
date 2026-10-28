@@ -52,7 +52,7 @@ inside Claude Desktop uses the [Claude Code plugin guide](/walrus-memory/mcp/cla
 <TabItem value="prereq" label="Prerequisites">
 
 - [x] You need Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x), because the server runs through `npx` with no install step.
-- [x] `npx` resolves the package name against the directory your client starts the server in, which is usually the project you have open. A project that contains an installed `@mysten-incubation/memwal-mcp` of its own would be run instead of the published package, and pinning a version in the command does not prevent it. The [plugin](/walrus-memory/mcp/claude-code) avoids this by installing the pinned version into `~/.memwal/runtime` and launching that absolute path; to get the same property without the plugin, install the version yourself outside any project and point `command`/`args` at the absolute entry point (see the [package README](https://github.com/MystenLabs/MemWal/blob/dev/packages/mcp/README.md#how-the-plugin-launches-the-server)).
+- [x] If the project you have open contains its own installed `@mysten-incubation/memwal-mcp`, your client runs that copy instead of the published package. `npx` resolves the package name against the directory your client starts the server in, which is usually the open project, and pinning a version in the command does not prevent this. To avoid it, use the [plugin](/walrus-memory/mcp/claude-code), which installs the pinned version into `~/.memwal/runtime` and launches that absolute path. Without the plugin, install the version yourself outside any project and point `command` and `args` at the absolute entry point, as the [package README](https://github.com/MystenLabs/MemWal/blob/dev/packages/mcp/README.md#how-the-plugin-launches-the-server) describes.
 - [x] You need a [Walrus Memory account](/walrus-memory/fundamentals/concepts/ownership-and-access). An unauthenticated memory-tool call returns sign-in instructions rather than signing you in, so ask the agent to run `memwal_login` and follow the URL it returns to connect your wallet. Config files carry no keys.
 
 </TabItem>
@@ -60,7 +60,7 @@ inside Claude Desktop uses the [Claude Code plugin guide](/walrus-memory/mcp/cla
 
 </div>
 
-## Set up your client
+## How do I add Walrus Memory to my client?
 
 | **Client** | **Where the config lives** | **Setup** |
 | --- | --- | --- |
@@ -118,11 +118,11 @@ Every client runs the same server and differs only in the file format. The serve
   </TabItem>
 </Tabs>
 
-## Configure a namespace
+## How do I configure a namespace?
 
 Every recall runs inside one account and namespace. To keep a client's memories in their own space, set the `MEMWAL_NAMESPACE` environment variable in the server entry (`env` in JSON configs, `environment` in OpenCode), or pass `"--namespace", "<name>"` in `args`. Without it, memories go to the `default` namespace.
 
-## Verify
+## How do I verify the setup?
 
 1. Open your client's MCP status view (for example `/mcp` in Claude Code) and confirm the status view lists `memwal` as connected with its tools.
 2. Ask the agent to run `memwal_health`; it returns a fast connectivity check against the relayer.
