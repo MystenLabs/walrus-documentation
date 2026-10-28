@@ -35,16 +35,17 @@ answer: >-
   batch deletion transaction, and submitting the wallet signature.
 ---
 
-## Overview
-
 Use the Security Delete API to find memories owned by a wallet, select memories older
 than a cutoff date, and permanently delete them. The API prepares and sponsors the Sui
-transaction; your wallet authenticates the requests and signs the prepared transaction.
+transaction, which means the server pays the gas fees. Your wallet authenticates the
+requests and signs the prepared transaction.
 
 :::warning
 Deletion is permanent. Start with the dry run in this guide, review every blob ID, and
   only then enable deletion.
 :::
+
+## Which endpoints does the deletion flow use?
 
 The deletion flow uses these endpoints:
 
@@ -56,7 +57,7 @@ The deletion flow uses these endpoints:
 | 4 | `POST /api/security-deletions` | Prepare a sponsored deletion transaction. |
 | 5 | `POST /api/security-deletions/{batchId}/submit` | Submit the wallet signature and execute the deletion. |
 
-## Before you begin
+## What does the script require?
 
 You need:
 
@@ -319,7 +320,7 @@ $ npx tsx delete-old-memories.ts
 The script chunks the selection using the server's `deleteBatchMax` value. Each batch
 requires a newly prepared transaction and wallet signature.
 
-## Verify the deletion
+## How to verify the deletion
 
 Run the script again without `CONFIRM_DELETE`. Successfully deleted blobs no longer appear
 in the default `deletable` list. To inspect terminal states directly, request them with the
@@ -331,6 +332,9 @@ same Bearer token:
 GET /api/security-deletable-blobs?state=deleted,deleted_external&limit=200
 Authorization: Bearer <token>
 ```
+
+Replace `<token>` with the Bearer token that `POST /api/security-delete-auth/verify`
+returns. In the script, the `authenticate` function returns this token.
 
 If submitting a batch times out or returns `RPC_UNAVAILABLE`, query
 `GET /api/security-deletions/{batchId}` until it reaches a terminal state. Do not prepare a
