@@ -95,7 +95,7 @@ Response (`201`):
 
 ### The helper code
 
-The signing, encryption, and decryption steps (steps 3, 5, and 8) share two files. `config.ts` holds the Mainnet constants: the Console API host, the Sui full node, the bucket-policy package IDs (`ORIGINAL_PACKAGE_ID` and `LATEST_PACKAGE_ID`, which intentionally hold the same value as long as the package has not been upgraded, since the latest published ID of the same package is still the original one), the bucket registry, and the Seal committee object. `seal.ts` wraps the signing and Seal encrypt and decrypt helpers. Put both in a working directory next to a `.env` file that sets `CONSOLE_API_KEY` and `CONSOLE_SERVICE_PRIVATE_KEY`.
+The signing, encryption, and decryption steps (steps 3, 5, and 8) share two files. `config.ts` holds the Mainnet constants: the Console API host, the Sui full node, the bucket-policy package IDs, the bucket registry, and the Seal committee object. `seal.ts` wraps the signing and Seal encrypt and decrypt helpers. Put both in a working directory next to a `.env` file that sets `CONSOLE_API_KEY` and `CONSOLE_SERVICE_PRIVATE_KEY`.
 
 ```ts title="config.ts"
 export const API_BASE = 'https://api.console.walrus.xyz';

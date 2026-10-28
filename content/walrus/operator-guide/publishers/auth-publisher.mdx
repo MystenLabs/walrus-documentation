@@ -136,7 +136,7 @@ The publisher supports replay suppression to prevent the malicious reuse of JWT 
 Replay suppression supports the following configuration parameters:
 
 - `--jwt-cache-size`: The maximum size of the JWT cache of the publisher, where the `jti` JWT IDs of used JWTs are kept until their expiration. This is a hard upper bound on the number of entries in the cache, after which additional requests to store are rejected. This hard bound prevents denial-of-service (DoS) attacks on the publisher through the cache.
-- `--jwt-cache-refresh-interval`: The interval (in seconds) after which the cache is refreshed and expired JWTs are removed, freeing their entries. Between refreshes, the cache size configured with `--jwt-cache-size` remains a hard upper bound, and additional requests to store are rejected once it is reached.
+- `--jwt-cache-refresh-interval`: The interval (in seconds) after which the cache is refreshed and expired JWTs are removed (possibly creating space for additional JWTs).
 
 ## Work with JWTs
 
