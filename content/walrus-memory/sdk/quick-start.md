@@ -43,7 +43,7 @@ The Walrus Memory SDK gives your agents portable memory that works across apps, 
 | `MemWalManual` | `@mysten-incubation/memwal/manual` | You need client-managed embeddings and local Seal operations |
 | `withMemWal` | `@mysten-incubation/memwal/ai` | You already use the Vercel AI SDK and want memory as middleware |
 
-## Installation
+## How to install the Walrus Memory SDK
 
 <Tabs groupId="pkg-manager">
 <TabItem value="npm" label="npm">
@@ -143,7 +143,7 @@ $ yarn add ai zod
 </TabItem>
 </Tabs>
 
-## Configuration
+## What configuration does the SDK need?
 
 Before wiring the SDK into your app:
 
@@ -164,7 +164,7 @@ Before wiring the SDK into your app:
 | `serverUrl` | `string` | No | Relayer URL, use `https://relayer.memory.walrus.xyz` (Mainnet) or `https://relayer-staging.memory.walrus.xyz` (Testnet) for the [managed relayer](/walrus-memory/relayer/public-relayer) |
 | `namespace` | `string` | No | Default namespace, falls back to `"default"` |
 
-## First memory
+## How to store your first memory
 
 :::warning
 **Use your own account, not an example one.** Generate your own `accountId` and delegate key at [memory.walrus.xyz](https://memory.walrus.xyz) before running. Recall is scoped per **account + namespace**, so writing against an account ID copied from docs or another project means your memories land in a shared space that everyone using it can read, instead of being isolated to you. The values below are placeholders; replace them with your own.
@@ -177,7 +177,7 @@ import { MemWal } from "@mysten-incubation/memwal";
 
 const memwal = MemWal.create({
   // Load your own credentials from the environment; never hardcode a shared example ID.
-  key: process.env.MEMWAL_KEY ?? "<your-ed25519-private-key>",
+  key: process.env.MEMWAL_PRIVATE_KEY ?? "<your-ed25519-private-key>",
   accountId: process.env.MEMWAL_ACCOUNT_ID ?? "<your-memwal-account-id>",
   serverUrl: "https://your-relayer-url.com",
   namespace: "demo",
@@ -190,6 +190,8 @@ await memwal.waitForRememberJob(job.job_id);
 const result = await memwal.recall({ query: "What do we know about this user?" });
 console.log(result.results);
 ```
+
+`remember()` returns a job. The example passes `job.job_id` to `waitForRememberJob()` to wait for that job to finish before it calls `recall()`.
 
 ## Next steps
 
