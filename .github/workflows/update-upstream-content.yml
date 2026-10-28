@@ -12,6 +12,9 @@
 #   site/src/data/changelog.json         and walrus-sites (gen:release-notes)
 #   site/upstream.json                   the walrus ref that <ImportContent>
 #                                        embeds are fetched from (gen:import)
+#   site/static/setup/*                  from MystenLabs/walrus at that ref, the
+#                                        files served for download under
+#                                        docs.wal.app/setup/ (gen:setup)
 #
 # A pull request opened with the default GITHUB_TOKEN does not trigger the
 # Build docs or Lint workflows. Vercel still builds a preview for it, and the
@@ -69,7 +72,7 @@ jobs:
             }
           ' "$latest"
 
-      - name: Regenerate skills and release notes
+      - name: Regenerate skills, release notes, and the setup downloads
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cd site && pnpm run gen:upstream
@@ -89,6 +92,7 @@ jobs:
             - `site/src/data/skills.json` from MystenLabs/walrus-skills
             - `content/walrus/release-notes*.mdx` and `site/src/data/changelog.json` from GitHub releases
             - `site/upstream.json` pinned to the latest walrus mainnet release
+            - `site/static/setup/*` from MystenLabs/walrus at that ref (the files served under docs.wal.app/setup/)
 
             Review the rendered diff, not the upstream commits: the pages in this
             pull request are exactly what docs.wal.app will serve once it merges.

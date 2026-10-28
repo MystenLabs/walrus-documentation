@@ -24,8 +24,9 @@ The build does not call the GitHub API. Content from other repositories is
 tracked here and refreshed only by the `Update upstream content` workflow (or
 `pnpm gen:upstream`, which needs `GITHUB_TOKEN`), which opens a pull request:
 `site/src/data/skills.json`, `content/walrus/release-notes/*.mdx`,
-`site/src/data/changelog.json`, and the walrus ref in `site/upstream.json` that
-embedded source files are fetched from. Do not edit those generated files by
+`site/src/data/changelog.json`, the walrus ref in `site/upstream.json` that
+embedded source files are fetched from, and the client setup files under
+`site/static/setup/` that docs.wal.app serves for download. Do not edit those generated files by
 hand, and do not bump the pin outside a pull request. Everything under
 `site/src/.generated/` is build output.
 
