@@ -46,7 +46,7 @@ After you plan your upload strategy, estimate the storage costs for your data. W
 
 ## Tune uploads for large blobs
 
-Uploading files larger than 1 GiB might require adjustments to client configuration and upload parameters to avoid stalled transfers.
+Uploading files larger than 1 GiB might require adjustments to client configuration and upload parameters to avoid stalled transfers. Plan for approximately 4.5x the blob size in client memory for each concurrent upload, because erasure coding expands the data into redundant shards that the client must hold during encoding.
 
 - Test uploads with representative dataset sizes before running production workloads.
 

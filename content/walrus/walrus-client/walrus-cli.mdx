@@ -74,7 +74,7 @@ The Walrus client needs to know about the Sui objects that store the Walrus syst
 
 By default, the Walrus client looks for the `client_config.yaml` (or `client_config.yml`) configuration file in the current directory, `$XDG_CONFIG_HOME/walrus/`, `~/.config/walrus/`, or `~/.walrus/`.
 
-Obtain the latest configuration file by downloading it directly from Walrus and placing it in one of the default configuration file locations:
+Obtain the latest configuration file by downloading it directly from Walrus and placing it in one of the default configuration file locations. The same URL serves both networks: the file defines a context for Testnet and one for Mainnet, which you select with the `--context` option.
 ```sh
 $ curl --create-dirs https://docs.wal.app/setup/client_config.yaml -o ~/.config/walrus/client_config.yaml
 ```

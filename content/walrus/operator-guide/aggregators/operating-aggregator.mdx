@@ -87,7 +87,7 @@ For the canonical configuration snippets and the object IDs they contain, see th
 
 The following example shows an aggregator node that hosts an HTTP endpoint you can use to fetch data from Walrus over the web.
 
-Run the aggregator process through the `walrus` client binary using a `systemd` service. Create the service file at `/etc/systemd/system/walrus-aggregator.service`, then reload the systemd daemon and enable the service so that the unit's `[Install]` section (`WantedBy=multi-user.target`) takes effect and the aggregator starts at boot:
+Run the aggregator process through the `walrus` client binary using a `systemd` service. Create the service file at `/etc/systemd/system/walrus-aggregator.service`, then reload the systemd daemon (`systemctl daemon-reload`) and enable and start the `walrus-aggregator` service (`systemctl enable --now walrus-aggregator`) so that the unit's `[Install]` section (`WantedBy=multi-user.target`) takes effect and the aggregator starts at boot:
 
 ```ini
 [Unit]

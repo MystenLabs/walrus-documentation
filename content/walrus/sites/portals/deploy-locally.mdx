@@ -166,7 +166,7 @@ docker run \
   mysten/walrus-sites-server-portal:mainnet-v2.8.0
 ```
 
-The portal Docker image version must match your `site-builder` version. Run the following command to get the version tag:
+The portal Docker image version must match your `site-builder` version. Run the following command before the Docker command to get the version tag to use in the image name:
 
 ```bash
 $ site-builder -V | awk '{ print $2 }' | awk -F - '{ printf("v%s\n", $1) }'

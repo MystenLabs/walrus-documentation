@@ -173,7 +173,7 @@ Preserve `ws-resources.json` after the first deployment. If the file is missing 
 
 You can use the optional `ignore` field to exclude certain files or folders when you publish your site. This is useful when you want to keep development files, secrets, or temporary assets out of the final build.
 
-The `ignore` field is a list of resource paths to skip. Each pattern must start with a `/`, and might end with a `*` to indicate a wildcard match.
+The `ignore` field is a list of resource paths to skip. Each pattern must start with a `/`, and can end with a single `*` to indicate a wildcard match. Unlike the `"/redirects/**/*"` pattern shown in the `redirects` section, `ignore` patterns accept a wildcard only in the last position of the path.
 
 For example:
 
