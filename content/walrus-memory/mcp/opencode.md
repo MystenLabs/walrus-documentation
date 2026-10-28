@@ -46,7 +46,7 @@ Add Walrus Memory to OpenCode so the agent can save and recall durable facts. Op
 
 </div>
 
-## Installation
+## How to add Walrus Memory to OpenCode
 
 Add the server to `~/.config/opencode/opencode.json` as a local (stdio) MCP server:
 
@@ -66,7 +66,7 @@ Add the server to `~/.config/opencode/opencode.json` as a local (stdio) MCP serv
 
 To pin a default namespace, add `"environment": { "MEMWAL_NAMESPACE": "<name>" }` to the server entry. Restart OpenCode, then ask the agent to run `memwal_login` on first use.
 
-## Available tools
+## Which memory tools are available?
 
 | Tool | Description |
 |------|-------------|
@@ -80,11 +80,11 @@ To pin a default namespace, add `"environment": { "MEMWAL_NAMESPACE": "<name>" }
 
 The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
-## Verify
+## How to verify the memory tools work
 
 Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
 
-## Troubleshooting
+## How to fix common problems
 
 - **Tools missing**: restart OpenCode after editing `opencode.json`.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
