@@ -46,9 +46,9 @@ This is the recommended path for Web3-native users who want to minimize trust in
 | Vector registration | | Server stores `{blob_id, vector}` in PostgreSQL |
 | Recall search | | Server searches vectors, returns `{blob_id, distance}` |
 | Walrus download | Client downloads from aggregator | |
-| Seal decryption | Client decrypts locally (SessionKey) | |
+| Seal decryption | Client decrypts locally (SessionKey; one wallet popup in browser mode) | |
 
-## Setup
+## How to set up MemWalManual
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal-manual.md</a>
 
@@ -66,6 +66,8 @@ const manual = MemWalManual.create({
   namespace: "chatbot-prod",
 });
 ```
+
+The `key` field is the delegate key that authenticates the client to the relayer. It differs from `suiPrivateKey`, which signs the Seal and Walrus operations that encrypt and store the data. For more on how the two keys work together, see [Agent state: holding your own keys](#agent-state-holding-your-own-keys).
 
 ## Core methods
 
@@ -88,15 +90,15 @@ await manual.restore("chatbot-prod", 10);
 console.log(manual.isWalletMode);
 ```
 
-## Remember flow (under the hood)
+## What happens when you call `rememberManual`?
 
 1. Client generates embedding through OpenAI-compatible API
-2. Client Seal-encrypts the plaintext locally (no wallet signature needed)
+2. Client Seal-encrypts the plaintext locally (encryption is local, so this step needs no wallet signature; the wallet prompt appears only during recall, when the client creates the Seal SessionKey in browser mode)
 3. Client sends `{encrypted_data (base64), vector}` to the relayer
 4. Relayer uploads encrypted bytes to Walrus through upload-relay sidecar (server pays gas)
 5. Relayer stores `{blob_id, vector, owner, namespace}` in PostgreSQL
 
-## Recall flow (under the hood)
+## What happens when you call `recallManual`?
 
 1. Client generates query embedding through OpenAI-compatible API
 2. Client sends the vector to the relayer
@@ -105,7 +107,7 @@ console.log(manual.isWalletMode);
 5. Client creates a single Seal SessionKey (one wallet popup in browser mode)
 6. Client decrypts each blob locally using the shared session key
 
-## Browser integration (wallet signer)
+## How to use MemWalManual with a browser wallet
 
 Use `walletSigner` instead of `suiPrivateKey` when integrating with a connected wallet (for example, `@mysten/dapp-kit`):
 
