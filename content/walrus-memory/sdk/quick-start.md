@@ -32,7 +32,7 @@ answer: >-
 ---
 
 <AgentPrompt
-  prompt="Install @mysten-incubation/memwal in this project, create a MemWal client from the MEMWAL_KEY, MEMWAL_ACCOUNT_ID, and MEMWAL_SERVER_URL environment variables, then store and recall a test memory to verify the setup."
+  prompt="Install @mysten-incubation/memwal in this project, create a MemWal client from the MEMWAL_PRIVATE_KEY, MEMWAL_ACCOUNT_ID, and MEMWAL_SERVER_URL environment variables, then store and recall a test memory to verify the setup."
 />
 
 The Walrus Memory SDK gives your agents portable memory that works across apps, sessions, and workflows. Store, recall, and analyze context, fully under your control. It exposes three entry points:
@@ -177,7 +177,7 @@ import { MemWal } from "@mysten-incubation/memwal";
 
 const memwal = MemWal.create({
   // Load your own credentials from the environment; never hardcode a shared example ID.
-  key: process.env.MEMWAL_KEY ?? "<your-ed25519-private-key>",
+  key: process.env.MEMWAL_PRIVATE_KEY ?? "<your-ed25519-private-key>",
   accountId: process.env.MEMWAL_ACCOUNT_ID ?? "<your-memwal-account-id>",
   serverUrl: "https://your-relayer-url.com",
   namespace: "demo",
