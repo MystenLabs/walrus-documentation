@@ -79,8 +79,11 @@ const chunks = [
   { text: "Convention: all API handlers validate input with zod schemas in src/schemas before touching the database." },
 ];
 
-// Batches of 20 or fewer. Chunk larger inputs and call once per batch.
-const result = await memwal.rememberBulkAndWait(chunks);
+// Each call accepts 20 or fewer items. Send larger inputs one batch at a time.
+const BATCH_SIZE = 20;
+for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+  await memwal.rememberBulkAndWait(chunks.slice(i, i + BATCH_SIZE));
+}
 ```
 
 For longer material such as a design document or a pull request description, `analyze` extracts discrete facts from the text and stores them as separate memories, which recall better than one large blob:
