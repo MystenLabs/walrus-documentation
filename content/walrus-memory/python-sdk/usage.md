@@ -36,6 +36,8 @@ answer: >-
   with `remember_and_wait` or `wait_for_remember_job`.
 ---
 
+The Walrus Memory Python SDK provides an async-native client, `MemWal`, and a synchronous wrapper, `MemWalSync`, with identical APIs. Namespaces isolate memories, and you set them per client or per call. `remember` returns a job ID immediately, and you poll to completion with `remember_and_wait` or `wait_for_remember_job`.
+
 The Python SDK exposes one relayer-backed client in two forms, plus middleware:
 
 | Entry point | Import | When to use |
@@ -50,7 +52,7 @@ Detailed pages:
 - [Manual methods](/walrus-memory/python-sdk/usage/memwal-manual), lower-level `remember_manual` / `recall_manual` / `embed`
 - [with_memwal](/walrus-memory/python-sdk/usage/with-memwal), LangChain and OpenAI middleware
 
-## Async vs sync
+## What is the difference between `MemWal` and `MemWalSync`?
 
 `MemWal` is async-native. Every API method is a coroutine:
 
@@ -80,7 +82,7 @@ client.close()
 
 Both support context managers (`async with MemWal.create(...)` / `with MemWalSync.create(...)`) which close the underlying HTTP client on exit.
 
-## Namespace rules
+## How do namespaces work?
 
 - Set a default namespace in `create(...)` when one app or agent uses one boundary
 - Pass `namespace=` per call when one client needs multiple boundaries
@@ -88,7 +90,7 @@ Both support context managers (`async with MemWal.create(...)` / `with MemWalSyn
 
 Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing.
 
-## Async remember model
+## How does the async remember model work?
 
 `remember` returns a `RememberAcceptedResult` (`job_id`, `status`) as soon as the relayer accepts the request, the Walrus upload and onchain commit happen in a background worker. Three ways to consume it:
 
