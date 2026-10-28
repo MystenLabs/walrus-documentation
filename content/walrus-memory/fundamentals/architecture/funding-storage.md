@@ -40,13 +40,13 @@ answer: >-
   from a central treasury.
 ---
 
-Walrus Memory writes your encrypted memories to Walrus as blobs, as described in [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works). Someone has to pay for that storage. This page explains who, and the trade-offs between an agent holding WAL itself and having a third party sponsor the cost.
+Walrus Memory writes your encrypted memories to Walrus as blobs, as described in [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works). Someone has to pay for that storage: either the agent holds WAL itself, or a third party sponsors the cost, and each choice has trade-offs. To store data and pay for it with the agent's own tokens, see [Model A](#model-a-how-does-an-agent-store-data-with-its-own-wal).
 
 :::note
 In a typical Walrus Memory setup, the relayer operates the Walrus write path for you, so most agents never touch WAL directly. Whether the storage is sponsored or self-funded then depends on how the relayer is deployed: a [public relayer](/walrus-memory/relayer/public-relayer) abstracts funding away from the agent, while [self-hosting](/walrus-memory/relayer/self-hosting) means you fund the writes. The models below explain what sits underneath either choice.
 :::
 
-## What a write costs: 2 tokens, not 1
+## What does a Walrus write cost?
 
 A Walrus write consumes 2 different tokens, and any funding design accounts for both:
 
@@ -61,7 +61,7 @@ The funding question is really 2 questions: who supplies the WAL, and who suppli
 
 A successful write also produces a `Blob` object on Sui. Whoever owns that object controls the blob lifecycle, such as extending its lifetime, deleting it, adding attributes, or burning it to reclaim Sui storage. Ownership matters as much as payment, so track it deliberately, especially in sponsored flows.
 
-## Model a: the agent holds WAL directly
+## Model A: how does an agent store data with its own WAL?
 
 The agent has its own Sui address (key pair) that holds both SUI and WAL, and it signs and pays for its own writes. This is the default model for a long-lived, autonomous agent that owns and manages its own data.
 
@@ -101,13 +101,13 @@ This model gives the agent full autonomy, because no external service sits in th
 - Keep both balances funded. Running out of either SUI or WAL stalls writes.
 - Manage the blob lifecycle. Blobs expire after the paid number of epochs (an epoch is about 2 weeks on Mainnet and about 1 day on Testnet, and you can buy up to about 2 years in advance), so the agent extends them before expiry or the network drops the data.
 
-## Model b: sponsored storage
+## Model B: how does sponsored storage work?
 
 Sponsored storage is not a single feature. Several distinct patterns exist, and they sponsor different parts of the cost. Choose based on how much you want the agent to hold and own.
 
 ### Publisher: sponsor pays WAL and SUI
 
-A publisher is an HTTP service that accepts raw bytes and runs the entire write flow for the caller. Its sub-wallets hold SUI and WAL and pay for everything, so the agent needs no tokens at all and only sends the data. A Walrus Memory relayer plays this role for your memories.
+A publisher is an HTTP service that accepts raw bytes and runs the entire write flow for the caller. Its sub-wallets, which are Sui addresses that the publisher controls, hold SUI and WAL and pay for everything, so the agent needs no tokens at all and only sends the data. A Walrus Memory relayer plays this role for your memories.
 
 - This is the most complete form of sponsorship, because the sponsoring application carries 100% of the WAL and SUI cost.
 - By default, the publisher's sub-wallet owns the resulting `Blob` object. To let the agent keep ownership, set the publisher's `send-object-to` parameter to the agent's Sui address so the publisher transfers the blob after upload.
@@ -118,7 +118,7 @@ Mainnet has no public, unauthenticated publisher, because each upload spends the
 
 Use a publisher when the agent runs in a constrained or untrusted environment, or when you do not want the agent to custody tokens.
 
-### Sui Sponsored transactions: sponsor pays SUI gas only
+### Sui sponsored transactions: sponsor pays SUI gas only
 
 Sui natively supports sponsored transactions, where a sponsor account provides the gas coin for a transaction the agent signs. This covers only the SUI side. The WAL storage fee still comes from somewhere else, either the agent's own WAL or a publisher.
 
@@ -139,11 +139,11 @@ An upload relay is easy to mistake for a sponsor, but it is not one. A relay onl
 
 In short, an upload relay reduces the agent's network load, not its funding load. Do not confuse a Walrus upload relay with the Walrus Memory relayer: the Walrus Memory relayer runs the full write flow and can fund it, while a bare Walrus upload relay only forwards slivers.
 
-### Protocol subsidies are network-level, not per-agent
+### Do protocol subsidies fund a specific agent?
 
 Walrus reserves a portion of WAL supply as subsidies that supplement storage-node rewards while the network grows. This lowers effective costs across the whole network, but it is not a way for one party to fund a specific agent's blob. Do not model subsidies as sponsored storage in your architecture.
 
-## Choose a model
+## Which funding model fits your agent?
 
 | **If the agent** | **Use** | **Pays WAL** | **Pays SUI gas** | **Owns the blob** |
 | --- | --- | --- | --- | --- |
