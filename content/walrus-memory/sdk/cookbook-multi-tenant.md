@@ -33,7 +33,7 @@ answer: >-
 
 This is the pattern for SaaS-style apps where **one operator** runs a server that stores memory on behalf of **many end users**. For example, a Next.js app on Vercel where users connect a Sui wallet only for sign-in, and the server holds the credentials.
 
-## The pattern at a glance
+## How does the multi-tenant pattern work?
 
 | **Layer** | **What it holds** | **Why** |
 | --- | --- | --- |
@@ -83,7 +83,9 @@ MEMWAL_ACCOUNT_ID=0x<memwal-account-object-id>
 MEMWAL_REGISTRY_ID=0x<account-registry-object-id>
 ```
 
-### Revoke flow
+The `removeDelegateKey` call in the revoke flow reads `MEMWAL_REGISTRY_ID`. The `getMemWal()` client in step 3 passes only `key`, `accountId`, and `serverUrl` to `MemWal.create()`.
+
+### How to revoke a compromised delegate key
 
 If a delegate key is compromised, revoke it from the [dashboard](https://memory.walrus.xyz), or programmatically with the **owner** credentials:
 
@@ -104,7 +106,7 @@ await removeDelegateKey({
 
 Then generate a fresh delegate key, register it with `addDelegateKey`, and rotate `MEMWAL_PRIVATE_KEY`. See the full lifecycle in [Delegate Key Management](/walrus-memory/contract/delegate-key-management).
 
-## 2. Namespace naming for multi-user apps
+## 2. How to name namespaces for multi-user apps
 
 Derive a deterministic namespace from the authenticated wallet address. Normalize it so the same wallet always maps to the same namespace:
 
@@ -127,7 +129,7 @@ Guidelines:
 A namespace serves as a **data-organization boundary, not a security boundary between users.** The delegate key can read and write **every** namespace under the account. Cross-user isolation depends entirely on your server mapping each authenticated wallet to the correct namespace. Verify the wallet signature **before** choosing the namespace. Never take the namespace (or raw address) from an unauthenticated request body.
 :::
 
-## 3. Next.js / serverless example
+## 3. How to use the client in Next.js and serverless apps
 
 Create one client per request (or memoize per warm Lambda) and pass the per-user namespace into each call.
 
@@ -206,7 +208,7 @@ Compute the namespace on the server from the authenticated address. If a client 
 The owner wallet (used for `createAccount` / `addDelegateKey` / `removeDelegateKey`) should never run on the server. Run those operations from a local machine or a secure admin tool.
 
 
-## 5. For demos and submissions
+## 4. How to prove onchain storage for demos and submissions
 
 Your `MemWalAccount` is a regular Sui object. Share its object ID and view it on a Sui explorer (for example, [Suiscan](https://suiscan.xyz) or [SuiVision](https://suivision.xyz)) to prove memory is really onchain, not just in a local cache. Pair it with a live `health()` check (see the [API Reference](/walrus-memory/sdk/api-reference)) so judges can confirm the relayer is reachable.
 
