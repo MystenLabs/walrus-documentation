@@ -33,7 +33,7 @@ answer: >-
 
 The Walrus Memory relayer is the public protocol/API layer for SDKs, MCP clients, and self-hosted deployments. Treat every route, signed header, response field, runtime config field, and documented environment variable on this page as a versioned contract.
 
-## Relayer SemVer
+## How does the relayer use SemVer?
 
 The relayer package version follows SemVer, and the public API contract is exposed separately as `apiVersion`.
 
@@ -51,7 +51,7 @@ Public surfaces include:
 - runtime config and environment variables used by self-hosted relayers
 - MCP transport behavior and bearer credential expectations
 
-## Compatibility matrix
+## Which SDK versions are compatible with the relayer?
 
 | Relayer API | Relayer package | TypeScript SDK | Python SDK | MCP package | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -59,9 +59,11 @@ Public surfaces include:
 
 SDKs and MCP clients read `/version` before protected requests and fail with an explicit compatibility error when the relayer API major or minimum SDK version is unsupported.
 
-## Runtime metadata
+## How do you check compatibility at runtime?
 
 Modern relayers expose compatibility metadata at `GET /version` and include the same block in `GET /health`.
+
+To check compatibility manually, request `GET /version` from your relayer. Confirm that your SDK version is at or above the matching `minSupportedSdk` value and that the `apiVersion` major matches a row in the compatibility matrix.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/versioning-and-compatibility.md" target="_blank" className="code-source-link">Source: relayer/versioning-and-compatibility.md</a>
 
@@ -96,7 +98,7 @@ Modern relayers expose compatibility metadata at `GET /version` and include the 
 
 `/health` keeps the legacy `version` field for older monitoring checks. New automation should prefer `relayerVersion`.
 
-## Deprecation process
+## How does the deprecation process work?
 
 Breaking changes must follow this process unless there is an active security incident:
 
