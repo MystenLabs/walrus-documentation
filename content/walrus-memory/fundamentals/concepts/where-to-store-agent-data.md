@@ -55,7 +55,12 @@ A vector database already gives you persistence and semantic recall, which is of
 
 ## Choose based on what you need
 
-Reach for provider-native memory when you are prototyping inside one platform and the data never needs to leave it, accepting that you give up portability and independent control. A managed vector database fits when you are building a single application, you want semantic search, and keeping the data inside your own account is enough, because you own the access-control model that surrounds it. Run a self-hosted vector database when you need full control of the stack and are prepared to secure it, and you do not need portability across apps or onchain ownership. Choose Walrus Memory when memory should travel with the user or agent across apps, when ownership and access should hold independently of whoever runs the server, when integrity should be verifiable, and when you would rather not operate storage yourself.
+Match each approach to the requirements it fits:
+
+- **Provider-native memory:** Use it when you are prototyping inside one platform and the data never needs to leave it, accepting that you give up portability and independent control.
+- **Managed vector database:** Use it when you are building a single application, you want semantic search, and keeping the data inside your own account is enough, because you own the access-control model that surrounds it.
+- **Self-hosted vector database:** Use it when you need full control of the stack and are prepared to secure it, and you do not need portability across apps or onchain ownership.
+- **Walrus Memory:** Use it when memory should travel with the user or agent across apps, when ownership and access should hold independently of whoever runs the server, when integrity should be verifiable, and when you would rather not operate storage yourself.
 
 These approaches are not mutually exclusive. An agent can keep a small local cache for speed and use Walrus Memory as the durable store of record. Because recall returns a blob ID for each memory, you can always point back to the exact stored item.
 
