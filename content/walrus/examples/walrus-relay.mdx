@@ -104,7 +104,7 @@ To target Mainnet instead, set `network: "mainnet"`, create the `SuiClient` for 
 
 The `useWalrusUpload` hook in [`src/hooks/useWalrusUpload.ts`](https://github.com/MystenLabs/walrus-sdk-relay-example-app/blob/main/src/hooks/useWalrusUpload.ts) orchestrates the store through the SDK's `writeFilesFlow` in four steps:
 
-1. **Encode:** Wrap the selected file with `WalrusFile.from` and call `flow.encode()`, which computes the blob metadata locally in the browser.
+1. **Encode:** Read the selected file's bytes into a `Uint8Array` (for example, with `new Uint8Array(await file.arrayBuffer())`), pass them as the `contents` for `WalrusFile.from`, and call `flow.encode()`, which computes the blob metadata locally in the browser.
 2. **Register:** `flow.register()` returns a transaction that registers the blob onchain with its storage parameters and sends the relay tip. The connected wallet signs and executes it.
 3. **Upload:** `flow.upload({ digest })` sends the file data to the relay in a single request. The relay distributes the slivers to the storage nodes and collects a confirmation certificate.
 4. **Certify:** `flow.certify()` returns a transaction that certifies the blob on Sui. After the wallet executes it, `flow.listFiles()` returns the blob ID and Sui object ID of the stored file.

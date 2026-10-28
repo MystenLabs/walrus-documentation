@@ -64,7 +64,7 @@ When you set `RUST_LOG=info`, the `walrus` client binary prints information abou
 
 ## How to enable debug logging
 
-You can enable debug logging for Walrus by setting the environment variable `RUST_LOG=walrus=debug`. The `debug` and `trace` levels provide a more detailed understanding of what a command does or how it fails.
+You can enable debug logging for Walrus by setting the environment variable `RUST_LOG=walrus=debug`. The `debug` and `trace` levels provide a more detailed understanding of what a command does or how it fails. This setting complements `RUST_LOG=info` described above: use `RUST_LOG=info` when you only need the configuration the client prints at startup (including the path to the Walrus configuration file and the Sui wallet), and `RUST_LOG=walrus=debug` when you also need the detailed command output.
 ```
 $ RUST_LOG=walrus=debug walrus store file.txt --epochs 5
 ```
