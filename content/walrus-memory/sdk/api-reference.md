@@ -31,6 +31,10 @@ answer: >-
   The Walrus Memory SDK API includes Walrus Memory (remember, recall, analyze, restore, health, rememberBulk, and more), MemWalManual (rememberManual, recallManual, restore), withMemWal (AI SDK middleware), account management utilities (createAccount, addDelegateKey, removeDelegateKey, generateDelegateKey), and utility functions for delegate key operations.
 ---
 
+The Walrus Memory SDK exposes the `MemWal` client, `MemWalManual`, `withMemWal`, account management functions, and utility functions. Each section gives the method signature, config fields, and return types.
+
+Walrus stores each memory as a Seal-encrypted blob, and the `blob_id` field in results identifies that blob.
+
 See also:
 
 - [Configuration](/walrus-memory/reference/configuration)
@@ -416,7 +420,7 @@ Fetch and validate the relayer compatibility contract from `/version`. Protected
 
 Return the hex-encoded public key for the current delegate key.
 
-### Lower-level methods
+### Which lower-level methods does `MemWal` expose?
 
 These exist on the `MemWal` class for advanced use cases:
 
@@ -455,7 +459,7 @@ Same as `MemWal.restore()`, delegates to the relayer.
 
 Whether this client uses a connected wallet signer (vs. raw keypair).
 
-### Config notes
+### How to configure `MemWalManual`
 
 - `suiNetwork` defaults to `mainnet`
 - `sealServerConfigs` lets the client configure independent or committee Seal servers; committee entries require `aggregatorUrl`
@@ -493,7 +497,7 @@ Wraps a Vercel AI SDK model with automatic memory recall and save.
 
 See [Configuration](/walrus-memory/reference/configuration) for all options.
 
-## Account management
+## How to manage accounts and delegate keys
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/api-reference.md" target="_blank" className="code-source-link">Source: sdk/api-reference.md</a>
 
