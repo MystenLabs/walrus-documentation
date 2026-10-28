@@ -5,11 +5,18 @@ description: >-
   the Walrus Memory Python SDK. Covers Walrus Memory, MemWalSync, middleware, and authentication.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - Python SDK
   - API reference
   - method signatures
   - dataclasses
+  - MemWal
+  - MemWalSync
+  - remember
+  - recall
+  - analyze
+  - bulk operations
+  - exceptions
+  - MemWalConfig
 goal:
   description: Look up the exact method signature, parameter types, return value, and exception type for any Walrus Memory Python SDK method before writing code that calls it.
   requires:
@@ -34,6 +41,8 @@ answer: >-
   It also covers result dataclasses, exception hierarchy, middleware wrappers, utility
   functions for delegate key derivation, and the Ed25519 request signing protocol.
 ---
+
+The Walrus Memory Python SDK provides the `MemWal` and `MemWalSync` clients. `MemWal` methods are coroutines, and `MemWalSync` exposes the same methods without `await`. Create either client with `create(...)`, then call methods such as `remember`, `recall`, `analyze`, and `ask`. All SDK errors derive from `MemWalError`.
 
 See also:
 
@@ -301,7 +310,7 @@ from memwal import with_memwal_langchain, with_memwal_openai
 
 Both wrap an existing LLM client with automatic recall + save and accept: `key`, `account_id`, `server_url`, `namespace`, `env`, `max_memories` (5), `auto_save` (True), `min_relevance` (0.3), `debug` (False). The alias `withMemWal` maps to `with_memwal_langchain`. See [with_memwal](/walrus-memory/python-sdk/usage/with-memwal).
 
-## Exceptions
+## What exceptions does the SDK raise?
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/api-reference.md" target="_blank" className="code-source-link">Source: python-sdk/api-reference.md</a>
 
@@ -322,6 +331,7 @@ from memwal import (
 | `MemWalRememberJobFailed` | `500` | Job reached terminal `failed` (`.error`) |
 | `MemWalRememberJobTimeout` | `504` | Polling exceeded `.timeout_ms` |
 | `MemWalRateLimited` | `429` | Every bulk status read, the confirming one included, was rate-limited; `.job_ids` are unconfirmed (`.retry_after`) |
+| `MemWalCompatibilityError` | | The SDK and relayer pair is unsupported; protected calls raise it before signing the first request (see `compatibility()`) |
 
 ## Utility functions
 
@@ -336,7 +346,7 @@ from memwal import delegate_key_to_sui_address, delegate_key_to_public_key
 | `delegate_key_to_sui_address(private_key_hex)` | Derive the `0x`-prefixed Sui address, `blake2b-256(0x00 ‖ pubkey)` |
 | `delegate_key_to_public_key(private_key_hex)` | 32-byte Ed25519 public key bytes |
 
-## Authentication
+## How does request authentication work?
 
 Every request is signed with Ed25519 (PyNaCl). Canonical message:
 
