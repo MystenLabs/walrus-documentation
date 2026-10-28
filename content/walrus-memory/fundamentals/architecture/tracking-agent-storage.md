@@ -25,7 +25,7 @@ The blob content on Walrus is the permanent record. The `Blob` object on Sui is 
 The vector entry in the relayer database is the only object in this list that is not a source of truth. If it is lost, the [restore flow](/walrus-memory/fundamentals/architecture/how-storage-works) rebuilds it from the blobs the agent still owns on Walrus. The other three objects are the record.
 :::
 
-## The lifecycle of one blob
+## What is the lifecycle of a blob?
 
 A blob moves through a predictable set of states from the moment the agent writes it. The agent's job is to know which state each blob is in and act before the blob expires.
 
@@ -64,7 +64,7 @@ flowchart TD
 
     Before a blob expires, the agent either extends its lifetime for more epochs or lets it lapse. When the agent lets a blob lapse, the network drops it and no one can recover its content. An agent with durable memory runs an extend-before-expiry loop.
 
-## Three ways to find what an agent owns
+## How to find what an agent owns
 
 An agent does not need a separate database to know what it owns, because ownership is already recorded on Sui and on Walrus. Use the source that fits the moment.
 
@@ -105,7 +105,7 @@ Restore's `limit` (default 10) caps how many onchain blobs it inspects, newest-f
 
 When the agent needs the details of a specific blob, such as its size or exact expiry epoch, it reads the `Blob` object on Sui by its object ID. The object carries the expiry epoch that drives every renewal decision.
 
-## Track expiry and renew on time
+## How to track expiry and renew on time
 
 Expiry is the one part of the lifecycle that fails silently. A blob does not warn the agent before it lapses, so the agent has to compare the current epoch against each blob's expiry epoch on a schedule.
 
@@ -122,7 +122,7 @@ Choose a safety margin larger than your renewal interval. If the agent checks on
 
 Storage resources follow the same ownership rule. A storage resource is a transferable Sui object that represents reserved capacity, so an agent can hold pre-bought capacity and spend it on writes without swapping WAL each time. The agent tracks storage resources the same way it tracks blobs: by object ID on Sui, watching the epochs each resource covers.
 
-## Ownership in sponsored writes
+## Who owns the blob in a sponsored write?
 
 When a sponsor runs the write, ownership of the resulting `Blob` object does not automatically land with the agent. By default, a publisher's sub-wallet owns the blob it creates. If the agent is meant to manage the blob's lifecycle, the sponsor sets the publisher's `send-object-to` parameter to the agent's Sui address so the `Blob` object transfers to the agent after upload.
 
