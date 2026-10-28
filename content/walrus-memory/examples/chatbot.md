@@ -37,7 +37,21 @@ $ pnpm install
 $ cp apps/chatbot/.env.example apps/chatbot/.env
 ```
 
-Fill in `apps/chatbot/.env`: `AUTH_SECRET`, `OPENROUTER_API_KEY`, `BLOB_READ_WRITE_TOKEN`, `POSTGRES_URL`, `REDIS_URL`, and the Walrus Memory values from the dashboard (`MEMWAL_PRIVATE_KEY`, `MEMWAL_ACCOUNT_ID`, `MEMWAL_SERVER_URL`). Run `pnpm --filter chatbot verify:memwal` to catch credential mismatches before the first relayer call.
+Fill in these variables in `apps/chatbot/.env`:
+
+- `AUTH_SECRET`
+- `OPENROUTER_API_KEY`
+- `BLOB_READ_WRITE_TOKEN`
+- `POSTGRES_URL`
+- `REDIS_URL`
+
+Then add the Walrus Memory values from the dashboard:
+
+- `MEMWAL_PRIVATE_KEY`
+- `MEMWAL_ACCOUNT_ID`
+- `MEMWAL_SERVER_URL`
+
+Run `pnpm --filter chatbot verify:memwal` to catch credential mismatches before the first relayer call.
 
 With the environment configured, apply the database migrations and start the app:
 
