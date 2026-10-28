@@ -24,7 +24,14 @@ Because `analyze` stores each extracted fact as its own memory, later recall ret
 
 ## Run it locally
 
-Noter ships without an `.env.example`, so create `apps/noter/.env` yourself with the variables the [noter README](https://github.com/MystenLabs/MemWal/tree/main/apps/noter) lists: `DATABASE_URL` for PostgreSQL, Google OAuth credentials (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`), the zkLogin endpoints, `OPENROUTER_API_KEY`, `NEXT_PUBLIC_APP_URL`, and the Walrus Memory values from the dashboard (`MEMWAL_PRIVATE_KEY`, `MEMWAL_ACCOUNT_ID`, `MEMWAL_SERVER_URL`).
+Noter ships without an `.env.example`, so create `apps/noter/.env` yourself with the variables the [noter README](https://github.com/MystenLabs/MemWal/tree/main/apps/noter) lists:
+
+- `DATABASE_URL` for PostgreSQL
+- Google OAuth credentials: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- The zkLogin endpoints
+- `OPENROUTER_API_KEY`
+- `NEXT_PUBLIC_APP_URL`
+- The Walrus Memory values from the dashboard: `MEMWAL_PRIVATE_KEY`, `MEMWAL_ACCOUNT_ID`, and `MEMWAL_SERVER_URL`
 
 With the environment configured, create the database tables and start the app from the repo root:
 
