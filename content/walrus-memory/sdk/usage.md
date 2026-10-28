@@ -45,4 +45,4 @@ Walrus Memory exposes three entry points:
 - Pass `namespace` per call when one client needs multiple boundaries; a per-call namespace takes precedence over the client config value
 - If omitted, namespace falls back to client config, then to `"default"`
 
-Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing, and remember that a per-call `namespace` takes precedence over the default set in `create(...)`, so a stale client config value is silently overridden.
+Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing.

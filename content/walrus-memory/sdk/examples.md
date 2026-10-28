@@ -38,7 +38,7 @@ answer: >-
 
 The shortest working Walrus Memory example using the default relayer-backed SDK.
 
-<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/examples.md" target="_blank" className="code-source-link">Source: docs/sdk/examples.md (this documentation page, not a runnable file)</a>
+<a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/examples.md" target="_blank" className="code-source-link">Source: sdk/examples.md</a>
 
 ```ts
 import { MemWal } from "@mysten-incubation/memwal";

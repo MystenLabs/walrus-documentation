@@ -8,7 +8,7 @@ The noter example (`apps/noter`) is a note-taking app with zkLogin sign-in, so u
 
 ## How it uses Walrus memory
 
-Noter keeps a shared server-side Walrus Memory client and uses `analyze` to turn note content into discrete facts, returning the text of each extracted fact:
+Noter keeps a shared server-side Walrus Memory client and uses `analyze` to turn note content into discrete facts, which the relayer stores as separate memories, and returns the text of each extracted fact:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/examples/noter.md" target="_blank" className="code-source-link">Source: examples/noter.md</a>
 

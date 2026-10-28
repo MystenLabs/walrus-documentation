@@ -77,7 +77,7 @@ await memwal.health();
 
 ## Restore
 
-Rebuild missing indexed entries for one namespace. `restore()` takes the namespace as its first argument and a numeric second argument, as in `restore("chatbot-prod", 10)`, and returns a result object. Incremental, namespace-scoped, and meant to
+Rebuild missing indexed entries for one namespace. `restore()` takes the namespace as its first argument and an optional `limit` as its second, the maximum number of blobs to inspect in that call (default 10), as in `restore("chatbot-prod", 10)`, and returns a result object. Incremental, namespace-scoped, and meant to
 repair PostgreSQL vector state from Walrus-backed memory.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
