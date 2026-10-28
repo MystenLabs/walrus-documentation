@@ -37,7 +37,7 @@ answer: >-
 
 Add Walrus Memory to Claude Desktop so the agent can save and recall durable facts. Claude Desktop uses the **MCP server** (the memory tools); the automatic-memory plugin hooks are available on [Claude Code](/walrus-memory/mcp/claude-code), [Codex](/walrus-memory/mcp/codex), [Cursor](/walrus-memory/mcp/cursor), and [Antigravity](/walrus-memory/mcp/antigravity).
 
-## Choose your setup
+## Which setup should you choose?
 
 For **regular Claude Desktop chat**, use the [OAuth custom connector](/walrus-memory/mcp/claude-connector):
 open **Settings → Connectors → Add custom connector**, enter
@@ -56,7 +56,7 @@ Desktop chat, for users who prefer local credentials.
 - Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x)
 - A Walrus Memory account. The first memory tool call opens a browser sign-in (`memwal_login`).
 
-## Local MCP installation
+## How to install the local MCP server
 
 Add the server to your Claude Desktop config:
 
@@ -118,9 +118,15 @@ Use Walrus Memory as my memory.
 
 The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
-## Verify
+## How to verify the installation
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
+Ask the agent which MCP tools it has available. For example, send this prompt:
+
+```text
+What MCP tools do you have available?
+```
+
+You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
 
 ## Troubleshooting
 
