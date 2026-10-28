@@ -59,7 +59,7 @@ Public surfaces include:
 
 SDKs and MCP clients read `/version` before protected requests and fail with an explicit compatibility error when the relayer API major or minimum SDK version is unsupported.
 
-## How do you check compatibility at runtime?
+## How do you check compatibility at runtime? {#runtime-metadata}
 
 Modern relayers expose compatibility metadata at `GET /version` and include the same block in `GET /health`.
 
