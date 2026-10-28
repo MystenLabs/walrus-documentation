@@ -56,7 +56,7 @@ and, when required by your trust model, Move-side verification of the TEE output
 or registered enclave identity.
 :::
 
-## What this provides
+## What does the TEE deployment pattern provide?
 
 | Layer | Status |
 | --- | --- |
@@ -67,7 +67,7 @@ or registered enclave identity.
 | Nautilus deployment | Requires your Nautilus CLI/platform to build and run the enclave image |
 | Attestation verification | Must be wired through your Nautilus/Sui verification path before clients rely on it |
 
-## Architecture flow
+## How does data flow through the TEE relayer?
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/nautilus-tee.md" target="_blank" className="code-source-link">Source: relayer/nautilus-tee.md</a>
 
@@ -112,7 +112,7 @@ Recall path:
 3. The sidecar downloads matching ciphertext blobs from Walrus and Seal-decrypts inside the enclave.
 4. The relayer returns plaintext matches to the authenticated client.
 
-## Reference template
+## How to deploy with the reference template
 
 Template files:
 
@@ -265,32 +265,32 @@ Run a remember/recall smoke test through the TEE endpoint:
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/nautilus-tee.md" target="_blank" className="code-source-link">Source: relayer/nautilus-tee.md</a>
 
 ```bash
-TEE_RELAYER_URL=https://tee-relayer.example.com \
+$ TEE_RELAYER_URL=https://tee-relayer.example.com \
 MEMWAL_DELEGATE_KEY=... \
 MEMWAL_ACCOUNT_ID=0x... \
-$ pnpm dlx tsx <<'TS'
-$ import { MemWal } from "@mysten-incubation/memwal";
+pnpm dlx tsx <<'TS'
+import { MemWal } from "@mysten-incubation/memwal";
 
-$ const namespace = `tee-smoke-${Date.now()}`;
-$ const memwal = MemWal.create({
+const namespace = `tee-smoke-${Date.now()}`;
+const memwal = MemWal.create({
   key: process.env.MEMWAL_DELEGATE_KEY!,
   accountId: process.env.MEMWAL_ACCOUNT_ID!,
   serverUrl: process.env.TEE_RELAYER_URL!,
   namespace,
-$ });
+});
 
-$ await memwal.health();
-$ const memory = `TEE smoke memory ${new Date().toISOString()}`;
-$ const job = await memwal.remember(memory);
-$ await memwal.waitForRememberJob(job.job_id);
-$ const recall = await memwal.recall({ query: "What smoke memory was stored?", limit: 5 });
+await memwal.health();
+const memory = `TEE smoke memory ${new Date().toISOString()}`;
+const job = await memwal.remember(memory);
+await memwal.waitForRememberJob(job.job_id);
+const recall = await memwal.recall({ query: "What smoke memory was stored?", limit: 5 });
 
-$ if (!recall.results.some((item) => item.text.includes("TEE smoke memory"))) {
+if (!recall.results.some((item) => item.text.includes("TEE smoke memory"))) {
   throw new Error("TEE remember/recall smoke test failed");
-$ }
+}
 
-$ console.log({ namespace, job_id: job.job_id, recalled: recall.results.length });
-$ TS
+console.log({ namespace, job_id: job.job_id, recalled: recall.results.length });
+TS
 ```
 
 Inspect logs for:
@@ -318,7 +318,7 @@ database URLs.
 | TLS/cert errors to DB or Redis | Host rewrite/proxy broke hostname validation | Preserve original hostnames when proxying TLS endpoints |
 | Plaintext appears in logs | Logging hygiene regression or debug middleware | Disable debug logs and scrub host/enclave log sinks |
 
-## Security considerations
+## What security guarantees does a TEE deployment provide?
 
 TEE deployment reduces trust in the relayer host, but it does not make the
 default SDK path end-to-end encrypted. Nautilus adds value only when the
