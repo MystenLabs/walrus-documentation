@@ -41,7 +41,7 @@ answer: >-
 
 When you call `memwal.remember(...)`, the relayer accepts a background job immediately and then stores the memory asynchronously. Here's what happens.
 
-## Storing a memory
+## How does Walrus Memory store a memory?
 
 <figure>
   <iframe src="https://docs.wal.app/diagrams/interactive_walrus-memory-remember_v1.html"
@@ -57,21 +57,21 @@ When you call `memwal.remember(...)`, the relayer accepts a background job immed
 
 ### Embedding
 
-    The relayer generates a vector embedding from your plaintext content. This embedding is a numerical representation of the meaning of your memory. It's what makes semantic search possible during recall.
+The relayer generates a vector embedding from your plaintext content. This embedding is a numerical representation of the meaning of your memory. It's what makes semantic search possible during recall.
 
-  ### Encryption
+### Encryption
 
-    The relayer encrypts the plaintext content using Seal (Sui's encryption framework). Only the owner or their authorized delegates can decrypt the encrypted payload.
+The relayer encrypts the plaintext content using Seal (Sui's encryption framework). Only the owner or their authorized delegates can decrypt the encrypted payload.
 
-  ### Blob upload
+### Blob upload
 
-    The relayer uploads the encrypted payload to Walrus as a blob and attaches metadata, including the namespace, so restore can discover the blob later. Walrus stores it durably across a decentralized network, so there is no single point of failure.
+The relayer uploads the encrypted payload to Walrus as a blob and attaches metadata, including the namespace, so restore can discover the blob later. Walrus stores it durably across a decentralized network, so there is no single point of failure.
 
-  ### Vector indexing
+### Vector indexing
 
-    The relayer stores the vector embedding (1536 dimensions, from `text-embedding-3-small`), along with the blob ID, owner address, and namespace, in the `vector_entries` table in PostgreSQL with pgvector. An HNSW index on the embedding column enables fast approximate nearest neighbor search during recall.
+The relayer stores the vector embedding (1536 dimensions, from `text-embedding-3-small`), along with the blob ID, owner address, and namespace, in the `vector_entries` table in PostgreSQL with pgvector. An HNSW index on the embedding column enables fast approximate nearest neighbor search during recall.
 
-## Recalling a memory
+## How does Walrus Memory recall a memory?
 
 <figure>
   <iframe src="https://docs.wal.app/diagrams/interactive_walrus-memory-recall_v1.html"
@@ -96,7 +96,7 @@ When you call `memwal.remember(...)`, the relayer accepts a background job immed
 If a blob has expired on Walrus (returns 404), the relayer automatically deletes the stale vector entry from the database. This reactive cleanup keeps your recall results clean without manual intervention.
 :::
 
-## Restoring a memory space
+## How do you restore a memory space?
 
 <figure>
   <iframe src="https://docs.wal.app/diagrams/interactive_walrus-memory-restore_v1.html"
