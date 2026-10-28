@@ -43,7 +43,7 @@ Every write to Walrus produces a **blob ID derived from the stored bytes**. Two 
 Put together, you get an append-only version history without building one: each revision is a separate, permanent, independently addressable object, and the chain of blob IDs is the lineage.
 
 :::warning
-Memories are Seal-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Treat every write as a new immutable version, and do not assume identical input produces an identical blob ID. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
+Memories are Seal-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Content-addressing guarantees that a blob ID pins down one exact set of ciphertext bytes. It does not guarantee that the same plaintext always maps to the same blob ID, because encrypting identical input twice can produce different ciphertext. Treat every write as a new immutable version. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
 :::
 
 ## Capturing a version handle
