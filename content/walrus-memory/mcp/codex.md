@@ -5,7 +5,6 @@ keywords:
   - MCP
   - Codex
   - Walrus Memory
-  - Walrus Memory
   - plugin
   - automatic memory
   - marketplace
