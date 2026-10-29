@@ -151,3 +151,16 @@ curl -s -X DELETE \
 | `401` | Missing or invalid API key |
 | `404` | Bucket not found or not owned by your account |
 | `409` | Bucket is not empty |
+
+## Pagination cursors
+
+A non-null `next_cursor` is an opaque string, for example `eyJjcmVhdGVk...` (truncated). Do not parse or build cursor values yourself. Copy the value from the response and pass it unchanged as the `cursor` query parameter, for example `$OYSTER_URL/api/v1/buckets?limit=10&cursor=eyJjcmVhdGVk...`. When `next_cursor` is `null`, there are no more results.
+
+## Set the server URL and API key
+
+In the examples, `$OYSTER_URL` is the address of your Oyster server, for example `http://localhost:3000`. Set it without the `/api/v1` prefix, because each example appends the full endpoint path. Your operator provides your API key. Export both values before you run the examples:
+
+```bash
+export OYSTER_URL="http://localhost:3000"
+export API_KEY="your-api-key-here"
+```
