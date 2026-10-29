@@ -79,4 +79,4 @@ const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
 
-Restore inspects your onchain blobs newest-first, up to `limit` (default 10), and has no pagination cursor. To rebuild a large namespace, rerun restore with a progressively higher `limit` until `restored` stops increasing. Restore skips blobs the relayer already indexed, so you can run it more than once safely. For the full flow, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
+Restore inspects your onchain blobs newest-first, up to `limit` (default 10), and has no pagination cursor. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call. Because restore has no cursor, rerunning it re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob is covered. Restore skips blobs the relayer already indexed, so you can run it more than once safely. For the full flow, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
