@@ -533,3 +533,7 @@ Someone revoked your delegate key from the dashboard, or your saved credentials 
 ### Verbose logs for debugging
 
 Set `MEMWAL_MCP_DEBUG=1` in the client's MCP server config `env` block (or in your terminal) to dump structured stderr logs covering credential loading, bridge connection, and per-request flow.
+
+## Remember wait time
+
+`MEMWAL_MCP_REMEMBER_WAIT_MS` sets how long `memwal_remember` waits for the Walrus write to finish before it replies. The default is 0: the tool returns at accept with a `job_id`, before the memory is stored. You can raise the value up to the tool's `MAX_REMEMBER_WAIT_MS` cap. The stdio package gives `memwal_remember` a 90_000 ms deadline to match that cap. Setting `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` makes the tool wait for `blob_id`. This requires a client that raises the 60s `tools/call` ceiling.
