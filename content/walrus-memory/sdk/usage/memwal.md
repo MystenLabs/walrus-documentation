@@ -120,4 +120,4 @@ for (const memory of result.results) {
 
 ## Restore limit and pagination
 
-The `limit` argument must be a positive integer. Otherwise, `restore()` throws a `TypeError`. Restore inspects your onchain blobs newest-first and has no pagination cursor. If you repeat a call at the same limit, it re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, rerun `restore()` with a progressively higher `limit` until `restored` stops increasing. You can safely run restore more than once, because it skips blobs the relayer already indexed.
+The `limit` argument must be a positive integer. Otherwise, `restore()` throws a `TypeError`. Restore inspects your onchain blobs newest-first and has no pagination cursor. If you repeat a call at the same limit, it re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call. A `restored` count that stops increasing across reruns is not proof that every blob is covered. You can safely run restore more than once, because it skips blobs the relayer already indexed.
