@@ -342,3 +342,13 @@ replacement batch for the same blobs while its state is `executing`.
 
 To delete memories through the dashboard instead, see
 [Delete old memories](/walrus-memory/guides/delete-old-memories).
+
+## Node.js version requirements
+
+The Node.js minimums of 22.23.4+ within 22.x, 24.22.1+ within 24.x, and 26.12.1+ within 26.x are security-patch levels, not API compatibility limits. They come from the [October 2026 Node.js security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases). The `engines` field in Walrus Memory packages describes API compatibility only, so an older patch release can install without warnings and still miss required security fixes.
+
+## How long is the Bearer token valid?
+
+The `POST /api/security-delete-auth/verify` response includes an `expiresInSecs` field next to `token`. The API reference example returns `"expiresInSecs": 2700`, which is 45 minutes. Long-running jobs should read this field and track when the token expires.
+
+The API returns `AUTH_TOKEN_EXPIRED` for expired tokens, and also for malformed or tampered ones. If you receive this error, request a new challenge and verify it again to get a fresh token. Each challenge ID works only once, but challenges for the same wallet are independent of each other.
