@@ -71,4 +71,4 @@ While quarantine is active, the owner cannot reactivate the account. `admin_clea
 
 ## How the indexer uses `AccountCreated`
 
-The indexer polls Sui events using `suix_queryEvents` and filters for `AccountCreated` events from the Walrus Memory package. For each event, it inserts an `account_id → owner` mapping into the `accounts` table. The relayer uses this same PostgreSQL database, so it can resolve accounts quickly. The indexer stores its event cursor in `indexer_state`, which lets it resume after restarts.
+The indexer runs on the Sui checkpoint-ingestion framework. It reads checkpoints from a remote checkpoint store and picks out `AccountCreated` events from the Walrus Memory package. For each event, it inserts an `account_id → owner` mapping into the `accounts` table. The relayer uses this same PostgreSQL database, so it can resolve accounts quickly. The framework records the indexer's checkpoint watermark, which lets it resume after restarts.
