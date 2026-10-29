@@ -117,3 +117,7 @@ for (const memory of result.results) {
 ```
 
 `recall` returns up to `limit` results, defaulting to `10`, and gives no signal when it drops extra matches. Treat a result count equal to `limit` as a sign that more matches might exist.
+
+## Restore limit and pagination
+
+The `limit` argument must be a positive integer. Otherwise, `restore()` throws a `TypeError`. Restore inspects your onchain blobs newest-first and has no pagination cursor. If you repeat a call at the same limit, it re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, rerun `restore()` with a progressively higher `limit` until `restored` stops increasing. You can safely run restore more than once, because it skips blobs the relayer already indexed.
