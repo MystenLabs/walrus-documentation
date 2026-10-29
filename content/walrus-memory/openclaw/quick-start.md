@@ -244,3 +244,7 @@ If `openclaw memwal stats` reports the plugin as connected but the logs never sh
 - Share a substantive fact. Capture skips trivial messages, such as messages under 30 characters and filler replies like ok or thanks.
 - Search the logs for `auto-capture skipped` or `auto-capture failed` messages.
 - Search the startup logs for `typed hook "agent_end" blocked`, which means `hooks.allowConversationAccess` is missing. See [Configure OpenClaw](#configure-openclaw).
+
+## Which config key sets the relayer URL?
+
+The plugin reads the relayer URL from the `serverUrl` field in the `config` block. Only `privateKey` expands `${ENV_VAR}` references. The plugin keeps `serverUrl` and every other field literal, so a secret cannot land in `serverUrl`. Write the full relayer URL as the value instead of an environment variable reference.
