@@ -100,3 +100,17 @@ In this example, one user has three separate memory spaces:
 - **personal** memories in **app-2** (a completely different deployment)
 
 Each is fully isolated. All three spaces share the same owner address, the Sui wallet address that owns the memory, so here it is the namespace and app ID that separate them. Storing into one never affects the others, and recall only searches within the specified memory space.
+
+## What is Seal encryption?
+
+Walrus Memory encrypts every memory with Seal, a threshold encryption scheme, before it uploads the memory to Walrus. Seal key servers are onchain objects, and encryption combines their shares according to a configured threshold. When the relayer encrypts a memory, it passes the owner address, the package ID, and the MemWal account ID. Because the package ID is part of encryption, a separate deployment with a different package ID provides cross-deployment isolation at the encryption layer.
+
+## How should multiple agents share one account?
+
+When several agents share one owner account, give each agent its own namespace. The OpenClaw plugin follows this pattern and derives the namespace from the agent name, for example `researcher` or `coder`. The relayer scopes recall and storage to the current namespace.
+
+A namespace organizes data. It is not an onchain authorization boundary. Every delegate key is authorized for the whole MemWal account, so a delegate assigned to one agent can still request another namespace's Seal key. Use separate MemWal accounts when agents require cryptographic isolation.
+
+## Switch namespaces per call
+
+The `namespace` you set in `create(...)` is a default, not a fixed binding. Set it there when one app or agent uses one boundary. When one client needs multiple memory spaces, pass `namespace` on each call instead of creating a new client. If a call omits `namespace`, it falls back to the client config, then to `"default"`. Avoid keeping everything in `"default"` after early testing.
