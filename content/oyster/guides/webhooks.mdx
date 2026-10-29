@@ -392,4 +392,4 @@ Oyster sleeps only between attempts. After a failed attempt, it waits the curren
 
 ## Webhook key rotation
 
-Rotation has no overlap window. Each `PUT` discards the prior keypair, so Oyster never signs with both the old and new keys. A receiver that still holds the old public key sees a fingerprint mismatch in `X-Oyster-Public-Key-Fingerprint` on every delivery after the call. Use that header to detect the rotation and install the new public key returned by the `PUT` response, or read the key back from `GET /api/v1/admin/app`.
+Rotation has no overlap window. Each `PUT` discards the prior key pair, so Oyster never signs with both the old and new keys. A receiver that still holds the old public key sees a fingerprint mismatch in `X-Oyster-Public-Key-Fingerprint` on every delivery after the call. Use that header to detect the rotation and install the new public key returned by the `PUT` response, or read the key back from `GET /api/v1/admin/app`.
