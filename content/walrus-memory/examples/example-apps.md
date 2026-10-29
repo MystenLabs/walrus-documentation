@@ -89,17 +89,17 @@ Each demo app has its own page with the integration pattern it shows, the key co
 Use Node.js 22.23.4 (pinned in `.nvmrc`) and pnpm 9.12 or later. You need Rust only for backend services, not for the TypeScript apps. Clone the repo and install dependencies from the repo root:
 
 ```bash
-git clone https://github.com/MystenLabs/MemWal.git
-cd MemWal
-nvm install
-nvm use
-pnpm install
+$ git clone https://github.com/MystenLabs/MemWal.git
+$ cd MemWal
+$ nvm install
+$ nvm use
+$ pnpm install
 ```
 
 If you use a different Node version manager, select the version in `.nvmrc` before installing dependencies. Build the SDK before you start any app, because the apps depend on its compiled output:
 
 ```bash
-pnpm build:sdk
+$ pnpm build:sdk
 ```
 
 For the full setup and troubleshooting steps, see [Run the Repo Locally](https://github.com/MystenLabs/MemWal/blob/dev/docs/contributing/run-repo-locally.md).
