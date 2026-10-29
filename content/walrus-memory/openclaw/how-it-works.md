@@ -226,7 +226,7 @@ Private keys support `${ENV_VAR}` syntax in config, the actual key is never writ
 
 ## Delegate keys and Seal access
 
-Delegate keys are lightweight Ed25519 keys that are registered onchain in a `MemWalAccount`. The relayer verifies them on every request. The [Seal](/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or a registered delegate before it releases decryption keys. Because this check is per account and not per namespace, any registered delegate can obtain keys for every namespace in the account. For the full model, see [Ownership and access](/fundamentals/concepts/ownership-and-access), the [data flow and security model](/fundamentals/architecture/data-flow-security-model), and [Delegate key management](/contract/delegate-key-management).
+Delegate keys are lightweight Ed25519 keys that are registered onchain in a `MemWalAccount`. The relayer verifies them on every request. The [Seal](/walrus-memory/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or a registered delegate before it releases decryption keys. Because this check is per account and not per namespace, any registered delegate can obtain keys for every namespace in the account. For the full model, see [Ownership and access](/walrus-memory/fundamentals/concepts/ownership-and-access), the [data flow and security model](/walrus-memory/fundamentals/architecture/data-flow-security-model), and [Delegate key management](/walrus-memory/contract/delegate-key-management).
 
 ## Configure the auto-capture message count
 
