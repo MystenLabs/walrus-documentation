@@ -83,3 +83,14 @@ Use direct SDK methods when your app needs precise control over:
 - when memory is stored
 - which text is analyzed
 - how recall results are displayed or filtered
+
+## Stream responses with `streamText`
+
+The wrapped model also works with `streamText`. Pass it as the `model` the same way you do for `generateText`:
+
+```ts
+const result = streamText({
+  model,
+  messages: [{ role: "user", content: "What do you remember about me?" }],
+});
+```
