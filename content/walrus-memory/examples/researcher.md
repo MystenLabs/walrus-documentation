@@ -49,3 +49,7 @@ $ pnpm dev:researcher
 ```
 
 The [researcher source](https://github.com/MystenLabs/MemWal/tree/main/apps/researcher) documents each variable.
+
+## How Researcher generates recall queries
+
+Before a fresh session starts, Researcher asks an LLM to read each sprint's metadata (title, summary, source titles, and tags) and generate 3-5 diverse search queries. The prompt requires the queries to cover different aspects of the sprint, use terms from the summary and tags, and be phrased as semantic search queries rather than questions. The app then runs every query through `recallFromMemWal` with a limit of 5 results, deduplicates the returned texts, and assembles them into a context block for that sprint. `recallFromMemWal` reports each result with a relevance score of `1 - r.distance`.
