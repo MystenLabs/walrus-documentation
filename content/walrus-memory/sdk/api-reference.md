@@ -531,3 +531,29 @@ import { delegateKeyToSuiAddress, delegateKeyToPublicKey } from "@mysten-incubat
 |----------|-------------|
 | `delegateKeyToSuiAddress(privateKeyHex)` | Derive the Sui address from a delegate private key |
 | `delegateKeyToPublicKey(privateKeyHex)` | Get the 32-byte public key from a delegate private key |
+
+## Remember job ID validation
+
+`getRememberStatus` and `waitForRememberJob` share one validity rule: a job ID must match `[A-Za-z0-9_-]+`. Both methods reject any other ID before signing, so the SDK never sends the request. This rule covers `.`, `..`, `\`, and `%2e%2e`, not only whitespace, `/`, `?`, and `#`. Valid UUID job IDs pass unchanged. For an empty ID, `getRememberStatus` returns `not_found` without a request, and `waitForRememberJob` fails immediately with status 404.
+
+## Account management options
+
+Each account function takes one options object. The `@mysten-incubation/memwal/account` entry exports the types `CreateAccountOpts`, `CreateAccountResult`, `AddDelegateKeyOpts`, `AddDelegateKeyResult`, and `RemoveDelegateKeyOpts`.
+
+- `createAccount`: `packageId`, `registryId`, and a signer. The result includes `accountId`.
+- `addDelegateKey`: `packageId`, `registryId`, `accountId`, `publicKey`, `label`, and a signer.
+- `removeDelegateKey`: `packageId`, `registryId`, `accountId`, `publicKey`, and a signer.
+
+For the signer, pass `walletSigner` for browser wallet signing or `suiPrivateKey` (a `suiprivkey1...` owner key) for server-side signing. `suiNetwork` selects the network, for example `mainnet` or `testnet`. Without `suiClient`, the functions default to `SuiGrpcClient` against the public fullnode for `suiNetwork`. An explicit `suiClient` takes precedence.
+
+## Manual method types
+
+`rememberManual(opts: RememberManualOptions)` resolves to `RememberManualResult`, which contains `id`, `blob_id`, and `owner`. Pass these fields:
+
+- `encryptedData`: Base64-encoded SEAL-encrypted bytes. The SDK rejects an empty value.
+- `vector`: An embedding vector you already generated (for example, 1536-dim). The SDK rejects non-finite values.
+- `namespace`: Optional. Defaults to the client namespace.
+
+The delegate private key stays on the client for this request.
+
+On `MemWal`, `recallManual` returns `RecallManualHitResult`, which holds a blob ID and distance for each hit and no text. `MemWalManual.recallManual` returns `RecallManualMemoryResult`, which holds decrypted text. `RecallManualResult` is a deprecated alias of those two types.
