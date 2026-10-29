@@ -95,3 +95,29 @@ cache validation (`If-None-Match` returns 304 on GET or HEAD) and safe
 concurrent writes (`If-Match` for optimistic locking, `If-None-Match: *`
 for create-only semantics). Oyster does not support time-based conditionals (`If-Modified-Since`,
 `If-Unmodified-Since`).
+
+## Path-style configuration in the Rust SDK
+
+In the AWS SDK for Rust (`aws-sdk-s3`), call `force_path_style(true)` on the config builder. The following client configuration also sets the region and endpoint:
+
+```rust
+use aws_sdk_s3::config::{Credentials, Region};
+
+let creds = Credentials::new(
+    "OYAK1234567890ABCDEF",
+    "abcdef1234567890...",
+    None, None, "oyster",
+);
+
+let config = aws_sdk_s3::Config::builder()
+    .behavior_version_latest()
+    .region(Region::new("us-east-1"))
+    .endpoint_url("http://localhost:3000")
+    .credentials_provider(creds)
+    .force_path_style(true)
+    .build();
+
+let client = aws_sdk_s3::Client::from_conf(config);
+```
+
+Other SDKs expose an equivalent path-style option. For full client setup, see [S3 setup](./setup.mdx).
