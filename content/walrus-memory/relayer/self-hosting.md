@@ -254,16 +254,16 @@ See [Database Sync](/walrus-memory/indexer/database-sync) for the full schema.
 
 ## Run the indexer
 
-The indexer is optional for development because the relayer can fall back to onchain resolution without it. For production, run it from `services/indexer`:
+The indexer is optional for development. Without it, the `accounts` table stays empty, so the account existence check and the owner-token route do not see any accounts. Delegate-key authentication does not depend on it. For production, run the `memwal-indexer` binary from `services/indexer`. It reads Sui checkpoints from a remote checkpoint store:
 
 ```bash
 cd services/indexer
-cargo run
+cargo run --release -- --remote-store-url <CHECKPOINT_STORE_URL> --first-checkpoint <CHECKPOINT>
 ```
 
-The indexer reads these environment variables:
+Set `--first-checkpoint` to a checkpoint at or before the one that published your Walrus Memory package, so the indexer sees every `AccountCreated` event.
+
+The indexer also reads these environment variables:
 
 - `DATABASE_URL` (required): PostgreSQL connection string.
 - `MEMWAL_PACKAGE_ID` (required): Walrus Memory contract package ID to filter events.
-- `SUI_RPC_URL` (optional): Sui RPC endpoint. Defaults to a Mainnet full node.
-- `POLL_INTERVAL_SECS` (optional): Seconds between event poll cycles. Defaults to `5`.
