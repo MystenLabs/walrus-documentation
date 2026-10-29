@@ -88,12 +88,12 @@ To unstake or withdraw your staked WAL:
 
 ## States of staked WAL
 
-Each staked WAL object is in one of two states:
+Each staked WAL object is in one of 2 states:
 
 - **Staked:** The default state after you stake. Your WAL sits in the staking pool of the storage node.
 - **Withdrawing:** You requested to unstake. The object records the withdraw epoch, which is the epoch when your funds become available.
 
-For a storage node in the current or next committee, unstaking takes two steps. **Unstake** moves the staked WAL from the Staked state to the Withdrawing state. When the withdraw epoch arrives, **Withdraw** returns the principal and the rewards earned up to the withdraw epoch.
+For a storage node in the current or next committee, unstaking takes 2 steps. **Unstake** moves the staked WAL from the Staked state to the Withdrawing state. When the withdraw epoch arrives, **Withdraw** returns the principal and the rewards earned up to the withdraw epoch.
 
 In some cases you withdraw directly, without the Withdrawing state:
 
