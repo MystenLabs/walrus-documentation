@@ -548,9 +548,9 @@ For the signer, pass `walletSigner` for browser wallet signing or `suiPrivateKey
 
 ## Manual method types
 
-`rememberManual(opts: RememberManualOptions)` resolves to `RememberManualResult`, which contains `id`, `blob_id`, and `owner`. Pass these fields:
+`rememberManual(opts: RememberManualOptions)` resolves to `RememberManualResult`, which contains `id`, `blob_id`, `owner`, and `namespace`. Pass these fields:
 
-- `encryptedData`: Base64-encoded SEAL-encrypted bytes. The SDK rejects an empty value.
+- `encryptedData`: Base64-encoded Seal-encrypted bytes. The SDK rejects an empty value.
 - `vector`: An embedding vector you already generated (for example, 1536-dim). The SDK rejects non-finite values.
 - `namespace`: Optional. Defaults to the client namespace.
 
