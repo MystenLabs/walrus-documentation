@@ -232,3 +232,7 @@ $ sudo journalctl -u walrus-node.service -f
 ```
 
 The storage node begins downloading and replaying events. This process can take some time before the node transitions to `Active` state.
+
+## Why listing backups does not use the admin socket
+
+Listing backups is a top-level `walrus-node` subcommand, not a `local-admin` operation. It reads the checkpoint directory directly and does not connect to a running node, so it does not use the administration socket. You can run it while the storage node is stopped, for example before a restore.
