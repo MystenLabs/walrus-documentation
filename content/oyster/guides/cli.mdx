@@ -462,3 +462,17 @@ the file extension:
 | `.mp4` | `video/mp4` |
 | `.webm` | `video/webm` |
 | (other) | `application/octet-stream` |
+
+## Where does the --app flag go?
+
+`--app <name>` is not one of the top-level global flags (`--config`, `--context`, `--url`, `--api-key`, and `--json`). It is scoped to the `oyster app account` subcommand tree. Use it only with `oyster app account` commands, and only when the active context defines more than one app.
+
+## How do you get an API key?
+
+Your Oyster administrator creates your account and issues you an initial API key (a Bearer token). Add that key as `api_key` in your context. With that key you can create additional API keys, manage buckets and blobs, and generate S3-compatible access keys.
+
+If your context already has an app with an `admin_key`, you can mint an account and its initial API key yourself. The `--activate` flag saves the new bearer to `context.api_key` in `client.yaml`:
+
+```bash
+oyster app account create --name alice --activate
+```
