@@ -92,4 +92,4 @@ The following example reads Walrus system state on Sui instead of blob data. The
 
 ## Default storage duration
 
-If you omit `epochs`, the publisher fills in the default of 1 when it parses the query parameters of the store request. The value counts epochs ahead of the current one, so the default stores the blob until the end of the next epoch.
+If you omit `epochs`, the publisher fills in the default of 1 when it parses the query parameters of the store request. The value counts epochs ahead of the current one, and the resulting end epoch is exclusive, so the default stores the blob only until the end of the current epoch.
