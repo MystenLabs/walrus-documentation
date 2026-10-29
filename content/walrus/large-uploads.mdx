@@ -104,7 +104,7 @@ Erasure coding and upload processing add memory overhead per blob. Running too m
 
 ## Enter storage duration in epochs
 
-The `walrus` CLI does not accept months as a duration. When you store a blob, set the duration with one of three flags: `--epochs` with a number greater than 0 or `max` for the maximum the system object onchain allows, `--end-epoch` with an epoch later than the current one, or `--earliest-expiry-time` with a time in RFC3339 format. Convert your planned duration in months to epochs before you run the command, and check that the count does not exceed the maximum number of epochs ahead that the network allows.
+The `walrus` CLI does not accept months as a duration. When you store a blob, set the duration with one of 3 flags: `--epochs` with a number greater than 0 or `max` for the maximum the system object onchain allows, `--end-epoch` with an epoch later than the current one, or `--earliest-expiry-time` with a time in RFC3339 format. Convert your planned duration in months to epochs before you run the command, and check that the count does not exceed the maximum number of epochs ahead that the network allows.
 
 ## Why does erasure coding need extra memory?
 
