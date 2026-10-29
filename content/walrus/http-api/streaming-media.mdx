@@ -61,3 +61,15 @@ A plain `<video src>` or `<audio src>` element loads media cross-origin without 
 - [Reading Blobs with the HTTP API](/docs/http-api/reading-blobs)
 - [Managing blobs](/docs/walrus-client/managing-blobs)
 - [Network Reference](/docs/network-reference)
+
+## Byte-range query parameters
+
+On the `byte-range` endpoint, `start` is a 0-indexed, inclusive byte position and `length` is the number of bytes to read, not an end offset. The aggregator reads the range `[start, start + length)`, so `start=0&length=1024` returns 1024 bytes starting from position 0.
+
+The aggregator does not truncate a request that runs past the end of the blob. It rejects any of the following requests with an error:
+
+- `length` is 0.
+- `start + length` overflows.
+- The range `[start, start + length)` extends beyond the blob's size. The error reads `byte range out of bounds`.
+
+Unlike a `Range` header request, a successful response from this endpoint uses status `200 OK` rather than `206 Partial Content`, so a CDN can cache it.
