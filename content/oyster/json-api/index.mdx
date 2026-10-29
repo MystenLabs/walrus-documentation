@@ -142,3 +142,7 @@ Explore and test all endpoints directly from your browser.
 ## How the server handles out-of-range limits
 
 When you pass a `limit` greater than the maximum, the server clamps it to 100 items and does not return an error. A `limit` of 0 or less returns `400` with the error `limit must be positive`.
+
+## What is the Pearl-derived wallet?
+
+Pearl is the custodial wallet service that Oyster uses for onchain operations. Pearl derives a Sui wallet address for each Oyster account from the account's identity. Oyster uses this Pearl-derived wallet for onchain operations when it stores blobs on Walrus, and Pearl signs the transactions that Oyster submits. To inspect your account's wallet, use [Get Wallet Address](wallet.mdx). When a request returns `402`, fund this wallet with the WAL and SUI amounts in `funding_required` and retry the request.
