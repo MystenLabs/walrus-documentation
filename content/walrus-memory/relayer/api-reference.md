@@ -708,3 +708,7 @@ Return the memory count and stored byte total for one namespace, scoped to the a
 ## MCP transports
 
 The relayer also proxies Model Context Protocol traffic to its Node sidecar. `GET`, `POST`, `DELETE`, and `OPTIONS` on `/api/mcp` serve the Streamable HTTP transport, and `GET /api/mcp/sse` plus `POST /api/mcp/messages` serve the legacy SSE transport. These routes use bearer authentication instead of signed headers. See [Reference](/walrus-memory/mcp/reference) for transport details and client configuration.
+
+## Legacy `x-delegate-key` header format
+
+The `x-delegate-key` value is the delegate private key as a hex string. `x-seal-session` carries an exported Seal `SessionKey` as base64-encoded JSON instead, so the private key never leaves the client. When a request sends both headers, the relayer uses `x-seal-session`. When a request sends only `x-delegate-key`, the relayer logs a deprecation warning that asks the client to upgrade to SDK v0.4+.
