@@ -103,3 +103,16 @@ Use Walrus Memory's MCP server when you want Cursor, Claude Desktop, Claude Code
 Go to: [MCP](/walrus-memory/mcp/overview)
 
 If the agent already has local memory, standing context, or session history, copy those facts in first: [Import Your Existing Memory](/walrus-memory/guides/import-existing-memory).
+
+## Managed relayer or self-hosted relayer?
+
+The managed relayer covers WAL storage fees and SUI gas through its server wallets and configured gas sponsor. You pay no gas or WAL for relayed writes and run no infrastructure. In exchange, the shared service applies usage limits and carries no service level agreement (SLA).
+
+A self-hosted relayer moves cost and operations to you:
+
+- **Funding:** You fund the relayer deployment, including access to a wallet funded with WAL and SUI.
+- **Embeddings:** You supply your own OpenAI-compatible API and credentials.
+- **Isolation:** You can deploy your own contract with a separate package ID, Seal encryption keys, and hard data isolation.
+- **Availability:** You control uptime instead of relying on a shared service without an SLA.
+
+Start with the managed relayer if you want to integrate without running infrastructure. Self-host when you need your own instance, trust boundary, or availability guarantees.
