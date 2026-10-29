@@ -101,3 +101,15 @@ Account authorization and application-user authorization operate at different le
 - An application using one account for many users enforces each user's namespace access in its own server. The account contract does not distinguish those application users.
 
 Removing a delegate rotates the account's encryption identity for future writes. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Keep the owner key secure so you can manage and replace delegate keys. See [Delegate key management](/walrus-memory/contract/delegate-key-management) for revocation steps.
+
+## What happens to encryption when you remove a delegate?
+
+The encryption identity is the [Seal](/walrus-memory/fundamentals/architecture/data-flow-security-model) key ID. Every key ID ends with `BCS(owner_address) ‖ BCS(access_counter_version)`. `access_counter_version` is a rotation counter on the `MemWalAccount`. Removing a delegate or freezing the account increments the counter. The new counter produces a different identity, and therefore a different key that the removed delegate cannot fetch. Writes after the removal use the new identity. Encrypt under a counter that you read fresh from chain, and never under a cached value. `seal_approve` rejects any counter above the account's current one, so an authorized delegate cannot pre-fetch keys for future identities.
+
+Rotation is forward-only. Memories written under an older counter stay readable with the older key. To retract them, you must re-encrypt them.
+
+## Register and remove delegates
+
+Create the account and a delegate key on the [Walrus Memory dashboard](https://memory.walrus.xyz). To register a delegate programmatically, the owner calls `addDelegateKey` with the delegate public key. To remove a delegate, use the dashboard or call `removeDelegateKey` from `@mysten-incubation/memwal/account` with the **owner** credentials. Keep the owner key offline, not on your application server.
+
+The relayer rejects a delegate key that exists locally but is not registered on the selected account, or that is registered on a different account or network. For the full lifecycle, see [Delegate key management](/walrus-memory/contract/delegate-key-management).
