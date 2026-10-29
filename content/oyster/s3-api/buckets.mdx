@@ -96,3 +96,7 @@ Returns no output on success (HTTP 204).
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist or your account doesn't own it |
 | `BucketNotEmpty` | Bucket still contains objects |
+
+## Does HeadBucket distinguish buckets owned by other accounts?
+
+Oyster doesn't use a separate status code for a bucket that another account owns. It looks up the bucket by name and by your account together, so another account's bucket returns the same HTTP 404 and `NoSuchBucket` error as a bucket that doesn't exist.
