@@ -123,3 +123,10 @@ Because the user's own wallet registers, pays for, and certifies the blob, the u
 
 - **The relay rejects an upload:** A paid relay only accepts uploads whose registration transaction includes the advertised tip. Make sure the client's `sendTip.max` covers the tip that the relay reports through `/v1/tip-config`.
 - **`Cannot read properties of undefined (reading 'buffer')`:** `WalrusFile.from` expects a `Uint8Array` for `contents`, not a `File`, `Blob`, or raw `ArrayBuffer`. Read the bytes first with `new Uint8Array(await file.arrayBuffer())`.
+
+## What does the tip configuration endpoint return?
+
+The `/v1/tip-config` endpoint returns a `TipConfig` value, and the relay serializes its variant names in snake case. A free relay returns the `NoTip` variant. A paid relay returns the `SendTip` variant, which carries 2 fields:
+
+- `address`: The Sui address that receives the tip.
+- `kind`: The tip formula, either `Const` (a constant tip) or `Linear` (a `base` tip plus an amount per KiB of encoded blob size).
