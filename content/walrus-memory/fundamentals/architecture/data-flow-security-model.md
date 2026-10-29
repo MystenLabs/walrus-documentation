@@ -140,4 +140,4 @@ The reference files in `services/server/deploy/nautilus` are not a complete Naut
 2. Register or publish the expected identity through the Nautilus or Sui verification path your deployment uses.
 3. Require clients, gateway policy, or Move-side verification to check that identity before trusting the endpoint.
 
-Local Docker smoke tests do not produce a Nautilus attestation, so they do not prove the relayer runs inside a TEE. Without verification, users still trust that the advertised endpoint is the enclave deployment. See [Nautilus TEE](/relayer/nautilus-tee) for the full operator guide.
+Local Docker smoke tests do not produce a Nautilus attestation, so they do not prove the relayer runs inside a TEE. Without verification, users still trust that the advertised endpoint is the enclave deployment. See [Nautilus TEE](/walrus-memory/relayer/nautilus-tee) for the full operator guide.
