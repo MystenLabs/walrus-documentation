@@ -242,3 +242,7 @@ Explorers and directory listings show this `string` to indicate ownership or att
   }
 }
 ```
+
+## Aggregator URLs for images stored on Walrus
+
+When you host the preview image on Walrus directly, build the `image_url` from an aggregator URL. The aggregator serves a blob by its blob ID at the path `/v1/blobs/{blob_id}`. If you know the Sui object ID of the blob, you can use `/v1/blobs/by-object-id/{blob_object_id}` instead. The object ID path also returns response headers, such as `content-disposition`, that you configure through blob attributes.
