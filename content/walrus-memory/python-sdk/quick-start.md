@@ -158,3 +158,16 @@ Prefer a synchronous style? Swap `MemWal` for `MemWalSync` and drop the `await`s
 
 - [Usage](/walrus-memory/python-sdk/usage), async vs sync, namespace rules, manual methods, and middleware
 - [API Reference](/walrus-memory/python-sdk/api-reference), full method signatures and result types
+
+## When do you need `env`?
+
+`env="prod"` resolves to `https://relayer.memory.walrus.xyz`, which is also the default `server_url`. Passing `env="prod"` or omitting both arguments targets the same production relayer. Use `env` mainly to switch between presets, for example from `prod` to `staging`, without hardcoding a URL. `env` applies only when you omit `server_url`. If you pass any explicit `server_url`, the client ignores `env`. `MemWalSync.create`, `with_memwal_langchain`, and `with_memwal_openai` also accept `env`.
+
+## How do you get an account ID and delegate key?
+
+Create the account and a delegate key once on the [Walrus Memory dashboard](https://memory.walrus.xyz). The dashboard gives you:
+
+- A MemWalAccount object ID (`0x…`), which you set as `MEMWAL_ACCOUNT_ID`
+- A delegate private key in hex, which you set as `MEMWAL_PRIVATE_KEY`
+
+The account owner registers the delegate public key onchain in the `MemWalAccount`. A delegate key that you do not register on the same account and network fails authentication. Use a delegate key, never the owner wallet key, and keep `MEMWAL_PRIVATE_KEY` server-side. See [Delegate Key Management](/walrus-memory/contract/delegate-key-management) for the full lifecycle.
