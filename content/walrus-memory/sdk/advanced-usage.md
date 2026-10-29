@@ -60,3 +60,12 @@ Wire up the `withMemWal` middleware for automatic recall in AI generation pipeli
 
 - [SDK Usage](/walrus-memory/sdk/usage)
 - [AI Integration](/walrus-memory/sdk/ai-integration)
+
+## Manual method parameters
+
+Both manual methods take an options object:
+
+- `rememberManual({ encryptedData, vector, namespace? })`: `encryptedData` is a base64-encoded string of SEAL-encrypted bytes that the relayer uploads to Walrus. `vector` is your precomputed embedding (`number[]`). `namespace` defaults to the config namespace or `default`. The result contains `id`, `blob_id`, `owner`, and `namespace`.
+- `recallManual({ vector, limit?, namespace? })`: `vector` is your precomputed query embedding (`number[]`). `limit` must be a positive integer (default 10, relayer caps at 100). You can also pass optional `scoringWeights`. Each hit contains only `blob_id` and `distance`, with no decrypted text.
+
+Both methods reject an empty or non-finite `vector` before signing. `rememberManual` rejects a missing or blank `encryptedData` string with `TypeError`.
