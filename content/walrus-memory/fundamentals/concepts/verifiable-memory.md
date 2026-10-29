@@ -83,3 +83,15 @@ A dedicated `verify()` helper that reconstructs a memory from its onchain blob o
 - [Data flow and security model](/walrus-memory/fundamentals/architecture/data-flow-security-model)
 - [How storage works](/walrus-memory/fundamentals/architecture/how-storage-works)
 - [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop)
+
+## Fields to check on a `MemWalAccount`
+
+When you open your `MemWalAccount` object on a Sui explorer, for example [Suiscan](https://suiscan.xyz) or [SuiVision](https://suivision.xyz), check these fields:
+
+- `owner`: The Sui wallet address that owns the account. Confirm it matches your wallet address.
+- `delegate_keys`: The list of authorized Ed25519 delegate keys, each with a Sui address. Every entry in this list is authorized, so compare each one against the delegate keys you registered.
+- `active`: Whether the account is active. A value of `false` means the account is frozen and Seal access is denied.
+- `admin_quarantined`: Whether AdminCap containment blocks owner reactivation.
+- `created_at`: When the account was created, in epoch milliseconds.
+
+The relayer's public read of an owner's delegate keys lists each onchain key with `public_key` (64 lowercase hex characters, no `0x` prefix), `sui_address`, `label`, and `created_at`. Match these values against the explorer view.
