@@ -59,3 +59,16 @@ The Walrus Memory contract emits the following events:
 ## Current coverage
 
 The indexer currently targets the `AccountCreated` event flow as its primary sync path. Delegate key events and account activation events are part of the broader design and might be indexed in future iterations.
+
+## Account freeze and quarantine states
+
+Owner deactivation and Admin quarantine use separate flags on the account. `AccountDeactivated` reports that the `active` flag changed to false. Two calls emit it:
+
+- The owner calls `deactivate_account`. The call aborts if the account is already deactivated.
+- An AdminCap holder calls `admin_deactivate_account`. This sets the `admin_quarantined` flag and emits `AccountQuarantined`. It also emits `AccountDeactivated`, but only if the account was still active.
+
+While quarantine is active, the owner cannot reactivate the account. `admin_clear_quarantine` releases quarantine without reactivating the account. The account stays frozen until the owner calls `reactivate_account`.
+
+## How the indexer uses `AccountCreated`
+
+The indexer polls Sui events using `suix_queryEvents` and filters for `AccountCreated` events from the Walrus Memory package. For each event, it inserts an `account_id → owner` mapping into the `accounts` table. The relayer uses this same PostgreSQL database, so it can resolve accounts quickly. The indexer stores its event cursor in `indexer_state`, which lets it resume after restarts.
