@@ -105,3 +105,7 @@ for hit in hits.results:
 | Plain query text, want decrypted matches | `recall` |
 
 All four manual entry points exist on both `MemWal` (async) and `MemWalSync` (sync) with identical signatures.
+
+## Fields in the remember_manual result
+
+In the result, `id` is a UUID that the relayer assigns to the stored memory record. `blob_id` is the Walrus blob ID of the uploaded ciphertext, `owner` is the owner address, and `namespace` is the namespace the relayer used.
