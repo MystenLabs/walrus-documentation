@@ -130,7 +130,7 @@ open "$OYSTER_URL/api/docs"
 
 ## What is the Pearl wallet service?
 
-Pearl is the custodial wallet service that Oyster depends on. Pearl derives a Sui wallet address for each Oyster account from the account's identity. Oyster uses that wallet for onchain operations when it stores blobs on Walrus. When Pearl is not configured or is unreachable, `/ready` reports `pearl` as `"unreachable"`, and `GET /api/v1/account/wallet` returns `503`.
+Pearl is the custodial wallet service that derives each Oyster account's Sui wallet. When Pearl is not configured or is unreachable, `/ready` reports `pearl` as `"unreachable"`, and `GET /api/v1/account/wallet` returns `503`. See [What is Pearl?](wallet.mdx#what-is-pearl).
 
 ## Additional Prometheus metrics
 
