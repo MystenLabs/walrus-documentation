@@ -197,3 +197,9 @@ When the publisher stores a blob on behalf of a client, the sub-wallet that stor
 - If the client does not specify the `send_object_to` query parameter, 2 outcomes are possible:
   - **Default behavior:** The sub-wallet transfers the newly created blob object to the main wallet, which keeps all these objects. You can change this behavior by setting the `--burn-after-store` flag, which causes the publisher to delete the blob object immediately.
   - **Interaction with `send_object_to`:** The `--burn-after-store` flag does not affect the `send_object_to` query parameter. Regardless of this flag, the publisher sends created objects to the address in `send_object_to` if the PUT request specifies it.
+
+## How requests share sub-wallets
+
+The publisher does not wait for an idle sub-wallet before it processes a request. It assigns sub-wallets to requests in round-robin order, so when `--max-concurrent-requests` is larger than `--n-clients`, several in-flight requests share the same sub-wallet. By default, `--n-clients` equals the concurrent request limit, so each request gets its own sub-wallet and the lowest possible latency. To keep that behavior when you raise the request limit, raise `--n-clients` to the same value.
+
+The flags `--max-concurrent-requests` and `--max-buffer-size` are deprecated aliases of `--publisher-max-concurrent-requests` and `--publisher-max-buffer-size`.
