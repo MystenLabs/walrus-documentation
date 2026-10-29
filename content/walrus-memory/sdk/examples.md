@@ -107,3 +107,17 @@ Use this when you want to store structured research findings and recall them in 
 3. Use `recall()` with a `query` and `limit`, as in the basic example, to pull plaintext results for the same namespace back into context
 
 Structured summaries usually recall better than raw transcripts because they keep the signal high.
+
+## Manual remember and recall parameters
+
+`rememberManual({ encryptedData, vector, namespace? })` accepts these options:
+
+- `encryptedData`: Base64-encoded SEAL-encrypted bytes. The relayer uploads them to Walrus.
+- `vector`: The embedding vector you already generated, as `number[]`.
+- `namespace`: Optional. Defaults to the config namespace or `default`.
+
+It returns `id`, `blob_id`, `owner`, and `namespace`.
+
+`recallManual({ vector, limit?, namespace? })` accepts a pre-computed query embedding vector, an optional `limit` (default 10, must be a positive integer), and an optional `namespace`. It returns hits that contain only `blob_id` and `distance`, with no decrypted text, so you fetch and decrypt the blobs yourself.
+
+To generate an embedding vector without storing anything, call `embed(text)`.
