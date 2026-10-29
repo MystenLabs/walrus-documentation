@@ -104,7 +104,7 @@ Point the workflow failure at on-call. A red job whose log contains
 `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` means live `seal_approve` allowed a
 cross-account identity. That is a Seal policy regression, not a flake. Conversely, a green run whose log contains neither `skip` nor `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` is the real passing result: the secrets exist and live `seal_approve` rejected the cross-account identity.
 
-## Create the two isolated accounts
+## Create the 2 isolated accounts
 
 Generate each account ID and delegate private key from the hosted Walrus Memory dashboard on the network the synthetic targets:
 
