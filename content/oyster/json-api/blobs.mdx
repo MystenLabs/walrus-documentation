@@ -619,3 +619,7 @@ curl -s -X DELETE \
 ```
 
 **Response:** `204 No Content`
+
+## Content type for reads by blob ID
+
+Reads by blob ID always return `Content-Type: application/octet-stream`, whatever MIME type you set at upload. The endpoint reads only the raw content from the blob store and does not look up any key metadata, so it can't return the original MIME type. The same data produces the same blob ID in any bucket or under any key, so a blob ID is not tied to one key's stored MIME type. To get the MIME type you set at upload, download the blob by bucket and key with `GET /api/v1/buckets/{bucket_name}/blobs/{key}`.
