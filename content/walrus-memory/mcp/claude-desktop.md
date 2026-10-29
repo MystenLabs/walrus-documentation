@@ -133,3 +133,7 @@ You should see the `memwal_*` tools. State a durable fact and confirm the agent 
 - **Tools missing**: fully quit and reopen Claude Desktop (`Cmd+Q`).
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
 - **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+
+## How does `memwal_restore` choose a namespace?
+
+`memwal_restore` is an MCP tool, so the agent passes the namespace as the `namespace` argument of the tool call rather than as a command-line argument. The tool schema lists `namespace` as required, so the agent normally passes it explicitly. If the agent calls `memwal_restore` without a namespace, the package fills in the default you configure with the `--namespace` flag or the `MEMWAL_NAMESPACE` environment variable. When you set both, `--namespace` wins. Ask the agent to restore the same namespace you saved your memories to.
