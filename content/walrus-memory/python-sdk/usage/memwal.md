@@ -122,3 +122,9 @@ Use these when you already have a vector or Seal-encrypted bytes. See [Manual me
 | `MemWalRateLimited` | A bulk wait could not read any job status because every read, including one confirming read at the end, was rate-limited (`.job_ids`, `.retry_after`). The writes might or might not have landed |
 
 Transient statuses (connection drop, `429`, `5xx`) are retried inside the polling loops rather than surfaced. The one exception: if no bulk status read gets through before the deadline, `wait_for_remember_jobs` makes one confirming read and raises `MemWalRateLimited` when that is rate-limited too. Status reads count against the same delegate-key budget as writes.
+
+## What does remember return?
+
+`remember` returns a `RememberAcceptedResult` with two fields, `job_id` and `status`, as soon as the relayer accepts the request. A background worker then runs the Walrus upload and onchain commit, so the accepted result has no `blob_id`.
+
+To check a job once without polling, call `get_remember_status` with the `job_id`. It returns the job state: `pending`, `running`, `uploaded`, `done`, `failed`, or `not_found`.
