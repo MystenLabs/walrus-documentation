@@ -84,3 +84,9 @@ Treat namespace names and the fact that your wallet owns memory as public. Keep 
 :::
 
 For the full ownership and access model, see [Ownership and Delegates](/walrus-memory/fundamentals/concepts/ownership-and-access).
+
+## Remove a lost delegate key
+
+To revoke a key you lost, open [memory.walrus.xyz](https://memory.walrus.xyz), find the delegate that matches the key's address in the **Delegate keys** panel, and remove it. Until you remove it, that delegate keeps its onchain authorization on your account. Only the account owner can add or remove delegate keys, so connect the owner wallet.
+
+Removing a delegate rotates the account's encryption identity for future writes. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Logging out of a client, such as with `memwal_logout`, only deletes local credentials and does not revoke the onchain delegate.
