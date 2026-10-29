@@ -112,7 +112,7 @@ Structured summaries usually recall better than raw transcripts because they kee
 
 `rememberManual({ encryptedData, vector, namespace? })` accepts these options:
 
-- `encryptedData`: Base64-encoded SEAL-encrypted bytes. The relayer uploads them to Walrus.
+- `encryptedData`: Base64-encoded Seal-encrypted bytes. The relayer uploads them to Walrus.
 - `vector`: The embedding vector you already generated, as `number[]`.
 - `namespace`: Optional. Defaults to the config namespace or `default`.
 
