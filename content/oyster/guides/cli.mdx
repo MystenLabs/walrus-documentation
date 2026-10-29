@@ -358,7 +358,7 @@ Mints a fresh account plus an initial API key for it.
   the bearer once and you can wire it up yourself.
 
 ```bash
-oyster app account create --name alice --activate
+$ oyster app account create --name alice --activate
 ```
 
 #### `use <id-or-name> [--revoke <key_id> | --revoke-oldest]`
@@ -474,5 +474,5 @@ Your Oyster administrator creates your account and issues you an initial API key
 If your context already has an app with an `admin_key`, you can mint an account and its initial API key yourself. The `--activate` flag saves the new bearer to `context.api_key` in `client.yaml`:
 
 ```bash
-oyster app account create --name alice --activate
+$ oyster app account create --name alice --activate
 ```
