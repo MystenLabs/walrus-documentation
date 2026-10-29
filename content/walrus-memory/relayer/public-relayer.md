@@ -68,3 +68,9 @@ The managed relayer covers WAL storage fees and SUI gas through its server walle
 With a [self-hosted relayer](/walrus-memory/relayer/self-hosting), you fund the relayer deployment.
 
 If you need full control over the trust boundary or your own dedicated instance, see [Self-Hosting](/walrus-memory/relayer/self-hosting).
+
+## Where does encryption happen?
+
+With the default `MemWal` client, the managed relayer receives your plaintext, generates embeddings, and encrypts each item with Seal before storing it on Walrus. You do not manage keys in this flow.
+
+To keep plaintext on the client, use `MemWalManual` from `@mysten-incubation/memwal/manual`. The client generates embeddings and performs Seal encryption locally, and the relayer only receives encrypted payloads and precomputed vectors. See [MemWalManual](/walrus-memory/sdk/usage/memwal-manual) for the client-managed flow.
