@@ -537,3 +537,9 @@ Set `MEMWAL_MCP_DEBUG=1` in the client's MCP server config `env` block (or in yo
 ## Remember wait time
 
 `MEMWAL_MCP_REMEMBER_WAIT_MS` sets how long `memwal_remember` waits for the Walrus write to finish before it replies. The default is 0: the tool returns at accept with a `job_id`, before the memory is stored. You can raise the value up to the tool's `MAX_REMEMBER_WAIT_MS` cap. The stdio package gives `memwal_remember` a 90_000 ms deadline to match that cap. Setting `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` makes the tool wait for `blob_id`. This requires a client that raises the 60s `tools/call` ceiling.
+
+## Settle a remember job with `memwal_remember_status`
+
+A current sidecar also advertises `memwal_remember_status`. By default, `memwal_remember` returns at accept with a `job_id` before the Walrus write finishes, so an empty recall right after accept is expected. Pass that `job_id`, or several as `job_ids`, to `memwal_remember_status`. The tool requires one of the two and returns an error if you omit both. Optional `waitMs` sets how long the call waits, and its ceiling stays under the 60s MCP client request deadline.
+
+While the job is queued or uploading, the reply starts with `STILL UPLOADING`, includes the `job_id` and the job state, and asks you to call the tool again with the same `job_id`. Do not re-send the fact with `memwal_remember`, because that queues a duplicate. Treat a fact as saved only after the job returns a `blob_id`. A failed, timed-out, or unknown job returns an error that names the condition.
