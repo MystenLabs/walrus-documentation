@@ -251,3 +251,19 @@ See [Database Sync](/walrus-memory/indexer/database-sync) for the full schema.
 - The indexer records which owner has an account. Delegate-key authentication does not scan `AccountRegistry`; a cold key needs `x-account-id` or `MEMWAL_ACCOUNT_ID`.
 - Without `OPENAI_API_KEY`, the server uses deterministic mock embeddings (hash-based), useful for local testing but not production.
 - Use `LOG_FORMAT=json` in production and see [Observability](/walrus-memory/relayer/observability) for dashboards and alerts.
+
+## Run the indexer
+
+The indexer is optional for development because the relayer can fall back to onchain resolution without it. For production, run it from `services/indexer`:
+
+```bash
+cd services/indexer
+cargo run
+```
+
+The indexer reads these environment variables:
+
+- `DATABASE_URL` (required): PostgreSQL connection string.
+- `MEMWAL_PACKAGE_ID` (required): Walrus Memory contract package ID to filter events.
+- `SUI_RPC_URL` (optional): Sui RPC endpoint. Defaults to a Mainnet full node.
+- `POLL_INTERVAL_SECS` (optional): Seconds between event poll cycles. Defaults to `5`.
