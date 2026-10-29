@@ -245,3 +245,23 @@ main().catch((err) => {
 - [MemWalManual](/walrus-memory/sdk/usage/memwal-manual): the client-managed encryption flow
 - [Public relayer](/walrus-memory/relayer/public-relayer): managed Mainnet and Testnet relayer endpoints
 - [API Reference](/walrus-memory/sdk/api-reference): every config field and return type
+
+## What does `rememberBulkAsync` return?
+
+`rememberBulkAsync` resolves to an object, not a bare array. The job identifiers are in its `job_ids` property, which is why the example reads `accepted.job_ids`:
+
+```ts
+{
+  job_ids: string[];
+  total: number;
+  status: string; // Usually "running"
+}
+```
+
+`job_ids` holds one ID per submitted item. If the relayer returns a different count, `rememberBulkAsync` throws instead of returning a partial list.
+
+## Handle a slow or unreachable relayer
+
+`waitForRememberJobs` and `rememberBulkAndWait` retry transient polling failures, including rate limits, within their timeout budget. The first poll is immediate, and the delay grows toward 5 s. The default budget is 120 s, which you can change through `timeoutMs`. An item still unsettled at the deadline comes back with status `timeout` and an `error` message. A timeout does not cancel the write or prove it failed, so keep the job ID and check it again rather than resubmitting.
+
+If every status read for the batch is rate-limited, the call throws `MemWalRateLimitedError`. The SDK retries polling only, not submissions. To retry a submission yourself, resend the unchanged batch: `rememberBulkAsync` sends an idempotency key derived from the batch, so a retry inside that window returns the same jobs instead of storing the batch again.
