@@ -183,3 +183,9 @@ With client-managed encryption the agent owns its key material. If the Sui key i
 :::
 
 For the full headless write, confirm, and recall loop that builds on this, see [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop).
+
+## Restore parameters
+
+The first argument of `restore` is the namespace to rebuild. The second argument, `limit`, is optional and defaults to `10`. It must be a positive integer, otherwise the client throws a `TypeError`. The method takes no other parameters.
+
+Restore inspects your onchain blobs newest-first, up to `limit`, and re-indexes only blobs the relayer does not already have. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs. To rebuild a large namespace, rerun restore with a progressively higher `limit` until `restored` stops increasing.
