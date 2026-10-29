@@ -85,3 +85,18 @@ To unstake or withdraw your staked WAL:
 1. Click **Unstake** or **Withdraw**.
 1. Click **Continue** to confirm your action.
 1. Follow the instructions in your wallet to approve the transaction.
+
+## States of staked WAL
+
+Each staked WAL object is in one of two states:
+
+- **Staked:** The default state after you stake. Your WAL sits in the staking pool of the storage node.
+- **Withdrawing:** You requested to unstake. The object records the withdraw epoch, which is the epoch when your funds become available.
+
+For a storage node in the current or next committee, unstaking takes two steps. **Unstake** moves the staked WAL from the Staked state to the Withdrawing state. When the withdraw epoch arrives, **Withdraw** returns the principal and the rewards earned up to the withdraw epoch.
+
+In some cases you withdraw directly, without the Withdrawing state:
+
+- The stake activates 2 epochs after the current epoch.
+- The stake activates in the next epoch and the storage node is not in the next committee.
+- The storage node is in neither the current nor the next committee.
