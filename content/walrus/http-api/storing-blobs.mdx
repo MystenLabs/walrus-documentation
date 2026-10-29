@@ -75,7 +75,7 @@ $ curl -X PUT "$PUBLISHER/v1/blobs?epochs=5" --upload-file "some/file"
 
 ### Deletable and permanent blobs
 
-Newly stored blobs are deletable by default. Specify whether a blob is stored as permanent or deletable through a query parameter `permanent=true` or `deletable=true`:
+Starting in v1.33, the publisher creates a deletable blob when you pass no query parameter. To store a permanent blob, which was the default before v1.33, pass `permanent=true`. The `deletable` parameter is deprecated and has no effect, so you do not need to set it. Deletable blobs can be removed from Walrus before their expiration time. Permanent blobs cannot, which helps when you need strong availability guarantees:
 
 ```sh
 # Store file `some/file` as a deletable blob:
@@ -163,11 +163,3 @@ When the publisher finds a certified blob with the same blob ID and a sufficient
 ```
 
 The `event` field returns the [Sui event ID](/docs/system-overview/core-concepts) that you can use to find the object creation transaction through [Suiscan](https://suiscan.xyz/) or a [Sui SDK](https://docs.sui.io/references/sui-sdks).
-
-## Deletable and permanent blobs
-
-Starting in v1.33, the publisher creates a deletable blob when you pass no query parameter. The `deletable` parameter is deprecated and has no effect, so you do not need to set it. To store a permanent blob, which was the default before v1.33, pass `permanent=true`.
-
-## Deletable and permanent blobs
-
-Deletable blobs can be removed from Walrus before their expiration time. Permanent blobs cannot be removed before their expiration time, which helps when you need strong availability guarantees.
