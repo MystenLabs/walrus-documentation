@@ -679,3 +679,11 @@ Lists all registered apps in tab-separated format.
 ID	NAME	CONTACT_EMAIL
 550e8400-e29b-41d4-a716-446655440000	my-app	admin@example.com
 ```
+
+## What is Pearl?
+
+Pearl is the custodial wallet service behind every Oyster account. Pearl derives each account's Sui wallet address from the account's identity, and Oyster uses that wallet for onchain operations when it stores blobs on Walrus. The wallet is an Ed25519 key that Pearl derives from a master seed with HKDF-SHA256. Each account records which seed version its wallet derives from (`accounts.key_version`). References on this page to the Pearl-derived wallet or the Pearl-managed sender mean this per-account wallet.
+
+## List accounts
+
+Use `GET /api/v1/accounts` with admin-key authentication to list the accounts your app manages, together with the number of active API keys on each account. Use this endpoint to look up an `account_id` after you create an account.
