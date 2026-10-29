@@ -101,3 +101,11 @@ Erasure coding and upload processing add memory overhead per blob. Running too m
 - Estimate total memory as: `blob_size × encoding_overhead × concurrent_uploads`, where `encoding_overhead` is approximately 4.5.
 
 - Scale horizontally across multiple machines rather than increasing concurrency on a single host.
+
+## Enter storage duration in epochs
+
+The `walrus` CLI does not accept months as a duration. When you store a blob, give the duration as a number of epochs greater than 0, as `max` for the maximum number of epochs the system object onchain allows, or as the earliest time the blob can expire in RFC3339 format. Convert your planned duration in months to epochs before you run the command, and check that the count does not exceed the maximum number of epochs ahead that the network allows.
+
+## Why does erasure coding need extra memory?
+
+Walrus uses Reed-Solomon erasure coding to spread each blob across many storage nodes. Before upload, the client splits the raw data into primary and secondary sliver pairs and adds redundant data, so the network can rebuild the blob even when some nodes are unavailable. The client then sends the slivers in parallel to storage nodes based on their shard assignments. The encoded slivers together are roughly 4.5x the size of the original blob, and the client holds them in memory during encoding, which is the source of the memory overhead.
