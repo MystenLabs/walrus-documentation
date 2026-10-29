@@ -164,3 +164,11 @@ If your files are larger than about 1 MiB each, the storage savings shrink quick
 - **Single-file quilts:** Wrapping one blob in a quilt adds `QuiltPatchId` indirection with no cost benefit. Store a lone blob as a regular blob.
 - **Mismatched lifetimes:** Grouping items you need to delete or extend on different schedules forces you to carry the whole quilt for the longest-lived item. Group by shared lifetime.
 - **Expecting content-addressed IDs:** If your application looks items up by a hash of their contents, Quilt's `QuiltPatchId` does not provide that. Use regular blobs, or maintain your own identifier-to-content mapping.
+
+## What is QuiltV1?
+
+QuiltV1 is version 1 of the quilt encoding format. Every quilt begins with a version byte in its first column, and clients read that byte to choose the matching decoder. Walrus currently supports only QuiltV1. When you store a quilt through the publisher without specifying a quilt version, the publisher uses V1.
+
+## What happens when a batch exceeds the blob limit?
+
+Walrus does not truncate the input or split it into several quilts. If a batch holds more blobs than a quilt can fit, quilt construction fails with the `too many blobs to fit in the quilt` error, and Walrus stores nothing. Through the publisher, the request fails with a malformed request error that starts with `failed to construct quilt`. To store a larger set, divide the files into batches that each fit within the per-quilt limit and store each batch as its own quilt.
