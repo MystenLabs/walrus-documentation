@@ -235,6 +235,6 @@ Restore is a recovery operation, not a sync. It leaves already-indexed blobs alo
 Before you adopt Walrus Memory, check its supported runtimes and fixed design constraints:
 
 - **Runtimes:** The SDK initializes entirely from configuration, so it runs in a backend service, a cron job, or an autonomous agent. A Python SDK signs requests with your Ed25519 delegate key and sends text over HTTPS. The AI middleware accepts models from AI SDK v4/v5 and v6+.
-- **Server-side processing:** Encryption, embedding, and Walrus storage happen server-side in a trusted execution environment (TEE).
+- **Server-side processing:** With the default client, the relayer performs encryption, embedding, and Walrus storage, so it sees your plaintext. To keep plaintext on your side, use `MemWalManual`, or run the relayer in a trusted execution environment (TEE).
 - **Sui-only ownership:** Ownership records live on Sui. Walrus Memory never mirrors a memory onto another chain, and an Ethereum address cannot own a memory account.
 - **Storage costs:** Walrus charges storage in WAL. Your agent neither holds nor spends WAL when a relayer fronts that cost.
