@@ -114,3 +114,9 @@ Ask the agent what MCP tools it has available. You should see the `memwal_*` too
 - **Tools missing**: restart Antigravity after installation.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
 - **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+
+## Choose a memory namespace
+
+Every recall runs inside one account and namespace. The `MEMWAL_NAMESPACE` value in the MCP-only config sets the default namespace. The package injects it into `memwal_remember`, `memwal_remember_bulk`, `memwal_recall`, `memwal_analyze`, and `memwal_restore` calls that do not already carry one. To keep this client's memories in their own space, set a distinct name such as `work` or `project-x`. Avoid keeping everything in `default` after early testing.
+
+You can also pass `"--namespace", "<name>"` in `args`. The CLI flag wins over the environment variable. An explicit `namespace` in a tool call always overrides the configured default. If you set neither, the relayer applies its own `default` namespace.
