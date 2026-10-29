@@ -82,3 +82,7 @@ Direct uploads keep the entire retry and quorum loop inside your process. Becaus
 ## When not to use the relay
 
 For server-side applications, direct node communication offers full control over the upload process, the ability to implement custom retry and error handling, with no relay tip costs. Server-side batch processing benefits from direct control over custom batching strategies and server resource allocation.
+
+## Where does blob encoding happen?
+
+When you use a relay, your client does not encode the blob into slivers. The client computes the blob metadata, including the blob ID, from the raw data. It then sends the unencoded blob bytes to the relay, which encodes them, distributes the slivers to storage nodes, and returns the certificate. Without a relay, the client encodes the blob into sliver pairs itself and sends them directly to the storage nodes.
