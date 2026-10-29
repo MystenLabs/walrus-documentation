@@ -171,3 +171,7 @@ For realistic node counts and small blob sizes, the total metadata overhead can 
 **Reference**
 
 [1] K. V. Rashmi, N. B. Shah and P. V. Kumar, "Enabling node repair in any erasure code for distributed storage," 2011 IEEE International Symposium on Information Theory Proceedings, St. Petersburg, Russia, 2011, pp. 1235-1239, doi: [10.1109/ISIT.2011.6033732](https://doi.org/10.1109/ISIT.2011.6033732).
+
+## How the encoder rounds the symbol size
+
+To compute the symbol size, the encoder divides the blob length by the number of source symbols in the message matrix and rounds up. It then rounds up again to the next multiple of the alignment that the encoding type requires. A blob whose natural symbol size is odd therefore gets the next even symbol size instead of an error. The encoder treats an empty blob as 1 byte long before it rounds. The encoder rejects a blob with `DataTooLargeError` only when the rounded symbol size does not fit in 16 bits.
