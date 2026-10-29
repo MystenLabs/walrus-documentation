@@ -149,3 +149,15 @@ Remember that I prefer TypeScript for new projects.
 - **Hooks not firing (plugin install)**: run `/hooks` and confirm the Walrus Memory hooks are trusted, not just installed.
 - **Hooks not firing (cloned-repo fallback)**: confirm `codex_hooks = true` under `[features]` in `~/.codex/config.toml`, and that you restarted Codex.
 - **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+
+## Choose a namespace for `memwal_restore`
+
+`memwal_restore` requires a `namespace` argument. Pass the namespace that holds the memories you saved. Namespaces match exactly, with no prefix or hierarchy.
+
+To find the value, check the `memwal` server entry in your client config:
+
+- **`--namespace` flag:** Use the value after `--namespace` in `args`. This flag wins over the environment variable.
+- **`MEMWAL_NAMESPACE` variable:** Use the value in the `env` block.
+- **Neither set:** The relayer applies its own `default` namespace, so pass `default`.
+
+If you configure a default and the agent calls `memwal_restore` without a namespace, the package fills in the configured default.
