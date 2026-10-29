@@ -229,3 +229,12 @@ Restore treats the blobs on Walrus as the source of truth and the index as a reb
 3. Downloads, decrypts, re-embeds, and re-indexes only the missing blobs.
 
 Restore is a recovery operation, not a sync. It leaves already-indexed blobs alone, so it does not rebuild an entry that is already in the index. The response reports those blobs as `skipped` and reports permanent decrypt or UTF-8 failures as `failed`. The `limit` parameter defaults to `10`, and the relayer clamps it to `[1, 100]`. Restore is incremental and idempotent, so you can call it multiple times safely.
+
+## What are the constraints of Walrus Memory?
+
+Before you adopt Walrus Memory, check its supported runtimes and fixed design constraints:
+
+- **Runtimes:** The SDK initializes entirely from configuration, so it runs in a backend service, a cron job, or an autonomous agent. A Python SDK signs requests with your Ed25519 delegate key and sends text over HTTPS. The AI middleware accepts models from AI SDK v4/v5 and v6+.
+- **Server-side processing:** Encryption, embedding, and Walrus storage happen server-side in a trusted execution environment (TEE).
+- **Sui-only ownership:** Ownership records live on Sui. Walrus Memory never mirrors a memory onto another chain, and an Ethereum address cannot own a memory account.
+- **Storage costs:** Walrus charges storage in WAL. Your agent neither holds nor spends WAL when a relayer fronts that cost.
