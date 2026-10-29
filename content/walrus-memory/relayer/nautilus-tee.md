@@ -344,3 +344,7 @@ instead of the default relayer-handled path.
 - [Environment Variables](/walrus-memory/reference/environment-variables)
 - [Trust  and  Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model)
 - [Sui Nautilus docs](https://docs.sui.io/guides/developer/nautilus)
+
+## Seal key server defaults
+
+If you set neither `SEAL_SERVER_CONFIGS` nor `SEAL_KEY_SERVERS`, the sidecar uses built-in defaults for the selected `SUI_NETWORK`. On Mainnet, the default is still the legacy pair of 2 independent key servers, and neither entry has an aggregator URL. To use a committee key server instead, set `SEAL_SERVER_CONFIGS` with `objectId`, `weight`, and `aggregatorUrl`. A committee uses a different key server object, so do not switch an existing deployment until you migrate or re-encrypt older data.
