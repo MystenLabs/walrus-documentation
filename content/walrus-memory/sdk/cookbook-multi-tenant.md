@@ -221,7 +221,7 @@ Your `MemWalAccount` is a regular Sui object. Share its object ID and view it on
 
 ## Which key formats do the revoke call and the client take?
 
-The revoke call and the memory client take two different keys:
+The revoke call and the memory client take 2 different keys:
 
 - **`suiPrivateKey` in `removeDelegateKey`:** The owner's Sui signer key in `suiprivkey1...` format. You can pass a `walletSigner` instead, so the owner key never has to exist as a string.
 - **`key` in `MemWal.create()`:** The delegate private key in hex, which you store in `MEMWAL_PRIVATE_KEY`.
