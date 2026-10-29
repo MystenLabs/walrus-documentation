@@ -219,3 +219,13 @@ If Walrus Memory is useful to you, [a star on the GitHub repo ⭐](https://githu
     SDK API, relayer API, configuration, environment variables
   </Card>
 </Cards>
+
+## How restore finds missing entries
+
+Restore treats the blobs on Walrus as the source of truth and the index as a rebuildable cache. For one namespace, the relayer:
+
+1. Queries the onchain Walrus blob objects you own, filtered by namespace metadata.
+2. Compares them against the local database to find the blobs it already indexed.
+3. Downloads, decrypts, re-embeds, and re-indexes only the missing blobs.
+
+Restore is a recovery operation, not a sync. It leaves already-indexed blobs alone, so it does not rebuild an entry that is already in the index. The response reports those blobs as `skipped` and reports permanent decrypt or UTF-8 failures as `failed`. The `limit` parameter defaults to `10`, and the relayer clamps it to `[1, 100]`. Restore is incremental and idempotent, so you can call it multiple times safely.
