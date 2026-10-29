@@ -28,7 +28,7 @@ questions:
   - "How do I connect to the public Walrus Memory relayer?"
   - "What are the trade-offs of using the managed Walrus Memory relayer?"
 answer: >-
-  The Walrus Foundation hosts managed relayer endpoints for production (Mainnet) at relayer.memory.walrus.xyz and staging (Testnet) at relayer-staging.memory.walrus.xyz. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext during encryption, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
+  The Walrus Foundation hosts managed relayer endpoints for production (Mainnet) at relayer.memory.walrus.xyz and staging (Testnet) at relayer.dev.memwal.ai. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext during encryption, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
 ---
 
 A managed relayer is a simpler experience for teams that want to get started without running infrastructure. If a managed relayer endpoint is available for your environment, it gives you the fastest path to integration.
@@ -38,7 +38,7 @@ A managed relayer is a simpler experience for teams that want to get started wit
 | **Network** | **Relayer URL** |
 |---|---|
 | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
-| **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
+| **Staging** (Testnet) | `https://relayer.dev.memwal.ai` |
 
 ## Minimal config
 

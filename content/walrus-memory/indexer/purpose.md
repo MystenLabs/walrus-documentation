@@ -45,10 +45,10 @@ Delegate-key authentication does not walk `AccountRegistry`. A cold key is verif
 The indexer is a standalone Rust service (`services/indexer`) that:
 
 1. Connects to the same PostgreSQL database as the relayer
-2. Polls Sui blockchain events using `suix_queryEvents`
+2. Reads Sui checkpoints from a remote checkpoint store through the Sui checkpoint-ingestion framework
 3. Filters for `AccountCreated` events from the Walrus Memory package
 4. Inserts `account_id → owner` mappings into the `accounts` table
-5. Stores its event cursor in `indexer_state` so it can resume after restarts
+5. Records its checkpoint watermark through the framework so it can resume after restarts
 
 ## Auth resolution flow
 
@@ -68,8 +68,13 @@ The indexer reads these environment variables:
 |----------|----------|---------|-------------|
 | `DATABASE_URL` | Yes | | PostgreSQL connection string |
 | `MEMWAL_PACKAGE_ID` | Yes | | Walrus Memory contract package ID to filter events |
-| `SUI_RPC_URL` | No | Mainnet fullnode | Sui RPC endpoint |
-| `POLL_INTERVAL_SECS` | No | `5` | Seconds between event poll cycles |
+
+It also takes two command-line flags:
+
+| Flag | Description |
+|------|-------------|
+| `--remote-store-url` | URL of the remote checkpoint store to read checkpoints from |
+| `--first-checkpoint` | Checkpoint to start from. Use one at or before the checkpoint that published your Walrus Memory package, so the indexer sees every `AccountCreated` event. |
 
 ## Running
 
@@ -77,7 +82,7 @@ The indexer reads these environment variables:
 
 ```bash
 $ cd services/indexer
-$ cargo run
+$ cargo run --release -- --remote-store-url <CHECKPOINT_STORE_URL> --first-checkpoint <CHECKPOINT>
 ```
 
 The indexer is recommended for production but optional for development. If the indexer stops or falls behind, the `accounts` table lags onchain state, so the existence check and owner-token lookup that read it will not see recently created accounts until it catches up; delegate-key auth resolution is unaffected, because the indexed `accounts` table is not part of that chain (a cold key still needs a signed `x-account-id` or `MEMWAL_ACCOUNT_ID`, otherwise it gets a `401`).

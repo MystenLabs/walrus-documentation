@@ -155,7 +155,7 @@ Walrus Foundation provides the following endpoints as a public good.
     | **Network** | **Relayer URL** |
     | --- | --- |
     | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
-    | **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
+    | **Staging** (Testnet) | `https://relayer.dev.memwal.ai` |
 
   ### Configure the SDK
 

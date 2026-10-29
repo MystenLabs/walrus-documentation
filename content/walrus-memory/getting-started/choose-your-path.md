@@ -68,7 +68,7 @@ Following endpoints are provided as public good by Walrus Foundation.
 | Network | Relayer URL |
 | --- | --- |
 | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
-| **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
+| **Staging** (Testnet) | `https://relayer.dev.memwal.ai` |
 
 Go to: [Managed Relayer](/walrus-memory/relayer/public-relayer)
 
