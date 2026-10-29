@@ -103,3 +103,12 @@ on:
 Point the workflow failure at on-call. A red job whose log contains
 `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` means live `seal_approve` allowed a
 cross-account identity. That is a Seal policy regression, not a flake. Conversely, a green run whose log contains neither `skip` nor `SYNTHETIC_SEAL_CROSS_ACCOUNT_FAIL` is the real passing result: the secrets exist and live `seal_approve` rejected the cross-account identity.
+
+## Create the two isolated accounts
+
+Generate each account ID and delegate private key from the hosted Walrus Memory dashboard on the network the synthetic targets:
+
+- Production (Mainnet): `https://memory.walrus.xyz`
+- Staging (Testnet): `https://dev.memwal.ai`
+
+Connect a different wallet for each account so the 2 accounts have different owners. To add a delegate key to an account you already own, create a new delegate key from the dashboard. The dashboard generates a fresh key pair and registers it to that account onchain. Save the private key securely, because the dashboard shows it only once.
