@@ -76,3 +76,19 @@ Guard your read and write paths on `memwal` being non-null, and the rest of the 
 :::note
 The dynamic `import()` also keeps the heavy dependency graph out of your Worker's cold-start critical path until memory is actually needed.
 :::
+
+## Verify memory operations in a Worker
+
+A successful `memwal.health()` call resolves with a response that includes `status` and `version` fields. A failed call throws, so the `catch` branch of the defensive import handles it.
+
+A passing health check only shows that the relayer is reachable. To confirm that memory operations work end to end from your Worker, store a memory, wait for the remember job, and then recall it:
+
+```ts
+const job = await memwal.remember("User prefers dark mode and works in TypeScript.");
+await memwal.waitForRememberJob(job.job_id);
+
+const result = await memwal.recall({ query: "What do we know about this user?" });
+console.log(result.results);
+```
+
+If `result.results` contains the stored text, the full path works inside the Workers runtime. This path covers the Seal session the client builds on `recall()`. To keep test data separate from real memories, run the check in a dedicated namespace.
