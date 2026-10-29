@@ -150,3 +150,7 @@ The Walrus upload relay functionality is only available in Walrus CLI version v1
 The upload relay is a third-party service that might require a fee or tip. This tip might be a constant SUI amount per blob stored, or it might depend on the size of the blob being stored. The Walrus CLI shows you how much tip the upload relay requires and asks for confirmation before continuing.
 
 View technical details on how the tip is [computed and paid](/docs/operator-guide/upload-relay).
+
+## What happens if you decline the upload relay tip?
+
+When the upload relay requires a tip, the CLI prints the total tip on top of the Walrus base costs and asks `Do you want to proceed? [y/N]`. Any answer that does not start with `y` cancels the whole store operation with the error `operation cancelled by user`. The CLI does not fall back to a direct upload to the storage nodes. To store without the relay, run the command again without `--upload-relay`. If the relay does not require a tip, the CLI does not show the prompt and proceeds with the upload.
