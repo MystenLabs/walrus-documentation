@@ -182,3 +182,17 @@ $ walrus node-admin vote-for-upgrade \
 ### Complete the upgrade
 
 After a quorum of node operators has voted in favor of a proposal, the contract upgrade is ready for finalization. The proposer usually does this using a programmable transaction block (PTB) that calls the respective functions to authorize, execute, and commit the upgrade. Then, depending on the upgrade, either at the start of the next epoch or immediately, a call to the `migrate` function in the `init` module of the `walrus` package migrates the system and staking objects to the new version. You can perform the upgrade and migration using the `walrus-deploy` binary.
+
+## Command syntax for collecting commission
+
+The `--node-id` flag belongs to the `collect-commission` subcommand, the same as for the other `node-admin` subcommands. Place it after the subcommand name:
+
+`walrus node-admin collect-commission --node-id $NODE_ID`
+
+## Quorum threshold for contract upgrades
+
+Votes count by shard weight, not by number of operators. Each node votes with a weight equal to the number of shards it holds in the current committee. A proposal reaches quorum when the nodes that voted for it hold 2f + 1 of the shards, which is more than 2/3 of all shards. Exactly 2/3 is not enough. A quorum guarantees that a majority of honest nodes by weight supports the upgrade and that byzantine nodes alone cannot block it.
+
+## Repeat a vote in a new epoch
+
+You do not need a new proposal when a vote does not finish within the epoch. Run the same `vote-for-upgrade` command again in the new epoch. The first vote for the digest in the new epoch resets the proposal to the current epoch and clears all earlier votes, so every operator must vote again. The upgrade can only be authorized in the same epoch in which the proposal reaches quorum.
