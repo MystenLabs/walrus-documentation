@@ -46,3 +46,10 @@ Walrus Memory exposes three entry points:
 - If omitted, namespace falls back to client config, then to `"default"`
 
 Good namespace examples: `todo`, `personal`, `password`, `project-x`. Avoid keeping everything in `"default"` after early testing.
+
+## What is Seal in Walrus Memory?
+
+All blobs on Walrus are public, so Walrus Memory encrypts private memory with Seal before it reaches Walrus. The relayer binds Seal encryption to your app's package ID.
+
+- **Relayer-managed (`MemWal`):** The relayer encrypts every item with Seal. You do not manage keys.
+- **Client-managed (`MemWalManual`):** Your runtime embeds and Seal-encrypts locally. A Sui key authorizes Seal encryption and decryption. The relayer uploads the resulting ciphertext to Walrus and stores the vector row, so it never sees plaintext.
