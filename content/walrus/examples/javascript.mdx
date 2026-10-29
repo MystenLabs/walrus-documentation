@@ -89,3 +89,7 @@ To try it, save the file locally and open it in a browser.
 The following example reads Walrus system state on Sui instead of blob data. The script calls the `sui_getObject` JSON-RPC method on a public Sui full node and renders the per-epoch rewards and used storage capacity from the system state into a table.
 
 <ImportContent source="examples/javascript/system_stats.html" mode="code" />
+
+## Default storage duration
+
+If you omit `epochs`, the publisher fills in the default of 1 when it parses the query parameters of the store request. The value counts epochs ahead of the current one, so the default stores the blob until the end of the next epoch.
