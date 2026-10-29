@@ -131,3 +131,7 @@ Cursor has no plugin CLI to list what loaded, so confirm the plugin from its log
 - **`MCP rate limit: ip_active_cap` (HTTP 429), sometimes followed by 503**: too many concurrent `memwal-mcp` sessions from one machine. The usual cause is a duplicate server, where the plugin sits next to a leftover manual `memwal` entry in `~/.cursor/mcp.json`. An `mcp-server-user-memwal.log` beside the plugin log confirms it. Remove the manual entry, then list leftover processes with `pgrep -fl memwal-mcp` and close the clients still holding them before restarting Cursor.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
 - **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+
+## Node.js version requirements
+
+The patch-level Node.js minimums are intentional. Each one is the minimum security-patched release in its major line: 22.23.4+ within 22.x, 24.22.1+ within 24.x, or 26.12.1+ within 26.x. The package `engines` field describes API compatibility, not the minimum security patch. For details, see the [October 2026 Node.js security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
