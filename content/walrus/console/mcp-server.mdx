@@ -174,3 +174,7 @@ Calling `generate_api_key` with only a working key configured returns an error a
 Console never receives your plaintext files or your decryption keys. The service private key never leaves your machine, and encryption, decryption, and signing all happen locally. The server talks to Console with your API key alone.
 
 A leaked working key cannot mint or escalate. A leaked Key-Admin credential can, and it also implies read access onchain, so keep it off worker hosts and revoke it separately if it escapes.
+
+## What is Seal?
+
+[Seal](https://seal-docs.wal.app/) encrypts data so that only a caller who satisfies an onchain access policy can decrypt it. Seal key servers are network-specific: a Testnet key server does not serve keys for a Mainnet package. For a complete encrypt and decrypt round trip with Walrus storage, see Encrypting data with Seal in the Walrus docs.
