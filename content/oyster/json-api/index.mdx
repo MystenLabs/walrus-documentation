@@ -145,4 +145,4 @@ When you pass a `limit` greater than the maximum, the server clamps it to 100 it
 
 ## What is the Pearl-derived wallet?
 
-Pearl is the custodial wallet service that Oyster uses for onchain operations. Pearl derives a Sui wallet address for each Oyster account from the account's identity. Oyster uses this Pearl-derived wallet for onchain operations when it stores blobs on Walrus, and Pearl signs the transactions that Oyster submits. To inspect your account's wallet, use [Get Wallet Address](wallet.mdx). When a request returns `402`, fund this wallet with the WAL and SUI amounts in `funding_required` and retry the request.
+Pearl is the custodial wallet service that derives each Oyster account's Sui wallet and signs the transactions Oyster submits. See [What is Pearl?](wallet.mdx#what-is-pearl) for how Pearl derives and protects the keys.
