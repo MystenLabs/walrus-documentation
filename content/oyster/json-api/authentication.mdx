@@ -136,3 +136,7 @@ curl -s "$OYSTER_URL/api/v1/buckets/my-bucket/blobs/hello.txt"
   on personnel changes through `oysterd app issue-admin-key` and
   `oysterd app revoke-admin-key`.
 - **TLS:** Always terminate TLS in front of Oyster in production.
+
+## What is `oysterd`?
+
+`oysterd` is the Oyster server binary. It runs the HTTP and S3 server (`oysterd serve`, the default when you give no subcommand). It also provides the `oysterd app` subcommands for managing apps and admin keys. These subcommands work through direct database access, so the server operator runs them on the server side. For the full `oysterd` command reference, read [Admin](admin.mdx). For the environment variables that configure the server, read the [Oyster README](https://github.com/MystenLabs/oyster#configuration).
