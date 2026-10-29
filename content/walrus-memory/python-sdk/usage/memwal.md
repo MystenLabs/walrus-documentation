@@ -125,7 +125,7 @@ Transient statuses (connection drop, `429`, `5xx`) are retried inside the pollin
 
 ## What does remember return?
 
-`remember` returns a `RememberAcceptedResult` with two fields, `job_id` and `status`, as soon as the relayer accepts the request. A background worker then runs the Walrus upload and onchain commit, so the accepted result has no `blob_id`.
+`remember` returns a `RememberAcceptedResult` with 2 fields, `job_id` and `status`, as soon as the relayer accepts the request. A background worker then runs the Walrus upload and onchain commit, so the accepted result has no `blob_id`.
 
 To check a job once without polling, call `get_remember_status` with the `job_id`. It returns the job state: `pending`, `running`, `uploaded`, `done`, `failed`, or `not_found`.
 
