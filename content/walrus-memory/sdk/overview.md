@@ -132,4 +132,4 @@ The TypeScript and Python SDKs normalize the key the same way. `generateDelegate
 
 ## What are local Seal operations?
 
-All blobs on Walrus are public, so Walrus Memory encrypts each item with Seal before it reaches Walrus. With `MemWal`, the relayer performs the Seal encryption and you do not manage keys. With `MemWalManual`, your client performs Seal encryption locally, so plaintext never leaves your process and the relayer never sees it. In exchange, your agent holds its own key material. If you lose the delegate key, you cannot recover the encrypted memories.
+With `MemWal`, the relayer performs the Seal encryption and you do not manage keys. With `MemWalManual`, your client performs Seal encryption locally, so plaintext never leaves your process and the relayer never sees it. In exchange, your agent holds its own key material, and if you lose the delegate key, you cannot recover the encrypted memories. For what Seal is, see [What is Seal encryption?](/walrus-memory/fundamentals/concepts/memory-space#what-is-seal-encryption).
