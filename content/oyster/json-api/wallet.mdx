@@ -41,3 +41,18 @@ curl -s -H "Authorization: Bearer $API_KEY" \
 |--------|-----------|
 | `401` | Missing or invalid API key |
 | `503` | Wallet service unavailable (Pearl not configured or unreachable) |
+
+## What is Pearl?
+
+Pearl is the custodial wallet service that runs alongside Oyster as a separate gRPC server. It derives Ed25519 keys through HKDF-SHA256 and signs Sui transaction blocks. Oyster asks Pearl for your account's wallet address, so this endpoint returns `503` when Oyster cannot reach Pearl.
+
+## Set the Oyster server address
+
+Set `OYSTER_URL` to your Oyster server address, for example `http://localhost:3000`. The curl example appends the `/api/v1` prefix itself, so leave it out of the variable. Your operator provides the API key:
+
+```bash
+export OYSTER_URL="http://localhost:3000"
+export API_KEY="your-api-key-here"
+```
+
+You can also explore and test this endpoint in the interactive OpenAPI UI at `$OYSTER_URL/api/docs`.
