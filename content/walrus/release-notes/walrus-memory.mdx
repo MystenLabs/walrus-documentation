@@ -14,6 +14,18 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
 <TabItem value="mcp" label="MCP" default>
 
+### Walrus Memory MCP v0.0.17
+
+October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.17)
+
+Unreleased. Package and plugin manifests are bumped manually to 0.0.17. The launcher installs the published 0.0.16 through `mcpPackageVersion` until 0.0.17 is available on npm; retarget that pin after publishing.
+
+#### Changes
+
+- [`memwal_remember_bulk` no longer registers a second paid Walrus blob when the bridge reconnects and replays the call. The bridge stamps each call with a stable idempotency key before tracking it, and the sidecar sends that key to the relayer, which answers a replayed key with the jobs it already queued. A bulk call the agent retries itself is a new call and gets a new key.](https://github.com/MystenLabs/MemWal/pull/1045)
+
+---
+
 ### Walrus Memory MCP v0.0.16
 
 October 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.16)
@@ -242,6 +254,20 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 </TabItem>
 
 <TabItem value="sdk" label="TypeScript SDK">
+
+### Walrus Memory TypeScript SDK v0.1.11
+
+October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.11)
+
+#### Changes
+
+- [`remember`, `rememberAsync`, and `rememberAndWait` accept `{ dedupe: true }` (`RememberOptions` / `RememberWaitOptions`) for opt-in content-hash deduplication per `(owner, namespace, text)` without a 30-minute time window. When `dedupe: true` is set, the client derives a bucket-less `dedupe:<sha256>` key and sends `dedupe: true` to `POST /api/remember`, collapsing duplicate writes onto the existing live job and `blob_id` while writing fresh if the memory was later forgotten or deleted. `MemWalMock` mirrors the same behavior.](https://github.com/MystenLabs/MemWal/pull/769)
+- [`formatUntrustedMemories` and `withMemWal` validate that each recalled memory's `distance` is a finite number and clamp similarity relevance (`1 - distance`) to `[0, 1]` before filtering and formatting. Records with `undefined`, `NaN`, or `±Infinity` distances are dropped instead of rendering `"relevance":"NaN"`, and negative or greater-than-one distances are clamped to `1.00` / `0.00`.](https://github.com/MystenLabs/MemWal/pull/976)
+- [`MemWal.listNamespaces` and `MemWal.listMemories` reject a `limit` that is not a positive integer before signing the query string, with the same `limit must be a positive integer, got <limit>` `TypeError` as `recall` and `recallManual`.](https://github.com/MystenLabs/MemWal/pull/1213)
+- [`analyze()` accepts an optional `signal` in `AnalyzeOptions` and aborts the in-flight `/api/analyze` HTTP request when the caller's `AbortSignal` fires.](https://github.com/MystenLabs/MemWal/pull/1095)
+- [`MemWal.rememberManual`, `MemWal.recallManual`, `MemWalManual.rememberManual`, and `MemWalManual.recallManual` reject an empty or non-finite `vector` (including `NaN`, `±Infinity`, non-number elements, and sparse arrays) before signing, and `rememberManual` rejects a missing or blank `encryptedData` string with `TypeError`.](https://github.com/MystenLabs/MemWal/pull/1211)
+
+---
 
 ### Walrus Memory TypeScript SDK v0.1.10
 
@@ -491,6 +517,14 @@ ephemeral SEAL sessions. SDK versions that do not include a nonce are rejected w
 
 <TabItem value="python" label="Python SDK">
 
+### Walrus Memory python v0.2.2
+
+October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.2)
+
+Release memwal Python SDK v0.2.2
+
+---
+
 ### Walrus Memory Python SDK v0.2.1
 
 October 26, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.1)
@@ -616,6 +650,12 @@ Initial release of the Walrus Memory Python SDK.
 </TabItem>
 
 <TabItem value="openclaw" label="OpenClaw">
+
+### Walrus Memory SDK v0.0.8
+
+October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.8)
+
+---
 
 ### Walrus Memory OpenClaw v0.0.7
 
