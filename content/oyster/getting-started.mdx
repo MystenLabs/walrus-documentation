@@ -279,3 +279,9 @@ For the full S3 API reference, see **[S3 API Reference](s3-api/index.mdx)**.
 ## AWS CLI version for the S3 API
 
 To use the S3-compatible API from the command line, install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). The [S3 setup](s3-api/setup.mdx) prerequisites list AWS CLI v2 for CLI usage. Other S3-compatible clients, such as `boto3` or the AWS SDK for JavaScript, also work with Oyster.
+
+## Who can download your blobs
+
+Anyone can download a blob through the JSON API without authentication, either by bucket name and key (`GET /api/v1/buckets/{bucket_name}/blobs/{key}`) or by its content-addressed blob ID (`GET /api/v1/blobs/by-blob-id/{blob_id}`). Only writes, deletes, and listing require an API key.
+
+The S3-compatible API is different: all S3 operations, including reads, require SigV4 authentication. Because the same blob stays readable through the public JSON API routes, treat any content you upload as publicly readable.
