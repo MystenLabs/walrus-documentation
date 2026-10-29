@@ -69,7 +69,7 @@ The indexer reads these environment variables:
 | `DATABASE_URL` | Yes | | PostgreSQL connection string |
 | `MEMWAL_PACKAGE_ID` | Yes | | Walrus Memory contract package ID to filter events |
 
-It also takes two command-line flags:
+It also takes 2 command-line flags:
 
 | Flag | Description |
 |------|-------------|
