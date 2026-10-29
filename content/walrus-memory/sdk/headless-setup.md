@@ -126,3 +126,17 @@ For the complete client-managed flow, see [MemWalManual](/walrus-memory/sdk/usag
 - [Public relayer](/walrus-memory/relayer/public-relayer)
 - [Environment Variables](/walrus-memory/reference/environment-variables)
 - [API Reference](/walrus-memory/sdk/api-reference)
+
+## Default relayer URL
+
+If you omit `serverUrl`, the client connects to `https://relayer.memory.walrus.xyz`, the Mainnet relayer. A Testnet service that leaves `serverUrl` unset sends its requests to Mainnet, so always set `serverUrl` when you target Testnet.
+
+## Delegate key formats
+
+The `key` field accepts the delegate private key in any of these forms:
+
+- A hex string, with or without a `0x` prefix
+- A `suiprivkey1...` string
+- A `Uint8Array`
+
+The dashboard gives you the delegate private key as hex: a 64-character string that encodes the 32-byte Ed25519 seed. Store that value in your environment variable unchanged.
