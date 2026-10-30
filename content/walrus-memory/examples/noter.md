@@ -44,3 +44,9 @@ $ pnpm dev:noter
 ```
 
 The app runs on [localhost:3002](http://localhost:3002).
+
+## How does zkLogin sign-in work in Noter?
+
+Noter signs users in through Enoki zkLogin, which runs client-side in `app/components/enoki-login-card.tsx` and `sui-providers.tsx`. The Enoki wallet only gives the app a Sui address. To prove control of that address, the client signs a server-issued, single-use challenge with its zkLogin key, and the server verifies the signature against the address. Noter stores each challenge in Redis and removes it at verification, so nobody can replay a captured signature. On success, the app registers or looks up the user by Sui address and creates a session in the `wallet_sessions` table with `walletType = "enoki"`.
+
+The auth tRPC router (`package/feature/auth/api/route.ts`) also supports sign-in with a Sui wallet (`connectWallet`) and manual login with a delegate private key and account ID (`connectDelegateKey`).
