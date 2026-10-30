@@ -251,3 +251,19 @@ See [Database Sync](/walrus-memory/indexer/database-sync) for the full schema.
 - The indexer records which owner has an account. Delegate-key authentication does not scan `AccountRegistry`; a cold key needs `x-account-id` or `MEMWAL_ACCOUNT_ID`.
 - Without `OPENAI_API_KEY`, the server uses deterministic mock embeddings (hash-based), useful for local testing but not production.
 - Use `LOG_FORMAT=json` in production and see [Observability](/walrus-memory/relayer/observability) for dashboards and alerts.
+
+## Run the indexer
+
+The indexer is optional for development. Without it, the `accounts` table stays empty, so the account existence check and the owner-token route do not see any accounts. Delegate-key authentication does not depend on it. For production, run the `memwal-indexer` binary from `services/indexer`. It reads Sui checkpoints from a remote checkpoint store:
+
+```bash
+$ cd services/indexer
+$ cargo run --release -- --remote-store-url <CHECKPOINT_STORE_URL> --first-checkpoint <CHECKPOINT>
+```
+
+Set `--first-checkpoint` to a checkpoint at or before the one that published your Walrus Memory package, so the indexer sees every `AccountCreated` event.
+
+The indexer also reads these environment variables:
+
+- `DATABASE_URL` (required): PostgreSQL connection string.
+- `MEMWAL_PACKAGE_ID` (required): Walrus Memory contract package ID to filter events.
