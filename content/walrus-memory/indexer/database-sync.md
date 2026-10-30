@@ -114,3 +114,11 @@ LIMIT $4
 ```
 
 The HNSW index provides approximate nearest neighbor search, which is fast enough for interactive recall even with large numbers of stored memories.
+
+## Recall limits and distance cutoffs
+
+The relayer fills `$4` from the request `limit`. The limit defaults to `10`, and the relayer caps it with `body.limit.min(100)` so a request cannot scan the whole table. The relayer applies no relevance threshold, so the query returns the closest matches even when they are weak. To drop weak matches, pass `maxDistance` to the SDK `recall` call. The SDK then removes results where `distance >= maxDistance` on the client side.
+
+## Where migrations live
+
+No migrations table and no manual `sqlx migrate` step exist. The SQL files live in `services/server/migrations`. `VectorDb::new()` in `services/server/src/storage/db.rs` lists each file explicitly and embeds it through `include_str!`. Every listed file re-runs in order on every server boot against `DATABASE_URL`, so restarting the server reapplies them. For this reason, each statement is idempotent and uses `IF NOT EXISTS`, `IF EXISTS`, or a guard query. When a file fails, the server reports `Failed to run migration` with the file name.
