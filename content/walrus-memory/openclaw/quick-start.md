@@ -235,3 +235,16 @@ Then the LLM can call `memory_search` and `memory_store` on its own when it deci
 
 - [How It Works](/walrus-memory/openclaw/how-it-works), understand the architecture, message flow, and hook mechanics
 - [Reference](/walrus-memory/openclaw/reference), detailed breakdown of hooks, tools, CLI, and configuration
+
+## Troubleshoot missing auto-capture
+
+If `openclaw memwal stats` reports the plugin as connected but the logs never show `auto-captured`, check the following:
+
+- Confirm `autoCapture` is `true` in the `config` block. This is the default.
+- Share a substantive fact. Capture skips trivial messages, such as messages under 30 characters and filler replies like ok or thanks.
+- Search the logs for `auto-capture skipped` or `auto-capture failed` messages.
+- Search the startup logs for `typed hook "agent_end" blocked`, which means `hooks.allowConversationAccess` is missing. See [Configure OpenClaw](#configure-openclaw).
+
+## Which config key sets the relayer URL?
+
+The plugin reads the relayer URL from the `serverUrl` field in the `config` block. Only `privateKey` expands `${ENV_VAR}` references. The plugin keeps `serverUrl` and every other field literal, so a secret cannot land in `serverUrl`. Write the full relayer URL as the value instead of an environment variable reference.
