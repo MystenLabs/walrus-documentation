@@ -82,7 +82,7 @@ Use direct SDK methods when your app needs precise control over:
 
 ## When does auto-save run?
 
-When `autoSave` is `true`, the middleware saves only on the first step of a user turn, when the prompt ends with a user message. It skips intermediate tool steps where the last message comes from a tool or the assistant. On a qualifying step, the middleware takes the last user message and passes it to `analyze()`. The relayer runs LLM-based fact extraction on that message and stores the extracted facts. The save runs fire-and-forget, so it does not delay the generated response. `recall()` only reads memories before generation. `analyze()` is the write path that runs after generation.
+When `autoSave` is `true`, the middleware saves only on the first step of a user turn, when the prompt ends with a user message. It skips intermediate tool steps where the last message comes from a tool or the assistant. On a qualifying step, the middleware takes the last user message and passes it to `analyze()`. Since SDK 0.1.12, the middleware bounds long messages: it sends `analyze()` at most 65,536 UTF-8 bytes and the recall query at most 16,384 UTF-8 bytes, keeping both the start and the end of the message for recall. The model still receives the full user turn. The relayer runs LLM-based fact extraction on that message and stores the extracted facts. The save runs fire-and-forget, so it does not delay the generated response. `recall()` only reads memories before generation. `analyze()` is the write path that runs after generation.
 
 ## How do you filter recalled memories?
 
