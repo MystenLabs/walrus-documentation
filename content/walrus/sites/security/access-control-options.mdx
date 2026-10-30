@@ -99,3 +99,9 @@ Some approaches look like access control but do not protect the underlying data:
 - **Gating a portal:** You can put HTTP authentication, IP restrictions, or rate limits in front of a [self-hosted portal](/docs/sites/portals/deploy-locally), but this only restricts that one portal. Anyone can run their own portal or fetch the site's blobs directly from any aggregator, because Sui exposes the resource paths and blob IDs publicly.
 - **Obscure URLs:** Unlisted paths offer no protection. The site object on Sui publicly maps every resource path to its blob ID.
 - **Blob IDs as secrets:** Blob IDs are content-derived and discoverable. Do not rely on keeping a blob ID private.
+
+## Can you remove a blob before its storage period ends?
+
+Storage nodes expire a blob at the epoch boundary where its storage period ends. To remove a blob before that, you must have stored it as deletable. The delete operation aborts if the blob is not deletable or has already expired, and the CLI delete command is only available for deletable blobs. A blob stored as permanent stays stored until its storage period ends.
+
+Burning a Blob object is not a way to revoke it. Burning removes the Blob object from Sui without deleting the data from Walrus and without refunding the storage. After you burn a blob, you can no longer extend or delete it.
