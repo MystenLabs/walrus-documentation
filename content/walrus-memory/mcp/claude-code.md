@@ -219,3 +219,11 @@ The stored credential can lapse if you revoked its delegate key from the dashboa
 
 **Corporate proxy or restricted network.**
 The server needs outbound HTTPS to `relayer.memory.walrus.xyz` (and the sign-in flow needs `memory.walrus.xyz`). If the network blocks only the relayer, the HTTP transport option above fails identically; allowlist both hosts.
+
+## Memories across machines and reinstalls
+
+Walrus Memory stores your memories as encrypted blobs on Walrus and records your account and its permissions on Sui. Your memories survive across sessions, clients, and machines, so uninstalling the plugin or moving to a new machine does not remove them.
+
+The one thing that stays local is the delegate key, a key pair your account authorizes to read and write memory on your behalf. A new installation starts without it. Sign in with the same wallet: your account decrypts its memories with any delegate key it registers, so a new key reads the memories you wrote with the old one. You do not need to recover the old key.
+
+Losing a delegate key does not lose your memories. If someone else might hold a key you lost, remove that key from your account on the dashboard so it can no longer act on your behalf.
