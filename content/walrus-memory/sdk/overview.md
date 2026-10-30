@@ -120,3 +120,16 @@ All clients support a default namespace. If you omit it, it falls back to `"defa
 2. Set a namespace explicitly
 3. Validate `remember`, `recall`, `analyze`, and `restore`
 4. Move to `MemWalManual` only if you need client-managed embeddings and local Seal work
+
+## Private key format
+
+The `key` parameter takes an Ed25519 delegate private key as a string in either of these formats:
+
+- A hex seed, with or without a `0x` prefix
+- A Sui `suiprivkey1...` string, the format that `sui keytool` and wallets export
+
+The TypeScript and Python SDKs normalize the key the same way. `generateDelegateKey()` returns the private key as hex.
+
+## What are local Seal operations?
+
+With `MemWal`, the relayer performs the Seal encryption and you do not manage keys. With `MemWalManual`, your client performs Seal encryption locally, so plaintext never leaves your process and the relayer never sees it. In exchange, your agent holds its own key material, and if you lose the delegate key, you cannot recover the encrypted memories. For what Seal is, see [What is Seal encryption?](/walrus-memory/fundamentals/concepts/memory-space#what-is-seal-encryption).
