@@ -127,3 +127,11 @@ and test all endpoints interactively.
 ```bash
 open "$OYSTER_URL/api/docs"
 ```
+
+## What is the Pearl wallet service?
+
+Pearl is the custodial wallet service that derives each Oyster account's Sui wallet. When Pearl is not configured or is unreachable, `/ready` reports `pearl` as `"unreachable"`, and `GET /api/v1/account/wallet` returns `503`. See [What is Pearl?](wallet.mdx#what-is-pearl).
+
+## Additional Prometheus metrics
+
+The metrics table lists only part of what the server exports. The server also records HTTP request metrics through its `track_http_metrics` middleware, and exports additional counters. One example is `oyster_delete_db_only_total`, a counter of `delete_blob` calls where the onchain Sui delete transaction failed with a non-`InsufficientBalance` error but Oyster still removed the database row to keep `DELETE` idempotent. Its `reason` label takes the values `upstream_error`, `internal_error`, or `other`. A nonzero rate means onchain `PooledBlob` orphans are accumulating. The server refreshes the `oyster_active_accounts` and `oyster_active_blobs` gauges from the database on each scrape.
