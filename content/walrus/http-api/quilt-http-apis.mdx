@@ -159,3 +159,10 @@ Both methods return the raw blob bytes in the response body. Metadata such as th
 - `X-Quilt-Patch-Identifier`: The identifier of the blob within the quilt
 - `ETag`: The patch ID or quilt ID for caching purposes
 - Additional custom headers from blob tags, if configured
+
+## Which ETag does each retrieval method return?
+
+The `ETag` value depends on how you retrieve the blob:
+
+- `/v1/blobs/by-quilt-patch-id/`: The `ETag` contains the quilt patch ID.
+- `/v1/blobs/by-quilt-id/`: The `ETag` contains the quilt ID, not a patch ID. Every blob you retrieve from the same quilt through this endpoint returns the same `ETag`.
