@@ -12,6 +12,8 @@ extend-exclude = [
   # Generated from GitHub release bodies, which are quoted verbatim.
   "content/walrus/release-notes/",
   "site/src/data/changelog.json",
+  # Mirrored verbatim from MystenLabs/walrus.
+  "site/static/setup/",
   "site/src/plugins/askcookbook/index.js",
   "site/src/scripts/audit-docs.mjs",
   "site/src/scripts/backfill-questions.mjs",

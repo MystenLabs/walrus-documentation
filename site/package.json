@@ -29,7 +29,8 @@
         "gen:memory-sidebar": "node src/scripts/generate-walrus-memory-sidebar.js",
         "gen:llms:oyster": "node src/scripts/generate-llmstxt.mjs --only-prefix oyster --output static/oyster/llms.txt",
         "gen:editorial": "node src/scripts/generate-editorial-summaries.mjs",
-        "gen:upstream": "npm run gen:skills&&npm run gen:release-notes"
+        "gen:setup": "node src/scripts/mirror-static-setup.js",
+    "gen:upstream": "npm run gen:skills&&npm run gen:release-notes&&npm run gen:setup"
     },
     "dependencies": {
         "@cookbookdev/docsbot": "^4.25.15",

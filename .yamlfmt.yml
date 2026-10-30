@@ -5,3 +5,6 @@ formatter:
   max_line_length: 120
   drop_merge_tag: true
   disable_alias_key_correction: true
+# Mirrored verbatim from MystenLabs/walrus by site/src/scripts/mirror-static-setup.js.
+exclude:
+  - site/static/setup/**
