@@ -90,3 +90,9 @@ These are separate layers that work together:
 | **Relayer** | Backend execution, encryption, storage, search | Server-side auth middleware |
 
 The relayer verifies every request against the onchain contract before executing any operation. Even if the relayer is compromised, it cannot forge delegate permissions or change ownership, those are cryptographically enforced onchain.
+
+## What happens to fetched keys when you freeze an account
+
+Freezing stops `seal_approve` from approving any new key request, for owners and delegates alike. It does not revoke keys that a caller already fetched. Seal keys are reusable, and a holder decrypts with them without calling `seal_approve` again. A key fetched before the freeze keeps decrypting memories written under the counter it covers.
+
+Freezing also bumps `access_counter_version`. Encryption never calls `seal_approve`, so a frozen account can still accumulate ciphertext. That ciphertext uses the new counter, which no one holds a key for, and no one can obtain that key until the owner reactivates the account. To cut off access to memories written before the freeze, re-encrypt them.
