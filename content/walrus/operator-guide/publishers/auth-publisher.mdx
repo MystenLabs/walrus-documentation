@@ -192,3 +192,7 @@ let encoding_key = EncodingKey::from_secret("my_secret".as_bytes());
 let claim = Claim { /* set here the parameters for the Claim struct above */ };
 let jwt = encode(&Header::default(), &claim, &encode_key).expect("a valid claim and key");
 ```
+
+## Expiration duration check
+
+The configured expiration duration is a whole number of seconds. The publisher compares it with the difference between the `exp` and `iat` claims using an exact integer comparison, without tolerance or rounding. If the difference is off by even 1 second, the publisher logs an error and rejects the token. Set `iat` and `exp` from the same clock reading when you issue a token, and add exactly the configured number of seconds to compute `exp`.
