@@ -1,7 +1,16 @@
 ---
 title: Researcher Example
 description: A research assistant that saves each research sprint as a structured memory and rebuilds context for fresh sessions through recall.
-keywords: [researcher, example app, research assistant, remember, recall, session rehydration, long-form memory]
+keywords:
+  - researcher
+  - example app
+  - research assistant
+  - remember
+  - recall
+  - session rehydration
+  - long-form memory
+  - pgvector
+  - sprint report
 ---
 
 The researcher example (`apps/researcher`) is a research assistant that works in sprints. It shows long-form memory and session rehydration: each sprint's findings persist as a structured report, and a fresh session pulls back the relevant history before it starts.
