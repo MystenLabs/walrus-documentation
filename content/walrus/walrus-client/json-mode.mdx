@@ -137,3 +137,11 @@ Two error cases are worth distinguishing:
 
 1. Invalid input, such as malformed JSON or an unknown key, fails before the command runs and reports a parse error on stderr.
 2. When storing multiple files, an individual file can fail while others succeed. The JSON output then contains an `error` variant for that file, with an `errorMsg` string and a `failurePhase` field indicating where the store failed.
+
+## Store result variants
+
+The `blobStoreResult` object contains exactly one of 4 sibling variants: `newlyCreated`, `alreadyCertified`, `markedInvalid`, or `error`. Variant and field names use camelCase. Both `markedInvalid` and `error` mean the CLI did not store the blob. The `error` variant has the `errorMsg` and `failurePhase` strings plus an optional blob ID, which is absent when the failure occurs before the client knows the blob ID. A `markedInvalid` result points to a bug in the client or the storage nodes, or to more than a third of the storage nodes acting maliciously.
+
+## Select a configuration context
+
+The `context` key is the JSON equivalent of the `--context` flag. Use it when your client configuration file defines multiple contexts and you want a command to run against a specific one. Set it to the name of a context in that file. The client loads the configuration from the `config` path, or from the default locations, using that context. Omit `context` to keep the context that the configuration file selects on its own.
