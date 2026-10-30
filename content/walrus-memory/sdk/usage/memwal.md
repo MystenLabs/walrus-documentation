@@ -93,3 +93,31 @@ Use these when you already have a vector or encrypted payload:
 - `rememberManual({ encryptedData, vector, namespace? })`
 - `recallManual({ vector, limit?, namespace? })`
 - `embed(text)`
+
+## What `analyze()` returns
+
+The relayer extracts facts synchronously and returns one `job_id` per fact, then embeds, encrypts, uploads, and indexes each fact in the background. The `analyze()` result contains:
+
+- `job_ids`: one polling ID per extracted fact
+- `facts`: each entry has `text` (the extracted fact), `id` (same value as `job_id`), and `job_id`
+- `fact_count`: the number of accepted facts
+- `status`: usually `pending`
+- `owner`: the owner address
+
+To wait until every extracted fact is stored, use `analyzeAndWait(text, namespace?, opts?)`.
+
+## Read recall results
+
+The `recall` result holds its matches in `result.results`. Each match carries the decrypted `text` and a `distance`, where a smaller number means a closer match:
+
+```ts
+for (const memory of result.results) {
+  console.log(memory.distance.toFixed(3), memory.text);
+}
+```
+
+`recall` returns up to `limit` results, defaulting to `10`, and gives no signal when it drops extra matches. Treat a result count equal to `limit` as a sign that more matches might exist.
+
+## Restore limit and pagination
+
+The `limit` argument must be a positive integer. Otherwise, `restore()` throws a `TypeError`. Restore inspects your onchain blobs newest-first and has no pagination cursor. If you repeat a call at the same limit, it re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call. A `restored` count that stops increasing across reruns is not proof that every blob is covered. You can safely run restore more than once, because it skips blobs the relayer already indexed.
