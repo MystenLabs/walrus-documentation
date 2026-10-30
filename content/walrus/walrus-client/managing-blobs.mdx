@@ -198,3 +198,7 @@ $ walrus delete --blob-id <BLOB_ID>
 You can extend a blob only before it expires, so monitor the end epoch and renew in time. Permanent blobs cannot be deleted before expiry, so choose permanence at store time based on how long the data must live.
 
 :::
+
+## How many epochs does `walrus extend` add?
+
+The `walrus extend` command has no default extension period. You must pass `--epochs-extended` with the number of epochs to extend the blob by, and the command adds that many epochs to the blob's lifetime. The command does not accept an end epoch or an expiry time, so work out the number of epochs from the blob's current end epoch. The command output reports how many epochs it extended the blob by.
