@@ -383,3 +383,7 @@ import AskAiCta from '@site/src/shared/components/AskAiCta';
 
 - [Troubleshooting guide](/docs/troubleshooting)
 - [Discord community](https://discord.com/invite/walrusprotocol)
+
+## How does the Testnet SUI-to-WAL exchange rate work?
+
+The SUI-to-WAL exchange on Testnet uses a fixed exchange rate, not a market price. The exchange contract charges no fee and has no slippage. It calculates the WAL you receive directly from the SUI you provide and the current rate. A new exchange starts at a 1:1 rate, and the exchange administrator can change that rate. The swap fails if the exchange holds less WAL than the amount you request.
