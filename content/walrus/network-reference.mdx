@@ -311,3 +311,24 @@ Stale endpoints and package IDs are a common cause of integration failures. Avoi
 Walrus can wipe the Testnet state at any point, possibly without warning. Testnet provides no availability or persistence guarantees, and Testnet package IDs change on redeployment. Do not use Testnet for production.
 
 :::
+
+## How does an upload relay set its tip?
+
+The relay operator sets the tip in the relay's tip configuration. Before uploading, the client fetches that configuration from the relay's `/v1/tip-config` route. A relay either requires no tip, or names a Sui address to receive the tip and a formula for the amount. The formula is one of the following:
+
+- A constant amount for each upload
+- A base amount plus a fixed amount for each KiB of the encoded blob size
+
+The encoded size depends on the blob's unencoded size, the number of shards, and the encoding type, so the client computes the tip for each blob before it pays.
+
+## Which query parameters does a publisher store request accept?
+
+The publisher's blob store request takes only optional query parameters:
+
+- `epochs`: The number of epochs, ahead of the current one, to store the blob. The default is 1 epoch.
+- `permanent`: If true, the publisher creates a permanent blob. Blobs are deletable by default since v1.33.
+- `force`: If true, the publisher stores the blob and creates a new Blob object even if the blob is already certified for the requested epochs.
+- `encoding_type`: The encoding type for the blob.
+- `deletable`: Deprecated since 1.35.0 and has no effect.
+
+The publisher rejects unknown query parameters.
