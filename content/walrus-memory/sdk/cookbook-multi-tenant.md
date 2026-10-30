@@ -218,3 +218,23 @@ Your `MemWalAccount` is a regular Sui object. Share its object ID and view it on
 - [Delegate Key Management](/walrus-memory/contract/delegate-key-management): full key lifecycle
 - [Ownership and Access](/walrus-memory/fundamentals/concepts/ownership-and-access): the trust model behind accounts and delegates
 - [API Reference](/walrus-memory/sdk/api-reference): full method signatures
+
+## Which key formats do the revoke call and the client take?
+
+The revoke call and the memory client take 2 different keys:
+
+- **`suiPrivateKey` in `removeDelegateKey`:** The owner's Sui signer key in `suiprivkey1...` format. You can pass a `walletSigner` instead, so the owner key never has to exist as a string.
+- **`key` in `MemWal.create()`:** The delegate private key in hex, which you store in `MEMWAL_PRIVATE_KEY`.
+
+Never put the owner key in `MEMWAL_PRIVATE_KEY`.
+
+## How do you implement `verifyWalletAuth`?
+
+The Walrus Memory example apps implement this check with a server-issued challenge:
+
+1. The server issues a single-use challenge message for the wallet address.
+2. The user signs the message with the wallet and returns the challenge ID and the signature.
+3. The server verifies the signature against the challenge and that address with `verifyPersonalMessageSignature` from `@mysten/sui/verify`.
+4. The server consumes the challenge before it creates a session, so nobody can replay a captured signature.
+
+Return the verified address as `session.walletAddress` and derive the namespace only from that value.
