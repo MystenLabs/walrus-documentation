@@ -403,3 +403,11 @@ aws --profile oyster s3api delete-object-tagging \
 |---------------|-----------|
 | `NoSuchBucket` | Bucket doesn't exist |
 | `NoSuchKey` | Object key doesn't exist |
+
+## DeleteObjectTagging on a missing key
+
+Unlike DeleteObject, DeleteObjectTagging is not idempotent for missing keys. If the object key doesn't exist, the operation returns `NoSuchKey`. If the bucket doesn't exist, it returns `NoSuchBucket`.
+
+## Maximum object size
+
+PutObject accepts single-part uploads only, up to a maximum of 1GB per object. Oyster does not support multipart upload, so you cannot split a larger object into parts. Because there is no multipart upload, the ETag is always the MD5 digest of the full object content, even for large objects.
