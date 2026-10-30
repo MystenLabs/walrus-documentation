@@ -138,3 +138,11 @@ $OYSTER_URL/api/docs
 ```
 
 Explore and test all endpoints directly from your browser.
+
+## How the server handles out-of-range limits
+
+When you pass a `limit` greater than the maximum, the server clamps it to 100 items and does not return an error. A `limit` of 0 or less returns `400` with the error `limit must be positive`.
+
+## What is the Pearl-derived wallet?
+
+Pearl is the custodial wallet service that derives each Oyster account's Sui wallet and signs the transactions Oyster submits. See [What is Pearl?](wallet.mdx#what-is-pearl) for how Pearl derives and protects the keys.
