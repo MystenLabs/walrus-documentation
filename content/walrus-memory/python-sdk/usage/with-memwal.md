@@ -145,3 +145,17 @@ Both wrappers accept the same keyword arguments:
 ## When to use direct SDK calls instead
 
 Use direct `MemWal` methods when you need precise control over when memory is stored, which text is analyzed, or how recall results are filtered and displayed.
+
+## What is the `withMemWal` alias?
+
+In the Python SDK, `withMemWal` is an alias that maps to `with_memwal_langchain`, so it wraps LangChain chat models. The name mirrors the `withMemWal` middleware in the TypeScript SDK, which you import from `@mysten-incubation/memwal/ai` and which wraps AI SDK models instead.
+
+## How the wrappers choose a relayer
+
+The wrappers resolve the relayer in this order:
+
+- An explicit `server_url` always wins, even if you also pass `env`.
+- `env` applies only when you omit `server_url`. `prod` selects `https://relayer.memory.walrus.xyz` and `staging` selects `https://relayer.dev.memwal.ai`.
+- If you pass neither, the wrapper uses the default `server_url`, `https://relayer.memory.walrus.xyz`.
+
+An unknown `env` preset raises `ValueError`.
