@@ -124,3 +124,7 @@ An account owner can deactivate (freeze) their account. When deactivated:
 - The owner can reactivate the account unless an AdminCap quarantine is active
 
 This is useful as an emergency kill switch if a key is compromised.
+
+## How quickly does delegate key removal take effect?
+
+The relayer caches each successful delegate key verification for up to 30 seconds, keyed by account and public key. After you remove a key onchain, that key can keep authenticating at the relayer for at most 30 seconds, until its cached verification expires. Removal also does not take back plaintext the delegate already read or decryption keys it already obtained.
