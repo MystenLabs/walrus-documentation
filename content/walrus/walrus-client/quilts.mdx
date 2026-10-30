@@ -95,3 +95,7 @@ To see all patches contained within a quilt along with their identifiers and `Qu
 ```sh
 $ walrus list-patches-in-quilt 057MX9PAaUIQLliItM_khR_cp5jPHzJWf-CuJr1z1ik
 ```
+
+## Tag filter syntax
+
+The `--tag` flag takes exactly 2 values as separate arguments: the tag key first, then the tag value. Each query supports only one key and value pair. If you pass more than one, the command fails with `Only one tag is supported for now.` You cannot combine `--tag` with `--quilt-patch-ids`.
