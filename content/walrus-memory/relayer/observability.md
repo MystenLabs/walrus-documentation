@@ -171,3 +171,11 @@ If your APM supports custom spans, map `memwal_external_request_duration_seconds
 - `sidecar / seal_decrypt_batch`
 - `sidecar / walrus_upload`
 - `walrus / download_blob`
+
+## Upload queue saturation alerts
+
+The relayer runs the upload queue saturation check itself, not a Prometheus alert rule. On every saturated check, it logs a warning that starts with `sidecar: upload queue saturated` and includes the queued, active, capacity, and consecutive-check counts.
+
+The relayer sends the Slack notification only when you configure Slack alerting for it. Without a Slack client, it skips the notification, and the log warning is the only signal. The relayer sends at most one saturation notification per Sui network per dedup window. If the backlog is still there after the window elapses, it sends another.
+
+The notification advises you to check for a bulk-write burst or to add wallets to `SERVER_SUI_PRIVATE_KEYS`, because upload throughput scales linearly with pool size.
