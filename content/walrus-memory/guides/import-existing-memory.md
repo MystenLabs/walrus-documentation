@@ -362,3 +362,11 @@ Install the plugin for the client you work in, so later sessions write to Walrus
 On Claude Code, merge the Walrus Memory block into `~/.claude/CLAUDE.md` and turn off built-in memory, or the agent keeps writing `MEMORY.md` beside Walrus Memory. That step is in the Claude Code page.
 
 Open a new session and ask for something only the imported fact would answer. When recall returns it, the account is carrying the memory you already had.
+
+## Install the SDK package
+
+The SDK sample imports from `@mysten-incubation/memwal`, the published npm package for the Walrus Memory SDK. Install it with its required peers `@mysten/sui` and `@mysten/seal`, for example `npm install @mysten-incubation/memwal @mysten/sui @mysten/seal`. The default `MemWal` client imports those peers on `recall()` to build the Seal session.
+
+## Unit of call costs
+
+The costs in the table are points. The relayer charges each call a number of points that reflects its computational and storage cost, so a heavy call that extracts and stores facts spends more of the budget than a status poll.
