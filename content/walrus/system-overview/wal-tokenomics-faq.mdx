@@ -90,3 +90,7 @@ Pricing storage at a fixed **$0.023/GB/month** gives you predictable, budgetable
 - [Staking and Unstaking](/docs/operator-guide/stake)
 - [Network Reference](/docs/network-reference)
 - [Walrus whitepaper](/walrus.pdf)
+
+## Does the epoch burn include subsidies?
+
+The 3% epoch burn applies to the full rewards balance of the epoch, after subsidies are added. Subsidies from the subsidies contract join the same per-epoch rewards balance that holds user storage payments, so the burn base includes both. Measured against user payments alone, the burn is larger: when the usage-dependent subsidy is at 800%, burning 3% of total rewards equals roughly 25% of what users paid.
