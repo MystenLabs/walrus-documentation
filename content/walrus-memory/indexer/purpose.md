@@ -81,3 +81,29 @@ $ cargo run
 ```
 
 The indexer is recommended for production but optional for development. If the indexer stops or falls behind, the `accounts` table lags onchain state, so the existence check and owner-token lookup that read it will not see recently created accounts until it catches up; delegate-key auth resolution is unaffected, because the indexed `accounts` table is not part of that chain (a cold key still needs a signed `x-account-id` or `MEMWAL_ACCOUNT_ID`, otherwise it gets a `401`).
+
+## Which routes read the accounts table?
+
+Three places in the relayer read the `accounts` table, and all of them use the same `db.find_account_by_owner` helper:
+
+- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks registry presence only, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
+- `POST /v1/owner-tokens`: Rejects the request with `400` when the owner has no indexed account, instead of minting a token for a nonexistent account.
+- Owner-token reads on `/v1/owners/{owner}/{namespaces,memories,agents}`: The read API's auth middleware, `auth::verify_read_api_auth`, resolves the token's owner to an account through the table and returns `401` when the account no longer resolves.
+
+None of them takes part in delegate-key resolution for signed requests. Because the table never records deactivation, owner-token issuance and owner-token reads both verify onchain that the account is still `active`. The existence endpoint does not.
+
+## When the owner-token flow checks the accounts table
+
+`POST /v1/owner-tokens` runs its gates in this order: address format validation, configuration check, per-owner rate limit, account lookup in the `accounts` table, an onchain check that the account is still active, and then mint. The table lookup comes after the cheaper gates because it costs a database round trip, so only requests that clear them reach the `accounts` table. The relayer lowercases the owner address before the lookup, because the indexer always stores the `accounts.owner` column as lowercase hex.
+
+The onchain check covers what the table cannot show:
+
+- If the account has been deactivated, the relayer returns `403` with `MemWalAccount has been deactivated`.
+- If the account object is not found onchain or belongs to a different owner, the relayer returns `400` with `owner has no MemWalAccount`.
+- If the onchain verification itself fails, the relayer returns `503` instead of minting.
+
+Owner-token reads run the same active check, so a token minted before deactivation stops working once the account is deactivated, even before the token expires.
+
+## What happens before an account is indexed
+
+Until the indexer inserts a row for a newly created account, the relayer treats the owner as having no account. The lookup resolves to no account, so `GET /api/accounts/{owner}/exists` reports that the owner has no account, and `POST /v1/owner-tokens` fails with `400` and the message `owner has no MemWalAccount`. Both routes return the account after the indexer observes the `AccountCreated` event and inserts the row.
