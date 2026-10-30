@@ -127,3 +127,23 @@ CI runs `pnpm check:compatibility`, which verifies that:
 - `test_seal_approve_delegate_requires_matching_owner` (`ENoAccess`) remains in the Move suite; CI also runs that test by name so deleting it fails the gate
 
 If a public compatibility value changes, update the implementation, this document, and the relevant changelog/deprecation notes together.
+
+## Legacy `version` field in `/health`
+
+The `/health` response has the following shape:
+
+- `status`: string.
+- `version`: string. This is the legacy field.
+- `relayerVersion`, `apiVersion`, and `minSupportedSdk`: optional. Modern relayers include them. Older relayers might omit them.
+
+Treat the compatibility fields as absent on older relayers, and fall back to `version` only for basic monitoring. `/health` and `/version` do not require authentication. A passing `/health` check confirms the relayer is reachable. It does not confirm that your signing key or account ID are valid.
+
+## Seal decrypt credentials
+
+Signed headers authenticate the caller, but they do not decrypt data. The routes that return stored memories, `/api/recall`, `/api/ask`, and `/api/restore`, also need a Seal credential in relayer mode:
+
+- **Relayer-managed (relayer mode):** The client sends `x-seal-session`, a base64-encoded Seal `SessionKey`. The official SDKs build, cache, and send this header.
+- **Legacy:** `x-delegate-key` sends the delegate private key to the relayer. It is deprecated.
+- **Server fallback:** A relayer configured with `SERVER_SUI_PRIVATE_KEY` decrypts with its own key, so the client sends neither header.
+
+Manual-mode requests send only the signed headers and omit decrypt credentials. Writes through `/api/remember` do not need a Seal credential.
