@@ -145,3 +145,7 @@ The same three primitives cover the full lifecycle:
 | Cleanup | `slashing::cleanup_slashing_proposals`    | Permissionless |
 
 For abort codes, monitoring, FAQs, and the parallel with the contract upgrade vote, see the main [Slashing](/docs/operator-guide/storage-nodes/slashing) page.
+
+## What happens if 2 operators execute at the same time
+
+Only one `execute_slashing` call succeeds for each proposal. The function first checks that a proposal exists for the candidate. It then removes that proposal from the `SlashingManager` table, checks the epoch and quorum, and burns the commission. If a second operator submits the same call after the first one executes, the second call finds no proposal for the candidate and aborts with `ENoProposalForNode`. The candidate's commission burns only once, and the abort does not change the outcome of the first call.
