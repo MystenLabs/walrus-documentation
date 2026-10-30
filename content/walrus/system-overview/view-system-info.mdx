@@ -127,3 +127,17 @@ You can check the health of storage nodes with the `walrus health` command. This
 | `--concurrent-requests <CONCURRENT_REQUESTS>` | Optional | Number of concurrent requests to send to storage nodes. Default: `60` |
 | `--trace-cli <TRACE_CLI>` | Optional | Enable tracing output. Values: `otlp` (sends to OTLP collector) or `file=path` (writes gzipped JSON traces to file) |
 | `-h`, `--help` | Optional | Print help |
+
+## Read the `walrus health` output
+
+With `--detail`, `walrus health` reports the following for each node:
+
+- Uptime
+- Current epoch
+- Node status, for example `Active` or `RecoveryInProgress`
+- Event progress: events persisted, events pending, and highest finished event index
+- Checkpoint downloading progress: latest checkpoint sequence number and estimated lag
+- Shard summary: owned shards and read-only shards
+- Owned shard status: counts of Ready, In transfer, In recovery, and Unknown shards
+
+A healthy node reports the `Active` status and the current epoch. A node with any other status responds to health checks but is not fully operational. If a node is unreachable, the command returns an error. Without `--json`, the error shows the cause, for example a connection timeout, a DNS failure, or a refused connection. The `--json` output shows only a generic error message.
