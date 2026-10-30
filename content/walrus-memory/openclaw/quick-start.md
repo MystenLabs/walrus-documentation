@@ -72,7 +72,7 @@ You also need a **delegate key**, **account ID**, and **relayer URL** from Walru
     | Environment | Relayer URL |
     |-------------|-------------|
     | **Production** (Mainnet) | `https://relayer.memory.walrus.xyz` |
-    | **Staging** (Testnet) | `https://relayer-staging.memory.walrus.xyz` |
+    | **Staging** (Testnet) | `https://relayer.dev.memwal.ai` |
 
     :::info
 Walrus Foundation provides these managed relayer endpoints as a public good.
@@ -104,7 +104,7 @@ Walrus Foundation provides these managed relayer endpoints as a public good.
             "config": {
               "privateKey": "${MEMWAL_PRIVATE_KEY}",           // References the env var
               "accountId": "0x3247e3da...",                     // Your account ID from the dashboard
-              "serverUrl": "https://relayer-staging.memory.walrus.xyz"     // Or your self-hosted relayer
+              "serverUrl": "https://relayer.dev.memwal.ai"     // Or your self-hosted relayer
             }
           }
         }

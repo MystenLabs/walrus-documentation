@@ -72,7 +72,7 @@ A self-hosted Walrus Memory backend has:
 | **Rust relayer** | `services/server` | Axum HTTP server for auth, routing, embedding, and vector search |
 | **TypeScript sidecar** | `services/server/scripts` | Seal encrypt and decrypt, Walrus upload, blob query (uses `@mysten/seal` and `@mysten/walrus`) |
 | **PostgreSQL + pgvector** | External | Vector storage, auth cache, indexer state |
-| **Indexer** (recommended) | `services/indexer` | Polls Sui events, syncs account data into PostgreSQL |
+| **Indexer** (recommended) | `services/indexer` | Reads Sui checkpoints, syncs account data into PostgreSQL |
 
 The Rust relayer starts the TypeScript sidecar as a child process on boot. They communicate over HTTP (`localhost:9000` by default). If the sidecar fails to start within 15 seconds, the relayer exits.
 
@@ -238,7 +238,7 @@ The relayer requires PostgreSQL with the `pgvector` extension. The relayer runs 
 - `vector_entries`: 1536-dimensional embeddings with HNSW index for cosine similarity search.
 - `delegate_key_cache`: Auth optimization (delegate key to account mapping).
 - `accounts`: The indexer populates this table (account to owner mapping).
-- `indexer_state`: Indexer cursor tracking.
+- `indexer_state`: Legacy cursor table from the event-polling indexer. The current indexer does not write to it.
 
 See [Database Sync](/walrus-memory/indexer/database-sync) for the full schema.
 

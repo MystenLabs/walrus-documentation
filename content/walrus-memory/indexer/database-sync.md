@@ -86,7 +86,7 @@ Populated by the indexer, maps owner addresses to their MemWalAccount object IDs
 
 ### `indexer_state`
 
-Tracks the indexer's cursor position so it can resume from where it left off after restarts.
+A legacy table from the event-polling indexer. The relayer's initial migration still creates it, but the current indexer does not write to it: it records its progress as a checkpoint watermark through the Sui checkpoint-ingestion framework.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -96,7 +96,7 @@ Tracks the indexer's cursor position so it can resume from where it left off aft
 ## Why does the indexer sync data to PostgreSQL?
 
 - **Constant-time account lookup**, the relayer checks `delegate_key_cache` and `accounts` instead of scanning the onchain registry
-- **Resumable event polling**, the indexer stores its cursor in `indexer_state`, so it picks up where it left off after restarts without re-processing old events
+- **Resumable ingestion**, the indexer records its checkpoint watermark, so it picks up where it left off after restarts without re-processing old checkpoints
 - **Reactive cleanup**, when Walrus returns 404 for an expired blob during recall, the relayer deletes the corresponding `vector_entries` rows automatically
 
 ## How does similarity search work?
