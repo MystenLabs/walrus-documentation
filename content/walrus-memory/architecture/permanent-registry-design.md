@@ -53,3 +53,7 @@ The `AccountRegistry` shared object in Walrus Memory is a permanent append-only 
 
 4. **Seal access integrity:**
    If an address could recreate its account, old data encrypted under the same Seal Key ID (`bcs(address)`) could become unpredictably accessible or orphaned depending on the new configuration. A permanent registry guarantees that the encryption identity mathematically maps to a single, stable onchain policy object forever.
+
+## How account deactivation works
+
+Deactivation does not freeze the `MemWalAccount` object at the Sui protocol level. The account is a shared object with an `active` boolean field, and `deactivate_account` sets that field to false. While the account is inactive, it denies Seal access and new delegate keys, but the owner can still remove delegate keys. Freezing the account also increments `access_counter_version`, so memories written later use a new Seal identity. The owner can call `reactivate_account` to unfreeze the account, unless an AdminCap holder has quarantined it with `admin_deactivate_account`. In every case, the registry entry for the address stays in place.
