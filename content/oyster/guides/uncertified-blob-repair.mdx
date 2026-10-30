@@ -127,3 +127,7 @@ writing anything.
   flat afterward; a rising count means certify transactions are still
   failing on first attempt (see
   `oyster_certify_stale_version_retries_total`).
+
+## Repair output format
+
+In the `oysterd blobs repair` output, a tab separates each column. The `REFERENCES` column lists every `bucket/key` pair for the blob, joined by a comma with no space. The tool writes bucket names and keys as stored, without quoting or escaping. A key that contains a comma or a tab therefore makes that line ambiguous when you split it automatically.
