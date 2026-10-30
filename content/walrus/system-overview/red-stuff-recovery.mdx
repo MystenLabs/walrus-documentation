@@ -111,3 +111,9 @@ $$
 Because $r_{5,3}$ is a repair symbol, shard 3 decodes the 3 symbols to obtain its secondary sliver. If shards 0, 1, and 2 respond instead, they provide $s_{0,3}$, $s_{1,3}$, and $s_{2,3}$, which are the symbols of the secondary sliver itself, so shard 3 does not need to decode.
 
 For properties, Walrus-specific parameters, blob size limits, and sliver authentication details, see [RedStuff properties and parameters](red-stuff-parameters).
+
+## How does shard 3 reconstruct the sliver?
+
+Shard 3 reconstructs a lost sliver with erasure decoding. Each recovery symbol carries a Merkle proof, and the recovering shard verifies the symbols against the sliver hashes in the blob metadata before it decodes them. Decoding needs a fixed number of recovery symbols for each sliver type, and the shard does not attempt decoding with fewer.
+
+After decoding, the shard checks the reconstructed sliver against its hash in the blob metadata. If the decoded sliver does not match that hash, the blob is inconsistently encoded. In that case the shard produces an inconsistency proof instead of a recovered sliver. The proof contains the recovery symbols and their Merkle proofs, so any entity can repeat the decoding and confirm the mismatch.
