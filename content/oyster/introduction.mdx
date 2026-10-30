@@ -92,3 +92,15 @@ through one are immediately visible in the other.
   AWS CLI setup.
 - **[Guides](guides/index.mdx)**: CLI quick start, SDK examples, and
   deeper topics.
+
+## Are blob reads public through the S3 API?
+
+Public, unauthenticated reads apply only to the JSON API. The S3-compatible API requires AWS Signature Version 4 (SigV4) authentication for every operation, including reads. To download a blob through an S3 client, sign the request with an S3 access key.
+
+## How does a storage pool control blob expiration?
+
+A `StoragePool` is a single onchain Sui object that Oyster creates for each account. Walrus storage is epoch-scoped, not time-scoped, and the pool's `end_epoch` defines the lifetime of every blob in the account. Oyster creates the pool lazily on the account's first upload, with `POOL_INITIAL_EPOCHS_AHEAD` of runway (default `5`). Later uploads share the same expiration.
+
+The account exposes the pool's `end_epoch` as `pool_end_epoch`. To check remaining runway, compare it with the network's current epoch. Blob responses carry no per-blob expiration.
+
+The background extension worker (`oysterd extend`) keeps each pool ahead of expiration. As long as the worker runs and the account's wallet has WAL and SUI to spend, your blobs persist indefinitely.
