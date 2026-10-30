@@ -385,3 +385,11 @@ Pair these with the extension worker counters
 (`oyster_extension_pools_extended_total`,
 `oyster_extension_errors_total{stage}`) to alert on chronic
 under-funding without alerting on transient receiver failures.
+
+## Retry backoff timing
+
+Oyster sleeps only between attempts. After a failed attempt, it waits the current delay and then doubles that delay for the next gap, capped at 5 s. It does not sleep after the final attempt. With 3 attempts, the full schedule is 100 ms before attempt 2 and 200 ms before attempt 3. The next doubled value (400 ms) never applies because no fourth attempt follows.
+
+## Webhook key rotation
+
+Rotation has no overlap window. Each `PUT` discards the prior key pair, so Oyster never signs with both the old and new keys. A receiver that still holds the old public key sees a fingerprint mismatch in `X-Oyster-Public-Key-Fingerprint` on every delivery after the call. Use that header to detect the rotation and install the new public key returned by the `PUT` response, or read the key back from `GET /api/v1/admin/app`.
