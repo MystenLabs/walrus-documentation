@@ -135,3 +135,7 @@ or use the [manual client flow](/walrus-memory/sdk/usage/memwal-manual) to handl
 and embedding entirely on the client side. See
 [Trust  and  Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model)
 for the full breakdown.
+
+## Sidecar URL configuration
+
+`SIDECAR_URL` takes a full absolute URL, including the scheme, host, and port, not a port number alone. When you leave the variable unset, the relayer uses `http://localhost:9000`. If you set `SIDECAR_SEAL_URL` to route Seal calls separately, it must also be a valid absolute URL, or the relayer stops at startup.
