@@ -251,3 +251,17 @@ For more Python examples, including driving the CLI through its JSON interface a
 - Use the HTTP API in depth: [Storing blobs with the HTTP API](/docs/http-api/storing-blobs) and [Reading blobs with the HTTP API](/docs/http-api/reading-blobs)
 - Run a publisher that pays for storage on behalf of your users: [Mainnet Publisher Production Guide](/docs/operator-guide/publishers/mainnet-production-guide)
 - Canonical endpoints and IDs: [Network Reference](/docs/network-reference)
+
+## What is an upload relay?
+
+A Walrus Upload Relay is an alternative upload path where your client pays the relay a tip. The relay validates transactions and delegates the upload to the Walrus SDK. Your account still owns the blob and pays for its registration. Each relay serves these routes:
+
+- `/v1/blob-upload-relay`: Uploads a blob through the relay.
+- `/v1/tip-config`: Returns the tip configuration that the relay requires.
+- `/v1/api`: Serves the OpenAPI docs for the relay.
+
+## Delete a blob
+
+To remove a blob before its storage period ends, use the CLI `delete` command. It accepts multiple files, blob IDs, or object IDs, and works only for deletable blobs. Deleting a blob returns its storage resource to you.
+
+New blobs are deletable by default. When you store through a publisher, the `permanent` query parameter creates a permanent blob instead, which you cannot delete.
