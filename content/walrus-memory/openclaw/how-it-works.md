@@ -223,3 +223,11 @@ The fix: memories are wrapped in `<memwal-memories>` tags on injection, and `str
 ### Key security
 
 Private keys support `${ENV_VAR}` syntax in config, the actual key is never written to `openclaw.json`. The plugin logs only a masked preview (`e21d...ed9b`) for debugging.
+
+## Delegate keys and Seal access
+
+Delegate keys are lightweight Ed25519 keys that are registered onchain in a `MemWalAccount`. The relayer verifies them on every request. The [Seal](/walrus-memory/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or a registered delegate before it releases decryption keys. Because this check is per account and not per namespace, any registered delegate can obtain keys for every namespace in the account. For the full model, see [Ownership and access](/walrus-memory/fundamentals/concepts/ownership-and-access), the [data flow and security model](/walrus-memory/fundamentals/architecture/data-flow-security-model), and [Delegate key management](/walrus-memory/contract/delegate-key-management).
+
+## Configure the auto-capture message count
+
+To change how many recent messages auto-capture analyzes, set `captureMaxMessages` in the `config` block of the `memory-memwal` entry under `plugins.entries`. The default is `10`. To turn off auto-capture, set `autoCapture` to `false`.
