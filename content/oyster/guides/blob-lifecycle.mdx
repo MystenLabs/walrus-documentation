@@ -245,3 +245,7 @@ to a given `blob_id` from the account (see
 | Auto-renewal | Not applicable | Yes (extension worker, multi-instance safe) |
 | `pooled_blob_object_id` | `null` | Sui object ID of the registered `PooledBlob` |
 | Storage scope | Per-blob file on disk | Pool-scoped capacity reservation |
+
+## What is a Pearl-derived wallet?
+
+Pearl is the custodial wallet service that derives each account's Sui wallet. To find the address to fund with WAL and SUI, call `GET /api/v1/account/wallet`. See [What is Pearl?](../json-api/wallet.mdx#what-is-pearl) for how Pearl derives and protects the keys.
