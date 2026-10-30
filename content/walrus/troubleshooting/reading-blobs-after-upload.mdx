@@ -105,3 +105,7 @@ $ walrus read <BLOB_ID> --out <FILE>
 ```
 
 If the CLI confirms the blob is certified but the aggregator still returns `404`, the fix is one of the cache workarounds above, or waiting out the propagation window.
+
+## Aggregator paths for reading a blob
+
+The retry helper and the cache-busting example read blobs through the aggregator endpoint `/v1/blobs/{blob_id}`. Aggregators also serve a blob by its Sui object ID at `/v1/blobs/by-object-id/{blob_object_id}`. The download URLs that the Walrus CLI prints after you store a blob use the object-ID path when the CLI knows the blob object. Otherwise they use the blob-ID path. If your app fetches those URLs right after upload, apply the same retry and cache-busting approach to them.
