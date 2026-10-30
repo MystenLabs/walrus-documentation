@@ -64,3 +64,16 @@ The notebook covers:
 - basic troubleshooting for auth, namespaces, and async remember jobs
 
 The repo copy lives in [`packages/python-sdk-memwal/notebooks/walrus_memory_python_sdk.ipynb`](https://github.com/MystenLabs/MemWal/blob/main/packages/python-sdk-memwal/notebooks/walrus_memory_python_sdk.ipynb).
+
+## Choose the relayer environment
+
+The notebook selects `staging` for test credentials. In your own project, pass `env` to the SDK to choose the relayer:
+
+| `env` | Relayer URL |
+| --- | --- |
+| `prod` | `https://relayer.memory.walrus.xyz` |
+| `staging` | `https://relayer.dev.memwal.ai` |
+
+An explicit `server_url` always takes precedence, including the hosted default. `env` applies only when you omit `server_url` (`None`), and an unknown preset raises `ValueError`.
+
+Accounts and delegate keys are specific to each network. A key you create on staging does not authenticate against the production relayer, and the reverse is also true. Match the relayer environment to where you created your account.
