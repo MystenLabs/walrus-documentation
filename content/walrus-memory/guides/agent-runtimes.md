@@ -142,3 +142,11 @@ Walrus Memory does not do the following. A design that assumes otherwise does no
 3. Walrus charges storage in WAL. Your agent neither holds nor spends it when a relayer fronts that cost.
 
 To link an EVM contract to a memory account, model the mapping in your own application: store it in your contract or database, and have your agent present the matching delegate key. For how the embed, store, and recall loop works underneath, see [How AI Agent Memory Works](/walrus-memory/fundamentals/concepts/how-agent-memory-works).
+
+## Timestamp format and clock drift
+
+The `{timestamp}` field in the canonical message is the same string you send in `x-timestamp`: Unix time in whole seconds, written as a decimal integer. The relayer accepts a timestamp within ±300s (5 minutes) of its own clock. A millisecond value always falls outside that window, so every request returns 401 and the relayer sets `ERR_TIMESTAMP_OUT_OF_BOUNDS` on the `x-auth-error` header. Keep the agent's clock synchronized, and use a fresh timestamp and nonce for each request.
+
+## Build the Seal session header
+
+The `x-seal-session` value is a base64-encoded JSON object holding an exported Seal `SessionKey` with these fields: `address`, `packageId`, `mvrName`, `creationTimeMs`, `ttlMin`, `personalMessageSignature`, and `sessionKey`. The relayer decodes the header, parses the JSON, and passes it to `SessionKey.import`, so your client must produce exactly that shape. The TypeScript SDK signs the session with the delegate key, scopes it to a single `packageId` that it reads from the relayer's public `/config` endpoint, and gives it a 5-minute TTL. Use the SDK's `buildSealSession` method as the reference implementation when you port this flow to another language.
