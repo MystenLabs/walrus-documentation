@@ -679,3 +679,11 @@ Lists all registered apps in tab-separated format.
 ID	NAME	CONTACT_EMAIL
 550e8400-e29b-41d4-a716-446655440000	my-app	admin@example.com
 ```
+
+## What is Pearl?
+
+Pearl is the custodial wallet service behind every Oyster account. References on this page to the Pearl-derived wallet or the Pearl-managed sender mean that per-account wallet. See [What is Pearl?](wallet.mdx#what-is-pearl) for how Pearl derives and protects the keys.
+
+## List accounts
+
+Use `GET /api/v1/accounts` with admin-key authentication to list the accounts your app manages, together with the number of active API keys on each account. Use this endpoint to look up an `account_id` after you create an account.
