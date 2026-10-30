@@ -113,3 +113,7 @@ redirect URI on a development OAuth client and set
   (`admin_key.issued_via_web` and `admin_key.revoked_via_web`).
 - `closed` mode is the abuse kill-switch: it stops new signups without
   affecting existing users' sign-in or their keys.
+
+## How does an approved user know to sign in again?
+
+Because Oyster sends no approval email, the waitlist pages tell the user what to do next. The **Request received** page, and the **Still in review** page that a pending user sees on any later sign-in, both ask the user to sign in again once you approve them. Each signup request records the email address that Google attested at request time. You can use that address to tell the person yourself, through any channel you choose. A user whose request you reject sees a **Request declined** page on their next sign-in.
