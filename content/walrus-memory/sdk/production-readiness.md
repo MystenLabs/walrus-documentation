@@ -217,3 +217,7 @@ if (result.results.length === 50) {
 - [MemWalManual](/walrus-memory/sdk/usage/memwal-manual): client-managed encryption and key custody
 - [Troubleshooting](/walrus-memory/troubleshooting/overview): auth, timeout, and read-after-write symptoms
 - [Public relayer](/walrus-memory/relayer/public-relayer): managed Mainnet and Testnet endpoints
+
+## Configure request timeouts
+
+Set `requestTimeoutMs` in the `MemWalConfig` object that you pass to `MemWal.create`, alongside `key`, `accountId`, and `serverUrl`. The client reads it once at construction. A non-positive or non-finite value does not disable the deadline: the client ignores it and uses the default instead. The same configuration object also accepts `recallTimeoutMs` and `preflightTimeoutMs`, which set separate deadlines for recall and preflight requests.
