@@ -404,3 +404,7 @@ Not at the time of writing. Plans exist for a staking app surface for slashing o
 - Move source: `contracts/walrus/sources/slashing.move` in the [Walrus repository](https://github.com/MystenLabs/walrus).
 - Related: [Commission and Governance](/docs/operator-guide/storage-nodes/commission-governance), which covers the `governance_authorized` setup and the parallel contract upgrade voting flow.
 - Sui PTB reference: see the [Sui developer documentation](https://docs.sui.io/concepts/transactions/prog-txn-blocks) for `sui client ptb` syntax.
+
+## How does a vote handle an invalid candidate node ID?
+
+`vote_for_slashing` does not check that the candidate node ID belongs to an existing `StakingPool`. The function runs the authorization check (`ENotAuthorized`) and reads voting weight only for your voter node ID. It uses the candidate ID only as the key of the proposal in the `SlashingManager` table. If you pass a mistyped or nonexistent candidate ID, the vote does not abort. Instead, it creates or adds weight to a proposal for that ID, and the intended node never receives your vote. Verify the candidate node ID against the staking app or `walrus info all` before you submit.
