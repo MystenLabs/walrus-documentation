@@ -107,3 +107,23 @@ sui move build
 sui move test
 sui client publish --skip-dependency-verification
 ```
+
+## Reuse a storage resource for a new blob
+
+To reuse the `Storage` resource that `delete_blob` returns, pass it to `register_blob` in the `walrus::system` module. The function consumes the storage resource and returns a new `Blob`:
+
+```move
+public fun register_blob(
+    self: &mut System,
+    storage: Storage,
+    blob_id: u256,
+    root_hash: u256,
+    size: u64,
+    encoding_type: u8,
+    deletable: bool,
+    write_payment: &mut Coin<WAL>,
+    ctx: &mut TxContext,
+): Blob {
+```
+
+The `size` argument is the unencoded blob size. The reserved space in `storage` must be at least the size of the encoded blob. Registration still takes a `Coin<WAL>` for the write payment, even when you supply your own storage resource.
