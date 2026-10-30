@@ -48,11 +48,11 @@ answer: >-
   prompt="Estimate the cost of storing 50 GB on Mainnet for a year in both WAL and SUI. Break out the write fee, encoding overhead, and per-blob costs separately, then verify the estimate with a dry run."
 />
 
-When choosing a platform to store and verify data, you should consider reliability, uptime, availability, programmability, and price predictability. Walrus offers a fixed, USD-denominated storage cost of **$0.023/GB/month**, allowing you to budget and scale with confidence.
+When choosing a platform to store and verify data, you should consider reliability, uptime, availability, programmability, and price predictability. Walrus offers a fixed, USD-denominated storage cost of **\$0.023/GB/month**, allowing you to budget and scale with confidence.
 
 ## How much does Walrus storage cost?
 
-Walrus storage costs a fixed **$0.023/GB/month**, billed on each blob's encoded size: the erasure-coded size of the blob, about 4.5x the original, plus a fixed 64 MB of metadata per blob. For example, keeping a 50 GB file for 1 year costs roughly $62. You pay for storage in WAL and for Sui transactions in SUI. To get a figure for your data, use the [Walrus Cost Calculator](https://costcalculator.wal.app/) or [estimate the cost by hand](#estimate-cost-by-hand).
+Walrus storage costs a fixed **\$0.023/GB/month**, billed on each blob's encoded size: the erasure-coded size of the blob, about 4.5x the original, plus a fixed 64 MB of metadata per blob. For example, keeping a 50 GB file for 1 year costs roughly \$62. You pay for storage in WAL and for Sui transactions in SUI. To get a figure for your data, use the [Walrus Cost Calculator](https://costcalculator.wal.app/) or [estimate the cost by hand](#estimate-cost-by-hand).
 
 ## How to estimate storage costs
 
@@ -78,7 +78,7 @@ For command-line estimates, run `walrus info` to view current storage prices and
 
 ## How does Walrus pricing work?
 
-You pay for storage on Walrus in WAL, but Walrus prices it at a fixed rate of **$0.023/GB/month**. The amount of WAL required adjusts automatically as the WAL token price changes.
+You pay for storage on Walrus in WAL, but Walrus prices it at a fixed rate of **\$0.023/GB/month**. The amount of WAL required adjusts automatically as the WAL token price changes.
 
 Walrus measures storage duration in epochs. On Mainnet, 1 epoch lasts 2 weeks.
 
@@ -136,9 +136,9 @@ Measured runs agree with the shape of that estimate. The [cost comparison table]
 
 The advantage narrows as files grow, because the per-blob overhead stops dominating: the same table shows 13x at 1 MiB per file. To decide whether to batch a specific workload, work through the [decision guide](/docs/system-overview/quilt#how-to-choose-between-a-quilt-and-a-regular-blob).
 
-## What do you get for $0.023/GB/month?
+## What do you get for \$0.023/GB/month?
 
-At $0.023 per GB per month, Walrus is in line with centralized storage providers but includes additional capabilities and lower configuration requirements.
+At \$0.023 per GB per month, Walrus is in line with centralized storage providers but includes additional capabilities and lower configuration requirements.
 
 #### Built-in redundancy
 
