@@ -180,3 +180,11 @@ SDK `recall` returns cosine **distance** (lower = more similar), and `maxDistanc
 ### How do I check whether the service is reachable?
 
 Run `memwal_health`. It does not require authentication, so it separates the question of whether the relayer is reachable from whether your credentials are valid.
+
+## Tune the remember wait budget
+
+`MEMWAL_MCP_REMEMBER_WAIT_MS` sets how long, in milliseconds, `memwal_remember` waits for the Walrus write to land before it returns a `job_id`. The default is `0`, which returns at accept (about 1 second). The MCP server reads the value once per process.
+
+When the variable is unset or empty, the server uses the default. When the value is not a number or is negative, the server logs `remember.wait_budget_invalid` and uses `0`. When the value exceeds the server's maximum, the server logs `remember.wait_budget_clamped` and uses the maximum instead.
+
+Set `90000` to wait for `blob_id`. Do not choose a value between `0` and the real completion time, because the call pays the wait and still returns pending.
