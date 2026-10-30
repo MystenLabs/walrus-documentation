@@ -127,3 +127,17 @@ Every protected API call goes through Ed25519 signature verification:
 ## Current status
 
 This describes the current production model. The trust boundaries continue to evolve: future versions might introduce client-side encryption by default or additional verifiability layers. Self-hosting remains the strongest option for teams that need full control today.
+
+## How the account ID is signed
+
+The final `account_id` field in the signed message holds the value of the `x-account-id` header. The relayer rebuilds the canonical message from that header before it verifies the signature, so an intermediary cannot swap the account hint without invalidating the request. Official SDKs always send `x-account-id`. If a raw client omits the header, it must sign the empty string in the final `account_id` position. The relayer rejects a cold delegate key with no account ID with `401`.
+
+## Verify a TEE relayer deployment
+
+The reference files in `services/server/deploy/nautilus` are not a complete Nautilus application, and the exact verification steps depend on the Nautilus version you deploy with. To verify a TEE relayer deployment:
+
+1. Record the enclave measurement, platform configuration registers (PCRs), or attestation identity that the build produces.
+2. Register or publish the expected identity through the Nautilus or Sui verification path your deployment uses.
+3. Require clients, gateway policy, or Move-side verification to check that identity before trusting the endpoint.
+
+Local Docker smoke tests do not produce a Nautilus attestation, so they do not prove the relayer runs inside a TEE. Without verification, users still trust that the advertised endpoint is the enclave deployment. See [Nautilus TEE](/walrus-memory/relayer/nautilus-tee) for the full operator guide.
