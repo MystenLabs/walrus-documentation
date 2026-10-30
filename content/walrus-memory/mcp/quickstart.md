@@ -129,3 +129,13 @@ Every recall runs inside one account and namespace. To keep a client's memories 
 3. State a durable fact, for example a package-manager preference, confirm the agent calls `memwal_remember`, then start a fresh session and confirm `memwal_recall` finds it.
 
 If a step fails, run `npx -y @mysten-incubation/memwal-mcp --help` in a terminal to surface the real error, and set `MEMWAL_MCP_DEBUG=1` in the server's environment for verbose logging. The [Claude Code page](/walrus-memory/mcp/claude-code#troubleshooting-faq) carries the full troubleshooting FAQ; the errors apply to every client.
+
+## Antigravity plugin directory
+
+The `degit` command copies the plugin into `~/.gemini/config/plugins/memwal`, which is Antigravity's plugin directory, so the `.gemini` path is correct. The plugin deploys the MCP server and its lifecycle hooks together. Restart Antigravity after you copy it. Antigravity reads `GEMINI.md` and `AGENTS.md` in the project as standing context. See [Antigravity](/walrus-memory/mcp/antigravity) for the MCP-only alternative.
+
+## What is a namespace?
+
+A namespace is a label that groups related memories inside your account. One account holds many namespaces, and recall and restore treat each one as a separate memory space. Recall is scoped per account plus namespace, so recall in one namespace never returns a memory from another. Every client that omits a namespace writes to and recalls from the same `default` space, so memories one client saves there are visible to the others.
+
+Choose namespaces before you write at scale. Recall and restore match a namespace exactly, so splitting or merging memories across namespaces later means rewriting them. Namespaces organize data, but they are not an onchain authorization boundary. Use separate Walrus Memory accounts when you need cryptographic isolation.
