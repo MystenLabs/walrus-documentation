@@ -14,6 +14,16 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
 <TabItem value="mcp" label="MCP" default>
 
+### Walrus Memory MCP v0.0.18
+
+October 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.18)
+
+#### Changes
+
+- [`MEMWAL_AUTO_SAVE` in `process.env` can no longer turn automatic memory on or clear `pendingConsent`. An MCP client populates `env` from `.cursor/mcp.json`, `.vscode/mcp.json`, or `.claude/settings.json` inside the checkout, so a truthy `MEMWAL_AUTO_SAVE` in `env` could flip automatic saving on over a stored `autoSave: false` (reporting `enabled: true` alongside `state: "off"`) or bypass the consent prompt on an unanswered install. Both the MCP server and the plugin hooks now honour only a disabling override (`MEMWAL_AUTO_SAVE=0`) from `env`, keep `state` and `enabled` consistent, and preserve `pendingConsent: true` until a stored answer exists in `~/.memwal/settings.json`.](https://github.com/MystenLabs/MemWal/pull/995)
+
+---
+
 ### Walrus Memory MCP v0.0.17
 
 October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.17)
@@ -254,6 +264,16 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 </TabItem>
 
 <TabItem value="sdk" label="TypeScript SDK">
+
+### Walrus Memory TypeScript SDK v0.1.12
+
+October 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.12)
+
+#### Changes
+
+- [`withMemWal` bounds the recall query (preserving both head context and tail question/instructions via `strategy: "head-tail"`) to 16,384 UTF-8 bytes and auto-save `analyze()` input to 65,536 UTF-8 bytes without splitting multi-byte UTF-8 codepoints across boundaries, while keeping the full user turn in the language model prompt. User turns exceeding the embedder's 16 KiB limit still inject relevant memories without HTTP 400 errors, and auto-save extracts facts across turns up to 64 KiB.](https://github.com/MystenLabs/MemWal/pull/1037)
+
+---
 
 ### Walrus Memory TypeScript SDK v0.1.11
 
