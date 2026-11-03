@@ -23,6 +23,7 @@
         "docs:audit:summary": "node src/scripts/audit-docs.mjs --summary",
         "docs:audit:failures": "node src/scripts/audit-docs.mjs --only-failures --summary",
         "test:markdown": "node scripts/test-markdown-export.js",
+        "test:agent-traffic": "node --test src/scripts/test-agent-traffic.mjs",
         "write-translations": "docusaurus write-translations",
         "write-heading-ids": "docusaurus write-heading-ids",
         "gen:oyster-sidebar": "node src/scripts/generate-oyster-sidebar.js",
