@@ -39,7 +39,9 @@ The Walrus Memory MCP package exposes MCP tools, CLI flags, environment variable
 
 The MCP server exposes **eight tools**: six **relayer tools** (memory operations plus a health check) and two **session tools** served locally by the stdio package. For the lifecycle hooks that drive these tools automatically, see [Claude Code](/walrus-memory/mcp/claude-code) or [Codex](/walrus-memory/mcp/codex).
 
-## First-run behavior
+In addition to these eight, a current sidecar advertises `memwal_remember_status`, which settles a pending remember job. See [Settle a remember job with `memwal_remember_status`](#settle-a-remember-job-with-memwal_remember_status).
+
+## What happens on first run? {#first-run-behavior}
 
 When the stdio package finds no credentials file (see [Credential locations](#credential-locations)), it does **not** exit immediately if an MCP host launched it.
 
@@ -99,6 +101,8 @@ Extract memorable facts from a longer passage of text (preferences, habits, biog
 
 Re-index a namespace from Walrus blobs back into the relayer's search index. Returns counts (`restored` / `skipped` / `total`) plus `truncated`, and does **not** return memory texts. Call `memwal_recall` afterwards to query the rebuilt index.
 
+When a call returns `truncated=true`, call `memwal_restore` again to continue the restore. For example, with the default `limit` of `10` and more than 10 missing blobs, the call returns `truncated=true`.
+
 `truncated=true` means this restore is **known-retryable-incomplete**: more missing blobs than `limit` allowed this call to restore, **or** the sidecar's owner-wide candidate fetch hit its cap **and** raising `limit` can still expand that fetch (`limit < 20`). Once the sidecar cap is saturated (`limit >= 20`, cap pinned at 100), truncation follows this call's missing-blob page length, not onchain `total`. A fully restored namespace does not loop. `truncated=false` is **not** proof the sidecar saw every onchain blob; blobs beyond the owner-wide sidecar candidate cap can still be missing. WALM-451 tracks a `sourceCapped` field for that case ([WALM-451](https://linear.app/mysten-labs/issue/WALM-451)). Relayers older than WALM-319 omit `truncated`; SDKs default it to `false`.
 
 | **Parameter** | **Type** | **Required** | **Description** |
@@ -156,7 +160,7 @@ Approving decides which file the package writes as well as which it reads. From 
 
 `MEMWAL_CREDS_DIR` overrides project resolution entirely and needs no approval. Because it skips the gate it must be an **absolute path outside the current project**, and the package refuses anything else with an error rather than ignoring it: a relative value resolves against the working directory, which would put the credentials and the approval record inside the repository, and an MCP client hands this process the `env` block it reads from `.cursor/mcp.json`, `.vscode/mcp.json`, or `.claude/settings.json` in the checkout, where editors expand `${workspaceFolder}`, so an in-project absolute path is not evidence you set it. An empty value means unset.
 
-### Working on several accounts
+### How to use several accounts {#working-on-several-accounts}
 
 Without a project-local file, every project on the machine shares one credential. Signing in from one project silently repoints the others at a different account and delegate key, and memories written in that state land on the wrong account, on immutable storage, with no delete path.
 
@@ -194,7 +198,7 @@ Signing in as a **different** account than the one already saved:
 
 Re-signing in as the **same** account (a label change, a rotated delegate key) overwrites in place without a backup.
 
-### Recovery
+### How to recover a replaced credential {#recovery}
 
 To restore a replaced credential, copy the backup back over the live file:
 
@@ -223,6 +227,7 @@ The stdio package accepts CLI flags and environment variables. **CLI takes prece
 | `--logout` | Not applicable | Delete the credentials file currently in use and exit. |
 | `approve-project` | Not applicable | Approve the project-local `.memwal/credentials.json` found from the current directory, so the package uses that file here. Requires an interactive terminal. See [Approving a project file](#approving-a-project-file). |
 | `revoke-project` | Not applicable | Withdraw that approval. Requires an interactive terminal. |
+| `auto-save on\|off` | Not applicable | Turn automatic memory on or off. This changes the standing answer that `memwal-mcp login` asks for once, which decides whether the agent calls `memwal_remember` proactively. |
 | `--help`, `-h` | Not applicable | Print usage and exit. |
 
 Set `MEMWAL_MCP_DEBUG=1` to enable verbose stderr logging.
@@ -362,7 +367,7 @@ Unlike the explicit-header and stdio flows, the OAuth path has the relayer gener
 
 To add the connector in Claude, paste the relayer's MCP URL as the connector URL. Claude handles discovery, registration, and consent from there.
 
-### When to prefer HTTP vs stdio
+### Should you use stdio or Streamable HTTP? {#when-to-prefer-http-vs-stdio}
 
 Prefer **stdio** when:
 
@@ -495,7 +500,7 @@ The relayer computes these, so they need no configuration.
 | `MCP_OAUTH_REGISTRATION_PER_HOUR_PER_IP` | `20` | DCR rate limit |
 | `MCP_OAUTH_REGISTRATION_TRUSTED_CIDRS` | `160.79.104.0/21` | Networks exempt from the per-IP registration throttle. Requests from other addresses still register when the redirect URI passes the allowlist and they stay inside the rate limit. The default is Anthropic's documented connector egress range. |
 
-## Logout semantics
+## What does logout remove? {#logout-semantics}
 
 `memwal_logout` and `--logout` only delete local credentials from this machine.
 
@@ -534,7 +539,7 @@ Someone revoked your delegate key from the dashboard, or your saved credentials 
 
 Set `MEMWAL_MCP_DEBUG=1` in the client's MCP server config `env` block (or in your terminal) to dump structured stderr logs covering credential loading, bridge connection, and per-request flow.
 
-## Remember wait time
+## How long does `memwal_remember` wait? {#remember-wait-time}
 
 `MEMWAL_MCP_REMEMBER_WAIT_MS` sets how long `memwal_remember` waits for the Walrus write to finish before it replies. The default is 0: the tool returns at accept with a `job_id`, before the memory is stored. You can raise the value up to the tool's `MAX_REMEMBER_WAIT_MS` cap. The stdio package gives `memwal_remember` a 90_000 ms deadline to match that cap. Setting `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` makes the tool wait for `blob_id`. This requires a client that raises the 60s `tools/call` ceiling.
 
