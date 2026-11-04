@@ -12,6 +12,7 @@ keywords:
   - rememberManual
   - recallManual
   - research app pattern
+  - embed
 goal:
   description: Run working SDK examples for storing, recalling, analyzing, and using AI middleware, and adapt them as starting points for your own integration.
   requires:
