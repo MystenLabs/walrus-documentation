@@ -20,7 +20,7 @@ long-lived per-app **admin keys**, and **end users** authenticate data
 operations with API keys. Both tiers use `Authorization: Bearer <hex>`;
 the route prefix selects which credential table Oyster consults.
 
-In this guide, the bucket and blob steps use an end-user API key, and the sections marked (operator) use an admin key. Blob downloads through the JSON API need no credential.
+In this guide, the JSON API bucket and blob steps use an end-user API key, the operator sections use an admin key, and the AWS CLI steps use S3 access keys. Blob downloads through the JSON API need no credential.
 
 ### For operators
 
