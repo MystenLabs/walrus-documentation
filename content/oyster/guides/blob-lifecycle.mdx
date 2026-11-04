@@ -220,7 +220,7 @@ Upload → Active → Pool Approaching Expiry → Pool Extended → Active → .
 | State | Description |
 |-------|-------------|
 | **Active** | Blob is registered in a pool with `pool_end_epoch > current_epoch` |
-| **Pool Approaching Expiry** | `pool_end_epoch < current_epoch + POOL_EXTEND_LOOKAHEAD_EPOCHS`; the worker claims and extends |
+| **Pool Approaching Expiry** | `pool_end_epoch < current_epoch + POOL_EXTEND_LOOKAHEAD_EPOCHS`; the worker claims and extends. No webhook is sent on entering this state. The worker sends `account.funding_required` only when it finds that the wallet cannot cover the extension cost (see [Webhooks](webhooks.mdx)) |
 | **Pool Extended** | `extend_storage_pool` PTB succeeded; `pool_end_epoch` advanced |
 | **Funding Required** | PTB failed insufficient-funds; webhook fired; cooldown TTL active |
 
