@@ -46,7 +46,7 @@ You already have memory on this machine: facts an agent saved locally, standing 
 
 Connect Walrus Memory in the client first, and sign in, so the upload and the later recall use the same account. See [MCP](/walrus-memory/mcp/overview) for Claude Code, Codex, Cursor, and Antigravity.
 
-## What should you copy?
+## What should you copy? {#what-to-copy}
 
 Treat the 3 sources differently. Recall works best on short, self-contained facts.
 
@@ -64,7 +64,7 @@ Write into the namespace your client already uses. With no `MEMWAL_NAMESPACE` an
 The MCP tools strip obvious credentials before a write. Treat that as a last check, not a guarantee. The SDK stores the string you pass, and `analyze` sends that string to the relayer's model. Read each passage before an SDK upload, and leave out passwords, API keys, tokens, private keys, and seed phrases.
 :::
 
-## Where are the local memory files?
+## Where are the local memory files? {#where-the-files-are}
 
 The following paths are the ones these clients write on a developer machine. Each client encodes the project directory by turning `/` into `-`. Claude Code turns the leading `/` into a leading `-`, so `/Users/me/app` becomes `-Users-me-app`. Cursor drops the leading slash, so the same path becomes `Users-me-app`. A folder named `empty-window` is a Cursor window with no project open. Transcripts for a project stay under its encoded path.
 
@@ -103,16 +103,16 @@ $ npx degit MystenLabs/MemWal/packages/mcp/plugin ~/.gemini/config/plugins/memwa
 
 See [Antigravity](/walrus-memory/mcp/antigravity).
 
-## How to upload with the agent
+## How to upload with the agent {#ask-the-agent-to-upload}
 
-Once `memwal_remember_bulk` and `memwal_analyze` are available, paste this into the client that already holds the session. The agent can see the current conversation, and it can read the files listed in [Where are the local memory files?](#where-are-the-local-memory-files).
+Once `memwal_remember_bulk` and `memwal_analyze` are available, paste this into the client that already holds the session. The agent can see the current conversation, and it can read the files listed in [Where are the local memory files?](#where-the-files-are).
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/import-existing-memory.md" target="_blank" className="code-source-link">Source: guides/import-existing-memory.md</a>
 
 ```text
 Import my existing memory into Walrus Memory. Use the namespace this client already recalls from.
 
-1. Local memory. Read the memory files for this project (Claude: ~/.claude/projects/<encoded-cwd>/memory/*.md except MEMORY.md; Codex: the raw_memory column of table stage1_outputs in ~/.codex/memories_1.sqlite; Cursor: .cursor/rules and user rules). Send each Claude memory file body through memwal_analyze, one call per chunk of at most 64 KiB. A Codex raw_memory value, or a Cursor rule you have already reduced to one statement, goes through memwal_remember_bulk, at most 20 per call. Wait for that call to finish before the next.
+1. Local memory. Read the memory files for this project (Claude: ~/.claude/projects/<encoded-cwd>/memory/*.md except MEMORY.md; Codex: raw_memory rows in ~/.codex/memories_1.sqlite; Cursor: .cursor/rules and user rules). Send each Claude memory file body through memwal_analyze, one call per chunk of at most 64 KiB. A Codex raw_memory value, or a Cursor rule you have already reduced to one statement, goes through memwal_remember_bulk, at most 20 per call. Wait for that call to finish before the next.
 2. Standing context. Read CLAUDE.md, AGENTS.md, GEMINI.md, and Cursor rules. Extract only durable preferences, decisions, constraints, and identity details. Upload those with memwal_remember_bulk, one statement per entry. Leave tool instructions and repo conventions in the files.
 3. This session and other recent sessions I name. Keep only the user and assistant text. Claude: message.content text, not tool_use, tool_result, or thinking. Codex: input_text and output_text. Cursor: message.content blocks of type text. Extract durable facts from that text with memwal_analyze, one call per chunk of at most 64 KiB. This tool has no session-time parameter, so include the date in the fact when it matters. Skip one-off tasks, the current bug, and small talk.
 4. Skip anything that looks like a secret.
@@ -120,9 +120,9 @@ Import my existing memory into Walrus Memory. Use the namespace this client alre
 6. Do not run this import a second time. memwal_remember_bulk has no idempotency key, so a second run stores each fact again. memwal_analyze collapses onto a stored fact only when the new sentence is identical.
 ```
 
-`memwal_remember_bulk` takes 1 to 20 strings. `memwal_analyze` takes one passage of at most 64 KiB and saves each extracted fact as its own memory. It does not accept a session time. The SDK `analyze` call does, through `occurredAt`, as described in [How to batch upload with the SDK](#how-to-batch-upload-with-the-sdk). See [MCP Reference](/walrus-memory/mcp/reference) for the parameters.
+`memwal_remember_bulk` takes 1 to 20 strings. `memwal_analyze` takes one passage of at most 64 KiB and saves each extracted fact as its own memory. It does not accept a session time. The SDK `analyze` call does, through `occurredAt`, as described in [How to batch upload with the SDK](#batch-upload-with-the-sdk). See [MCP Reference](/walrus-memory/mcp/reference) for the parameters.
 
-## How to batch upload with the SDK
+## How to batch upload with the SDK {#batch-upload-with-the-sdk}
 
 Use the SDK when you want to run the copy yourself. `analyze` is for a Claude memory file and for a transcript: the relayer extracts facts, then stores each one. `rememberBulk` is only for text you have already reduced to one statement per item, at most 20 items per call. `analyze` accepts at most 64 KiB and returns at most 20 facts per call, so walk a long passage in chunks of about 60,000 bytes. A dense chunk can still drop facts past that cap of 20.
 
@@ -367,6 +367,6 @@ Open a new session and ask for something only the imported fact would answer. Wh
 
 The SDK sample imports from `@mysten-incubation/memwal`, the published npm package for the Walrus Memory SDK. Install it with its required peers `@mysten/sui` and `@mysten/seal`, for example `npm install @mysten-incubation/memwal @mysten/sui @mysten/seal`. The default `MemWal` client imports those peers on `recall()` to build the Seal session.
 
-## What unit are call costs in?
+## What unit are call costs in? {#unit-of-call-costs}
 
 The costs in the table are points. The relayer charges each call a number of points that reflects its computational and storage cost, so a heavy call that extracts and stores facts spends more of the budget than a status poll.
