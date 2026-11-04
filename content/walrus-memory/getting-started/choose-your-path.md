@@ -89,7 +89,7 @@ Go to: [AI Integration](/walrus-memory/sdk/usage/with-memwal)
 
 ## 5. Self-hosted relayer
 
-Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data. This is the self-hosted deployment option of the relayer described in path 2, not a different backend: all paths share the same backend and data layer.
+Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data. Self-hosting is a deployment option of the relayer described in path 2, not a different backend: all paths share the same backend and data layer.
 
 Go to: [Self-Hosting](/walrus-memory/relayer/self-hosting)
 

@@ -51,7 +51,7 @@ The Walrus Memory contract emits the following events:
 | `AccountCreated` | A new account is created | `account_id`, `owner` |
 | `DelegateKeyAdded` | A delegate key is added | `account_id`, `public_key`, `sui_address`, `label` |
 | `DelegateKeyRemoved` | A delegate key is removed | `account_id`, `public_key` |
-| `AccountDeactivated` | An account is frozen | `account_id`, `owner` |
+| `AccountDeactivated` | An account's `active` flag changes to false (owner `deactivate_account`, or `admin_deactivate_account` when the account was still active) | `account_id`, `owner` |
 | `AccountReactivated` | A frozen account is unfrozen | `account_id`, `owner` |
 | `AccountQuarantined` | Admin containment is applied | `account_id`, `owner` |
 | `AccountQuarantineCleared` | Admin containment is released | `account_id`, `owner` |
@@ -65,7 +65,7 @@ The indexer currently targets the `AccountCreated` event flow as its primary syn
 Owner deactivation and Admin quarantine use separate flags on the account. `AccountDeactivated` reports that the `active` flag changed to false. Two calls emit it:
 
 - The owner calls `deactivate_account`. The call aborts if the account is already deactivated.
-- An AdminCap holder calls `admin_deactivate_account`. This sets the `admin_quarantined` flag and emits `AccountQuarantined`. It also emits `AccountDeactivated`, but only if the account was still active.
+- An AdminCap holder calls `admin_deactivate_account`. If the account is not already quarantined, this sets the `admin_quarantined` flag and emits `AccountQuarantined`, and also emits `AccountDeactivated` if the account was still active. A repeat call on a quarantined account returns without emitting events.
 
 While quarantine is active, the owner cannot reactivate the account. `admin_clear_quarantine` releases quarantine without reactivating the account. The account stays frozen until the owner calls `reactivate_account`.
 
