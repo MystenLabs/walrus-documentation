@@ -50,7 +50,7 @@ curl -s \
 
 You provision API keys through the Admin API (see
 [Admin](admin.mdx)). Oyster shows the full secret **only once** at
-creation time. You cannot recover a lost key.
+creation time. You cannot recover a lost key: to replace one, issue a new key through the Admin API key-management routes under `/accounts/{id}/...`, which are authenticated with the app's admin key (see [Admin](admin.mdx)).
 
 ### Errors
 

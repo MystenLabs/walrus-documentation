@@ -35,7 +35,7 @@ not count toward this limit.
 
 ## Use an access key with the AWS CLI
 
-The AWS CLI and SDKs handle SigV4 signing automatically, so you provide only your access key ID and secret. To use the AWS CLI, create a profile that stores your key pair and points `endpoint_url` at your Oyster deployment:
+The AWS CLI and SDKs handle SigV4 signing automatically, so you provide only your access key ID and secret. To use the AWS CLI, create a profile that stores your key pair and points `endpoint_url` at your Oyster deployment. Replace the placeholder values below with your own key pair: the access key ID is 20 characters with an `OYAK` prefix, and the secret access key is 40 hex characters, shown only once at creation:
 
 ```bash
 $ aws configure set aws_access_key_id "OYAK1234567890ABCDEF" --profile oyster
