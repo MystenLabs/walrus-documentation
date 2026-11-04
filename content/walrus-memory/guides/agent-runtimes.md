@@ -133,7 +133,7 @@ Confirm the agent reaches the relayer before you debug signing, using the unauth
 $ curl -sS "$MEMWAL_RELAYER_URL/health"
 ```
 
-## Does Walrus Memory support cross-chain agents?
+## What cross-chain support does not include
 
 Walrus Memory does not do the following. A design that assumes otherwise does not work:
 
