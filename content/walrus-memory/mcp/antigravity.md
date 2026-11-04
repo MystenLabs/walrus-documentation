@@ -111,7 +111,7 @@ The tool descriptions tell the agent to save and recall proactively. See [Refere
 
 ## How to verify the connection
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`. To confirm that the fact persists, ask the agent to recall it and check that `memwal_recall` returns it. If recall returns nothing, ask the agent to run `memwal_health` to check connectivity.
+Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`. To confirm that the fact persists, ask the agent to check the save with `memwal_remember_status`, then recall it and check that `memwal_recall` returns it. If the status never completes, ask the agent to run `memwal_health` to check connectivity.
 
 ## Troubleshooting
 
