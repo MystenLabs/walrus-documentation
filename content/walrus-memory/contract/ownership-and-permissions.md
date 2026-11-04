@@ -60,9 +60,9 @@ Delegates **cannot**:
 
 ## How does Seal access control work?
 
-The contract's `seal_approve` function is the Seal policy that controls who can decrypt memories. Every key ID must end with `BCS(owner_address) ‖ BCS(access_counter_version)`, the owner's 32 bytes followed by the account's 8-byte little-endian rotation counter. Anything might precede that tail; the SDK puts a namespace there. A key ID has this layout, in order:
+The contract's `seal_approve` function is the Seal policy that controls who can decrypt memories. Every key ID ends with the owner's address followed by the account's rotation counter. A key ID has this layout, in order:
 
-- Prefix: any bytes (the SDK uses the namespace)
+- Prefix: any bytes (the SDK uses the UTF-8 bytes of the namespace)
 - `BCS(owner_address)`: 32 bytes
 - `BCS(access_counter_version)`: 8 bytes, little-endian
 
@@ -82,7 +82,7 @@ Seal derives one reusable key per identity, and a holder decrypts with that key 
 
 Two rules follow, and clients must respect both:
 
-- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable only for callers who still pass the authorization check, the account owner and addresses still in `delegate_keys`, so owners keep access to their history. A removed delegate can no longer get `seal_approve` to approve any request, at an older counter or the current one, but revocation does not revoke a key they already fetched: that copy stays in their hands and still decrypts memories written under the counter it covers; retracting those requires re-encryption.
+- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable for callers who still pass the authorization check (the account owner and any Sui address still registered in `delegate_keys`), so owners keep access to their history. A removed delegate cannot get `seal_approve` to approve any request, at an older counter or the current one. Removal does not revoke a key the delegate already fetched: that copy still decrypts memories written under the counter it covers, and retracting those requires re-encryption.
 - **Read the counter fresh from chain immediately before encrypting**, never cache it, never accept it from a request body. Encrypting under a stale counter hands the data straight back to the delegate you just removed.
 
 Rotation is forward-only: memories already written under an older counter stay readable with the older key. Retracting those requires re-encryption.
@@ -99,7 +99,7 @@ These are separate layers that work together:
 
 The relayer verifies every request against the onchain contract before executing any operation. Even if the relayer is compromised, it cannot forge delegate permissions or change ownership, those are cryptographically enforced onchain.
 
-## What happens to fetched keys when you freeze an account
+## What happens to fetched keys when you freeze an account?
 
 Freezing stops `seal_approve` from approving any new key request, for owners and delegates alike. It does not revoke keys that a caller already fetched. Seal keys are reusable, and a holder decrypts with them without calling `seal_approve` again. A key fetched before the freeze keeps decrypting memories written under the counter it covers.
 
