@@ -41,7 +41,7 @@ The MCP server exposes **eight tools**: six **relayer tools** (memory operations
 
 In addition to these eight, a current sidecar advertises `memwal_remember_status`, which settles a pending remember job. See [Settle a remember job with `memwal_remember_status`](#settle-a-remember-job-with-memwal_remember_status).
 
-## What happens on first run?
+## What happens on first run? {#first-run-behavior}
 
 When the stdio package finds no credentials file (see [Credential locations](#credential-locations)), it does **not** exit immediately if an MCP host launched it.
 
@@ -160,7 +160,7 @@ Approving decides which file the package writes as well as which it reads. From 
 
 `MEMWAL_CREDS_DIR` overrides project resolution entirely and needs no approval. Because it skips the gate it must be an **absolute path outside the current project**, and the package refuses anything else with an error rather than ignoring it: a relative value resolves against the working directory, which would put the credentials and the approval record inside the repository, and an MCP client hands this process the `env` block it reads from `.cursor/mcp.json`, `.vscode/mcp.json`, or `.claude/settings.json` in the checkout, where editors expand `${workspaceFolder}`, so an in-project absolute path is not evidence you set it. An empty value means unset.
 
-### How to use several accounts
+### How to use several accounts {#working-on-several-accounts}
 
 Without a project-local file, every project on the machine shares one credential. Signing in from one project silently repoints the others at a different account and delegate key, and memories written in that state land on the wrong account, on immutable storage, with no delete path.
 
@@ -198,7 +198,7 @@ Signing in as a **different** account than the one already saved:
 
 Re-signing in as the **same** account (a label change, a rotated delegate key) overwrites in place without a backup.
 
-### How to recover a replaced credential
+### How to recover a replaced credential {#recovery}
 
 To restore a replaced credential, copy the backup back over the live file:
 
@@ -367,7 +367,7 @@ Unlike the explicit-header and stdio flows, the OAuth path has the relayer gener
 
 To add the connector in Claude, paste the relayer's MCP URL as the connector URL. Claude handles discovery, registration, and consent from there.
 
-### Should you use stdio or Streamable HTTP?
+### Should you use stdio or Streamable HTTP? {#when-to-prefer-http-vs-stdio}
 
 Prefer **stdio** when:
 
@@ -500,7 +500,7 @@ The relayer computes these, so they need no configuration.
 | `MCP_OAUTH_REGISTRATION_PER_HOUR_PER_IP` | `20` | DCR rate limit |
 | `MCP_OAUTH_REGISTRATION_TRUSTED_CIDRS` | `160.79.104.0/21` | Networks exempt from the per-IP registration throttle. Requests from other addresses still register when the redirect URI passes the allowlist and they stay inside the rate limit. The default is Anthropic's documented connector egress range. |
 
-## What does logout remove?
+## What does logout remove? {#logout-semantics}
 
 `memwal_logout` and `--logout` only delete local credentials from this machine.
 
@@ -539,7 +539,7 @@ Someone revoked your delegate key from the dashboard, or your saved credentials 
 
 Set `MEMWAL_MCP_DEBUG=1` in the client's MCP server config `env` block (or in your terminal) to dump structured stderr logs covering credential loading, bridge connection, and per-request flow.
 
-## How long does `memwal_remember` wait?
+## How long does `memwal_remember` wait? {#remember-wait-time}
 
 `MEMWAL_MCP_REMEMBER_WAIT_MS` sets how long `memwal_remember` waits for the Walrus write to finish before it replies. The default is 0: the tool returns at accept with a `job_id`, before the memory is stored. You can raise the value up to the tool's `MAX_REMEMBER_WAIT_MS` cap. The stdio package gives `memwal_remember` a 90_000 ms deadline to match that cap. Setting `MEMWAL_MCP_REMEMBER_WAIT_MS=90000` makes the tool wait for `blob_id`. This requires a client that raises the 60s `tools/call` ceiling.
 
