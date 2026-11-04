@@ -53,7 +53,7 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
 </div>
 
 
-### How to install the SDK
+### Install the SDK
 
     <Tabs groupId="pkg-manager">
       <TabItem value="pnpm" label="pnpm">
@@ -130,7 +130,7 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
       </TabItem>
     </Tabs>
 
-  ### How to generate your account ID and delegate key
+  ### Generate your account ID and delegate key
 
     Create a Walrus Memory account ID and delegate private key for your SDK client using one of the hosted endpoints below.
 
@@ -187,7 +187,7 @@ Use the `accountId` **you** generated in the previous step. Recall scope is per 
     await memwal.health();
     ```
 
-  ### How to store and recall your first memory
+  ### Store and recall your first memory
 
     The `remember()` call returns a job. Pass its `job_id` to `waitForRememberJob()` to wait until the job finishes, then call `recall()` to retrieve the memory:
 
