@@ -100,7 +100,7 @@ You can specify whether a newly stored blob is deletable or permanent through th
 - **Permanent:** The blob remains available until its expiry epoch. Not even the uploader can delete it beforehand.
 - **Deletable:** The blob can be deleted at any point during its lifetime by the owner of the corresponding Sui object. See [deletable blobs](/docs/walrus-client/managing-blobs#how-to-delete-blobs) for more details.
 
-Newly stored blobs are deletable by default.
+Newly stored blobs are deletable by default. To make sure no one can delete a blob before its expiry epoch, pass the `--permanent` option.
 
 ## Automatic optimizations
 
