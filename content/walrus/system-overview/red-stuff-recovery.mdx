@@ -84,7 +84,7 @@ To recover the secondary sliver:
 
 1. The node contacts at least 3 other shards to obtain recovery symbols.
 2. Each contacted shard provides the recovery symbol from its primary sliver (highlighted as a row). The recovery symbols are already part of the primary slivers that the other shards store, so no re-encoding is necessary.
-3. Shard 3 decodes the 3 symbols with [erasure decoding](#how-does-shard-3-reconstruct-the-sliver) to obtain its secondary sliver. If the 3 symbols are $s_{0,3}$, $s_{1,3}$, and $s_{2,3}$, they are the symbols of the secondary sliver itself, and shard 3 does not need to decode.
+3. Shard 3 decodes the 3 symbols with [erasure decoding](#how-does-shard-3-reconstruct-the-sliver) to obtain its secondary sliver, unless all 3 are source symbols of that sliver.
 
 For example, shards 0, 1, and 5 provide the recovery symbols $s_{0,3}$, $s_{1,3}$, and $r_{5,3}$, shown in green:
 
