@@ -1,7 +1,23 @@
 ---
 title: "Blobs"
 description: Store, read, list, update, and delete blobs in Oyster buckets, and manage blob tags.
-keywords: [ blobs, buckets, blob ID, ETag, blob tags, upload, download, Oyster ]
+keywords:
+- blobs
+- buckets
+- blob ID
+- ETag
+- blob tags
+- upload
+- download
+- Oyster
+- delete
+- list blobs
+- conditional requests
+- If-Match
+- If-None-Match
+- public access
+- content-addressed
+- blob lifecycle
 ---
 
 Blobs are binary objects stored inside buckets. A user-chosen **key** (like a file path)
@@ -247,7 +263,7 @@ blob ID but not which bucket or key holds it.
 **Example:**
 
 ```bash
-curl -s "$OYSTER_URL/api/v1/blobs/by-blob-id/2cf24dba5fb0a30e..."
+curl -s "$OYSTER_URL/api/v1/blobs/by-blob-id/2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
 ```
 
 **Response** (`200 OK`):
@@ -417,7 +433,7 @@ curl -s -X DELETE \
 | Status | Condition |
 |--------|-----------|
 | `401` | Missing or invalid API key |
-| `402` | Insufficient onchain balance to clear the `PooledBlob`; Oyster leaves the DB row intact for retry |
+| `402` | Pearl-derived wallet lacks the WAL or SUI needed to clear the `PooledBlob` onchain; Oyster leaves the DB row intact so you can fund that wallet and retry the same `DELETE` |
 | `404` | Blob not found |
 | `412` | `If-Match` or `If-None-Match` condition failed |
 
@@ -434,7 +450,7 @@ A `402` carries the same `funding_required` block as the upload path:
 ```
 
 `wal_frost` and `sui_mist` are decimal strings (Pearl-derived
-wallet's owed top-up); inspect your wallet through
+wallet's owed top-up, that is, the amounts you must add before retrying); inspect your wallet through
 [Get Wallet Address](wallet.mdx). When `delete_blob` returns `402`,
 Oyster leaves the DB row intact on purpose so the client can fund the
 Pearl-derived wallet and retry the same `DELETE`. Oyster still swallows other onchain
@@ -620,6 +636,6 @@ curl -s -X DELETE \
 
 **Response:** `204 No Content`
 
-## Content type for reads by blob ID
+## Why does a read by blob ID return `application/octet-stream`?
 
 Reads by blob ID always return `Content-Type: application/octet-stream`, whatever MIME type you set at upload. The endpoint reads only the raw content from the blob store and does not look up any key metadata, so it can't return the original MIME type. The same data produces the same blob ID in any bucket or under any key, so a blob ID is not tied to one key's stored MIME type. To get the MIME type you set at upload, download the blob by bucket and key with `GET /api/v1/buckets/{bucket_name}/blobs/{key}`.
