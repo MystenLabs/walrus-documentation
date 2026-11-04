@@ -110,18 +110,18 @@ Middleware: `with_memwal_langchain`, `with_memwal_openai`
 
 ---
 
-## What is the default namespace?
+## What is the default namespace? {#namespace}
 
 All clients support a default namespace. If you omit it, it falls back to `"default"`.
 
-## Which entry point should you start with?
+## Which entry point should you start with? {#recommended-path}
 
 1. Start with `MemWal` (TypeScript) or `memwal` (Python)
 2. Set a namespace explicitly
 3. Validate `remember`, `recall`, `analyze`, and `restore`
 4. Move to `MemWalManual` only if you need client-managed embeddings and local Seal work
 
-## Which private key formats can you use?
+## Which private key formats can you use? {#private-key-format}
 
 The `key` parameter takes an Ed25519 delegate private key as a string in either of these formats:
 
