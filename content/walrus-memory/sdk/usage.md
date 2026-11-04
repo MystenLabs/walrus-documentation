@@ -31,11 +31,11 @@ answer: >-
   Walrus Memory exposes three entry points: Walrus Memory (recommended default with relayer-handled operations), MemWalManual (client-managed embeddings and SEAL), and withMemWal (Vercel AI SDK middleware). Namespaces can be set per client or per call, and fall back to "default" if omitted.
 ---
 
-Walrus Memory exposes three entry points. Use `MemWal` by default, `MemWalManual` when you need client-managed embeddings and local Seal operations, and `withMemWal` when you already use the Vercel AI SDK and want memory as middleware. A namespace scopes memory. You set it per client or per call, and it falls back to `"default"` if you omit it.
+Walrus Memory exposes 3 entry points.
 
-The main difference between `MemWal` and `MemWalManual` is what the relayer does for you. With `MemWal`, the relayer handles embeddings, Seal encryption, and storage. With `MemWalManual`, your runtime handles embeddings and Seal encryption locally, and the relayer only uploads the resulting ciphertext to Walrus and stores the vector row.
+The main difference between `MemWal` and `MemWalManual` is what the relayer does for you. With `MemWal`, the relayer handles embeddings, Seal encryption, and storage. With `MemWalManual`, your runtime handles embeddings and Seal encryption locally, and the relayer uploads the resulting ciphertext to Walrus, stores the vector row, and runs the vector search on recall.
 
-Compare the three entry points:
+Compare the 3 entry points:
 
 | Entry point | Import | When to use |
 | --- | --- | --- |
