@@ -7,7 +7,7 @@ keywords: [ Oyster, S3, AWS S3, limitations, bucket naming, path-style URLs, con
 Oyster implements the most commonly used S3 operations. Some features and behaviors
 differ from a full AWS S3 deployment.
 
-## Supported vs. not supported
+## Which S3 features does Oyster support? {#supported-vs-not-supported}
 
 | Feature | Status | Notes |
 |---------|--------|-------|
@@ -15,12 +15,12 @@ differ from a full AWS S3 deployment.
 | HeadBucket | Supported | |
 | ListBuckets | Supported | Max 1000, no pagination |
 | DeleteBucket | Supported | Requires empty bucket (same as AWS S3) |
-| PutObject | Supported | Single-part only |
+| PutObject | Supported | Single-part only, max 1GB |
 | GetObject | Supported | |
 | HeadObject | Supported | |
 | DeleteObject | Supported | |
 | ListObjectsV2 | Supported | Prefix, delimiter, pagination |
-| Conditional requests | Supported | If-Match, If-None-Match on object operations |
+| Conditional requests | Supported | If-Match, If-None-Match on PutObject, GetObject, and HeadObject; DeleteObject supports If-Match only |
 | Multipart upload | Not supported | Use single PutObject (max 1GB) |
 | CopyObject | Not supported | Download and re-upload instead |
 | DeleteObjects (batch) | Not supported | Delete one at a time |
@@ -39,7 +39,7 @@ differ from a full AWS S3 deployment.
 | Object Lock and Legal Hold | Not supported | |
 | Lifecycle rules | Not supported | See [Object expiration](#object-expiration) |
 
-## Behavioral differences
+## How does Oyster behave differently from AWS S3? {#behavioral-differences}
 
 ### Object expiration
 
@@ -74,7 +74,7 @@ http://endpoint/bucket-name/key
 ```
 
 Oyster does **not** support virtual-hosted-style URLs (`bucket-name.endpoint/key`).
-Always set `force_path_style: true` in your SDK configuration.
+Always set `force_path_style: true` in your SDK configuration. For full client setup, see [S3 setup](./setup.mdx).
 
 ### No region semantics
 
@@ -96,7 +96,7 @@ concurrent writes (`If-Match` for optimistic locking, `If-None-Match: *`
 for create-only semantics). Oyster does not support time-based conditionals (`If-Modified-Since`,
 `If-Unmodified-Since`).
 
-## Path-style configuration in the Rust SDK
+## How to set path-style URLs in the Rust SDK {#path-style-configuration-in-the-rust-sdk}
 
 In the AWS SDK for Rust (`aws-sdk-s3`), call `force_path_style(true)` on the config builder. The following client configuration also sets the region and endpoint:
 
