@@ -16,3 +16,6 @@ creating new ones.
 
 This protection applies only to bridge replays. If your agent retries a bulk call itself, that retry
 counts as a new call and gets a new key.
+
+The plugin launcher in this release still installs MCP server 0.0.16. Plugin users get the fix from
+v0.0.18.
