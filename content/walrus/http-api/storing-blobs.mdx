@@ -79,7 +79,7 @@ Starting in v1.33, the publisher creates a deletable blob when you pass no query
 
 ```sh
 # Store file `some/file` as a deletable blob:
-$ curl -X PUT "$PUBLISHER/v1/blobs?deletable=true" --upload-file "some/file"
+$ curl -X PUT "$PUBLISHER/v1/blobs" --upload-file "some/file"
 ```
 
 ```sh
@@ -89,7 +89,7 @@ $ curl -X PUT "$PUBLISHER/v1/blobs?permanent=true" --upload-file "some/file"
 
 :::caution
 
-Newly stored blobs are permanent by default; pass `deletable=true` to store a deletable blob. The `newlyCreated` response for a store without query parameters shows `"deletable": false`.
+Passing both `deletable=true` and `permanent=true` returns an `INVALID_BLOB_PERSISTENCE` error.
 
 :::
 
@@ -132,7 +132,7 @@ If successful, the response includes the content stored in the blob's correspond
         "endEpoch": 35,
         "storageSize": 66034000
       },
-      "deletable": false
+      "deletable": true
     },
     "resourceOperation": {
       "registerFromScratch": {

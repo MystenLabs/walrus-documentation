@@ -57,7 +57,7 @@ For transaction timeouts, always check onchain state before retrying. A timed-ou
 
 ## How to retry with exponential backoff
 
-Transient errors such as network timeouts and temporary node unavailability are common in distributed systems. Use exponential backoff to avoid overwhelming the network with retries.
+Transient errors such as network timeouts and temporary node unavailability are common in distributed systems. Use exponential backoff to avoid overwhelming the network with retries. The following example waits `2^attempt` seconds after each failed attempt, so the default of five attempts waits 2, 4, 8, and 16 seconds between attempts.
 
 ```typescript
 async function retryWithBackoff<T>(
@@ -72,9 +72,9 @@ async function retryWithBackoff<T>(
       const isRetryable =
         message.includes('timeout') || message.includes('network');
 
-      if (isRetryable && attempt <= maxRetries) {
+      if (isRetryable && attempt < maxRetries) {
         const delay = Math.pow(2, attempt) * 1000;
-        console.log(`Retry attempt ${attempt}/${maxRetries} after ${delay}ms`);
+        console.log(`Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       } else {
         throw error;
