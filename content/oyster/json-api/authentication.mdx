@@ -7,9 +7,10 @@ keywords: [ authentication, API key, admin key, Bearer token, Oyster, key rotati
 Oyster uses **Bearer tokens** for authenticated routes plus **public access**
 for blob reads and infrastructure probes. There are two tiers of Bearer
 token, distinguished by which routes they unlock; both share the same
-`Authorization: Bearer <hex>` wire format.
+`Authorization: Bearer <hex>` wire format. Admin keys belong to an app, which
+owns the accounts it creates and manages them through admin routes.
 
-## Authentication modes at a glance
+## Which routes need authentication?
 
 | Route pattern | Auth mode | Purpose |
 |---|---|---|
@@ -24,7 +25,7 @@ token, distinguished by which routes they unlock; both share the same
 > (one account per key). Both tokens are 64-character hex; the hash check
 > happens on whichever table the route statically uses.
 
-## Bearer token (API key) authentication
+## How to authenticate with an API key
 
 Include your API key in the `Authorization` header:
 
@@ -58,7 +59,7 @@ creation time. You cannot recover a lost key.
 |---|---|
 | `401 Unauthorized` | Missing, malformed, or invalid API key |
 
-## Admin-key authentication (for apps)
+## How to authenticate with an admin key
 
 Admin endpoints require a per-app **admin key** that the server
 operator issues:
@@ -90,7 +91,7 @@ app's accounts returns **403 Forbidden**:
 { "error": "forbidden: account does not belong to this app" }
 ```
 
-### Rotation
+### How to rotate admin keys
 
 Admin keys do not expire. The recommended pattern is AWS-style two-key
 overlap:
@@ -112,7 +113,7 @@ revoked) so an operator can audit before revoking.
 | `401 Unauthorized` | Missing, malformed, revoked, or unknown admin key |
 | `403 Forbidden` | Valid admin key but accessing another app's resources |
 
-## Public endpoints (no authentication)
+## Which endpoints are public?
 
 The following routes require no authentication:
 
@@ -129,7 +130,10 @@ curl -s "$OYSTER_URL/api/v1/buckets/my-bucket/blobs/hello.txt"
 ## Security notes
 
 - **API keys and admin keys:** Oyster stores only the BLAKE2s-256 hash.
-  You cannot recover a lost key; issue a new one instead.
+  You cannot recover a lost key. For a lost API key, issue a replacement
+  through the Admin API (see [Create API key](admin.mdx#create-api-key)).
+  For a lost admin key, the server operator issues a new one with
+  `oysterd app issue-admin-key`.
 - **Admin-key compromise:** A leaked admin key gives full app-admin
   access (account creation, key issuance, S3 access keys) until you revoke it.
   Treat it like a long-lived service credential and rotate it periodically and
