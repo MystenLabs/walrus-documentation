@@ -86,7 +86,11 @@ Each demo app has its own page with the integration pattern it shows, the key co
 
 ## Set up the repo locally
 
-Use Node.js 22.23.4 (pinned in `.nvmrc`) and pnpm 9.12 or later. You need Rust only for backend services, not for the TypeScript apps. Clone the repo and install dependencies from the repo root:
+Use Node.js 22.23.4 (pinned in `.nvmrc`) and pnpm 9.12 or later. You need Rust only for backend services, not for the TypeScript apps. Setup has 2 steps. Complete both before you start any app.
+
+##### Step 1: Install dependencies
+
+Clone the repo and install dependencies from the repo root:
 
 ```bash
 $ git clone https://github.com/MystenLabs/MemWal.git
@@ -96,7 +100,11 @@ $ nvm use
 $ pnpm install
 ```
 
-If you use a different Node version manager, select the version in `.nvmrc` before installing dependencies. Build the SDK before you start any app, because the apps depend on its compiled output:
+If you use a different Node version manager, select the version in `.nvmrc` before installing dependencies.
+
+##### Step 2: Build the SDK
+
+Build the SDK before you start any app, because the apps depend on its compiled output:
 
 ```bash
 $ pnpm build:sdk
