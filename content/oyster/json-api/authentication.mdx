@@ -131,7 +131,7 @@ curl -s "$OYSTER_URL/api/v1/buckets/my-bucket/blobs/hello.txt"
 
 - **API keys and admin keys:** Oyster stores only the BLAKE2s-256 hash.
   You cannot recover a lost key. For a lost API key, issue a replacement
-  through the Admin API key-management routes (see [Admin](admin.mdx)).
+  through the Admin API (see [Create API key](admin.mdx#create-api-key)).
   For a lost admin key, the server operator issues a new one with
   `oysterd app issue-admin-key`.
 - **Admin-key compromise:** A leaked admin key gives full app-admin
