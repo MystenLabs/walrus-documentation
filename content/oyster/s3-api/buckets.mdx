@@ -4,6 +4,8 @@ description: Create, check, list, and delete buckets with S3 API operations usin
 keywords: [ S3, buckets, CreateBucket, HeadBucket, ListBuckets, DeleteBucket, AWS CLI, SigV4 ]
 ---
 
+Oyster supports 4 bucket operations through the S3 API: CreateBucket, HeadBucket, ListBuckets, and DeleteBucket. You run them with the AWS CLI.
+
 All bucket operations require S3 authentication (SigV4). See
 [S3 Setup](setup.mdx) for configuration.
 
@@ -49,9 +51,9 @@ your account doesn't own it, the AWS CLI prints an error (HTTP 404).
 
 **Errors:**
 
-| S3 error code | Condition |
+| HTTP status | Condition |
 |---------------|-----------|
-| `NoSuchBucket` | Bucket doesn't exist or your account doesn't own it |
+| 404 | Bucket doesn't exist or your account doesn't own it |
 
 ## ListBuckets
 
@@ -99,4 +101,4 @@ Returns no output on success (HTTP 204).
 
 ## Does HeadBucket distinguish buckets owned by other accounts?
 
-Oyster doesn't use a separate status code for a bucket that another account owns. It looks up the bucket by name and by your account together, so another account's bucket returns the same HTTP 404 and `NoSuchBucket` error as a bucket that doesn't exist.
+Oyster doesn't use a separate status code for a bucket that another account owns. It looks up the bucket by name and by your account together, so another account's bucket returns the same HTTP 404 as a bucket that doesn't exist.
