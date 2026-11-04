@@ -11,7 +11,7 @@ prefixed with `OYAK`) and a **secret access key** (40 hex characters).
 
 You can have up to **3 active access keys** per account.
 
-## Managing access keys
+## How to manage access keys
 
 The [Admin API](admin.mdx#s3-access-keys) provisions access keys.
 An app operator uses admin-key authentication to create, list, and revoke
@@ -23,7 +23,7 @@ keys for accounts they manage.
 | [List](admin.mdx#list-access-keys) | `GET /api/v1/accounts/{account_id}/access-keys` | List all keys for an account |
 | [Revoke](admin.mdx#revoke-access-key) | `DELETE /api/v1/accounts/{account_id}/access-keys/{access_key_id}` | Revoke a key |
 
-## Key format
+## What is the access key format?
 
 | Field | Format | Description |
 |-------|--------|-------------|
@@ -43,6 +43,8 @@ $ aws configure set aws_secret_access_key "abcdef1234567890..." --profile oyster
 $ aws configure set region "us-east-1" --profile oyster
 $ aws configure set endpoint_url "$OYSTER_URL" --profile oyster
 ```
+
+The example shortens the secret access key. Replace it with your full 40-character hex secret. Set `OYSTER_URL` to the URL of your Oyster deployment.
 
 Then pass the profile to standard S3 commands:
 
