@@ -9,8 +9,8 @@ you have created a bucket, uploaded a blob, and downloaded it back.
 
 ## Prerequisites
 
-- **curl**: for making HTTP requests to the JSON API
-- **AWS CLI** (optional): for using the S3-compatible API
+- **curl**: for making HTTP requests to the [JSON API](json-api/index.mdx)
+- **AWS CLI** (optional): for using the [S3-compatible API](s3-api/index.mdx)
   ([install guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html))
 
 ## Obtaining credentials
@@ -19,6 +19,8 @@ Oyster uses a two-tier auth model: **operators** manage accounts with
 long-lived per-app **admin keys**, and **end users** authenticate data
 operations with API keys. Both tiers use `Authorization: Bearer <hex>`;
 the route prefix selects which credential table Oyster consults.
+
+In this guide, the JSON API bucket and blob steps use an end-user API key, the operator sections use an admin key, and the AWS CLI steps use S3 access keys. Blob downloads through the JSON API need no credential.
 
 ### For operators
 
@@ -99,6 +101,8 @@ Response:
 
 ## Upload a blob
 
+A blob is any data you store in a bucket under a key, such as a text file or an image. Oyster also gives each blob a content-addressed blob ID.
+
 Upload a text file to your bucket with the key `hello.txt`:
 
 ```bash
@@ -133,7 +137,7 @@ curl -s -X PUT \
 
 ## Download a blob
 
-Blob reads are **public** (no authentication needed):
+Blob reads are **public** (no authentication needed). Oyster serves a blob either by bucket name and key, as in the following example, or by its content-addressed blob ID at `GET /api/v1/blobs/by-blob-id/{blob_id}`:
 
 ```bash
 curl -s "$OYSTER_URL/api/v1/buckets/my-bucket/blobs/hello.txt"
@@ -212,6 +216,10 @@ Oyster shows the `bearer_token` field only once. Save it immediately.
 See the [Admin API docs](json-api/admin.mdx#create-api-key) for full
 details including error handling and key revocation.
 
+## AWS CLI version for the S3 API
+
+To use the S3-compatible API from the command line, install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). The [S3 setup](s3-api/setup.mdx) prerequisites list AWS CLI v2 for CLI usage. Other S3-compatible clients, such as `boto3` or the AWS SDK for JavaScript, also work with Oyster.
+
 ## Set up S3 access keys (operator)
 
 To use the AWS CLI or any S3-compatible SDK, the operator creates S3 access
@@ -241,7 +249,7 @@ immediately. You can have up to 3 active S3 access keys per account.
 :::
 
 
-Then configure the AWS CLI:
+Then configure the AWS CLI (install AWS CLI v2 first, as described in [AWS CLI version for the S3 API](#aws-cli-version-for-the-s3-api); older CLI versions do not support `endpoint_url` as a profile setting):
 
 ```bash
 aws configure set aws_access_key_id "OYAK1234567890ABCDEF" --profile oyster
@@ -276,11 +284,7 @@ For the full S3 API reference, see **[S3 API Reference](s3-api/index.mdx)**.
 - **[Guides](guides/index.mdx)**: CLI quick start, SDK examples, and
   advanced topics.
 
-## AWS CLI version for the S3 API
-
-To use the S3-compatible API from the command line, install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). The [S3 setup](s3-api/setup.mdx) prerequisites list AWS CLI v2 for CLI usage. Other S3-compatible clients, such as `boto3` or the AWS SDK for JavaScript, also work with Oyster.
-
-## Who can download your blobs
+## Who can download your blobs?
 
 Anyone can download a blob through the JSON API without authentication, either by bucket name and key (`GET /api/v1/buckets/{bucket_name}/blobs/{key}`) or by its content-addressed blob ID (`GET /api/v1/blobs/by-blob-id/{blob_id}`). Only writes, deletes, and listing require an API key.
 
