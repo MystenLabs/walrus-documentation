@@ -103,7 +103,7 @@ If your account already has an active OAuth delegate from an earlier grant, the 
 
 ### Finish in Claude
 
-The relayer verifies the transaction onchain and hands control back to Claude. The `memwal_*` tools appear in the session. Ask Claude what tools it has to confirm. To check that the grant reached your account, open the [Walrus Memory dashboard](https://memory.walrus.xyz) and look for a delegate at the address the consent screen showed.
+The relayer verifies the transaction onchain and hands control back to Claude. The `memwal_*` tools appear in the session. To confirm, ask Claude which tools it has. To check that the grant reached your account, open the [Walrus Memory dashboard](https://memory.walrus.xyz) and look for a delegate at the address the consent screen showed.
 
 ## What you approve
 
