@@ -193,7 +193,7 @@ console.log(result.results);
 
 `remember()` returns a job. The example passes `job.job_id` to `waitForRememberJob()` to wait for that job to finish before it calls `recall()`.
 
-The `serverUrl` value `https://your-relayer-url.com` is a placeholder. To use the managed relayer, set it to `https://relayer.memory.walrus.xyz` (Mainnet) or `https://relayer.dev.memwal.ai` (Testnet). To match the `key` and `accountId` fields, you can read it from the `MEMWAL_SERVER_URL` environment variable instead.
+The `serverUrl` value `https://your-relayer-url.com` is a placeholder. To use the managed relayer, set it to `https://relayer.memory.walrus.xyz` (Mainnet) or `https://relayer.dev.memwal.ai` (Testnet). If you omit `serverUrl`, the client uses the Mainnet relayer. To match the `key` and `accountId` fields, you can read it from the `MEMWAL_SERVER_URL` environment variable instead.
 
 The example sets `namespace` to `demo`. Recall is scoped per account and namespace, so `recall()` searches only the memories stored under that namespace. If you omit `namespace`, the client uses `"default"`. For namespace rules, see [Usage](/walrus-memory/sdk/usage).
 
