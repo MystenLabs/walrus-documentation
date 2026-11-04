@@ -433,24 +433,11 @@ curl -s -X DELETE \
 | Status | Condition |
 |--------|-----------|
 | `401` | Missing or invalid API key |
-| `402` | Pearl-derived wallet lacks the WAL or SUI needed to clear the `PooledBlob` onchain; Oyster leaves the DB row intact so you can fund that wallet and retry the same `DELETE` |
+| `402` | Pearl-derived wallet lacks the SUI needed for gas to delete the `PooledBlob` onchain; Oyster leaves the DB row intact so you can fund that wallet and retry the same `DELETE` |
 | `404` | Blob not found |
 | `412` | `If-Match` or `If-None-Match` condition failed |
 
-A `402` carries the same `funding_required` block as the upload path:
-
-```json
-{
-  "error": "insufficient balance: ...",
-  "funding_required": {
-    "wal_frost": "1234567890",
-    "sui_mist": "98765432"
-  }
-}
-```
-
-`wal_frost` and `sui_mist` are decimal strings (Pearl-derived
-wallet's owed top-up, that is, the amounts you must add before retrying); inspect your wallet through
+A `DELETE` `402` carries only an `error` message and no `funding_required` block, because the delete needs only SUI gas. Check your Pearl-derived wallet's SUI balance through
 [Get Wallet Address](wallet.mdx). When `delete_blob` returns `402`,
 Oyster leaves the DB row intact on purpose so the client can fund the
 Pearl-derived wallet and retry the same `DELETE`. Oyster still swallows other onchain
