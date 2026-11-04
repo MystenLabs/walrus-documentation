@@ -24,7 +24,7 @@ questions:
   - What tools does the Walrus Console MCP server expose?
   - How do I let an agent mint its own Walrus Console API key?
 answer: >-
-  Install the Walrus Console MCP server with `npx -y @mysten-incubation/walrus-console-mcp@0.1.0 install`. The installer asks for the
+  Install the Walrus Console MCP server with `npx -y @mysten-incubation/walrus-console-mcp@0.1.1 install`. The installer asks for the
   credential bundle Console shows when you mint a key, or for the `hbr_` API key and the
   `suiprivkey1` service private key one at a time, stores them outside your client configuration,
   and registers the server with the agents it detects. Call `ping_console` to confirm. The server
@@ -36,12 +36,12 @@ The Walrus Console MCP server gives an AI client the same file and folder operat
 
 The package is `@mysten-incubation/walrus-console-mcp`, licensed MIT. The [server source](https://github.com/MystenLabs/ts-sdks-incubation/tree/main/packages/walrus-console-mcp) is public.
 
-Every command on this page runs an exact version, `0.1.0`, the same version Console's own install commands use. Always pin an exact version: without one, `npx` runs whichever copy of the package it finds first, and a dist-tag can move.
+Every command on this page runs an exact version, `0.1.1`, the same version Console's own install commands use. Always pin an exact version: without one, `npx` runs whichever copy of the package it finds first, and a dist-tag can move.
 
 
 ## Prerequisites
 
-- Node.js 22 or later. Version `0.1.0` sets `"node": ">=22"` in its engines field.
+- Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x). Version `0.1.1` exits at startup on any other Node version, including odd-numbered majors and prereleases, and names the version it found. This applies to the Node that your agent launches, which can differ from the one in your terminal. Update that one and restart the agent. If Claude Desktop supplies its own Node, update Claude Desktop.
 - A Walrus Console account with an API key. Open [console.walrus.xyz](https://console.walrus.xyz), sign in, then click **Integrations** and **Create API Key** in the top-right corner. Name the key and give it the `read_write` role.
 - The values Console reveals. It shows them once: the `hbr_` API key, the `suiprivkey1` service private key, and a `CONSOLE_CREDENTIAL_BUNDLE` value that carries both keys plus two Sui addresses. Copy the bundle if you can. It is the installer's first prompt.
 
@@ -51,7 +51,7 @@ The API key authorizes calls to Console. The service private key signs onchain a
 
 In **Integrations**, choose **Connect MCP**. Console creates an API key for your agent, shows the two secrets and the `CONSOLE_CREDENTIAL_BUNDLE` once, then asks which agent you use. You can open the same steps later for an existing key from the key's row.
 
-Claude Desktop uses a downloadable extension. Every other agent uses the interactive installer, `npx -y @mysten-incubation/walrus-console-mcp@0.1.0 install`. See [Install](#install) for what the installer asks and where it stores your credentials.
+Claude Desktop uses a downloadable extension. Every other agent uses the interactive installer, `npx -y @mysten-incubation/walrus-console-mcp@0.1.1 install`. See [Install](#install) for what the installer asks and where it stores your credentials.
 
 Follow the steps for your agent:
 
@@ -66,7 +66,7 @@ If you did not save the bundle, create a new key. Console cannot show it again.
 Run the interactive installer from a fresh directory:
 
 ```sh
-$ npx -y @mysten-incubation/walrus-console-mcp@0.1.0 install
+$ npx -y @mysten-incubation/walrus-console-mcp@0.1.1 install
 ```
 
 The installer:
@@ -95,7 +95,7 @@ On Windows, the launcher is `node_modules\.bin\walrus-console-mcp.cmd` under `%L
 The installer installs the launcher only when it registers at least one agent. If you ticked none, install it into the same directory:
 
 ```sh
-$ npm install --prefix "${XDG_DATA_HOME:-$HOME/.local/share}/walrus-console-mcp" --no-audit --no-fund --ignore-scripts @mysten-incubation/walrus-console-mcp@0.1.0
+$ npm install --prefix "${XDG_DATA_HOME:-$HOME/.local/share}/walrus-console-mcp" --no-audit --no-fund --ignore-scripts @mysten-incubation/walrus-console-mcp@0.1.1
 ```
 
 Then register it, replacing `<launcher-path>` with the path you printed:
@@ -131,7 +131,7 @@ Restart the client, run `/mcp`, and approve `walrus-console-mcp` when prompted.
 
 Ask the agent to call `ping_console`. It confirms which credentials the server loaded and reports `has_api_key`, `has_service_key`, `has_admin_key`, and `has_admin_signer` as booleans, plus the `network` the server resolved. It never echoes the values themselves.
 
-If `ping_console` reports that the key was rotated or revoked, open Console, create or rotate a key, and run `npx @mysten-incubation/walrus-console-mcp@0.1.0 config` to paste the new bundle.
+If `ping_console` reports that the key was rotated or revoked, open Console, create or rotate a key, and run `npx @mysten-incubation/walrus-console-mcp@0.1.1 config` to paste the new bundle.
 
 ## Available tools
 
