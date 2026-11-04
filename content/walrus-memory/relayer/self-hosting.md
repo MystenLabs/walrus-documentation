@@ -37,7 +37,7 @@ The managed relayer that Walrus Foundation provides is a reference implementatio
 
 If you want the default relayer-handled SDK flow while reducing trust in the host operator, see the [TEE Deployment Pattern](/walrus-memory/relayer/nautilus-tee).
 
-## Who self-hosts and when
+## Who self-hosts the relayer and when?
 
 Two primary personas typically self-host the relayer:
 
@@ -55,7 +55,7 @@ The most common reasons to self-host include:
 
 With the current architecture, Walrus Memory isolates data strictly by **User (Owner address)** and **Namespace**. The relayer scopes all vector searches and storage operations by `owner + namespace`, so multiple agents or applications can safely share the same relayer deployment by using different namespaces or operating under different delegate keys.
 
-## Horizontal scaling
+## How to scale the relayer horizontally
 
 If you are a managed service provider or need to handle high agentic throughput, you can horizontally scale your hosted relayer natively. To run multiple instances of the relayer behind a load balancer for the same account and package ID:
 
@@ -63,7 +63,7 @@ If you are a managed service provider or need to handle high agentic throughput,
 2. Supply the **same `SERVER_SUI_PRIVATE_KEYS` pool** to all instances so they can seamlessly execute concurrent Walrus uploads.
 3. Configure the **same Redis cluster** (`REDIS_URL`) across all nodes so that the rate limiter sliding window accurately tracks global user quotas across your deployment.
 
-## What runs
+## What does a self-hosted backend run?
 
 A self-hosted Walrus Memory backend has:
 
@@ -86,7 +86,7 @@ If you do not already have PostgreSQL + pgvector running, start it with:
 $ docker compose -f services/server/docker-compose.yml up -d postgres
 ```
 
-Then run the relayer:
+Copy the example environment file, set the [required environment variables](#required) in `services/server/.env`, and then run the relayer:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
@@ -106,7 +106,7 @@ Then check:
 $ curl http://localhost:8000/health
 ```
 
-## Environment variables
+## Which environment variables does the relayer use?
 
 The relayer reads its configuration from environment variables, grouped by how likely you are to need them.
 
@@ -139,7 +139,7 @@ By default, the relayer enforces rate limits and storage quotas through Redis to
 - `SIDECAR_URL` defaults to `http://localhost:9000`.
 - `SUI_NETWORK` defaults to `mainnet`.
 - `SUI_RPC_URL`, Walrus endpoints, and `WALRUS_PACKAGE_ID` fall back to network defaults based on `SUI_NETWORK`.
-- `SEAL_SERVER_CONFIGS` and `SEAL_KEY_SERVERS` are optional overrides for encrypt and decrypt; prefer `SEAL_SERVER_CONFIGS` for custom committees.
+- `SEAL_SERVER_CONFIGS` and `SEAL_KEY_SERVERS` are optional overrides for encrypt and decrypt; prefer `SEAL_SERVER_CONFIGS` for custom committees. See [Seal key server configuration](#how-to-configure-seal-key-servers) for both variables.
 - `WALRUS_AGGREGATOR_URLS` can add comma-separated proxy or aggregator candidates for cold-read tail racing after Redis cache misses.
 - `WALRUS_SKIP_CONSISTENCY_CHECK=false` by default; enable only for trusted Walrus Memory-written cold reads after accepting the consistency tradeoff.
 - The sidecar Walrus upload route defaults storage `epochs` by network: `5` on `testnet`, `3` on `mainnet` (unless the request passes `epochs`). Both the request value and the `WALRUS_STORAGE_EPOCHS` override cap at `15`; an over-cap override falls back to the network default.
@@ -193,6 +193,10 @@ MEMWAL_PACKAGE_ID=0xe7c16fbea0560e7057e2bf7422feaa4fb313749fc69c9e9092fac7a33b81
 MEMWAL_REGISTRY_ID=0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f
 ```
 
+## How to configure Seal key servers
+
+Two variables control which Seal key servers the sidecar uses. `SEAL_KEY_SERVERS` takes a comma-separated list of independent key server object IDs. `SEAL_SERVER_CONFIGS` takes a JSON array of server entries (`objectId`, optional `weight`, `aggregatorUrl`, and an `apiKeyName` and `apiKey` pair); committee entries require an `aggregatorUrl`. If you set both, the sidecar uses `SEAL_SERVER_CONFIGS` and ignores `SEAL_KEY_SERVERS`. Prefer `SEAL_SERVER_CONFIGS` for custom committees.
+
 If you set neither `SEAL_SERVER_CONFIGS` nor `SEAL_KEY_SERVERS`, the sidecar uses built-in defaults for the selected `SUI_NETWORK`. On `testnet`, the default remains Mysten's original independent key server pair so existing encrypted memories remain decryptable:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
@@ -231,7 +235,7 @@ Use the official key server configuration where possible.
 `VITE_MEMWAL_PACKAGE_ID` and `VITE_MEMWAL_REGISTRY_ID` are frontend environment variables for the app or playground, not for the relayer.
 :::
 
-## Database setup
+## How to set up the database
 
 The relayer requires PostgreSQL with the `pgvector` extension. The relayer runs migrations automatically on boot, creating these tables:
 
