@@ -4,11 +4,13 @@ description: >-
   Advanced Walrus Memory SDK usage patterns including manual registration with pre-computed vectors, fact extraction with analyze(), and AI SDK middleware integration.
 keywords:
   - Walrus Memory
-  - Walrus Memory
   - advanced usage
   - manual registration
   - analyze
   - AI middleware
+  - rememberManual
+  - recallManual
+  - withMemWal
 goal:
   description: Call registerEntry() to store a pre-uploaded blob, use analyze() to extract and store structured facts from long content, and wire up withMemWal middleware for automatic recall in AI generation pipelines.
   requires:
@@ -31,25 +33,27 @@ answer: >-
   Advanced Walrus Memory features include manual registration (rememberManual/recallManual) for pre-computed vectors and encrypted payloads, analyze() for LLM-based fact extraction from longer text, and withMemWal AI middleware for automatic recall before generation and auto-save after generation.
 ---
 
-## Use this when
+Advanced Walrus Memory features include manual registration (`rememberManual()` and `recallManual()`) for precomputed vectors and encrypted payloads, `analyze()` for LLM-based fact extraction from longer text, and the `withMemWal` AI middleware for automatic recall before generation and optional auto-save after generation. The relayer uploads your encrypted payloads to Walrus and extracts structured facts for `analyze()`.
+
+## When should I use advanced features?
 
 - you already have a vector or encrypted payload
 - you want fact extraction with `analyze()`
 - you want memory inside an AI SDK pipeline
 
-## Manual registration
+## How do I register memories with precomputed vectors?
 
 Use:
 
 - `rememberManual()` when you already have encrypted payload plus vector
 - `recallManual()` when you already have a query vector
 
-## Analyze
+## How does `analyze()` extract facts?
 
 Use `analyze()` for LLM-based fact extraction when you want the relayer to extract structured facts from longer text and store them as
 memories.
 
-## AI Middleware
+## How do I use the `withMemWal` middleware?
 
 Wire up the `withMemWal` middleware for automatic recall in AI generation pipelines when you want:
 
@@ -61,7 +65,7 @@ Wire up the `withMemWal` middleware for automatic recall in AI generation pipeli
 - [SDK Usage](/walrus-memory/sdk/usage)
 - [AI Integration](/walrus-memory/sdk/ai-integration)
 
-## Manual method parameters
+## What parameters do the manual methods take?
 
 Both manual methods take an options object:
 
