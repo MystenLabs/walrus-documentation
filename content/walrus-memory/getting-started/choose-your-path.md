@@ -18,7 +18,7 @@ keywords:
   - MCP server
   - choose your path
 goal:
-  description: Compare the four integration paths — default SDK, manual client, AI middleware, and MCP server — and pick the one that matches your trust model, tech stack, and control requirements.
+  description: Compare the six integration paths, Default SDK, Managed Relayer, Manual Client Flow, AI Middleware, Self-Hosted Relayer, and MCP Clients, and pick the one that matches your trust model, tech stack, and control requirements.
   requires:
     - has_frontmatter:
         - title
@@ -87,7 +87,7 @@ Use `@mysten-incubation/memwal/ai` when you already use the AI SDK and want reca
 
 Go to: [AI Integration](/walrus-memory/sdk/usage/with-memwal)
 
-## 5. Self-host the relayer (deployment option of path 2)
+## 5. Self-hosted relayer
 
 Use this when you need full control over the trust boundary - your infrastructure, your credentials, no third party sees your data. This is the self-hosted deployment option of the relayer described in path 2, not a different backend: all paths share the same backend and data layer.
 
