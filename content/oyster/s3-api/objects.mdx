@@ -22,7 +22,7 @@ All S3 operations require authentication (SigV4), including reads. See
 ## PutObject
 
 Uploads an object to a bucket. If an object with the same key already
-exists, the upload replaces it. PutObject accepts single-part uploads only, up to a maximum of 1GB per object (see [Maximum object size](#maximum-object-size)).
+exists, the upload replaces it. PutObject accepts single-part uploads up to 1GB (see [Maximum object size](#maximum-object-size)).
 
 ```bash
 aws --profile oyster s3api put-object \
