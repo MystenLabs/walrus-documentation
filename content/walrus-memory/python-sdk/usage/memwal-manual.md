@@ -60,7 +60,7 @@ print(len(vec.vector))
 
 ## `remember_manual`
 
-Send base64 Seal-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping. The snippet below continues the `embed` example above: it reuses the same `memwal` client, so if you run it on its own also import `MemWal` and create the client with `MemWal.create(key="...", account_id="0x...", env="prod")`.
+Send base64 Seal-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
@@ -79,7 +79,7 @@ print(result.id, result.blob_id, result.owner, result.namespace)
 
 ## `recall_manual`
 
-Search with a pre-computed query vector. Returns `{blob_id, distance}` hits only, no decrypted text (you fetch/decrypt the blobs yourself). As above, the snippet reuses the `memwal` client from the `embed` example, so when running it on its own also import `MemWal` and create the client with `MemWal.create(key="...", account_id="0x...", env="prod")`.
+Search with a pre-computed query vector. Returns `{blob_id, distance}` hits only, no decrypted text (you fetch/decrypt the blobs yourself).
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 

@@ -65,7 +65,7 @@ The indexer currently targets the `AccountCreated` event flow as its primary syn
 Owner deactivation and Admin quarantine use separate flags on the account. `AccountDeactivated` reports that the `active` flag changed to false. Two calls emit it:
 
 - The owner calls `deactivate_account`. The call aborts if the account is already deactivated.
-- An AdminCap holder calls `admin_deactivate_account`. This call always sets the `admin_quarantined` flag and emits `AccountQuarantined`. It emits `AccountDeactivated` only when the account was still active at the time of the call; if the account was already deactivated, no `AccountDeactivated` event is emitted.
+- An AdminCap holder calls `admin_deactivate_account`. If the account is not already quarantined, this sets the `admin_quarantined` flag and emits `AccountQuarantined`, and also emits `AccountDeactivated` if the account was still active. A repeat call on a quarantined account returns without emitting events.
 
 While quarantine is active, the owner cannot reactivate the account. `admin_clear_quarantine` releases quarantine without reactivating the account. The account stays frozen until the owner calls `reactivate_account`.
 

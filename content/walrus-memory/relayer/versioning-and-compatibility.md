@@ -55,7 +55,7 @@ Public surfaces include:
 
 | Relayer API | Relayer package | TypeScript SDK | Python SDK | MCP package | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `1.x` | `0.1.x` | `>=0.0.4` | `>=0.1.0` | `>=0.0.1` | Requires `x-nonce`; TypeScript and Python SDKs use `x-seal-session` for relayer-mode decrypt flows; MCP uses bearer credentials for SSE, and the legacy `x-delegate-key` delegate private key header is deprecated |
+| `1.x` | `0.1.x` | `>=0.0.4` | `>=0.1.0` | `>=0.0.1` | Requires `x-nonce`; TypeScript and Python SDKs use `x-seal-session` for relayer-mode decrypt flows; MCP sends a bearer credential (a delegate key, or an OAuth access token that the relayer resolves to one) at SSE open; the legacy `x-delegate-key` header is deprecated |
 
 SDKs and MCP clients read `/version` before protected requests and fail with an explicit compatibility error when the relayer API major or minimum SDK version is unsupported.
 
