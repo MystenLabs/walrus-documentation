@@ -404,7 +404,7 @@ aws --profile oyster s3api delete-object-tagging \
 | `NoSuchBucket` | Bucket doesn't exist |
 | `NoSuchKey` | Object key doesn't exist |
 
-#### DeleteObjectTagging on a missing key
+## DeleteObjectTagging on a missing key
 
 Unlike DeleteObject, DeleteObjectTagging is not idempotent for missing keys. If the object key doesn't exist, the operation returns `NoSuchKey`. If the bucket doesn't exist, it returns `NoSuchBucket`.
 

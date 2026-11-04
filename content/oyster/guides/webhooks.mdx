@@ -101,8 +101,8 @@ exponential backoff:
 - Attempt 2: after 100 ms.
 - Attempt 3: after 200 ms.
 
-(Backoff doubles each retry with a cap of 5 s. Oyster sleeps only
-between attempts, so the next doubled value (400 ms) never applies because no fourth attempt follows.)
+(Backoff doubles each retry with a cap of 5 s, so the third sleep
+would be 400 ms, well under the cap.)
 
 Retry semantics by response:
 
