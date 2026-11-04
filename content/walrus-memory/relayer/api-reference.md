@@ -265,7 +265,7 @@ The motivating use is rebuilding local credentials: a client that holds a workin
 }
 ```
 
-The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account ID returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account ID can recover it here only when its delegate key is already in the relayer's delegate-key cache or the server has `MEMWAL_ACCOUNT_ID` set; otherwise the request returns `401` before the handler runs.
+The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account ID returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account ID can recover it here only under those 2 conditions.
 
 ### `POST /api/remember`
 
@@ -644,7 +644,7 @@ Rebuild missing vector entries for one namespace. Queries onchain blobs by owner
 
 `skipped` is onchain blobs already in the local success index. `failed` is permanent decrypt or UTF-8 failures on this onchain page (negative-cache hits plus new permanent failures this call), so it never exceeds `total`. `failed` does not count transient download, decrypt, or embed errors; when a page yields only those, `truncated` is true so the caller retries.
 
-When `truncated` is true, call `POST /api/restore` again. Raise `limit` to cover more blobs in each call.
+When `truncated` is true, call `POST /api/restore` again. If transient download or embed errors caused it, retry with the same `limit`. Otherwise, a larger `limit` (up to `100`) restores more missing blobs in each call.
 
 `truncated=true` means this restore is **known-retryable-incomplete**: more missing blobs than `limit` allowed this call to restore, **or** the sidecar's owner-wide candidate fetch hit its cap **and** raising `limit` can still expand that fetch (`limit < 20`). Once the sidecar cap is saturated (`limit >= 20`, cap pinned at 100), truncation follows this call's missing-blob page length, not onchain `total`. A fully restored namespace does not loop. `truncated=false` is **not** proof the sidecar saw every onchain blob; blobs beyond the owner-wide sidecar candidate cap can still be missing. WALM-451 tracks a `sourceCapped` field for that case ([WALM-451](https://linear.app/mysten-labs/issue/WALM-451)). Relayers older than WALM-319 omit `truncated`; SDKs default it to `false`.
 
