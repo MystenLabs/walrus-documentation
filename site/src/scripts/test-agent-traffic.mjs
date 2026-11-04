@@ -1,3 +1,6 @@
+// Copyright (c) Walrus Foundation
+// SPDX-License-Identifier: Apache-2.0
+
 // Tests the agent traffic log in middleware.js: which requests write an
 // `agent-hit` line, and what the line says.
 //   node --test src/scripts/test-agent-traffic.mjs

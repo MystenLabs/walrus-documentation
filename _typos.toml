@@ -5,6 +5,8 @@ certifi = "certifi"
 [default.extend-words]
 # Accepted spelling, used in the Walrus Memory docs.
 unparseable = "unparseable"
+# "catch-alls" in the agent traffic block that site/middleware.js shares with sui-docs.
+alls = "alls"
 
 [files]
 extend-exclude = [
