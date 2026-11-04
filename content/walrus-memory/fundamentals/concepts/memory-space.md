@@ -78,7 +78,7 @@ const memwal = MemWal.create({
 
 ## App ID
 
-The **app ID** is the Walrus Memory package ID deployed on Sui (`MEMWAL_PACKAGE_ID`). Each relayer deployment ties to a single package ID. Seal encryption key derivation and Walrus blob metadata use this package ID.
+The **app ID** is the Walrus Memory package ID deployed on Sui (`MEMWAL_PACKAGE_ID`). Each relayer deployment ties to a single package ID. [Seal encryption](#what-is-seal-encryption) key derivation and Walrus blob metadata use this package ID.
 
 Two separate Walrus Memory deployments can each have a user with a `personal` namespace, and their memories never mix, because the app ID (package ID) is different. This means the vector database scopes queries by `owner + namespace`, while the encryption and blob discovery layer provides an additional isolation boundary through the package ID.
 
@@ -107,10 +107,10 @@ Walrus Memory encrypts every memory with Seal, a threshold encryption scheme, be
 
 ## How should multiple agents share one account?
 
-When several agents share one owner account, give each agent its own namespace. The OpenClaw plugin follows this pattern and derives the namespace from the agent name, for example `researcher` or `coder`. The relayer scopes recall and storage to the current namespace.
+When several agents share one owner account, give each agent its own [namespace](#namespace). The OpenClaw plugin follows this pattern and derives the namespace from the agent name, for example `researcher` or `coder`. The relayer scopes recall and storage to the current namespace.
 
 A namespace organizes data. It is not an onchain authorization boundary. Every delegate key is authorized for the whole MemWal account, so a delegate assigned to one agent can still request another namespace's Seal key. Use separate MemWal accounts when agents require cryptographic isolation.
 
 ## Switch namespaces per call
 
-The `namespace` you set in `create(...)` is a default, not a fixed binding. Set it there when one app or agent uses one boundary. When one client needs multiple memory spaces, pass `namespace` on each call instead of creating a new client. If a call omits `namespace`, it falls back to the client config, then to `"default"`. Avoid keeping everything in `"default"` after early testing.
+The `namespace` you set in `create(...)` is a default, not a fixed binding. Set it there when one app or agent uses one boundary. When one client needs multiple [memory spaces](#what-defines-a-memory-space), pass `namespace` on each call instead of creating a new client. If a call omits `namespace`, it falls back to the client config, then to `"default"`. Avoid keeping everything in `"default"` after early testing.
