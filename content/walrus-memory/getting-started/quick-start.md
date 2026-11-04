@@ -53,7 +53,7 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
 </div>
 
 
-### Install the SDK
+### How to install the SDK
 
     <Tabs groupId="pkg-manager">
       <TabItem value="pnpm" label="pnpm">
@@ -130,7 +130,7 @@ The fastest way to get Walrus Memory running is through the TypeScript SDK.
       </TabItem>
     </Tabs>
 
-  ### Generate your account ID and delegate key
+  ### How to generate your account ID and delegate key
 
     Create a Walrus Memory account ID and delegate private key for your SDK client using one of the hosted endpoints below.
 
@@ -173,6 +173,8 @@ Walrus Foundation provides the following endpoints as a public good.
     });
     ```
 
+    The example reads the account ID you generated from the `MEMWAL_ACCOUNT_ID` environment variable and passes it as `accountId`. It reads your delegate private key from the `MEMWAL_KEY` environment variable and passes it as `key`. The `namespace` value, `my-app` in this example, scopes your memories together with the account ID: `recall()` searches the memories stored under the same account and namespace.
+
     :::warning
 Use the `accountId` **you** generated in the previous step. Recall scope is per **account and namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
 :::
@@ -185,7 +187,9 @@ Use the `accountId` **you** generated in the previous step. Recall scope is per 
     await memwal.health();
     ```
 
-  ### Store and recall your first memory
+  ### How to store and recall your first memory
+
+    The `remember()` call returns a job. Pass its `job_id` to `waitForRememberJob()` to wait until the job finishes, then call `recall()` to retrieve the memory:
 
     ```ts
     const job = await memwal.remember("User prefers dark mode and works in TypeScript.");
