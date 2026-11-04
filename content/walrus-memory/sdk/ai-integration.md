@@ -68,7 +68,7 @@ Before generation:
 
 After generation:
 
-- optionally runs `analyze()` on the user message
+- optionally runs `analyze()` on the user message to extract facts
 - saves extracted facts asynchronously
 
 ## Why namespace matters here
@@ -86,7 +86,7 @@ Use direct SDK methods when your app needs precise control over:
 
 ## Stream responses with `streamText`
 
-The wrapped model also works with `streamText`. Pass it as the `model` the same way you do for `generateText`:
+The wrapped model also works with `streamText`. Pass it as the `model` the same way you do for `generateText`. Unlike the `generateText` example, the `streamText` call does not use `await`: the returned `result` is the stream handle you consume.
 
 ```ts
 const result = streamText({
