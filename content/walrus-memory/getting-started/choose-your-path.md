@@ -18,7 +18,7 @@ keywords:
   - MCP server
   - choose your path
 goal:
-  description: Compare the six integration paths, Default SDK, Managed Relayer, Manual Client Flow, AI Middleware, Self-Hosted Relayer, and MCP Clients, and pick the one that matches your trust model, tech stack, and control requirements.
+  description: Compare the six integration paths (Default SDK, Managed Relayer, Manual Client Flow, AI Middleware, Self-Hosted Relayer, and MCP Clients) and pick the one that matches your trust model, tech stack, and control requirements.
   requires:
     - has_frontmatter:
         - title
