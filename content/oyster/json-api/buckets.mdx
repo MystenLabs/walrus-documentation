@@ -1,11 +1,22 @@
 ---
 title: "Buckets"
 description: Buckets are globally unique named containers that hold your blobs. Create, list, and delete buckets with the buckets API.
-keywords: [ buckets, bucket naming rules, create bucket, list buckets, delete bucket, blobs, API ]
+keywords:
+  - buckets
+  - bucket naming rules
+  - create bucket
+  - list buckets
+  - delete bucket
+  - blobs
+  - API
+  - pagination
+  - cursor
+  - globally unique
+  - Oyster
 ---
 
 Buckets are named containers that hold your blobs. Bucket names are
-**globally unique**: no two accounts can have a bucket with the same name.
+**globally unique**: no two accounts can have a bucket with the same name. The examples on this page use `$OYSTER_URL` and `$API_KEY`; export both values first, as described in [Set the server URL and API key](#set-the-server-url-and-api-key).
 
 ## Bucket naming rules
 
@@ -22,6 +33,15 @@ Bucket names must follow these rules:
 
 **Invalid examples:** `My-Bucket` (uppercase), `a` (too short),
 `-bucket` (starts with hyphen), `my--bucket` (consecutive hyphens)
+
+## Set the server URL and API key
+
+In the examples, `$OYSTER_URL` is the address of your Oyster server, for example `http://localhost:3000`. Set it without the `/api/v1` prefix, because each example appends the full endpoint path. Your operator provides your API key. Export both values before you run the examples:
+
+```bash
+export OYSTER_URL="http://localhost:3000"
+export API_KEY="your-api-key-here"
+```
 
 ## Create bucket
 
@@ -155,12 +175,3 @@ curl -s -X DELETE \
 ## Pagination cursors
 
 A non-null `next_cursor` is an opaque string, for example `eyJjcmVhdGVk...` (truncated). Do not parse or build cursor values yourself. Copy the value from the response and pass it unchanged as the `cursor` query parameter, for example `$OYSTER_URL/api/v1/buckets?limit=10&cursor=eyJjcmVhdGVk...`. When `next_cursor` is `null`, there are no more results.
-
-## Set the server URL and API key
-
-In the examples, `$OYSTER_URL` is the address of your Oyster server, for example `http://localhost:3000`. Set it without the `/api/v1` prefix, because each example appends the full endpoint path. Your operator provides your API key. Export both values before you run the examples:
-
-```bash
-export OYSTER_URL="http://localhost:3000"
-export API_KEY="your-api-key-here"
-```
