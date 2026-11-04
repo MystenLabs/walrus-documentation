@@ -16,6 +16,7 @@ keywords:
   - service private key
   - CONSOLE_CREDENTIAL_BUNDLE
   - ping_console
+  - antigravity
 questions:
   - How do I connect Walrus Console to Claude Code?
   - How do I connect Walrus Console to Claude Desktop?
@@ -42,7 +43,7 @@ The package is `@mysten-incubation/walrus-console-mcp`, licensed MIT. The [serve
 - A Walrus Console account with an API key. Open [console.walrus.xyz](https://console.walrus.xyz), sign in, then click **Integrations** and **Create API Key** in the top-right corner. Name the key and give it the `read_write` role.
 - The values Console reveals. It shows them once: the `hbr_` API key, the `suiprivkey1` service private key, and a `CONSOLE_CREDENTIAL_BUNDLE` value that carries both keys plus two Sui addresses. Copy the bundle if you can. It is the installer's first prompt.
 
-The API key authorizes calls to Console. The service private key signs onchain access grants and unwraps Seal keys locally, which is why the server needs both. The two addresses in the bundle are your Console account address and the address of the space's Management API key signer, if any. `create_bucket` checks the transaction it signs against them and refuses to run without the account address.
+The API key authorizes calls to Console. The service private key signs onchain access grants and unwraps [Seal](#what-is-seal) keys locally, which is why the server needs both. The two addresses in the bundle are your Console account address and the address of the space's Management API key signer, if any. `create_bucket` checks the transaction it signs against them and refuses to run without the account address.
 
 ## Connect from the Walrus Console web app
 
@@ -83,6 +84,8 @@ Environment variables override the saved file, so `CONSOLE_API_KEY` and `CONSOLE
 | --- | --- |
 | Claude Code | `claude mcp add --scope user walrus-console-mcp -- npx -y @mysten-incubation/walrus-console-mcp` |
 | Codex | `codex mcp add walrus-console-mcp -- npx -y @mysten-incubation/walrus-console-mcp` |
+| Cursor | Run the [installer](#install), or add a stdio server whose `command` is the absolute path to the installed launcher, with no arguments |
+| Gemini CLI | Run the [installer](#install), or add a stdio server whose `command` is the absolute path to the installed launcher, with no arguments |
 | Claude Desktop | Install the Walrus Console extension from the Connect MCP step in Console |
 
 `--scope user` makes the server available in every project. Use `--scope local` to limit it to the current one.
