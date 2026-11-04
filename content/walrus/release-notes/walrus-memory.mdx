@@ -14,11 +14,41 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
 <TabItem value="mcp" label="MCP" default>
 
+### Walrus Memory MCP v0.0.18
+
+October 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.18)
+
+Project-level MCP config files such as `.cursor/mcp.json`, `.vscode/mcp.json`, or
+`.claude/settings.json` populate `env`. Before this release, a truthy `MEMWAL_AUTO_SAVE` in those
+files could override a stored `autoSave: false` or bypass the consent prompt on a new install. The
+MCP server and plugin hooks now accept only a disabling override (`MEMWAL_AUTO_SAVE=0`) from `env`.
+They keep `state` and `enabled` consistent and preserve `pendingConsent: true` until
+`~/.memwal/settings.json` holds a stored answer.
+
+Pending SSE readers now wake as soon as the connection aborts, so idle sessions reconnect without
+waiting for the HTTP reader to fail.
+
+#### Changes
+
+- [`MEMWAL_AUTO_SAVE` in `process.env` can no longer turn automatic memory on or clear `pendingConsent`. An MCP client populates `env` from `.cursor/mcp.json`, `.vscode/mcp.json`, or `.claude/settings.json` inside the checkout, so a truthy `MEMWAL_AUTO_SAVE` in `env` could flip automatic saving on over a stored `autoSave: false` (reporting `enabled: true` alongside `state: "off"`) or bypass the consent prompt on an unanswered install. Both the MCP server and the plugin hooks now honour only a disabling override (`MEMWAL_AUTO_SAVE=0`) from `env`, keep `state` and `enabled` consistent, and preserve `pendingConsent: true` until a stored answer exists in `~/.memwal/settings.json`.](https://github.com/MystenLabs/MemWal/pull/995)
+
+---
+
 ### Walrus Memory MCP v0.0.17
 
 October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.0.17)
 
-Unreleased. Package and plugin manifests are bumped manually to 0.0.17. The launcher installs the published 0.0.16 through `mcpPackageVersion` until 0.0.17 is available on npm; retarget that pin after publishing.
+This release fixes duplicate storage charges in `memwal_remember_bulk`. Previously, when the bridge
+reconnected and replayed a bulk call, the call could register a second paid Walrus blob. The bridge
+now stamps each call with a stable idempotency key before tracking it. The sidecar sends that key to
+the relayer, and the relayer answers a replayed key with the jobs it already queued instead of
+creating new ones.
+
+This protection applies only to bridge replays. If your agent retries a bulk call itself, that retry
+counts as a new call and gets a new key.
+
+The plugin launcher in this release still installs MCP server 0.0.16. Plugin users get the fix from
+v0.0.18.
 
 #### Changes
 
@@ -255,9 +285,39 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 
 <TabItem value="sdk" label="TypeScript SDK">
 
+### Walrus Memory TypeScript SDK v0.1.12
+
+October 30, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.12)
+
+This release fixes how `withMemWal` handles long user turns. It caps the recall query at 16,384
+UTF-8 bytes and uses `strategy: "head-tail"` to keep both the leading context and the trailing
+question or instructions. It caps auto-save `analyze()` input at 65,536 UTF-8 bytes. Truncation
+never splits a multi-byte UTF-8 codepoint across a boundary.
+
+The language model prompt still receives the full user turn. Turns longer than the embedder's 16 KiB
+limit still inject relevant memories without HTTP 400 errors. Auto-save extracts facts across turns
+of up to 64 KiB.
+
+#### Changes
+
+- [`withMemWal` bounds the recall query (preserving both head context and tail question/instructions via `strategy: "head-tail"`) to 16,384 UTF-8 bytes and auto-save `analyze()` input to 65,536 UTF-8 bytes without splitting multi-byte UTF-8 codepoints across boundaries, while keeping the full user turn in the language model prompt. User turns exceeding the embedder's 16 KiB limit still inject relevant memories without HTTP 400 errors, and auto-save extracts facts across turns up to 64 KiB.](https://github.com/MystenLabs/MemWal/pull/1037)
+
+---
+
 ### Walrus Memory TypeScript SDK v0.1.11
 
 October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.11)
+
+`remember`, `rememberAsync`, and `rememberAndWait` accept `{ dedupe: true }` for opt-in content-hash
+deduplication per owner, namespace, and text, with no time window. Duplicate writes collapse onto
+the existing live job and `blob_id`. If the memory was forgotten or deleted, the client writes it
+fresh. `MemWalMock` mirrors this behavior.
+
+`MemWal.create` and `MemWalManual.create` copy a supplied `Uint8Array` key, so `destroy()` leaves
+your buffer intact. `MemWalManual.destroy()` also drops cached secrets and rejects later calls.
+`formatUntrustedMemories` and `withMemWal` drop non-finite distances and clamp relevance to [0, 1].
+`listNamespaces`, `listMemories`, and the manual vector methods validate inputs before signing.
+`analyze()` accepts an abort `signal`.
 
 #### Changes
 
@@ -517,11 +577,22 @@ ephemeral SEAL sessions. SDK versions that do not include a nonce are rejected w
 
 <TabItem value="python" label="Python SDK">
 
-### Walrus Memory python v0.2.2
+### Walrus Memory Python SDK v0.2.2
 
 October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.2)
 
-Release memwal Python SDK v0.2.2
+`MemWal` and `MemWalSync` add `forget(namespace=None)`, with the alias `forget_namespace`. It wraps
+`POST /api/forget`, deletes the owner's index rows for the namespace, leaves Walrus blobs in place,
+and returns a `ForgetResult`. `destroy()` and `close(clear_keys=True)` zero the client's copy of the
+seed, drop the signing key and cached Seal session credentials, and reject later calls with
+`MemWalError`. `create()` accepts 32-byte `bytes` or `bytearray` keys and copies caller buffers, so
+`destroy()` leaves yours intact.
+
+An empty or non-JSON 2xx response now raises `MemWalJsonBodyError`, a `MemWalError` subclass,
+instead of `json.JSONDecodeError`. A response missing a required field raises `MemWalError` instead
+of `KeyError`. `ask()` and `recall()` reject a blank `question` or `query` and an invalid `limit` or
+`max_distance` before signing. Cancelling one concurrent caller no longer aborts the others during
+initialization.
 
 ---
 
@@ -651,9 +722,20 @@ Initial release of the Walrus Memory Python SDK.
 
 <TabItem value="openclaw" label="OpenClaw">
 
-### Walrus Memory SDK v0.0.8
+### Walrus Memory OpenClaw v0.0.8
 
 October 28, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.8)
+
+Auto-capture keeps state for at most 1,000 recent session scopes and expires scopes after 30 idle
+minutes, so long-lived gateways stop retaining every past session. A per-session message watermark
+skips already-captured turns, and `occurredAt` uses each message's creation timestamp. `withTimeout`
+aborts the HTTP request when `requestTimeoutMs` expires, `withRetry` does not retry timed-out calls,
+and an in-flight guard prevents overlapping auto-capture requests.
+
+`memory_store` no longer reports pending jobs as stored. It polls `waitForRememberJobs` when
+available, surfaces upload failures, and otherwise reports `"Accepted N fact(s) (not stored yet;
+job_ids=...)"`. The plugin also detects letter-spaced prompt injection, such as `i g n o r e`, and
+uses MemWal SDK `0.1.10`.
 
 ---
 
