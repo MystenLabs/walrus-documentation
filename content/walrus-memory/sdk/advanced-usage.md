@@ -33,15 +33,15 @@ answer: >-
   Advanced Walrus Memory features include manual registration (rememberManual/recallManual) for pre-computed vectors and encrypted payloads, analyze() for LLM-based fact extraction from longer text, and withMemWal AI middleware for automatic recall before generation and auto-save after generation.
 ---
 
-Advanced Walrus Memory features include manual registration (`rememberManual()` and `recallManual()`) for precomputed vectors and encrypted payloads, `analyze()` for LLM-based fact extraction from longer text, and the `withMemWal` AI middleware for automatic recall before generation and optional auto-save after generation. The relayer uploads your encrypted payloads to Walrus and extracts structured facts for `analyze()`.
+Advanced Walrus Memory features include manual registration (`rememberManual()` and `recallManual()`) for precomputed vectors and encrypted payloads, `analyze()` for LLM-based fact extraction from longer text, and the `withMemWal` AI middleware for automatic recall before generation and auto-save after generation (on by default; set `autoSave: false` to turn it off). The relayer uploads your encrypted payloads to Walrus and extracts structured facts for `analyze()`.
 
-## When should I use advanced features?
+## When to use advanced features
 
 - you already have a vector or encrypted payload
 - you want fact extraction with `analyze()`
 - you want memory inside an AI SDK pipeline
 
-## How do I register memories with precomputed vectors?
+## How to use manual registration and recall
 
 Use:
 
@@ -53,7 +53,7 @@ Use:
 Use `analyze()` for LLM-based fact extraction when you want the relayer to extract structured facts from longer text and store them as
 memories.
 
-## How do I use the `withMemWal` middleware?
+## How to use the `withMemWal` middleware
 
 Wire up the `withMemWal` middleware for automatic recall in AI generation pipelines when you want:
 
