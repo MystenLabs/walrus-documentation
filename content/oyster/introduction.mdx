@@ -10,7 +10,7 @@ Oyster is a Web2-friendly object storage service backed by
 [Sui](https://sui.io/) (onchain state). It gives you familiar HTTP and S3
 APIs while a decentralized network stores your data.
 
-## What are Oyster's core concepts?
+## What are Oyster's core concepts? {#core-concepts}
 
 ### Accounts
 
@@ -59,11 +59,11 @@ Key properties of blobs:
   Oyster removes the underlying data only when no other keys point to it.
 - **Expiration:** blobs share their account's `StoragePool` lifetime
   rather than expiring individually. A `StoragePool` is a single onchain
-  Sui object that Oyster creates for each account. A background extension service
+  Sui object that Oyster creates for each account on its first upload. A background extension service
   renews each pool before it expires; see
   [Blob Lifecycle](guides/blob-lifecycle.mdx) for details.
 
-## Which APIs does Oyster expose?
+## Which APIs does Oyster expose? {#two-api-surfaces}
 
 Oyster exposes two ways to interact with your data:
 
