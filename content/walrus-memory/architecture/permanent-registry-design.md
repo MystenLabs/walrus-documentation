@@ -39,7 +39,11 @@ answer: >-
 
 ## Permanent registry design intent
 
+Walrus Memory keeps the `AccountRegistry` permanent and append-only so that each address can create only one MemWalAccount, indexers can rely on a stable mapping, and the Seal encryption identity maps to a single onchain policy object.
+
 The `AccountRegistry` shared object in Walrus Memory is a permanent append-only mapping of `owner_address -> account_id`. Even if you deactivate or delete your account, your address remains in the registry, because deletion is treated as deactivation (freezing) rather than true erasure.
+
+**Design rule:** The contract never removes or replaces an `AccountRegistry` entry. When you design account and key lifecycle flows, deactivate an account instead of deleting it, and expect the address to keep its original account ID.
 
 ## Security and architecture rationale
 1. **Preventing duplicate Sybil accounts:**
@@ -52,8 +56,15 @@ The `AccountRegistry` shared object in Walrus Memory is a permanent append-only 
    In Web3, identity is persistent. Walrus Memory treats the deletion of an account as a deactivation (freezing) rather than true erasure, which aligns with blockchain state patterns. The account remains frozen, preserving the historical linkage.
 
 4. **Seal access integrity:**
-   If an address could recreate its account, old data encrypted under the same Seal Key ID (`bcs(address)`) could become unpredictably accessible or orphaned depending on the new configuration. A permanent registry guarantees that the encryption identity mathematically maps to a single, stable onchain policy object forever.
+   If an address could recreate its account, old data encrypted under a Seal identity that ends in `bcs(owner)` followed by `bcs(access_counter_version)` could become unpredictably accessible or orphaned depending on the new configuration. A permanent registry guarantees that the encryption identity mathematically maps to a single, stable onchain policy object forever.
 
 ## How account deactivation works
 
-Deactivation does not freeze the `MemWalAccount` object at the Sui protocol level. The account is a shared object with an `active` boolean field, and `deactivate_account` sets that field to false. While the account is inactive, it denies Seal access and new delegate keys, but the owner can still remove delegate keys. Freezing the account also increments `access_counter_version`, so memories written later use a new Seal identity. The owner can call `reactivate_account` to unfreeze the account, unless an AdminCap holder has quarantined it with `admin_deactivate_account`. In every case, the registry entry for the address stays in place.
+Deactivation does not freeze the `MemWalAccount` object at the Sui protocol level. The account is a shared object with an `active` boolean field, and `deactivate_account` sets that field to false. While the account is inactive, it denies Seal access and new delegate keys, but the owner can still remove delegate keys. Deactivating the account also increments `access_counter_version`, so memories written later use a new Seal identity.
+
+Reactivation depends on how the account became inactive:
+
+- **Owner deactivation:** `deactivate_account` sets `active` to false. The owner can call `reactivate_account` to make the account active again.
+- **Admin quarantine:** An AdminCap holder calls `admin_deactivate_account`, which sets `active` to false and increments `access_counter_version`. The owner cannot call `reactivate_account` while the account is quarantined. After the AdminCap holder calls `admin_clear_quarantine`, the owner can reactivate the account with `reactivate_account`.
+
+In every case, the registry entry for the address stays in place.
