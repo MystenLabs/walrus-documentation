@@ -10,6 +10,13 @@ keywords:
   - agent memory storage
   - decision guide
   - Walrus Memory
+  - pgvector
+  - Qdrant
+  - Chroma
+  - portability
+  - verifiability
+  - provider-native memory
+  - self-hosted vector database
 goal:
   description: Compare provider-native memory, vector databases, and Walrus Memory across persistence, portability, ownership, and verifiability — then select the right store for your agent's data requirements.
   requires:
