@@ -1,7 +1,7 @@
 ---
 title: "Blob Lifecycle"
 description: Oyster blobs move from upload through automatic storage pool extension to expiration, with retries, auto-grow, and reference-counted deletion.
-keywords: [ blob lifecycle, Oyster, StoragePool, storage pool, extension worker, auto-grow, Walrus epochs, expiration, deletion, webhook, account.funding_required, Prometheus metrics, WAL, SUI, horizontal scaling ]
+keywords: [ blob lifecycle, Oyster, StoragePool, storage pool, extension worker, auto-grow, Walrus epochs, expiration, deletion, webhook, account.funding_required, Prometheus metrics, WAL, SUI, horizontal scaling, Pearl-derived wallet, pool_end_epoch ]
 ---
 
 Blobs progress through a well-defined lifecycle from upload to expiration.
@@ -25,7 +25,7 @@ expiration. Every blob in the account shares the pool's lifetime.
 
 Oyster runs a **background extension worker** (`oysterd extend`) that
 keeps every account's `StoragePool` ahead of expiration. As long as the
-worker is running and the account's Pearl-derived wallet has WAL and
+worker is running and the account's [Pearl-derived wallet](#what-is-a-pearl-derived-wallet) has WAL and
 SUI to spend, your blobs persist indefinitely.
 
 ### What the worker guarantees
@@ -46,7 +46,7 @@ While the worker is running:
   extending its pool has an upper bound of `EXTENSION_IDLE_SLEEP_SECS` plus the
   RPC time of one extension.
 - Before every extension the worker reads the pool's onchain
-  `end_epoch` and only submits the PTB if the chain still shows the
+  `end_epoch` and only submits the programmable transaction block (PTB) if the chain still shows the
   pool inside the lookahead window. Walrus extensions are additive, so
   this is what keeps a retry idempotent: if an earlier attempt landed
   onchain but Oyster lost the DB update (write failure, timeout
@@ -198,7 +198,7 @@ reference and resubmits, up to three attempts in total
 fails, the client receives `502` and Oyster writes no `blobs` row; the
 `PooledBlob` stays registered but uncertified onchain.
 
-A `502` on `PUT` is the signal to retry with the same bytes. The retry
+A `502` on `PUT` after the certify attempts run out is the signal to retry with the same bytes. The retry
 re-registers, which aborts with `EFieldAlreadyExists` because the
 `PooledBlob` already exists; Oyster then recovers the existing object
 and reads its `certified_epoch`. If it is already certified (a TOCTOU
@@ -209,7 +209,7 @@ sliver upload and certify for that existing object before answering
 
 ## Blob states
 
-A blob's lifetime is bound to its account's `StoragePool`:
+A blob's lifetime is bound to its account's `StoragePool`. The funding-required branch in the following diagram does not start when a pool approaches expiry. Oyster reaches it only after an `extend_storage_pool` PTB fails with an insufficient-funds error:
 
 ```
 Upload → Active → Pool Approaching Expiry → Pool Extended → Active → ...
