@@ -7,7 +7,7 @@ keywords: [ Oyster, S3, AWS S3, limitations, bucket naming, path-style URLs, con
 Oyster implements the most commonly used S3 operations. Some features and behaviors
 differ from a full AWS S3 deployment.
 
-## Which S3 features does Oyster support?
+## Which S3 features does Oyster support? {#supported-vs-not-supported}
 
 | Feature | Status | Notes |
 |---------|--------|-------|
@@ -39,7 +39,7 @@ differ from a full AWS S3 deployment.
 | Object Lock and Legal Hold | Not supported | |
 | Lifecycle rules | Not supported | See [Object expiration](#object-expiration) |
 
-## How does Oyster behave differently from AWS S3?
+## How does Oyster behave differently from AWS S3? {#behavioral-differences}
 
 ### Object expiration
 
@@ -96,7 +96,7 @@ concurrent writes (`If-Match` for optimistic locking, `If-None-Match: *`
 for create-only semantics). Oyster does not support time-based conditionals (`If-Modified-Since`,
 `If-Unmodified-Since`).
 
-## How to set path-style URLs in the Rust SDK
+## How to set path-style URLs in the Rust SDK {#path-style-configuration-in-the-rust-sdk}
 
 In the AWS SDK for Rust (`aws-sdk-s3`), call `force_path_style(true)` on the config builder. The following client configuration also sets the region and endpoint:
 
