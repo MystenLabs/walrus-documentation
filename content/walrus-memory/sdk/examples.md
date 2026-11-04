@@ -34,7 +34,9 @@ answer: >-
   The basic example creates a Walrus Memory client, stores a memory with remember(), waits for completion with waitForRememberJob(), and recalls it with recall(). Advanced examples cover manual registration for pre-computed vectors, fact extraction with analyze() for longer text, and AI middleware with withMemWal for automatic recall and save in AI pipelines.
 ---
 
-## Basic: store and recall
+With the Walrus Memory SDK, you store a memory with `remember()`, wait for completion with `waitForRememberJob()`, and recall it with `recall()`. Advanced patterns cover manual registration with pre-computed vectors, fact extraction with `analyze()`, AI middleware with `withMemWal`, and structured memory for research apps.
+
+## Store and recall a memory
 
 The shortest working Walrus Memory example using the default relayer-backed SDK.
 
@@ -77,9 +79,9 @@ What you should see:
 ### Manual registration
 
 Use `rememberManual()` when you already have an encrypted payload plus vector, and `recallManual()`
-when you already have a query vector.
+when you already have a query vector. On the `MemWal` client, `recallManual()` returns hits that contain only `blob_id` and `distance`, with no decrypted text, so you fetch and decrypt the blobs yourself. For all options and return values, see [Manual remember and recall parameters](#manual-remember-and-recall-parameters).
 
-### Fact extraction
+### Extract facts from text
 
 Use `analyze()` when you want the relayer to extract facts from longer text and store them as
 memories.
@@ -93,7 +95,7 @@ const analyzed = await memwal.analyze(
 console.log(analyzed.facts, analyzed.job_ids);
 ```
 
-### AI Middleware
+### AI middleware
 
 Use `withMemWal` when you want recall before generation and optional auto-save after generation.
 See [AI Integration](/walrus-memory/sdk/ai-integration) for the full setup.
