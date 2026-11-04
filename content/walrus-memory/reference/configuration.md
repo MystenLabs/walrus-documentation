@@ -35,7 +35,7 @@ answer: >-
   with optional fields for server URL, namespace, SEAL, and Walrus settings.
 ---
 
-Use this page to pick the right config shape quickly.
+The Walrus Memory SDK uses three configuration shapes: `MemWalConfig` for the standard relayer-backed client, `MemWalManualConfig` for direct Sui signing and encryption, and `WithMemWalOptions` for AI middleware. Pick the shape that matches your integration path.
 
 ## `MemWalConfig`
 
@@ -74,7 +74,7 @@ Core fields:
 | `packageId` | yes | Walrus Memory package ID on Sui |
 | `registryId` | yes | `AccountRegistry` shared object ID on Sui |
 | `accountId` | yes | `MemWalAccount` object ID |
-| `namespace` | no | Default namespace |
+| `namespace` | no | Default namespace. Default: `"default"` |
 | `preflightTimeoutMs` | no | Per-round-trip budget for the compatibility preflight. Default: `5000` |
 
 Sui signer fields:
@@ -90,8 +90,8 @@ Walrus and network fields:
 | Field | Required | Notes |
 | --- | --- | --- |
 | `suiNetwork` | no | `testnet` or `mainnet`. Default: `mainnet` |
-| `sealServerConfigs` | no | Full Seal configs for independent or committee servers. Committee entries require `aggregatorUrl` |
-| `sealKeyServers` | no | Legacy override for independent Seal key server object IDs |
+| `sealServerConfigs` | no | Full Seal configs for independent or committee servers. Committee entries require `aggregatorUrl`. See [How do independent and committee Seal servers differ?](#how-do-independent-and-committee-seal-servers-differ) |
+| `sealKeyServers` | no | Legacy override for independent Seal key server object IDs. See [How do independent and committee Seal servers differ?](#how-do-independent-and-committee-seal-servers-differ) |
 | `sealThreshold` | no | Default: `2`, capped to total configured server weight |
 | `walrusEpochs` | no | Default: `50` |
 | `walrusAggregatorUrl` | no | Walrus download endpoint. Defaults follow `suiNetwork` |
@@ -121,13 +121,13 @@ Walrus and network fields:
 - Because `MemWalManual` defaults to `mainnet`, it keeps the legacy independent Seal key server pair by default for compatibility. Pass `sealServerConfigs` to use a committee aggregator manually.
 - Use `sealServerConfigs` to override the built-in default with another committee by providing `objectId`, `weight`, and `aggregatorUrl`.
 
-## Relayer configuration
+## How do I configure a self-hosted relayer?
 
 The fields above configure the client SDKs. If you run your own relayer, its behavior is configured through environment variables rather than these config objects. One option to be aware of is the Sui RPC transport, `SUI_GRPC_URL`. Set this to a Sui gRPC fullnode URL to route the relayer's Sui calls through gRPC instead of JSON-RPC. It covers both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. It is empty by default, which keeps JSON-RPC. This option exists to migrate ahead of the Sui JSON-RPC sunset in July 2026.
 
 For the full list of relayer settings, see the [Environment Variables](/walrus-memory/reference/environment-variables) reference and the [Self-Hosting](/walrus-memory/relayer/self-hosting) guide.
 
-## Independent and committee Seal servers
+## How do independent and committee Seal servers differ?
 
 An independent Seal key server is one onchain key server object. You list several of them, and `sealThreshold` sets how many shares encryption and decryption need. The legacy independent pair keeps a threshold of 2.
 
