@@ -12,6 +12,10 @@ keywords:
   - automatic memory
   - lifecycle hooks
   - memwal_login
+  - memwal_remember
+  - memwal_recall
+  - memwal_restore
+  - stdio
 goal:
   description: Add Walrus Memory to Antigravity as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify the connection with a test recall.
   requires:
@@ -49,7 +53,7 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 
 </div>
 
-## Installation
+## How to install Walrus Memory in Antigravity
 
 <Tabs groupId="code">
   <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
@@ -83,7 +87,7 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
 | Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
 
-## Lifecycle hooks (plugin only)
+## What lifecycle hooks does the plugin provide?
 
 | Hook | Event | What it does |
 |------|-------|--------------|
@@ -105,9 +109,9 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 
 The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
-## Verify
+## How to verify the connection
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
+Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`. To confirm that the fact persists, ask the agent to recall it and check that `memwal_recall` returns it. If recall returns nothing, ask the agent to run `memwal_health` to check connectivity.
 
 ## Troubleshooting
 
