@@ -31,7 +31,9 @@ answer: >-
   Walrus Memory uses a layered permission model where the account owner has full control (manage keys, activate/deactivate), delegates can store and recall memories but cannot modify account settings, and the SEAL seal_approve function grants decryption access to owners and registered delegates on active accounts. The relayer verifies every request against the onchain contract, ensuring that permissions are cryptographically enforced on Sui.
 ---
 
-## Owner
+Walrus Memory uses a layered permission model. The account owner has full control of the account, delegates store and recall memories but cannot change account settings, and the Seal `seal_approve` function grants decryption access to owners and registered delegates on active accounts.
+
+## What can an account owner do?
 
 The owner is the Sui wallet address recorded by the `MemWalAccount`. The owner can:
 
@@ -41,7 +43,7 @@ The owner is the Sui wallet address recorded by the `MemWalAccount`. The owner c
 
 Each Sui address can only create **one** MemWalAccount: the `AccountRegistry` enforces this limit, so an attempt to create a second account from an address that already owns one is rejected instead of producing another account.
 
-## Delegate
+## What can a delegate do?
 
 A delegate key authenticates API calls through the relayer. Delegates can:
 
@@ -56,9 +58,15 @@ Delegates **cannot**:
 - Deactivate or reactivate the account
 - Transfer ownership
 
-## Seal Access control
+## How does Seal access control work?
 
-The contract's `seal_approve` function is the Seal policy that controls who can decrypt memories. Every key ID must end with `BCS(owner_address) ‖ BCS(access_counter_version)`, the owner's 32 bytes followed by the account's 8-byte little-endian rotation counter. Anything might precede that tail; the SDK puts a namespace there. This tail check applies to owners and delegates alike. Given it, access is granted if the caller is:
+The contract's `seal_approve` function is the Seal policy that controls who can decrypt memories. Every key ID must end with `BCS(owner_address) ‖ BCS(access_counter_version)`, the owner's 32 bytes followed by the account's 8-byte little-endian rotation counter. Anything might precede that tail; the SDK puts a namespace there. A key ID has this layout, in order:
+
+- Prefix: any bytes (the SDK uses the namespace)
+- `BCS(owner_address)`: 32 bytes
+- `BCS(access_counter_version)`: 8 bytes, little-endian
+
+This tail check applies to owners and delegates alike. Given it, access is granted if the caller is:
 
 1. **The data owner**, the caller is the account owner
 2. **A registered delegate**, the caller's Sui address is in the account's `delegate_keys` list
@@ -70,16 +78,16 @@ but it does not stop another delegate on the same account from requesting that k
 
 ### The rotation counter
 
-Seal derives one *reusable* key per identity, so an identity fixed at `BCS(owner)` would let any delegate who ever fetched that key keep decrypting new memories forever, removing them onchain would never touch the copy in their hands. Tailing the ID with `access_counter_version` fixes this: withdrawing access (removing a delegate, freezing the account) bumps the counter, which changes the identity, which yields a key the removed delegate cannot fetch.
+Seal derives one reusable key per identity, and a holder decrypts with that key without calling `seal_approve` again. An identity fixed at `BCS(owner)` would let any delegate who ever fetched that key keep decrypting new memories forever. Removing them onchain would never touch the copy in their hands. Tailing the ID with `access_counter_version` fixes this: withdrawing access (removing a delegate, freezing the account) bumps the counter, which changes the identity, which yields a key the removed delegate cannot fetch.
 
 Two rules follow, and clients must respect both:
 
-- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable, so owners keep access to their history, but a removed delegate who already fetched an older key keeps the copy in their hands and can still decrypt memories written under that counter; retracting those requires re-encryption.
+- **`seal_approve` rejects any counter above the account's current one.** Otherwise a delegate authorized *right now* could pre-fetch keys for every future identity and make rotation a no-op. Older counters stay approvable only for callers who still pass the authorization check, the account owner and addresses still in `delegate_keys`, so owners keep access to their history. A removed delegate can no longer get `seal_approve` to approve any request, at an older counter or the current one, but revocation does not revoke a key they already fetched: that copy stays in their hands and still decrypts memories written under the counter it covers; retracting those requires re-encryption.
 - **Read the counter fresh from chain immediately before encrypting**, never cache it, never accept it from a request body. Encrypting under a stale counter hands the data straight back to the delegate you just removed.
 
 Rotation is forward-only: memories already written under an older counter stay readable with the older key. Retracting those requires re-encryption.
 
-## Permission boundary
+## How do the permission layers work together?
 
 These are separate layers that work together:
 
