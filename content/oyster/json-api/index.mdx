@@ -8,7 +8,7 @@ Oyster serves the JSON API under `/api/v1/`. All requests and responses
 use JSON (except blob content, which is raw binary). Authenticated endpoints
 require a Bearer token in the `Authorization` header.
 
-## Base URL
+## What is the base URL? {#base-url}
 
 All API endpoints use the `/api/v1` prefix:
 
@@ -19,7 +19,7 @@ $OYSTER_URL/api/v1/
 Throughout this reference, `$OYSTER_URL` represents your Oyster
 server address (for example, `http://localhost:3000`).
 
-## Authentication
+## How to authenticate requests {#authentication}
 
 Most endpoints require a Bearer token:
 
@@ -32,7 +32,7 @@ Endpoints that **do not** require authentication:
 - Health, readiness, and metrics probes
 - OpenAPI documentation
 
-## Error responses
+## What do error responses look like? {#error-responses}
 
 All errors return a JSON body with a single `error` field:
 
@@ -52,7 +52,7 @@ All errors return a JSON body with a single `error` field:
 | `304` | Not Modified: `If-None-Match` matched on a GET request |
 | `400` | Bad Request: invalid input or validation failure |
 | `401` | Unauthorized: missing or invalid API key |
-| `402` | Payment Required: the Pearl-derived wallet lacks WAL or SUI to fund the onchain action (see [Cross-cutting error contracts](#cross-cutting-error-contracts)) |
+| `402` | Payment Required: the [Pearl-derived wallet](#what-is-the-pearl-derived-wallet) lacks WAL or SUI to fund the onchain action (see [Cross-cutting error contracts](#cross-cutting-error-contracts)) |
 | `404` | Not Found: resource doesn't exist or your account doesn't own it |
 | `409` | Conflict: resource already exists or limit reached |
 | `412` | Precondition Failed: `If-Match` or `If-None-Match` condition not met |
@@ -81,6 +81,19 @@ appear once here, and per-route docs link back.
   `DELETE /buckets/{bucket}/blobs/{key}` (see
   [Delete Blob](blobs.mdx#delete-blob)). When the lookup itself
   fails, `funding_required` is `null`.
+
+  The body has this shape:
+
+  ```json
+  {
+    "error": "human-readable error message",
+    "funding_required": {
+      "wal_frost": "decimal string",
+      "sui_mist": "decimal string"
+    }
+  }
+  ```
+
 - **`CapExceeded` (400)**: the upload would push the account
   past its per-account `max_unencoded_bytes` cap. Body carries a
   `cap_exceeded` block pointing at the admin endpoint that can
@@ -97,7 +110,7 @@ The admin-side onchain shrink endpoint
 has its own 400 variants (`would_orphan`, `shrink_aborted`),
 which the admin reference documents.
 
-## Pagination
+## How to paginate list results {#pagination}
 
 List endpoints use **cursor-based pagination**:
 
@@ -129,7 +142,7 @@ curl -s -H "Authorization: Bearer $API_KEY" \
   "$OYSTER_URL/api/v1/buckets?limit=10&cursor=eyJjcmVhdGVk..." | jq
 ```
 
-## Interactive documentation
+## Where is the interactive documentation? {#interactive-documentation}
 
 Oyster serves an interactive OpenAPI UI at:
 
