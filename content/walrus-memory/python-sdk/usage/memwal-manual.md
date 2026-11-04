@@ -2,7 +2,7 @@
 title: "Manual Methods"
 description: >-
   Lower-level remember_manual, recall_manual, and embed methods for callers that manage
-  their own vectors or already have SEAL-encrypted payloads in the Python SDK.
+  their own vectors or already have Seal-encrypted payloads in the Python SDK.
 keywords:
   - Walrus Memory
   - Walrus Memory
@@ -12,7 +12,7 @@ keywords:
   - remember_manual
   - recall_manual
 goal:
-  description: Call the manual Python SDK methods to register SEAL-encrypted bytes with a pre-computed embedding vector, search with a pre-computed vector, and compute embeddings independently from storage.
+  description: Call the manual Python SDK methods to register Seal-encrypted bytes with a pre-computed embedding vector, search with a pre-computed vector, and compute embeddings independently from storage.
   requires:
     - has_frontmatter:
         - title
@@ -32,7 +32,7 @@ questions:
 answer: >-
   The Python SDK provides lower-level manual methods on the same Walrus Memory/MemWalSync client:
   `embed` computes a vector without storing anything, `remember_manual` sends
-  base64 SEAL-encrypted bytes plus a pre-computed vector (the relayer uploads to
+  base64 Seal-encrypted bytes plus a pre-computed vector (the relayer uploads to
   Walrus), and `recall_manual` searches with a pre-computed query vector returning
   raw blob IDs and distances.
 ---
@@ -60,7 +60,9 @@ print(len(vec.vector))
 
 ## `remember_manual`
 
-Send base64 Seal-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping.
+Send base64 Seal-encrypted bytes plus a pre-computed vector. The relayer uploads the ciphertext to Walrus and stores the `{blob_id, vector, owner, namespace}` mapping. The blob is that uploaded ciphertext, and `blob_id` identifies it on Walrus.
+
+This example reuses the `memwal` client and the `vec` result from the [`embed`](#embed) example.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
@@ -81,6 +83,8 @@ print(result.id, result.blob_id, result.owner, result.namespace)
 
 Search with a pre-computed query vector. Returns `{blob_id, distance}` hits only, no decrypted text (you fetch/decrypt the blobs yourself).
 
+This example reuses the `memwal` client from the [`embed`](#embed) example.
+
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/memwal-manual.md" target="_blank" className="code-source-link">Source: python-sdk/usage/memwal-manual.md</a>
 
 ```python
@@ -98,11 +102,11 @@ for hit in hits.results:
 
 | You have… | Use |
 | --- | --- |
-| Plain text, want it stored | `remember` / `remember_and_wait` |
+| Plain text, want it stored | [`remember`](/walrus-memory/python-sdk/usage/memwal) / `remember_and_wait` |
 | Plain text, want only the vector | `embed` |
 | A vector + Seal-encrypted bytes | `remember_manual` |
 | A query vector, want raw hits | `recall_manual` |
-| Plain query text, want decrypted matches | `recall` |
+| Plain query text, want decrypted matches | [`recall`](/walrus-memory/python-sdk/usage/memwal) |
 
 All four manual entry points exist on both `MemWal` (async) and `MemWalSync` (sync) with identical signatures.
 
