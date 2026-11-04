@@ -1,7 +1,7 @@
 ---
 title: WAL Tokenomics FAQ
 description: Answers to common questions about the WAL token, covering fee flows, staking and re-delegation, rewards, slashing, and what burning a blob does.
-keywords: ["walrus", "wal token", "tokenomics", "staking", "re-delegation", "rewards", "slashing", "storage fund", "fees", "burn", "faq"]
+keywords: ["walrus", "wal token", "tokenomics", "staking", "re-delegation", "rewards", "slashing", "storage fund", "fees", "burn", "faq", "write fee", "subsidies"]
 ---
 
 Common questions about the WAL token and how value flows through Walrus focus on mechanics that are visible to users and integrators: what you pay, where those payments go, how staking and rewards work, and what actually happens when you burn a blob.
@@ -14,7 +14,7 @@ You pay for Walrus in two tokens: WAL covers storage and write fees, and SUI cov
 
 ### What is WAL used for?
 
-WAL is the native token of Walrus. You use it to pay for storage and to stake with storage nodes. Walrus prices storage at a fixed **$0.023/GB/month**, and you pay in WAL, with the WAL amount adjusting automatically as the WAL price changes. See [Storage Costs](/docs/system-overview/storage-costs) for the full pricing model.
+WAL is the native token of Walrus. You use it to pay for storage and to stake with storage nodes. Walrus prices storage at a fixed **$0.023/GB/month**, and you pay in WAL, with the WAL amount adjusting periodically through an onchain price vote that storage nodes update as the WAL price changes. See [Storage Costs](/docs/system-overview/storage-costs) for the full pricing model.
 
 You also pay SUI, not WAL, for the Sui transactions that register, certify, and extend blobs. WAL covers storage and write fees, and SUI covers onchain gas.
 
@@ -49,6 +49,8 @@ Committee selection for an epoch happens ahead of time, at the midpoint of the p
 - **Staking:** To affect the committee in epoch `e`, stake before the midpoint of epoch `e - 1`. Stake added after that point first becomes active in epoch `e + 1`.
 - **Unstaking:** A withdrawal requested before the midpoint of epoch `e - 1` stops earning at the start of epoch `e`. Requested after that point, the stake stays active and keeps accruing rewards through epoch `e`, and the balance is available at the start of epoch `e + 1`.
 
+For example, to affect the committee in epoch 10, stake before the midpoint of epoch 9. Stake you add after that midpoint first becomes active in epoch 11. A withdrawal you request before the midpoint of epoch 9 stops earning at the start of epoch 10. If you request it after that midpoint, the stake keeps earning through epoch 10, and the balance becomes available at the start of epoch 11.
+
 ### Can Walrus slash my stake?
 
 Walrus never slashes your delegated principal. If a storage node misbehaves, committee members can vote to slash it, and executing that slash burns the node operator's accumulated commission, not the WAL you delegated. Separately, poor node performance lowers the rewards a node earns, which reduces the rewards you receive as a delegator. Choosing reliable nodes therefore protects your rewards, while your staked principal stays safe from slashing. For the operator side, see [Slashing](/docs/operator-guide/storage-nodes/slashing).
@@ -80,6 +82,10 @@ Burning a blob removes the blob's corresponding Sui object, which reclaims most 
 
 See [Burn blobs](/docs/walrus-client/managing-blobs#how-to-burn-blobs) for the CLI workflow, and [Storage Costs](/docs/system-overview/storage-costs#manage-blob-object-lifecycle) for when burning saves money.
 
+### Does the epoch burn include subsidies?
+
+The 3% epoch burn applies to the full rewards balance of the epoch, after subsidies join it. Subsidies from the subsidies contract join the same per-epoch rewards balance that holds user storage payments, so the burn base includes both. Measured against user payments alone, the burn is larger: when the usage-dependent subsidy is at 800%, burning 3% of total rewards equals roughly 25% of what users paid.
+
 ### Why is storage priced in dollars but paid in WAL?
 
 Pricing storage at a fixed **$0.023/GB/month** gives you predictable, budgetable costs regardless of WAL price movement. Storage nodes track the WAL price from multiple sources and periodically update an onchain price vote, so the WAL amount charged for a given store adjusts to keep the USD-denominated price stable. See [How pricing works](/docs/system-overview/storage-costs#how-does-walrus-pricing-work).
@@ -90,7 +96,3 @@ Pricing storage at a fixed **$0.023/GB/month** gives you predictable, budgetable
 - [Staking and Unstaking](/docs/operator-guide/stake)
 - [Network Reference](/docs/network-reference)
 - [Walrus whitepaper](/walrus.pdf)
-
-## Does the epoch burn include subsidies?
-
-The 3% epoch burn applies to the full rewards balance of the epoch, after subsidies are added. Subsidies from the subsidies contract join the same per-epoch rewards balance that holds user storage payments, so the burn base includes both. Measured against user payments alone, the burn is larger: when the usage-dependent subsidy is at 800%, burning 3% of total rewards equals roughly 25% of what users paid.
