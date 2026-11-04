@@ -12,7 +12,7 @@ next extension cycle succeeds.
 The webhook has a defined trigger condition, payload schema, retry
 behavior, and circuit-breaker semantics. You write a receiver to handle it.
 
-## Overview
+## How the webhook works {#overview}
 
 When the extension worker tries to extend an account's `StoragePool`
 and Sui rejects the transaction with an insufficient-funds error,
@@ -24,7 +24,7 @@ Oyster currently emits only `account.funding_required`. Future events
 share the same envelope shape. Receivers should switch on the `type`
 field rather than assuming a single schema.
 
-## Trigger condition
+## When does Oyster send the webhook? {#trigger-condition}
 
 The webhook fires when **all** of the following hold during an
 extension cycle:
@@ -86,13 +86,13 @@ signature:
 | `X-Oyster-Signature` | `ed25519=<base64(64-byte signature)>` over the exact response body bytes. |
 | `X-Oyster-Public-Key-Fingerprint` | Hex of the first 8 bytes of the public key. Lets receivers detect rotation before attempting verification. |
 
-The response from `PUT /api/v1/admin/app/webhook` (or
+The [Admin API](../json-api/admin.mdx) response from `PUT /api/v1/admin/app/webhook` (or
 `GET /api/v1/admin/app`) returns the public key as a
 base64-encoded 32-byte string. Receivers **must** verify the signature
 and reject deliveries whose fingerprint does not match the currently
 configured public key.
 
-## Retry policy
+## How does Oyster retry failed deliveries? {#retry-policy}
 
 Oyster retries the same delivery up to `MAX_RETRIES = 3` times with
 exponential backoff:
@@ -101,8 +101,7 @@ exponential backoff:
 - Attempt 2: after 100 ms.
 - Attempt 3: after 200 ms.
 
-(Backoff doubles each retry with a cap of 5 s, so the third sleep
-would be 400 ms, well under the cap.)
+Backoff doubles after each failed attempt, capped at 5 s. See [Retry backoff timing](#retry-backoff-timing).
 
 Retry semantics by response:
 
@@ -152,7 +151,7 @@ you want to suppress repeated notifications for the same underfunded
 account, do so in your receiver based on `account_id` and your own
 state.
 
-## Setup
+## How to set up a webhook receiver {#setup}
 
 Webhook receiver URLs are self-service. Use the `oyster` CLI (or the
 Admin API directly) with your app admin key:
@@ -175,9 +174,9 @@ new key after each call. The corresponding HTTP endpoints are
 `PUT /api/v1/admin/app/webhook`, `DELETE /api/v1/admin/app/webhook`,
 and `GET /api/v1/admin/app`. See [Admin API](../json-api/admin.mdx).
 
-## Verifying signatures
+## How to verify signatures {#verifying-signatures}
 
-Verify each delivery against the public key returned at registration.
+Verify each delivery against the public key returned when you [register the webhook](#setup).
 Compute the verification over the exact request body bytes. Do not
 re-serialize the JSON. The fingerprint header carries hex of the first 8 bytes of the public key, so compare it against the hex encoding of your configured key rather than against raw key bytes.
 
@@ -390,6 +389,6 @@ under-funding without alerting on transient receiver failures.
 
 Oyster sleeps only between attempts. After a failed attempt, it waits the current delay and then doubles that delay for the next gap, capped at 5 s. It does not sleep after the final attempt. With 3 attempts, the full schedule is 100 ms before attempt 2 and 200 ms before attempt 3. The next doubled value (400 ms) never applies because no fourth attempt follows.
 
-## Webhook key rotation
+## What happens when you rotate the webhook key? {#webhook-key-rotation}
 
 Rotation has no overlap window. Each `PUT` discards the prior key pair, so Oyster never signs with both the old and new keys. A receiver that still holds the old public key sees a fingerprint mismatch in `X-Oyster-Public-Key-Fingerprint` on every delivery after the call. Use that header to detect the rotation and install the new public key returned by the `PUT` response, or read the key back from `GET /api/v1/admin/app`.
