@@ -50,7 +50,7 @@ import { MemWal } from "@mysten-incubation/memwal";
 
 ### `@mysten-incubation/memwal/manual`
 
-Use this when the client must handle embeddings and local Seal operations.
+Use this when the client must handle embeddings and [local Seal operations](#what-are-local-seal-operations).
 
 - relayer still handles upload relay, registration, search, and restore
 
@@ -110,18 +110,18 @@ Middleware: `with_memwal_langchain`, `with_memwal_openai`
 
 ---
 
-## Namespace
+## What is the default namespace? {#namespace}
 
 All clients support a default namespace. If you omit it, it falls back to `"default"`.
 
-## Recommended path
+## Which entry point should you start with? {#recommended-path}
 
 1. Start with `MemWal` (TypeScript) or `memwal` (Python)
 2. Set a namespace explicitly
 3. Validate `remember`, `recall`, `analyze`, and `restore`
 4. Move to `MemWalManual` only if you need client-managed embeddings and local Seal work
 
-## Private key format
+## Which private key formats can you use? {#private-key-format}
 
 The `key` parameter takes an Ed25519 delegate private key as a string in either of these formats:
 
