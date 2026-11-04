@@ -100,7 +100,7 @@ Account authorization and application-user authorization operate at different le
 - The [Seal](/walrus-memory/fundamentals/architecture/data-flow-security-model) contract policy checks the owner or registered delegate before releasing decryption keys.
 - An application using one account for many users enforces each user's namespace access in its own server. The account contract does not distinguish those application users.
 
-Removing a delegate rotates the account's encryption identity for future writes. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Keep the owner key secure so you can manage and replace delegate keys. See [Delegate key management](/walrus-memory/contract/delegate-key-management) for revocation steps.
+Removing a delegate increments the account's rotation counter, which produces a new encryption identity used by writes after the removal; it does not re-encrypt existing memories. It does not take back plaintext the delegate already read, or decryption keys it already obtained. Keep the owner key secure so you can manage and replace delegate keys. See [Delegate key management](/walrus-memory/contract/delegate-key-management) for revocation steps.
 
 ## What happens to encryption when you remove a delegate?
 

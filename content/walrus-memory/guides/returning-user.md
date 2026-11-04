@@ -49,7 +49,7 @@ const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
 
-Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of your namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call: because restore has no cursor, rerunning it only re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob has been covered. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
+Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call and never exceeds `limit` (10 by default), not a full count of your namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call: because restore has no cursor, rerunning it only re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob has been covered. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
 
 ## Does Walrus Memory migrate existing Walrus data?
 

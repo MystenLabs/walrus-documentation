@@ -38,7 +38,7 @@ Credential and authorization errors have the following symptoms, causes, and fix
 
 **Symptom:** You generated a delegate key, often from the dashboard, confirmed your account ID, and every authenticated call returns `AUTH_REJECTED` with HTTP status 401. A health check still succeeds, because the health endpoint needs no authentication, so the relayer is reachable but it does not accept your signed requests.
 
-**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. The following table orders the causes by how often they apply to a freshly generated key, and each row pairs the check with its fix:
+**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. The following table documents all known causes from the authentication model rather than a single confirmed one, ordered by how often they apply to a freshly generated key, with each row pairing the check with its fix:
 
 | **Cause** | **How to check** | **How to fix** |
 | --- | --- | --- |

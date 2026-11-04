@@ -89,6 +89,6 @@ When `autoSave` is `true`, the middleware saves only on the first step of a user
 Beyond the `MemWalConfig` fields, `withMemWal` accepts `maxMemories`, `autoSave`, `minRelevance`, and `debug`. It has no callback-based recall or save filter.
 
 - `minRelevance`: minimum similarity score (0 to 1) that a recalled memory needs to reach the prompt. The default is `0.3`. A value of `0` turns off the relevance filter.
-- `autoSave`: turns saving after generation on or off. The default is `true`.
+- `autoSave`: turns saving after generation on or off. This option is optional and defaults to `true`, so the explicit `autoSave: true` in the example above only restates the default and can be omitted.
 
 To choose exactly which text the app stores or how it filters recall results, call the SDK methods directly instead of relying on the middleware.
