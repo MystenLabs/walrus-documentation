@@ -36,7 +36,7 @@ answer: >-
 
 With the Walrus Memory SDK, you store a memory with `remember()`, wait for completion with `waitForRememberJob()`, and recall it with `recall()`. Advanced patterns cover manual registration with pre-computed vectors, fact extraction with `analyze()`, AI middleware with `withMemWal`, and structured memory for research apps.
 
-## How do I store and recall a memory?
+## Store and recall a memory
 
 The shortest working Walrus Memory example using the default relayer-backed SDK.
 
@@ -79,9 +79,9 @@ What you should see:
 ### Manual registration
 
 Use `rememberManual()` when you already have an encrypted payload plus vector, and `recallManual()`
-when you already have a query vector. `recallManual()` returns hits that contain only `blob_id` and `distance`, with no decrypted text, so you fetch and decrypt the blobs yourself. For all options and return values, see [Manual remember and recall parameters](#manual-remember-and-recall-parameters).
+when you already have a query vector. On the `MemWal` client, `recallManual()` returns hits that contain only `blob_id` and `distance`, with no decrypted text, so you fetch and decrypt the blobs yourself. For all options and return values, see [Manual remember and recall parameters](#manual-remember-and-recall-parameters).
 
-### How do I extract facts from text?
+### Extract facts from text
 
 Use `analyze()` when you want the relayer to extract facts from longer text and store them as
 memories.
