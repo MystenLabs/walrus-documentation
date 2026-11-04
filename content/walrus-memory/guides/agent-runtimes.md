@@ -48,7 +48,7 @@ Agents built on EVM, Base, Virtuals, or any other stack can use Walrus Memory. T
 
 Walrus Memory stores memories as encrypted blobs on Walrus and records ownership in a Sui account. Your agent authenticates with an Ed25519 delegate key that the account owner registers on that account. An agent that also signs Ethereum transactions, holds an ERC-20 balance, or runs inside a Virtuals runtime uses Walrus Memory the same way as any other agent.
 
-## Requirements
+## What does your agent need?
 
 Your agent needs two things, whatever its language or chain:
 
@@ -81,7 +81,7 @@ const hits = await memwal.recall({ query: "user preferences", limit: 5 });
 
 To load credentials from the environment, validate connectivity at boot, and handle credential errors, see [Headless SDK Setup](/walrus-memory/sdk/headless-setup). For the write-confirm-recall cycle, see the [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop).
 
-## Sign requests directly
+## How to call Walrus Memory from a language with no SDK
 
 For agents in a language with no SDK, such as Go, Rust, or Elixir, call the relayer API directly. Every authenticated route takes the same signed headers, so your agent needs an Ed25519 signer, SHA-256, and an HTTP client.
 
@@ -101,7 +101,7 @@ Send the result as hex in these headers:
 | `x-signature` | Hex-encoded Ed25519 signature of the message above, 64 bytes |
 | `x-timestamp` | Unix timestamp in seconds, valid for five minutes |
 | `x-nonce` | UUID v4, which the relayer records for replay protection |
-| `x-account-id` | The account object ID. Official SDKs always send it and include it in the signed message |
+| `x-account-id` | The account object ID, the same value as the `{account_id}` field of the signed message. Official SDKs always send it |
 
 The relayer verifies the signature, then resolves the owner by looking up your public key in the account's onchain delegate keys. For every route, request shape, and response shape, see the [Relayer API Reference](/walrus-memory/relayer/api-reference).
 
@@ -125,7 +125,7 @@ Supply it one of three ways:
 
 A client that sends only the five signed headers authenticates successfully and then fails to decrypt, which is the failure to expect if recall returns nothing usable. Building a `SessionKey` outside the SDK means implementing the Seal client flow yourself, so plan for that work before choosing the direct path for reads. Writes through `/api/remember` do not need it.
 
-Confirm the agent reaches the relayer before you debug signing, using the unauthenticated health route:
+Confirm the agent reaches the relayer before you debug signing, using the unauthenticated health route. Set `MEMWAL_RELAYER_URL` to your relayer's base URL, for example `https://relayer.memory.walrus.xyz` for Mainnet or `https://relayer.dev.memwal.ai` for Testnet:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/guides/agent-runtimes.md" target="_blank" className="code-source-link">Source: guides/agent-runtimes.md</a>
 
@@ -133,7 +133,7 @@ Confirm the agent reaches the relayer before you debug signing, using the unauth
 $ curl -sS "$MEMWAL_RELAYER_URL/health"
 ```
 
-## Limits of cross-chain support
+## Does Walrus Memory support cross-chain agents?
 
 Walrus Memory does not do the following. A design that assumes otherwise does not work:
 
