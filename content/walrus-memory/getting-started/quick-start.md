@@ -173,6 +173,8 @@ Walrus Foundation provides the following endpoints as a public good.
     });
     ```
 
+    The example reads the account ID you generated from the `MEMWAL_ACCOUNT_ID` environment variable and passes it as `accountId`. It reads your delegate private key from the `MEMWAL_KEY` environment variable and passes it as `key`. The `namespace` value, `my-app` in this example, scopes your memories together with the account ID: `recall()` searches the memories stored under the same account and namespace.
+
     :::warning
 Use the `accountId` **you** generated in the previous step. Recall scope is per **account and namespace**. Reusing an account ID copied from docs or another project puts your memories in a shared space instead of isolating them to you.
 :::
@@ -186,6 +188,8 @@ Use the `accountId` **you** generated in the previous step. Recall scope is per 
     ```
 
   ### Store and recall your first memory
+
+    The `remember()` call returns a job. Pass its `job_id` to `waitForRememberJob()` to wait until the job finishes, then call `recall()` to retrieve the memory:
 
     ```ts
     const job = await memwal.remember("User prefers dark mode and works in TypeScript.");
