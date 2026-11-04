@@ -86,7 +86,7 @@ If you do not already have PostgreSQL + pgvector running, start it with:
 $ docker compose -f services/server/docker-compose.yml up -d postgres
 ```
 
-Then copy the example environment file and run the relayer. Edit `services/server/.env` to set the [required environment variables](#required) before the `cargo run` step:
+Copy the example environment file, set the [required environment variables](#required) in `services/server/.env`, and then run the relayer:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
@@ -139,7 +139,7 @@ By default, the relayer enforces rate limits and storage quotas through Redis to
 - `SIDECAR_URL` defaults to `http://localhost:9000`.
 - `SUI_NETWORK` defaults to `mainnet`.
 - `SUI_RPC_URL`, Walrus endpoints, and `WALRUS_PACKAGE_ID` fall back to network defaults based on `SUI_NETWORK`.
-- `SEAL_SERVER_CONFIGS` and `SEAL_KEY_SERVERS` are optional overrides for encrypt and decrypt; prefer `SEAL_SERVER_CONFIGS` for custom committees. See [How do I configure Seal key servers?](#how-do-i-configure-seal-key-servers) for both variables.
+- `SEAL_SERVER_CONFIGS` and `SEAL_KEY_SERVERS` are optional overrides for encrypt and decrypt; prefer `SEAL_SERVER_CONFIGS` for custom committees. See [Seal key server configuration](#how-to-configure-seal-key-servers) for both variables.
 - `WALRUS_AGGREGATOR_URLS` can add comma-separated proxy or aggregator candidates for cold-read tail racing after Redis cache misses.
 - `WALRUS_SKIP_CONSISTENCY_CHECK=false` by default; enable only for trusted Walrus Memory-written cold reads after accepting the consistency tradeoff.
 - The sidecar Walrus upload route defaults storage `epochs` by network: `5` on `testnet`, `3` on `mainnet` (unless the request passes `epochs`). Both the request value and the `WALRUS_STORAGE_EPOCHS` override cap at `15`; an over-cap override falls back to the network default.
@@ -193,9 +193,9 @@ MEMWAL_PACKAGE_ID=0xe7c16fbea0560e7057e2bf7422feaa4fb313749fc69c9e9092fac7a33b81
 MEMWAL_REGISTRY_ID=0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f
 ```
 
-### How do I configure Seal key servers?
+## How to configure Seal key servers
 
-Two variables control which Seal key servers the sidecar uses. `SEAL_KEY_SERVERS` pins independent key servers by object ID. `SEAL_SERVER_CONFIGS` opts into a committee key server and requires an `aggregatorUrl`. Prefer `SEAL_SERVER_CONFIGS` for custom committees.
+Two variables control which Seal key servers the sidecar uses. `SEAL_KEY_SERVERS` takes a comma-separated list of independent key server object IDs. `SEAL_SERVER_CONFIGS` takes a JSON array of server entries (`objectId`, optional `weight`, `aggregatorUrl`, and an `apiKeyName` and `apiKey` pair); committee entries require an `aggregatorUrl`. If you set both, the sidecar uses `SEAL_SERVER_CONFIGS` and ignores `SEAL_KEY_SERVERS`. Prefer `SEAL_SERVER_CONFIGS` for custom committees.
 
 If you set neither `SEAL_SERVER_CONFIGS` nor `SEAL_KEY_SERVERS`, the sidecar uses built-in defaults for the selected `SUI_NETWORK`. On `testnet`, the default remains Mysten's original independent key server pair so existing encrypted memories remain decryptable:
 
