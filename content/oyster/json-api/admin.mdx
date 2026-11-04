@@ -87,7 +87,24 @@ curl -s -X POST \
 GET /api/v1/accounts
 ```
 
-Use `GET /api/v1/accounts` with admin-key authentication to list the accounts your app manages, together with the number of active API keys on each account. Use this endpoint to look up an `account_id` after you create an account.
+Lists the accounts your app owns, oldest first, with the number of active
+(non-revoked) API keys on each. Requires admin-key authentication. Use this
+endpoint to look up an `account_id` after you create an account.
+
+**Response** (`200 OK`): an array of objects with these fields.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Account ID |
+| `name` | string | Human-readable account name |
+| `created_at` | string | ISO 8601 creation timestamp |
+| `active_api_key_count` | integer | Number of active (non-revoked) API keys on the account |
+
+**Errors:**
+
+| Status | Condition |
+|--------|-----------|
+| `401` | Missing or invalid admin key |
 
 ### Update storage cap
 
@@ -163,7 +180,7 @@ and Oyster populates `pool` from the onchain read).
 
 `max_unencoded_bytes` measures unencoded bytes, but Walrus tracks
 usage in encoded bytes, and the encoding `f` carries a large fixed
-per-blob metadata overhead. With `avg_blob_size = 0` (the default only for accounts created before this feature) the cap
+per-blob metadata overhead. With `avg_blob_size = 0` (the value Oyster backfilled for accounts that predate the `avg_blob_size` setting) the cap
 therefore acts as an **upper** bound: an account storing many small
 blobs pays that overhead per blob and hits the cap well below its
 stated unencoded budget.
