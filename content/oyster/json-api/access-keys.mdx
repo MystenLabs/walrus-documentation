@@ -11,7 +11,7 @@ prefixed with `OYAK`) and a **secret access key** (40 hex characters).
 
 You can have up to **3 active access keys** per account.
 
-## How to manage access keys
+## How to manage access keys {#managing-access-keys}
 
 The [Admin API](admin.mdx#s3-access-keys) provisions access keys.
 An app operator uses admin-key authentication to create, list, and revoke
@@ -23,7 +23,7 @@ keys for accounts they manage.
 | [List](admin.mdx#list-access-keys) | `GET /api/v1/accounts/{account_id}/access-keys` | List all keys for an account |
 | [Revoke](admin.mdx#revoke-access-key) | `DELETE /api/v1/accounts/{account_id}/access-keys/{access_key_id}` | Revoke a key |
 
-## What is the access key format?
+## What is the access key format? {#key-format}
 
 | Field | Format | Description |
 |-------|--------|-------------|
