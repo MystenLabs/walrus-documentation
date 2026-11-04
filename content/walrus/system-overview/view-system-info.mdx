@@ -81,7 +81,9 @@ Additional price for each write: 20,000 FROST
 ...
 ```
 
-You can view additional information with various subcommands:
+The `...` line marks where this example omits the rest of the output. To print all information, run `walrus info all`.
+
+You can view additional information with various subcommands. Run each subcommand as `walrus info <SUBCOMMAND>`, for example `walrus info epoch`:
 
 | Command | Description |
 |---|---|
@@ -107,14 +109,14 @@ You can view additional information with various subcommands:
 
 ## How to check storage node health with `walrus health`
 
-You can check the health of storage nodes with the `walrus health` command. This command accepts different options to select which nodes to check. 
+You can check the health of storage nodes with the `walrus health` command. This command accepts different options to select which nodes to check. You must provide one of the node-selection options: `--node-ids`, `--node-urls`, `--committee`, or `--active-set`.
 
 | Parameter | Required or optional | Description |
 |---|---|---|
-| `--node-ids <NODE_IDS>...` | Required | The IDs of the storage nodes to be selected |
-| `--node-urls <NODE_URLS>...` | Required | The URLs of the storage nodes to be selected |
-| `--committee` | Required | Select all storage nodes in the current committee |
-| `--active-set` | Required | Select all storage nodes in the active set |
+| `--node-ids <NODE_IDS>...` | Required (choose one) | The IDs of the storage nodes to be selected |
+| `--node-urls <NODE_URLS>...` | Required (choose one) | The URLs of the storage nodes to be selected |
+| `--committee` | Required (choose one) | Select all storage nodes in the current committee |
+| `--active-set` | Required (choose one) | Select all storage nodes in the active set |
 | `--config <CONFIG>` | Optional | Path to the Walrus configuration file. Defaults to `client_config.yaml` or `client_config.yml` in the current directory, `$XDG_CONFIG_HOME/walrus/`, `~/.config/walrus/`, or `~/.walrus/` |
 | `--rpc-url <RPC_URL>` | Optional | URL of the Sui RPC node. Defaults to `rpc_url` in client config or wallet config |
 | `--context <CONTEXT>` | Optional | Configuration context to use; defaults to `default_context` |
