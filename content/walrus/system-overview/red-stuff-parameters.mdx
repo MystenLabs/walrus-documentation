@@ -78,7 +78,7 @@ The following sections describe the concrete parameter choices and mechanisms th
 
 ### Sliver-pair-to-shard mapping
 
-The previous sections assumed that sliver pair $i$ is stored on shard $i$. In practice, the system maps sliver pairs to shards in a pseudo-random fashion to ensure that the systematic slivers, which contain the original data, are not always stored on the same shard.
+The previous sections assumed that sliver pair $i$ is stored on shard $i$. In practice, the system maps sliver pairs to shards in a pseudo-random fashion so that the same shard does not always store the [systematic slivers](red-stuff), which contain the original data.
 
 This is important because systematic slivers are the most frequently accessed, as they allow you to access the data without any decoding.
 
@@ -107,7 +107,7 @@ For example, the following settings apply:
 
 Walrus stores the symbol size as a 16-bit integer, and the Reed-Solomon implementation requires every symbol to have an even number of bytes. A symbol is therefore at least 2 bytes and at most $2^{16} - 2 = 65534$ bytes.
 
-The system encodes the blob in the rectangular message matrix, which upper-bounds the blob size by `source_symbols_primary * source_symbols_secondary * 65534`. There is no minimum blob size: small blobs, including empty ones, use 2-byte symbols, so the encoded size has a lower bound instead. The encoded sizes below count the slivers only, not the metadata. A few examples for the same configurations as above:
+The system encodes the blob in the rectangular message matrix, which upper-bounds the blob size by `source_symbols_primary * source_symbols_secondary * 65534`. In this formula, `source_symbols_primary` is the number of primary source symbols ($N - 2f$), `source_symbols_secondary` is the number of secondary source symbols ($N - f$), and 65534 is the maximum symbol size in bytes. The Num primary and Num secondary columns of the [source symbol counts](#source-symbol-counts) table list these values. There is no minimum blob size: small blobs, including empty ones, use 2-byte symbols, so the encoded size has a lower bound instead. The encoded sizes below count the slivers only, not the metadata. A few examples for the same configurations as above:
 
 | N shards | Max blob size | Min encoded blob size | Max encoded blob size |
 |---------:|--------------:|----------------------:|----------------------:|
