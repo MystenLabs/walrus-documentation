@@ -108,6 +108,8 @@ await removeDelegateKey({
 });
 ```
 
+Removal does not take effect immediately. The relayer can keep accepting the removed key for up to 30 seconds, until its cached verification expires. For details, see [how quickly delegate key removal takes effect](#how-quickly-does-delegate-key-removal-take-effect).
+
 ## What are the delegate key limits?
 
 - Each account supports up to **20 delegate keys**
