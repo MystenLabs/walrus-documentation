@@ -86,7 +86,7 @@ flowchart LR
     Sidecar --> Walrus  
 ```
 
-The sidecar is started automatically when the Rust server boots and communicates over HTTP on `localhost:9000` (configurable through `SIDECAR_URL`). If the sidecar fails to start, the relayer exits immediately.
+The Rust server starts the sidecar automatically when it boots. The sidecar communicates over plain HTTP, not HTTPS, on `localhost:9000` (configurable through `SIDECAR_URL`, see [Sidecar URL configuration](#sidecar-url-configuration)). If the sidecar fails to start, the relayer exits immediately.
 
 ### Sui RPC transport
 
@@ -94,7 +94,7 @@ The relayer reaches Sui over JSON-RPC by default. Ahead of the Sui JSON-RPC suns
 
 ## Key pool
 
-For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). Each concurrent Walrus upload uses a different key from the pool in round-robin order, bypassing per-signer serialization and enabling parallel uploads.
+For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). With a single key, uploads signed by that key run one after another (per-signer serialization), which slows down requests that store many facts at once. Each concurrent Walrus upload uses a different key from the pool in round-robin order, bypassing per-signer serialization and enabling parallel uploads.
 
 ## Rate limiting  and  abuse prevention
 
