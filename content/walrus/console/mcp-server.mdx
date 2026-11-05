@@ -36,7 +36,7 @@ The Walrus Console MCP server gives an AI client the same file and folder operat
 
 The package is `@mysten-incubation/walrus-console-mcp`, licensed MIT. The [server source](https://github.com/MystenLabs/ts-sdks-incubation/tree/main/packages/walrus-console-mcp) is public.
 
-Every command on this page runs an exact version, `0.1.1`, the same version Console's own install commands use. Always pin an exact version: without one, `npx` runs whichever copy of the package it finds first, and a dist-tag can move.
+Commands that fetch the package pin an exact version, `0.1.1`, the same version Console's own install commands use. A dist-tag can move, so always pin an exact version.
 
 
 ## Prerequisites
@@ -110,7 +110,7 @@ Then register it, replacing `<launcher-path>` with the path you printed:
 
 `--scope user` makes the server available in every project. Use `--scope local` to limit it to the current one.
 
-For Cursor, Gemini CLI, or any hand-written configuration, add a stdio server that runs the launcher. MCP clients start `command` without a shell, so write the full path rather than `~`:
+For any other client or a hand-written configuration, add a stdio server that runs the launcher. MCP clients start `command` without a shell, so write the full path rather than `~`:
 
 ```json
 {
@@ -131,7 +131,7 @@ Restart the client, run `/mcp`, and approve `walrus-console-mcp` when prompted.
 
 Ask the agent to call `ping_console`. It confirms which credentials the server loaded and reports `has_api_key`, `has_service_key`, `has_admin_key`, and `has_admin_signer` as booleans, plus the `network` the server resolved. It never echoes the values themselves.
 
-If `ping_console` reports that the key was rotated or revoked, open Console, create or rotate a key, and run `npx @mysten-incubation/walrus-console-mcp@0.1.1 config` to paste the new bundle.
+If `ping_console` reports that the key was rotated or revoked, open Console, create or rotate a key, and run `"${XDG_DATA_HOME:-$HOME/.local/share}/walrus-console-mcp/node_modules/.bin/walrus-console-mcp" config` to paste the new bundle.
 
 ## Available tools
 
