@@ -40,7 +40,7 @@ Aggregators support the HTTP `Range` header, which is what lets a browser seek w
 $ curl -H "Range: bytes=0-999" "$AGGREGATOR/v1/blobs/<BLOB_ID>"
 ```
 
-There is also a dedicated endpoint that takes the range as query parameters. Unlike a `Range` header request, a successful response from this endpoint uses status `200 OK` rather than `206 Partial Content`, so a CDN can cache it:
+There is also a dedicated endpoint that takes the range as query parameters. The two paths return different status codes on success: a `Range` header request returns `206 Partial Content`, and this endpoint returns `200 OK`, so a CDN can cache it:
 
 ```sh
 $ curl "$AGGREGATOR/v1/blobs/<BLOB_ID>/byte-range?start=0&length=1024"
@@ -52,16 +52,6 @@ A byte-range read verifies only the consistency of the bytes it fetches, not the
 
 :::
 
-## Does cross-origin playback need CORS?
-
-A plain `<video src>` or `<audio src>` element loads media cross-origin without extra configuration. If your application instead fetches blob bytes with JavaScript (for example, `fetch` followed by `URL.createObjectURL`, or drawing a frame to a `<canvas>`), the request is subject to the aggregator's cross-origin resource sharing (CORS) policy, which depends on how that aggregator and any CDN in front of it are deployed. If a cross-origin `fetch` fails, prefer the direct-`src` approach, or read through an aggregator you control.
-
-## References
-
-- [Reading Blobs with the HTTP API](/docs/http-api/reading-blobs)
-- [Managing blobs](/docs/walrus-client/managing-blobs)
-- [Network Reference](/docs/network-reference)
-
 ## Byte-range query parameters
 
 On the `byte-range` endpoint, `start` is a 0-indexed, inclusive byte position and `length` is the number of bytes to read, not an end offset. The aggregator reads the range `[start, start + length)`, so `start=0&length=1024` returns 1024 bytes starting from position 0.
@@ -72,4 +62,12 @@ The aggregator does not truncate a request that runs past the end of the blob. I
 - `start + length` overflows.
 - The range `[start, start + length)` extends beyond the blob's size. The error reads `byte range out of bounds`.
 
-Unlike a `Range` header request, a successful response from this endpoint uses status `200 OK` rather than `206 Partial Content`, so a CDN can cache it.
+## Does cross-origin playback need CORS?
+
+A plain `<video src>` or `<audio src>` element loads media cross-origin without extra configuration. If your application instead fetches blob bytes with JavaScript (for example, `fetch` followed by `URL.createObjectURL`, or drawing a frame to a `<canvas>`), the request is subject to the aggregator's cross-origin resource sharing (CORS) policy, which depends on how that aggregator and any CDN in front of it are deployed. If a cross-origin `fetch` fails, prefer the direct-`src` approach, or read through an aggregator you control.
+
+## References
+
+- [Reading Blobs with the HTTP API](/docs/http-api/reading-blobs)
+- [Managing blobs](/docs/walrus-client/managing-blobs)
+- [Network Reference](/docs/network-reference)
