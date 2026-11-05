@@ -40,7 +40,7 @@ The loop has four stages:
 3. **Confirm** each write reached a durable `done` state before the agent acts on it.
 4. **Recall** the stored context back into the agent.
 
-## Set up in an agent runtime
+## How to set up in an agent runtime
 
 An agent runtime has no human to click through a wallet or paste a key at a prompt. Generate the account ID and delegate key once at [dev.memwal.ai](https://dev.memwal.ai) for Testnet, store them as secrets, and load them from the environment at startup.
 
@@ -81,7 +81,7 @@ The `MemWal.create` config takes four fields:
 | `serverUrl` | `string` | No | Relayer URL for your network |
 | `namespace` | `string` | No | Default namespace, falls back to `"default"` |
 
-## Batch many small writes with Quilt
+## How to batch many small writes with Quilt
 
 Agents tend to produce many small state blobs: observations, intermediate results, per-step notes. Writing them one at a time means a separate round trip and Sui transaction set for each. The SDK batches them instead, backed by Walrus Quilt.
 
@@ -104,7 +104,7 @@ const result = await memwal.rememberBulkAndWait(items);
 Keep each batch at 20 items or fewer. If you have more, chunk the array and call `rememberBulkAndWait` per chunk. To fan out without blocking, use `rememberBulkAsync` and collect the returned `job_ids` to confirm later.
 :::
 
-## Encrypt agent state
+## How to encrypt agent state
 
 All blobs on Walrus are public, so you must encrypt private agent state. There are two models, and which one you want depends on who should hold the keys.
 
@@ -140,7 +140,7 @@ Client-managed encryption means the agent is responsible for its key material. I
 
 For the full client-managed flow, including local embeddings and recall, see [MemWalManual](/walrus-memory/sdk/usage/memwal-manual).
 
-## Confirm a write before depending on it
+## How to confirm a write before depending on it
 
 An autonomous agent should not act on a memory it only believes it wrote. Before the agent reads state back or makes a decision that assumes the write persisted, confirm that the write reached a durable state.
 
@@ -165,7 +165,7 @@ if (failed.length > 0) {
 A dedicated `verify()` helper that reconstructs a memory from its onchain blob object is on the roadmap. Until it ships, a job reaching `done` is the durability signal to gate on, and the memory's Walrus blob object on Sui is the onchain record of the write.
 :::
 
-## Recall the stored context
+## How to recall the stored context
 
 After you confirm the writes, recall pulls the relevant memories back by semantic similarity. The relayer verifies the request, embeds the query, searches, downloads from Walrus, decrypts, and returns plaintext.
 
@@ -184,7 +184,7 @@ for (const memory of recalled.results) {
 
 Recall uses the client's namespace by default. Pass `namespace` to read from a different one, and `limit` to cap how many memories return.
 
-## The full loop
+## What does the full loop look like?
 
 Putting the four stages together, here is a complete headless agent that runs end to end on Testnet:
 
@@ -260,7 +260,7 @@ main().catch((err) => {
 
 `job_ids` holds one ID per submitted item. If the relayer returns a different count, `rememberBulkAsync` throws instead of returning a partial list.
 
-## Handle a slow or unreachable relayer
+## How to handle a slow or unreachable relayer
 
 `waitForRememberJobs` and `rememberBulkAndWait` retry transient polling failures, including rate limits, within their timeout budget. The first poll is immediate, and the delay grows toward 5 s. The default budget is 120 s, which you can change through `timeoutMs`. An item still unsettled at the deadline comes back with status `timeout` and an `error` message. A timeout does not cancel the write or prove it failed, so keep the job ID and check it again rather than resubmitting.
 
