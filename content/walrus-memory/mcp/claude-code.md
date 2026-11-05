@@ -54,7 +54,7 @@ which does not require Node.js or the Claude Code CLI.
 
 </div>
 
-## Installation
+## How to install Walrus Memory
 
 <Tabs groupId="code">
   <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
@@ -73,8 +73,9 @@ Run these as separate commands in a terminal, stopping if one fails. Agents with
         from a configured marketplace, then confirm it under **Manage plugins**.
         Do not paste slash commands into chat as plain text.
 
-        Slash commands are an alternative only in an interactive Claude Code
-        session that exposes `/plugin`:
+        Slash commands replace the terminal commands; they are not an extra step.
+        Use them only if you did not run the terminal commands, and only in an
+        interactive Claude Code session that exposes `/plugin`:
 
         ```
         /plugin marketplace add https://github.com/MystenLabs/MemWal.git
@@ -85,7 +86,7 @@ Run these as separate commands in a terminal, stopping if one fails. Agents with
 
 Restart Claude Code, then ask the agent to run `memwal_login` and open the URL it returns to connect your wallet. MCP-only is not a complete Claude Code setup: without the plugin, the agent often writes Claude's built-in `MEMORY.md` instead of calling `memwal_remember`.
 
-        Claude's system prompt still prefers `MEMORY.md` over MCP instructions. Show this block, get the user's go-ahead, then merge it into `~/.claude/CLAUDE.md` (do not replace the file). If `<!-- memwal:start -->` ... `<!-- memwal:end -->` is already there, replace that span only. Turn off Claude's built-in (native) memory in account settings if it is on:
+        Claude's system prompt still prefers `MEMORY.md` over MCP instructions. Merge this block into `~/.claude/CLAUDE.md` yourself, or let the agent do it after it shows you the block and you approve. Do not replace the file. If `<!-- memwal:start -->` ... `<!-- memwal:end -->` is already there, replace that span only. Turn off Claude's built-in (native) memory in account settings if it is on:
 
         ```markdown
         <!-- memwal:start -->
@@ -111,7 +112,7 @@ Restart Claude Code, then ask the agent to run `memwal_login` and open the URL i
   </TabItem>
 </Tabs>
 
-## What the plugin includes
+## What does the plugin include?
 
 | **Component** | **Plugin** | **MCP-only** |
 |---|:-:|:-:|
@@ -122,7 +123,7 @@ MCP-only still saves and recalls on its own because the tools are proactive. The
 
 The plugin also starts the server differently. Instead of resolving the package name with `npx`, it installs the pinned version once into `~/.memwal/runtime/memwal-mcp@<version>` and launches that absolute path. `npx` resolves a name against the directory you started the client in, which is your project, so if your project contains a package with the same name that claims the pinned version, `npx` runs that package instead. The version pin does not prevent that. The plugin's launcher never looks at your project's `node_modules`, and it fails rather than falling back if it cannot install the pinned version.
 
-## Available tools
+## Which tools are available?
 
 | **Tool** | **Description** |
 |------|-------------|
@@ -165,7 +166,7 @@ Agent: (calls memwal_recall, finds your preferences)
        Scaffolding with pnpm and "strict": true, matching how you like to work.
 ```
 
-## Verify
+## How to verify the setup
 
 Work through these three checks in order; each one isolates a different layer.
 
@@ -220,7 +221,7 @@ The stored credential can lapse if you revoked its delegate key from the dashboa
 **Corporate proxy or restricted network.**
 The server needs outbound HTTPS to `relayer.memory.walrus.xyz` (and the sign-in flow needs `memory.walrus.xyz`). If the network blocks only the relayer, the HTTP transport option above fails identically; allowlist both hosts.
 
-## Memories across machines and reinstalls
+## Do memories survive reinstalls and new machines?
 
 Walrus Memory stores your memories as encrypted blobs on Walrus and records your account and its permissions on Sui. Your memories survive across sessions, clients, and machines, so uninstalling the plugin or moving to a new machine does not remove them.
 
