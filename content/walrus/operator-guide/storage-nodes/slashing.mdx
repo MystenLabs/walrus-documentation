@@ -40,7 +40,7 @@ answer: >-
 
 Walrus protects the network from misbehaving storage nodes through an onchain slashing mechanism. Committee members vote against a candidate node, and when their votes reach a quorum of voting weight, anyone can finalize the slashing to burn the candidate's accumulated commission. The operator pays the penalty, never the delegators staking with that pool.
 
-The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#how-to-manage-contract-upgrades). The same `governance_authorized` entity on the node's staking pool gates both actions, both use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
+The mechanism deliberately mirrors the [contract upgrade vote](/docs/operator-guide/storage-nodes/commission-governance#how-to-manage-contract-upgrades). The same `governance_authorized` entity on the node's staking pool gates both actions. This entity is the address or object authorized for governance on that pool, which you set as described in [Update the commission receiver and entity authorized for governance](/docs/operator-guide/storage-nodes/commission-governance#how-to-update-the-commission-receiver-and-governance-authorization). Both actions use a quorum of more than two-thirds of the shards, and both reset their state at the boundary of each epoch. If you have voted on a contract upgrade before, the wallet, signing flow, and threshold semantics are identical.
 
 :::warning
 
@@ -144,7 +144,7 @@ The Walrus package ID changes after every contract upgrade. To get the latest pa
 
 ## Vote on a slashing proposal
 
-There is no dedicated `walrus node-admin` subcommand for slashing, so you submit the vote directly through the Sui CLI as a programmable transaction block (PTB). You need a PTB because `vote_for_slashing` takes an `Authenticated` argument that the same transaction must construct onchain. You cannot pass an `Authenticated` value from the command line.
+There is no dedicated `walrus node-admin` subcommand for slashing, so you submit the vote directly through the Sui CLI as a programmable transaction block (PTB). You need a PTB because `vote_for_slashing` takes an `Authenticated` argument. `Authenticated` is a Move type that ties the call to the transaction sender or to a controlling object, and `vote_for_slashing` checks it against your pool's `governance_authorized` field. The same transaction must construct this value onchain, so you cannot pass an `Authenticated` value from the command line.
 
 The PTB has two move calls:
 
@@ -228,11 +228,28 @@ Sui prints the abort code along with the module name in the failure output, so y
 
 ### Monitoring the proposal
 
-You can inspect the live state of the proposal at any time by reading the `SlashingManager` object. Either look it up directly on [Suiscan](https://suiscan.xyz) using the object ID from [Walrus onchain object IDs](#walrus-onchain-object-ids), or call `sui client object` from a shell:
+You can inspect the live state of the proposal at any time by reading the `SlashingManager` object. Either look it up directly on [Suiscan](https://suiscan.xyz) using the object ID from [Walrus onchain object IDs](#walrus-onchain-object-ids), or call `sui client object` from a shell with the `SlashingManager` ID for your network:
+
+<div className="outlined-tabs">
+
+<Tabs groupId="network">
+<TabItem value="mainnet" label="Mainnet">
 
 ```sh
 $ sui client object 0xfe343f7b72f67a1eca9bfc9dff0dac0520e11dca3bda5a0ea32816af6f722109 --json
 ```
+
+</TabItem>
+<TabItem value="testnet" label="Testnet">
+
+```sh
+$ sui client object 0xba59eb74de5c7707f830415ff9f64261d107d790bb65ab5835918eeac62daaee --json
+```
+
+</TabItem>
+</Tabs>
+
+</div>
 
 The object exposes a `slashing_candidates` table. Each entry is a `SlashingProposal` with `epoch`, `node_id`, `voting_weight`, and `voters` fields. You can confirm:
 
