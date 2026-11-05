@@ -45,7 +45,7 @@ For efficiently storing large numbers of small blobs, Walrus provides the quilt 
 
 You can interact with quilts using a dedicated set of `walrus` subcommands.
 
-Blobs within a quilt are retrieved by a `QuiltPatchId`, not their standard `BlobId`. This ID is generated based on all blobs in the quilt, so a blob's `QuiltPatchId` changes if it is moved to a different quilt.
+You retrieve a blob within a quilt by its `QuiltPatchId`, not its standard `BlobId`. A `BlobId` identifies a blob stored on its own. A `QuiltPatchId` identifies 1 blob inside a specific quilt. Walrus generates the `QuiltPatchId` from all blobs in the quilt, so a blob's `QuiltPatchId` changes if you move it to a different quilt. To find the `QuiltPatchId` of each blob in a quilt, run `walrus list-patches-in-quilt`.
 
 Standard blob operations like `delete`, `extend`, or `share` cannot target individual blobs inside a quilt. You must apply them to the entire quilt.
 
