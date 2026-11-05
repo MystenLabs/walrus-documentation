@@ -87,6 +87,13 @@ $ curl -X PUT "$PUBLISHER/v1/blobs" --upload-file "some/file"
 $ curl -X PUT "$PUBLISHER/v1/blobs?permanent=true" --upload-file "some/file"
 ```
 
+To set more than one option, join the query parameters with `&`. The following command stores a permanent blob for 5 storage epochs:
+
+```sh
+# Store file `some/file` as a permanent blob for 5 storage epochs:
+$ curl -X PUT "$PUBLISHER/v1/blobs?epochs=5&permanent=true" --upload-file "some/file"
+```
+
 :::caution
 
 Passing both `deletable=true` and `permanent=true` returns an `INVALID_BLOB_PERSISTENCE` error.
