@@ -84,7 +84,7 @@ Common error codes include:
 | --- | --- | --- |
 | `401` | `unauthorized` | Missing or invalid API key. |
 | `401` | `api_key_registering` / `api_key_revoking` / `api_key_revoked` | The key is not currently usable. |
-| `401` | `api_key_rotation_incomplete` | The key was revoked by a rotation that has not finished. Its creator can resume the rotation from **Integrations**. |
+| `401` | `api_key_rotation_incomplete` | The key was revoked by a rotation that has not finished. Its creator can resume the rotation from **Integrations** if Console offers it there. Otherwise, create a new key. |
 | `401` | `api_key_replaced` | The key was rotated and a new key replaces it. Use the new API key and service private key shown in Console. |
 | `403` | `read_only_api_key` | A write was attempted with a read-only key. |
 | `403` | `insufficient_scope` | The key's scope does not cover the endpoint. |
