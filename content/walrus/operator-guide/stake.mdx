@@ -62,7 +62,7 @@ To use the app, visit the [Walrus staking app](https://stake-wal.wal.app) and co
 You need to have Testnet WAL in your wallet. You can exchange your Testnet SUI to WAL using the app:
 
 1. Click **Get WAL**.
-1. Select the amount of SUI. This is exchanged to WAL at a 1:1 rate.
+1. Select the amount of SUI. The app exchanges Testnet SUI for Testnet WAL at a 1:1 rate. This rate applies only to Testnet tokens.
 1. Click **Exchange**.
 1. Follow the instructions in your wallet to approve the transaction.
 
@@ -81,8 +81,10 @@ To stake WAL with a storage node:
 To unstake or withdraw your staked WAL:
 
 1. Find the staked WAL you want to unstake. Below the current committee list, you can find all your staked WAL. You can expand a storage node to find all your stakes with that node.
-1. Depending on the state of the staked WAL, you can unstake or withdraw your funds.
-1. Click **Unstake** or **Withdraw**.
+1. Check the state of the staked WAL, as described in [States of staked WAL](#states-of-staked-wal), and choose the action:
+   - If the stake meets one of the cases for direct withdrawal, click **Withdraw**.
+   - Otherwise, if the staked WAL is in the Staked state, click **Unstake**. When the withdraw epoch arrives, return to the app and click **Withdraw**.
+   - If the staked WAL is in the Withdrawing state and the withdraw epoch has arrived, click **Withdraw**.
 1. Click **Continue** to confirm your action.
 1. Follow the instructions in your wallet to approve the transaction.
 
