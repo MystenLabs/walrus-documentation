@@ -116,6 +116,8 @@ $ sui client object $SLASHING_MANAGER --json
 
 You see the candidate's `commission` field at zero, the WAL `total_supply` lower by the burned amount, and no entry for the candidate in `slashing_candidates`.
 
+The `grep -A1` filter prints only 1 line after each match, so it might cut off the `commission` value if the JSON output spreads it across several lines. To see the full field, run `sui client object $CANDIDATE_NODE_ID --json` without the filter.
+
 ## How to clean up dangling proposals from prior epochs
 
 If the operators do not reach 667 votes by the end of epoch `N`, the next vote in epoch `N+1` resets the proposal: the first vote in `N+1` creates a fresh proposal with `voting_weight` starting from zero, and the contract discards all prior voters. The vote must start over.
