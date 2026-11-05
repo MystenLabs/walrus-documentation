@@ -34,7 +34,7 @@ answer: >-
   To add Walrus Memory to Cursor, install the Walrus Memory plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall and save need no extra instructions. Cursor ships no plugin CLI, so the copy is the install. You can instead configure Walrus Memory as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
 ---
 
-Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** (adds automatic-memory hooks) or as **MCP-only** (just the tools).
+Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** or as **MCP-only** (just the tools). The plugin adds lifecycle hooks, scripts that run on Cursor's own events and prompt the agent to recall and save memories automatically.
 
 <div className="outlined-tabs">
 
@@ -49,7 +49,7 @@ Add Walrus Memory to Cursor so the agent recalls context and saves durable facts
 
 </div>
 
-## Installation
+## How to add Walrus Memory to Cursor
 
 <Tabs groupId="code">
   <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
@@ -118,9 +118,9 @@ The hook scripts ship inside the plugin bundle (`packages/mcp/plugin/`), so the 
 
 The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
-## Verify
+## How to verify the setup
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact (for example, a preferred package manager) and confirm the agent saves it with `memwal_remember`.
+Ask the agent what MCP tools it has available, for example with the prompt `What MCP tools do you have available?`. You should see the `memwal_*` tools. State a durable fact (for example, a preferred package manager) and confirm the agent saves it with `memwal_remember`.
 
 Cursor has no plugin CLI to list what loaded, so confirm the plugin from its logs instead. The newest folder under `~/Library/Application Support/Cursor/logs/` on macOS gets an `mcp-server-plugin-memwal-memwal.log` once the plugin loads. The `plugin-` prefix is Cursor's own naming for a plugin-scoped server.
 
