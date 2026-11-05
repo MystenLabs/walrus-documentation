@@ -53,6 +53,8 @@ answer: >-
 
 Use the Walrus client to manage blobs and their metadata.
 
+Some commands take a blob ID and others take a blob object ID. The blob ID identifies the blob data in Walrus, and you can derive it from a file. The blob object ID is the ID of the Sui object that corresponds to the blob.
+
 ## How to check a blob's status and expiry
 
 Before you extend or depend on a blob, check that it is still stored and see when it expires. Use the blob ID:
@@ -76,8 +78,10 @@ Check status on a schedule rather than waiting for a read to fail. Looking well 
 You can extend Walrus blob lifetimes using the following command:
 
 ```sh
-$ walrus extend --blob-obj-id <BLOB_OBJECT_ID>
+$ walrus extend --blob-obj-id <BLOB_OBJECT_ID> --epochs-extended <EPOCHS>
 ```
+
+You must pass the `--epochs-extended` flag with the number of epochs to add to the blob's lifetime. See [How many epochs does `walrus extend` add?](#how-many-epochs-does-walrus-extend-add).
 
 The blob cannot be expired when you run this command. Both address-owned blobs and [shared blobs](#shared-blobs) can have their lifetime extended. Anyone can extend shared blobs, but only the owner can extend owned blobs. When extending a shared blob, supply the `--shared` flag to inform the command that the blob is shared.
 
@@ -184,7 +188,7 @@ $ walrus blob-status --blob-id <BLOB_ID>
 3. Before the blob reaches its end epoch, extend its lifetime so the data stays available. You need the blob's object ID, not the blob ID. See [Extend the lifetime of a blob](#extend-the-lifetime-of-a-blob).
 
 ```sh
-$ walrus extend --blob-obj-id <BLOB_OBJECT_ID>
+$ walrus extend --blob-obj-id <BLOB_OBJECT_ID> --epochs-extended <EPOCHS>
 ```
 
 4. When you no longer need a deletable blob, delete it to release its storage object for reuse, which helps manage [storage costs](/docs/system-overview/storage-costs).
