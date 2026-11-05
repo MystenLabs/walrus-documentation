@@ -1,5 +1,55 @@
 [
   {
+    "id": "walrus-testnet-v1.60.1",
+    "date": "2026-11-04T17:57:20Z",
+    "category": "walrus",
+    "title": "Walrus v1.60.1",
+    "description": null,
+    "badge": "Testnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.60.1",
+    "changes": [
+      {
+        "text": "A checkpoint tailing task that stops on its own, for example because the full node failed to serve a Move package, is now restarted after a backoff instead of leaving the node's event processing stalled.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3865"
+      }
+    ]
+  },
+  {
+    "id": "memwal-@mysten-incubation/memwal-mcp@0.1.0",
+    "date": "2026-11-04T07:28:36Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory MCP v0.1.0",
+    "description": null,
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.1.0",
+    "changes": [
+      {
+        "text": "Add `memwal-mcp status` and `whoami` CLI subcommand to inspect current account, delegate, label, relayer, namespace, credentials file, and auto-save configuration without interactive prompts.",
+        "url": "https://github.com/MystenLabs/MemWal/pull/1340"
+      }
+    ]
+  },
+  {
+    "id": "memwal-@mysten-incubation/memwal@0.1.13",
+    "date": "2026-11-04T07:28:12Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory TypeScript SDK v0.1.13",
+    "description": null,
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13",
+    "changes": []
+  },
+  {
+    "id": "memwal-@mysten-incubation/oc-memwal@0.0.9",
+    "date": "2026-11-04T07:28:00Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory SDK v0.0.9",
+    "description": null,
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9",
+    "changes": []
+  },
+  {
     "id": "memwal-@mysten-incubation/memwal-mcp@0.0.18",
     "date": "2026-10-30T06:16:41Z",
     "category": "walrus-memory",
