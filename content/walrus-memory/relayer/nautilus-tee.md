@@ -146,8 +146,10 @@ Build the reference image from the repo root:
 $ make -C services/server/deploy/nautilus build
 ```
 
-That target first builds the existing `services/server/Dockerfile` runtime image,
-then builds the TEE wrapper image from `Containerfile`. Use Nautilus to build and
+That target builds both images, so a single `make` invocation is enough and you
+do not need to build the runtime image manually first: it builds the existing
+`services/server/Dockerfile` runtime image, then builds the TEE wrapper image
+from `Containerfile`. Use Nautilus to build and
 deploy the enclave image from that payload, then pin the image measurement or
 attestation identity produced by the deployment. The exact build/publish/run
 commands are Nautilus-version specific; the Walrus Memory requirements are the runtime
