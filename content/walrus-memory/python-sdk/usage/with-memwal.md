@@ -36,7 +36,7 @@ answer: >-
   stored asynchronously. Both support options like max_memories, min_relevance, and auto_save.
 ---
 
-`with_memwal_langchain` and `with_memwal_openai` wrap an existing LLM client with automatic memory management. Before each call relevant memories are recalled and injected; after each call the user message is analyzed for new facts (fire-and-forget).
+`with_memwal_langchain` and `with_memwal_openai` wrap an existing LLM client with automatic memory management. Before each call, the wrapper recalls relevant memories and injects them. After each call, the wrapper analyzes the user message for new facts in the background (fire-and-forget). The call does not wait for this save to finish, so a failed save does not raise an error in your code. The `memwal` package also exports `withMemWal`, an alias for `with_memwal_langchain`. For details, see [What is the `withMemWal` alias?](#what-is-the-withmemwal-alias).
 
 Both integrations import their dependency lazily, install only what you use:
 
@@ -62,6 +62,8 @@ $ pip install memwal[openai]
 </Tabs>
 
 ## LangChain
+
+The examples on this page use `await`, so run them inside an `async def` function, for example one that you start with `asyncio.run()`.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: python-sdk/usage/with-memwal.md</a>
 
@@ -125,7 +127,7 @@ response = await smart_client.chat.completions.create(
 
 **After generation:**
 
-- If `auto_save` (default `True`), runs `analyze()` on the user message fire-and-forget
+- If `auto_save` is `True` (the default), runs `analyze()` on the user message without waiting for the result (fire-and-forget), so a failed save does not raise an error in your code
 - Extracted facts are stored asynchronously
 
 ## Options
@@ -134,6 +136,8 @@ Both wrappers accept the same keyword arguments:
 
 | Option | Default | Description |
 | --- | --- | --- |
+| `key` | | Your Walrus Memory private key (the examples read it from `MEMWAL_PRIVATE_KEY`) |
+| `account_id` | | Your Walrus Memory account ID (the examples read it from `MEMWAL_ACCOUNT_ID`) |
 | `server_url` | `https://relayer.memory.walrus.xyz` | Explicit relayer URL (wins over `env`) |
 | `env` | | Hosted relayer preset: `staging` for testing or `prod` for production |
 | `namespace` | `"default"` | Memory namespace |
@@ -152,7 +156,7 @@ In the Python SDK, `withMemWal` is an alias that maps to `with_memwal_langchain`
 
 ## How the wrappers choose a relayer
 
-The wrappers resolve the relayer in this order:
+Both `with_memwal_langchain` and `with_memwal_openai` resolve the relayer in this order:
 
 - An explicit `server_url` always wins, even if you also pass `env`.
 - `env` applies only when you omit `server_url`. `prod` selects `https://relayer.memory.walrus.xyz` and `staging` selects `https://relayer.dev.memwal.ai`.
