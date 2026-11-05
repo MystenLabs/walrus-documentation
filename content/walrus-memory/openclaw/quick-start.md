@@ -32,7 +32,7 @@ answer: >-
   Install the Walrus Memory OpenClaw plugin with openclaw plugins install @mysten-incubation/oc-memwal. Configure it in ~/.openclaw/openclaw.json with your delegate key (through the MEMWAL_PRIVATE_KEY environment variable), account ID, and relayer URL. Restart the gateway and verify by running openclaw memwal stats, then test the memory loop by storing a fact in one conversation and recalling it in another.
 ---
 
-Get the plugin running and test the memory loop in a few minutes.
+To set up the Walrus Memory plugin for OpenClaw, install it with one command, configure it with your delegate key, account ID, and relayer URL, and restart the gateway. Then run `openclaw memwal stats` and a test conversation to confirm that automatic recall and capture work.
 
 <div className="outlined-tabs">
 
@@ -49,7 +49,7 @@ Get the plugin running and test the memory loop in a few minutes.
 You also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory. [Get your Walrus Memory credentials](#get-your-walrus-memory-credentials) explains how to get these.
 
 
-### Install the plugin
+### How to install the plugin
 
     ```bash
     openclaw plugins install @mysten-incubation/oc-memwal
@@ -158,7 +158,7 @@ If you see `health check failed`, check that your relayer URL is reachable and t
 :::
 
 
-### Check connectivity
+### How to verify the plugin is connected
 
 Run the stats command to confirm the plugin is connected:
 
@@ -170,7 +170,7 @@ $ openclaw memwal stats
 
 This shows the relayer status, your key (masked), account ID, active namespace, and whether auto-recall and auto-capture are enabled.
 
-### Test the memory loop
+### How to test the memory loop
 
 The core value of the plugin is the automatic recall and capture cycle. Test it end-to-end:
 
@@ -236,7 +236,7 @@ Then the LLM can call `memory_search` and `memory_store` on its own when it deci
 - [How It Works](/walrus-memory/openclaw/how-it-works), understand the architecture, message flow, and hook mechanics
 - [Reference](/walrus-memory/openclaw/reference), detailed breakdown of hooks, tools, CLI, and configuration
 
-## Troubleshoot missing auto-capture
+## Why does auto-capture not run?
 
 If `openclaw memwal stats` reports the plugin as connected but the logs never show `auto-captured`, check the following:
 
