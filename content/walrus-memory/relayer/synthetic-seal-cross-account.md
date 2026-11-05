@@ -42,6 +42,8 @@ answer: >-
 The Seal cross-account synthetic alerts if a live identity from account A can
 authorize account B's Seal key. It is a production-safe **negative** check on
 top of the Move unit test `test_seal_approve_delegate_requires_matching_owner`.
+A negative check passes only when the call fails: live `seal_approve` must
+reject the cross-account identity.
 The unit test covers the contract in isolation.
 
 The script is **read-only**. It never calls remember, never fetches Seal
@@ -111,4 +113,4 @@ Generate each account ID and delegate private key from the hosted Walrus Memory 
 - Production (Mainnet): `https://memory.walrus.xyz`
 - Staging (Testnet): `https://dev.memwal.ai`
 
-Connect a different wallet for each account so the 2 accounts have different owners. To add a delegate key to an account you already own, create a new delegate key from the dashboard. The dashboard generates a fresh key pair and registers it to that account onchain. Save the private key securely, because the dashboard shows it only once.
+Connect a different wallet for each account so the 2 accounts have different owners. To add a delegate key to an account you already own, create a new delegate key from the dashboard. The dashboard generates a fresh key pair and registers it to that account onchain. Save the private key securely, because the dashboard shows it only once. Store each account ID and delegate private key as the matching GitHub secret from the table in the Secrets and variables section, for example `SEAL_CROSS_ACCOUNT_A_KEY` for the account A key.
