@@ -79,11 +79,15 @@ To go deeper, see [How AI Agent Memory Works](/walrus-memory/fundamentals/concep
 
 ## How does restore rebuild the index?
 
+Durability is a key difference between Walrus Memory and a standalone vector database. Because the memories live on Walrus, losing the vector index does not lose the memory, and `restore` rebuilds the index from Walrus.
+
 `restore(namespace, limit?)` rebuilds missing index entries for a namespace from Walrus. The relayer queries the onchain Walrus blob objects you own, filtered by namespace metadata, and compares them against its database. It then downloads, decrypts, re-embeds, and re-indexes only the missing blobs:
 
 ```ts
 const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
+
+In the result, `restored` counts the missing blobs that restore re-indexed, and `skipped` counts the blobs the relayer already indexed. A non-zero `skipped` count is normal and does not indicate a problem.
 
 Restore inspects your onchain blobs newest-first, up to `limit` (default 10), and has no pagination cursor. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call. Because restore has no cursor, rerunning it re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob is covered. Restore skips blobs the relayer already indexed, so you can run it more than once safely. For the full flow, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
