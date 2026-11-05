@@ -60,8 +60,9 @@ writing anything.
   the upload path no longer creates these blobs.
 - The same environment as `oysterd serve`: `DATABASE_URL`,
   `PEARL_GRPC_URL`, `PEARL_SERVICE_SECRET`, `SUI_RPC_URL`,
-  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Pearl signs certify
-  and delete transactions under each account's own key, and the
+  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Pearl, the signing
+  service that Oyster reaches at `PEARL_GRPC_URL`, signs certify and
+  delete transactions under each account's own key, and the
   account's wallet pays for them (SUI gas only; no WAL).
 - The tool skips an account under `oysterd keys migrate` (`FAILED: signer:
   key migration in progress`); re-run after the rotation.
@@ -77,7 +78,9 @@ writing anything.
 
    Output is TSV: `ACCOUNT`, `BLOB_ID`, `POOLED_BLOB`, `REFERENCES`
    (`bucket/key,...`), `OUTCOME`. A summary line goes to stderr. The
-   `would-certify` count is what the real run recovers.
+   `would-certify` count is what the real run recovers. To parse lines
+   whose keys contain a comma or a tab, see
+   [Repair output format](#repair-output-format).
 
 2. Run it:
 
