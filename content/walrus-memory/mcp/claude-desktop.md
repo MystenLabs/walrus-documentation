@@ -85,7 +85,7 @@ Quit and reopen Claude Desktop (`Cmd+Q` on macOS; closing the window is not enou
 
 ## Add memory instructions
 
-Regular Claude Desktop chat does not run the lifecycle hooks that reinforce automatic memory on
+Regular Claude Desktop chat does not run the automatic-memory plugin's lifecycle hooks, which reinforce automatic memory on
 [Claude Code](/walrus-memory/mcp/claude-code), [Codex](/walrus-memory/mcp/codex), and [Antigravity](/walrus-memory/mcp/antigravity).
 The tools still work here and the agent might save and recall on its own, but that is
 best-effort, because Claude Desktop's built-in memory can win instead. State the
@@ -132,7 +132,7 @@ You should see the `memwal_*` tools. State a durable fact and confirm the agent 
 
 - **Tools missing**: fully quit and reopen Claude Desktop (`Cmd+Q`).
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
-- **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+- **`memwal_recall` returns nothing although you saved before**: ask the agent to call the `memwal_restore` tool with the namespace you saved your memories to. The tool rebuilds the index from Walrus.
 
 ## How does `memwal_restore` choose a namespace?
 
