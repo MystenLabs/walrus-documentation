@@ -39,7 +39,7 @@ answer: >-
 
 Production relayers should emit structured logs, scrape Prometheus metrics, and send alerts for the external systems Walrus Memory depends on: PostgreSQL, Redis, Sui RPC, OpenAI-compatible embedding/LLM APIs, Seal, Walrus, and the TypeScript sidecar.
 
-## Request correlation
+## How does request correlation work?
 
 Every relayer request gets an `x-request-id`.
 
@@ -51,7 +51,7 @@ Every relayer request gets an `x-request-id`.
 
 Use this ID when searching logs across the Rust relayer and TypeScript sidecar.
 
-## Logs
+## How to configure production logs
 
 For production, run with JSON logs:
 
@@ -75,7 +75,7 @@ Useful fields include:
 
 The relayer avoids logging memory text, recall queries, and ask/analyze prompts. It logs byte or character lengths instead.
 
-## Prometheus metrics
+## What Prometheus metrics does the relayer expose?
 
 The Rust relayer exposes Prometheus metrics at:
 
@@ -123,7 +123,7 @@ scrape_configs:
       - targets: ["relayer.example.com"]
 ```
 
-## Recommended dashboards
+## Which dashboards should you build?
 
 Create panels for:
 
@@ -136,7 +136,7 @@ Create panels for:
 - PostgreSQL query latency and pool open/idle connections.
 - Sidecar wallet counters: `walletSubmittedTotal`, `walletLockErrorsTotal`, `walletPermanentFailuresTotal`.
 
-## Recommended alerts
+## What alerts should you set up?
 
 | Alert | Suggested Condition |
 | --- | --- |
@@ -152,7 +152,7 @@ Create panels for:
 | Permanent wallet failures | Sidecar `walletPermanentFailuresTotal` increases |
 | Upload queue saturation | Built in: the relayer polls sidecar `/metrics/uploads` and alerts Slack when `queuedWalrusUploads` stays above `SIDECAR_QUEUE_SATURATION_THRESHOLD` (default 20) for `SIDECAR_QUEUE_SATURATION_CONSECUTIVE` checks (default 4) polled every `SIDECAR_QUEUE_SATURATION_INTERVAL_SECS` (default 30) |
 
-## APM Integration
+## How to integrate with APM tools
 
 Walrus Memory emits structured logs and Prometheus metrics in vendor-neutral formats. For Datadog, New Relic, Grafana Cloud, or OpenTelemetry Collector based setups:
 
@@ -172,7 +172,7 @@ If your APM supports custom spans, map `memwal_external_request_duration_seconds
 - `sidecar / walrus_upload`
 - `walrus / download_blob`
 
-## Upload queue saturation alerts
+## How do upload queue saturation alerts work?
 
 The relayer runs the upload queue saturation check itself, not a Prometheus alert rule. On every saturated check, it logs a warning that starts with `sidecar: upload queue saturated` and includes the queued, active, capacity, and consecutive-check counts.
 
