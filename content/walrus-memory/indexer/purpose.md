@@ -38,7 +38,7 @@ The indexer keeps the backend in sync with onchain state so the relayer can serv
 
 ## Why it exists
 
-Delegate-key authentication does not walk `AccountRegistry`. A cold key is a delegate key that the relayer has not yet cached in `delegate_key_cache`. A cold key is verified against the signed `x-account-id`, or against `MEMWAL_ACCOUNT_ID` when that env is set. The indexer is what fills the `accounts` table the existence check and owner-token lookup read.
+Delegate-key authentication does not walk `AccountRegistry`. A cold key is a delegate key that has no row in the relayer's `delegate_key_cache` table. A cold key is verified against the signed `x-account-id`, or against `MEMWAL_ACCOUNT_ID` when that env is set. The indexer is what fills the `accounts` table the existence check and owner-token lookup read.
 
 ## How it works
 
