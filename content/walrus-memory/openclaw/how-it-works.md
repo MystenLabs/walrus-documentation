@@ -230,4 +230,4 @@ Delegate keys are lightweight Ed25519 keys that are registered onchain in a `Mem
 
 ## Configure the auto-capture message count
 
-To change how many recent messages auto-capture analyzes, set `captureMaxMessages` in the `config` block of the `memory-memwal` entry under `plugins.entries` in `openclaw.json`. The default is `10`. To turn off auto-capture, set `autoCapture` to `false`.
+To change how many recent messages auto-capture analyzes, set `captureMaxMessages` in the `config` block of the `memory-memwal` entry under `plugins.entries` in `~/.openclaw/openclaw.json`. The default is `10`. To turn off auto-capture, set `autoCapture` to `false`.
