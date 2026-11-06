@@ -55,7 +55,7 @@ The deletion flow uses these endpoints:
 | 2 | `POST /api/security-delete-auth/verify` | Exchange the signed challenge for a short-lived Bearer token. |
 | 3 | `GET /api/security-deletable-blobs` | List tracked blobs that the wallet can delete. |
 | 4 | `POST /api/security-deletions` | Prepare a sponsored deletion transaction. |
-| 5 | `POST /api/security-deletions/{batchId}/submit` | Submit the wallet signature and execute the deletion. Returns the number of deleted blobs (`deleted`) and the transaction digest (`digest`). |
+| 5 | `POST /api/security-deletions/{batchId}/submit` | Submit the wallet signature and execute the deletion. Returns the batch state (`state`, `completed` on success), the number of deleted blobs (`deleted`), and the transaction digest (`digest`). |
 
 ## What does the script require?
 
