@@ -108,6 +108,8 @@ await removeDelegateKey({
 });
 ```
 
+Removal does not take effect immediately. The relayer can keep accepting the removed key for up to 30 seconds, until its cached verification expires, and for up to about 10 minutes while the relayer cannot read the chain. For details, see [how quickly delegate key removal takes effect](#how-quickly-does-delegate-key-removal-take-effect).
+
 ## What are the delegate key limits?
 
 - Each account supports up to **20 delegate keys**
@@ -127,4 +129,4 @@ This is useful as an emergency kill switch if a key is compromised.
 
 ## How quickly does delegate key removal take effect?
 
-The relayer caches each successful delegate key verification for up to 30 seconds, keyed by account and public key. After you remove a key onchain, that key can keep authenticating at the relayer for at most 30 seconds, until its cached verification expires. Removal also does not take back plaintext the delegate already read or decryption keys it already obtained.
+The relayer caches each successful delegate key verification for up to 30 seconds, keyed by account and public key. After you remove a key onchain, that key can keep authenticating at the relayer for at most 30 seconds, until its cached verification expires. While the relayer cannot read the chain, it keeps serving a cached verification for up to 10 minutes past that window, so a removed key can authenticate for up to about 10.5 minutes during an outage. Removal also does not take back plaintext the delegate already read or decryption keys it already obtained.
