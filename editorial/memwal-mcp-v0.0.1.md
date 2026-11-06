@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.1
+title: "Walrus Memory MCP v0.0.1"
 description: Initial release of the Walrus Memory MCP server with stdio transport, browser wallet login, inline session tools, and memory...
 keywords: ["walrus memory", "release notes", "changelog", "memwal-mcp"]
 ---

@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.7
+title: "Walrus Memory TypeScript SDK v0.0.7"
 description: Adds an optional occurredAt parameter to analyze() for temporal anchoring of extracted facts, resolving relative date references...
 keywords: ["walrus memory", "release notes", "changelog", "memwal"]
 ---

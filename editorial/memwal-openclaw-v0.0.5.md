@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.5
+title: "Walrus Memory OpenClaw v0.0.5"
 description: Fixes a workspace dependency that broke npm installs outside the monorepo and switches the release workflow to pnpm publish...
 keywords: ["walrus memory", "release notes", "changelog", "oc-memwal"]
 ---
