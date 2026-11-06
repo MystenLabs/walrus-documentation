@@ -181,11 +181,18 @@ To operate a high-performance publisher with higher concurrency, use the followi
 - `--n-clients NUM`: Creates a number of separate wallets that perform concurrent Sui chain operations. Increase this value to allow more parallel uploads. A higher number requires more SUI and WAL coins initially because the publisher distributes the funds to more wallets (see [Create and fund the publisher wallet](#fund-publisher)).
 - `--max-concurrent-requests NUM`: Determines how many concurrent requests the publisher can handle, including Sui operations (limited by the number of clients) and uploads. After requests exceed this limit, the publisher queues additional requests up to the `--max-buffer-size NUM` limit. After the buffer is full, the publisher rejects requests with an HTTP 429 code.
 
+When `--max-concurrent-requests` is larger than `--n-clients`, several requests share the same sub-wallet. To give each request its own sub-wallet, raise `--n-clients` to the same value. For details, see [How requests share sub-wallets](#how-requests-share-sub-wallets).
+
 ## Manage SUI coins in sub-wallets {#manage-sub-wallets}
 
 Each sub-wallet requires funds to interact with the chain and purchase storage. The publisher distributes funds from the main wallet to the sub-wallets at startup, and a background process then periodically checks, once per `--refill-interval`, whether the sub-wallets still hold at least `--sub-wallets-min-balance`, refilling them during operation. Because the check runs on this interval rather than on every request, a busy sub-wallet can temporarily drop below the target balance before the next refill. In steady state, each sub-wallet has a balance of 0.5 to 1.0 SUI and WAL.
 
-To adjust how the publisher handles refills, use the following arguments: `--refill-interval REFILL_INTERVAL`, `--gas-refill-amount GAS_REFILL_AMOUNT`, `--wal-refill-amount WAL_REFILL_AMOUNT`, and `--sub-wallets-min-balance SUB_WALLETS_MIN_BALANCE`.
+To adjust how the publisher handles refills, use the following arguments:
+
+- `--refill-interval REFILL_INTERVAL`: Sets how often the background process checks sub-wallet balances.
+- `--gas-refill-amount GAS_REFILL_AMOUNT`: Sets the amount of SUI, in MIST, that the publisher sends to a sub-wallet at each refill. The default is `500000000` (0.5 SUI).
+- `--wal-refill-amount WAL_REFILL_AMOUNT`: Sets the amount of WAL, in FROST, that the publisher sends to a sub-wallet at each refill. The default is `500000000` (0.5 WAL).
+- `--sub-wallets-min-balance SUB_WALLETS_MIN_BALANCE`: Sets the minimum SUI balance (in MIST) and WAL balance (in FROST) below which the publisher refills a sub-wallet. The default is `500000000`.
 
 ## Understand `Blob` object lifecycle
 
