@@ -98,7 +98,7 @@ Some approaches look like access control but do not protect the underlying data:
 
 - **Gating a portal:** You can put HTTP authentication, IP restrictions, or rate limits in front of a [self-hosted portal](/docs/sites/portals/deploy-locally), but this only restricts that one portal. Anyone can run their own portal or fetch the site's blobs directly from any aggregator, because Sui exposes the resource paths and blob IDs publicly.
 - **Obscure URLs:** Unlisted paths offer no protection. The site object on Sui publicly maps every resource path to its blob ID.
-- **Blob IDs as secrets:** Blob IDs are content-derived and discoverable. Do not rely on keeping a blob ID private.
+- **Blob IDs as secrets:** Blob IDs are content-derived, and the site object on Sui publicly lists the blob ID of every resource. Do not rely on keeping a blob ID private.
 
 ## Can you remove a blob before its storage period ends?
 
