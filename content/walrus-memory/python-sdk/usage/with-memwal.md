@@ -36,7 +36,7 @@ answer: >-
   stored asynchronously. Both support options like max_memories, min_relevance, and auto_save.
 ---
 
-`with_memwal_langchain` and `with_memwal_openai` wrap an existing LLM client with automatic memory management. Before each call, the wrapper recalls relevant memories and injects them. After each call, the wrapper analyzes the user message for new facts in the background (fire-and-forget). The call does not wait for this save to finish, so a failed save does not raise an error in your code. The `memwal` package also exports `withMemWal`, an alias for `with_memwal_langchain`. For details, see [What is the `withMemWal` alias?](#what-is-the-withmemwal-alias).
+`with_memwal_langchain` and `with_memwal_openai` wrap an existing LLM client with automatic memory management. Before each call, the wrapper recalls relevant memories and injects them. After each call, the wrapper analyzes the user message for new facts in the background (fire-and-forget). The chat call returns without waiting for the save, and a failed save does not raise from that call. To wait for pending saves and surface failures, call `await client.memwal_flush()` (or `client.memwal_flush_sync()` in sync code), which raises if a background save failed, or pass an `on_save_error` callback. The `memwal` package also exports `withMemWal`, an alias for `with_memwal_langchain`. For details, see [What is the `withMemWal` alias?](#what-is-the-withmemwal-alias).
 
 Both integrations import their dependency lazily, install only what you use:
 
@@ -127,7 +127,7 @@ response = await smart_client.chat.completions.create(
 
 **After generation:**
 
-- If `auto_save` is `True` (the default), runs `analyze()` on the user message without waiting for the result (fire-and-forget), so a failed save does not raise an error in your code
+- If `auto_save` is `True` (the default), runs `analyze()` on the user message without waiting for the result (fire-and-forget). A failed save does not raise from the chat call; `memwal_flush()` raises it later, and `on_save_error` receives it.
 - Extracted facts are stored asynchronously
 
 ## Options
@@ -136,8 +136,8 @@ Both wrappers accept the same keyword arguments:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `key` | | Your Walrus Memory private key (the examples read it from `MEMWAL_PRIVATE_KEY`) |
-| `account_id` | | Your Walrus Memory account ID (the examples read it from `MEMWAL_ACCOUNT_ID`) |
+| `key` | Required | Ed25519 delegate key (hex); the examples read it from `MEMWAL_PRIVATE_KEY` |
+| `account_id` | Required | Walrus Memory account object ID; the examples read it from `MEMWAL_ACCOUNT_ID` |
 | `server_url` | `https://relayer.memory.walrus.xyz` | Explicit relayer URL (wins over `env`) |
 | `env` | | Hosted relayer preset: `staging` for testing or `prod` for production |
 | `namespace` | `"default"` | Memory namespace |
