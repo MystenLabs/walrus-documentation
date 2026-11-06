@@ -188,7 +188,7 @@ def read_status(blob_id: str) -> str:
 print(read_status(blob_id))  # "available", "retry", or "unavailable"
 ```
 
-The function returns `"retry"` for every `404`. Retry a `404` only when you just certified the blob. For a blob you did not just write, treat a `404` as final.
+This function returns `"retry"` for every `404`, so use it only right after you certify a blob. For a blob you did not just write, a `404` is final.
 
 </TabItem>
 </Tabs>
