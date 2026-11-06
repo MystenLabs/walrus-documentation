@@ -128,7 +128,7 @@ Every recall runs inside one account and namespace. To keep a client's memories 
 2. Ask the agent to run `memwal_health`; it returns a fast connectivity check against the relayer.
 3. State a durable fact, for example a package-manager preference, confirm the agent calls `memwal_remember`, then start a fresh session and confirm `memwal_recall` finds it.
 
-If a step fails, run `npx -y @mysten-incubation/memwal-mcp --help` in a terminal to surface the real error, and set `MEMWAL_MCP_DEBUG=1` in the server's environment for verbose logging. The [Claude Code page](/walrus-memory/mcp/claude-code#troubleshooting-faq) carries the full troubleshooting FAQ; the errors apply to every client.
+If a step fails, first confirm that your Node.js version matches one listed in the prerequisites, because the server runs through `npx`. Then run `npx -y @mysten-incubation/memwal-mcp --help` in a terminal to surface the real error, and set `MEMWAL_MCP_DEBUG=1` in the server's environment for verbose logging. The [Claude Code page](/walrus-memory/mcp/claude-code#troubleshooting-faq) carries the full troubleshooting FAQ; the errors apply to every client.
 
 ## Antigravity plugin directory
 
