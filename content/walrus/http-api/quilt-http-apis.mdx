@@ -157,12 +157,14 @@ $ curl "$AGGREGATOR/v1/blobs/by-quilt-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3Pjl
 Both methods return the raw blob bytes in the response body. Metadata such as the blob ID and the tags supplied through the `_metadata` field at store time are returned as HTTP headers:
 
 - `X-Quilt-Patch-Identifier`: The identifier of the blob within the quilt
-- `ETag`: For caching purposes, the quilt patch ID when you retrieve by patch ID, or the quilt ID when you retrieve by quilt ID and identifier
+- `ETag`: The quilt ID, for caching purposes. Both retrieval methods return the quilt ID, so every blob from the same quilt returns the same `ETag`
 - Additional custom headers from blob tags, if configured
 
 ## Which ETag does each retrieval method return?
 
-The `ETag` value depends on how you retrieve the blob:
+Both retrieval methods return the quilt ID as the `ETag`:
 
-- `/v1/blobs/by-quilt-patch-id/`: The `ETag` contains the quilt patch ID.
-- `/v1/blobs/by-quilt-id/`: The `ETag` contains the quilt ID, not a patch ID. Every blob you retrieve from the same quilt through this endpoint returns the same `ETag`.
+- `/v1/blobs/by-quilt-patch-id/`: The `ETag` contains the ID of the quilt that holds the patch, not the patch ID.
+- `/v1/blobs/by-quilt-id/`: The `ETag` contains the quilt ID.
+
+Every blob you retrieve from the same quilt returns the same `ETag`, whichever endpoint you use.
