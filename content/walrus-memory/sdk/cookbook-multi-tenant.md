@@ -184,7 +184,7 @@ export async function POST(req: Request) {
 }
 ```
 
-`remember` waits for acceptance, not for the upload and indexing to finish. When the caller needs completion before proceeding, call `rememberAndWait` instead. For its signature, see the [API Reference](/walrus-memory/sdk/api-reference). Persist the returned job ID if completion must survive a process restart. For retries, stable operation keys, and checking completion outside the chat turn, see [Production readiness](/walrus-memory/sdk/production-readiness).
+`remember` waits for acceptance, not for the upload and indexing to finish. Persist the returned job ID if completion must survive a process restart. When the caller needs completion before proceeding, call `rememberAndWait` instead. For its signature, see the [API Reference](/walrus-memory/sdk/api-reference). For retries, stable operation keys, and checking completion outside the chat turn, see [Production readiness](/walrus-memory/sdk/production-readiness).
 
 :::note
 **Structured agent state (a single profile JSON):** semantic `recall` is built for fuzzy retrieval by meaning, so it is not a reliable way to fetch one authoritative "current profile" record. If you need deterministic key-based reads/upserts, follow [issue #247](https://github.com/MystenLabs/MemWal/issues/247). For now, prefer a **dedicated namespace per structured record** and treat free-form semantic lines separately.
