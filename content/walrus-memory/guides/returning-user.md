@@ -38,7 +38,7 @@ Losing a delegate key does not lose your memories. The key is a credential for r
 
 ### Do you need to restore your memories?
 
-The search index lives in the relayer's database, not your browser, scoped to your account and namespace. Once you have a delegate key on the new device, recall reaches your existing memories straight away, with nothing to rebuild.
+The search index lives in the relayer's database, not your browser, scoped to your account and namespace. The relayer is the backend service that processes Walrus Memory requests: it encrypts and stores your memories on Walrus and keeps the search index that recall uses. You can use the managed relayer or run your own self-hosted relayer. Once you have a delegate key on the new device, recall reaches your existing memories straight away, with nothing to rebuild.
 
 You only run restore when the relayer's index lacks rows, for example after a database loss or reset, or when you point a fresh self-hosted relayer at your account. Restore rediscovers the blobs your account owns in a namespace and re-indexes any the relayer does not already have:
 
