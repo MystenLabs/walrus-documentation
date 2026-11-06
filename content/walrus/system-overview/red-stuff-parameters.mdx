@@ -78,7 +78,7 @@ The following sections describe the concrete parameter choices and mechanisms th
 
 ### Sliver-pair-to-shard mapping
 
-The previous sections assumed that sliver pair $i$ is stored on shard $i$. In practice, the system maps sliver pairs to shards in a pseudo-random fashion so that the same shard does not always store the [systematic slivers](red-stuff), which contain the original data.
+The previous sections assumed that sliver pair $i$ is stored on shard $i$. In practice, the system maps sliver pairs to shards in a pseudo-random fashion so that the same shard does not always store the [systematic slivers](/docs/system-overview/red-stuff), which contain the original data.
 
 This is important because systematic slivers are the most frequently accessed, as they allow you to access the data without any decoding.
 
