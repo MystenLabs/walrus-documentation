@@ -80,7 +80,7 @@ Choose namespaces before you write at scale. Because recall and restore match a 
 
 ## How to renew memories
 
-A memory persists on Walrus for the number of epochs you paid for. An epoch is about 2 weeks on Mainnet and about 1 day on Testnet. When the epochs run out, Walrus drops the blob and the memory disappears. Renewal extends the memory's underlying Walrus `Blob` object for more epochs: the blob keeps its blob ID and its place in the [relayer's index](#how-to-rebuild-the-search-index), and only its expiry epoch moves forward, so renewal never re-uploads the content.
+A memory persists on Walrus for the number of epochs you paid for. An epoch is about 2 weeks on Mainnet and about 1 day on Testnet. When the epochs run out, Walrus drops the blob and the memory disappears. Renewal extends the memory's underlying Walrus `Blob` object for more epochs: the blob keeps its blob ID and its place in the index on the [relayer](/walrus-memory/relayer/overview), and only its expiry epoch moves forward, so renewal never re-uploads the content.
 
 Renewal covers two cases:
 
