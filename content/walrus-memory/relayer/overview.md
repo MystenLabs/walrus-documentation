@@ -86,7 +86,7 @@ flowchart LR
     Sidecar --> Walrus  
 ```
 
-The Rust server starts the sidecar automatically when it boots. The sidecar communicates over plain HTTP, not HTTPS, on `localhost:9000` (configurable through `SIDECAR_URL`, see [Sidecar URL configuration](#sidecar-url-configuration)). If the sidecar fails to start, the relayer exits immediately.
+The Rust server starts the sidecar automatically when it boots. By default, the sidecar communicates over plain HTTP, not HTTPS, on `localhost:9000`. To change this, set `SIDECAR_URL` (see [Sidecar URL configuration](#sidecar-url-configuration)). If the sidecar fails to start, the relayer exits immediately.
 
 ### Sui RPC transport
 
