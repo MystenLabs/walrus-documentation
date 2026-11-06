@@ -299,6 +299,10 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 
 November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13)
 
+#### Changes
+
+- [`MemWal` and `MemWalMock` share input validation on `remember*`, `rememberBulk*`, `analyze*`, `embed`, `recall`, `restore`, and `listNamespaces`, rejecting invalid `idempotencyKey` values before signing and rejecting `limit: 0` consistently. On read paths (`recall`, `recallManual`, `restore`, and `listMemories`), empty string `""` is rejected while whitespace namespaces remain readable to match the server's namespace validation. (Refs #978)](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13)
+
 ---
 
 ### Walrus Memory TypeScript SDK v0.1.12
@@ -738,9 +742,15 @@ Initial release of the Walrus Memory Python SDK.
 
 <TabItem value="openclaw" label="OpenClaw">
 
-### Walrus Memory SDK v0.0.9
+### Walrus Memory OpenClaw v0.0.9
 
 November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9)
+
+#### Changes
+
+- [Keep sub-agent memory separate from the main agent when the derived namespace or legacy alias would collide with `defaultNamespace`. Colliding derived namespaces use a deterministic hashed namespace, and `memory_search` and `memory_store` reject explicit requests for the main namespace from sub-agent sessions.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9)
+- [When a sub-agent's derived namespace previously equaled `defaultNamespace`, it now uses the hashed namespace. Memories already stored under `defaultNamespace` remain there and are no longer automatically recalled by that sub-agent.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9)
+- [Update the MemWal SDK dependency to `0.1.13`.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9)
 
 ---
 

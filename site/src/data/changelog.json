@@ -37,17 +37,35 @@
     "description": null,
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13",
-    "changes": []
+    "changes": [
+      {
+        "text": "`MemWal` and `MemWalMock` share input validation on `remember*`, `rememberBulk*`, `analyze*`, `embed`, `recall`, `restore`, and `listNamespaces`, rejecting invalid `idempotencyKey` values before signing and rejecting `limit: 0` consistently. On read paths (`recall`, `recallManual`, `restore`, and `listMemories`), empty string `\"\"` is rejected while whitespace namespaces remain readable to match the server's namespace validation. (Refs #978)",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13"
+      }
+    ]
   },
   {
     "id": "memwal-@mysten-incubation/oc-memwal@0.0.9",
     "date": "2026-11-04T07:28:00Z",
     "category": "walrus-memory",
-    "title": "Walrus Memory SDK v0.0.9",
+    "title": "Walrus Memory OpenClaw v0.0.9",
     "description": null,
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9",
-    "changes": []
+    "changes": [
+      {
+        "text": "Keep sub-agent memory separate from the main agent when the derived namespace or legacy alias would collide with `defaultNamespace`. Colliding derived namespaces use a deterministic hashed namespace, and `memory_search` and `memory_store` reject explicit requests for the main namespace from sub-agent sessions.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
+      },
+      {
+        "text": "When a sub-agent's derived namespace previously equaled `defaultNamespace`, it now uses the hashed namespace. Memories already stored under `defaultNamespace` remain there and are no longer automatically recalled by that sub-agent.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
+      },
+      {
+        "text": "Update the MemWal SDK dependency to `0.1.13`.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
+      }
+    ]
   },
   {
     "id": "memwal-@mysten-incubation/memwal-mcp@0.0.18",

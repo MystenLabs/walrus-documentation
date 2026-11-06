@@ -177,7 +177,7 @@ function extractSummary(body) {
 
 // ── Extract linked changes from a GitHub release body ──────────────
 
-function extractLinkedChanges(body, repoSlug) {
+function extractLinkedChanges(body, repoSlug, { fallbackUrl = null } = {}) {
   if (!body) return [];
 
   const changes = [];
@@ -250,7 +250,64 @@ function extractLinkedChanges(body, repoSlug) {
     }
   }
 
+  if (changes.length === 0 && fallbackUrl) {
+    return extractPlainChanges(body, fallbackUrl);
+  }
   return changes;
+}
+
+// ── Fallback: plain bullets from a release body ────────────────────
+//
+// Changeset-style release bodies (Walrus Memory packages) often list changes
+// as bullets without a (#N) PR reference. When a body has no linked bullets,
+// the caller can ask for these instead, so the entry is not left with only a
+// heading, a date, and a link. Each change links to the release itself.
+// Top-level bullets only: wrapped continuation lines are joined, nested
+// bullets (for example the package list under "Updated dependencies") and
+// bare "Updated dependencies" bullets are dropped.
+
+function extractPlainChanges(body, releaseUrl) {
+  if (!body) return [];
+
+  const items = [];
+  let current = null;
+  let inFence = false;
+  const flush = () => {
+    if (current !== null) items.push(current);
+    current = null;
+  };
+
+  for (const line of body.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("```")) {
+      inFence = !inFence;
+      flush();
+      continue;
+    }
+    if (inFence) continue;
+
+    const indent = line.length - line.trimStart().length;
+    const bullet = line.match(/^ {0,1}[-*]\s+(.+)$/);
+    if (bullet) {
+      flush();
+      current = bullet[1].trim();
+      continue;
+    }
+    if (current !== null && trimmed && indent >= 2 && !/^[-*]\s/.test(trimmed)) {
+      current += " " + trimmed;
+      continue;
+    }
+    flush();
+  }
+  flush();
+
+  return items
+    .map((text) => text.replace(/^\*\*([^*]+)\*\*:\s*/, "$1: "))
+    .filter((text) => !/^updated dependencies\b/i.test(text))
+    .map((text) => ({
+      text: sanitizeForMDX(text).replace(/\[([^\]]+)\]\([^)]+\)/g, "$1"),
+      url: releaseUrl,
+    }));
 }
 
 // ── Editorial summaries (docs/editorial/*.md) ──────────────────────
@@ -421,6 +478,26 @@ function memwalCategoryKey(pkg) {
   return "other";
 }
 
+// Product names per package category. Keep in step with PRODUCT_TITLES in
+// generate-editorial-summaries.mjs, which titles the editorial files.
+//   @mysten-incubation/memwal      → Walrus Memory TypeScript SDK
+//   @mysten-incubation/memwal-mcp  → Walrus Memory MCP
+//   memwal-python                  → Walrus Memory Python SDK
+//   @mysten-incubation/oc-memwal   → Walrus Memory OpenClaw
+const MEMWAL_PRODUCT_NAMES = {
+  mcp: "Walrus Memory MCP",
+  sdk: "Walrus Memory TypeScript SDK",
+  python: "Walrus Memory Python SDK",
+  openclaw: "Walrus Memory OpenClaw",
+};
+
+function memwalDisplayName(pkg) {
+  return (
+    MEMWAL_PRODUCT_NAMES[memwalCategoryKey(pkg)] ||
+    pkg.replace("@mysten-incubation/", "")
+  );
+}
+
 async function loadMemWalReleases() {
   console.log("  Fetching MystenLabs/walrus-memory releases...");
   const releases = await fetchAllPages(
@@ -435,19 +512,7 @@ async function loadMemWalReleases() {
     if (!parsed) continue;
     if (!r.body || r.body.trim().length < 20) continue;
 
-    let displayName = parsed.package
-      .replace("@mysten-incubation/", "")
-      .replace("memwal-", "Walrus Memory ")
-      .replace("memwal", "Walrus Memory SDK");
-
-    if (displayName === "Walrus Memory SDK")
-      displayName = "Walrus Memory TypeScript SDK";
-    if (displayName === "Walrus Memory mcp")
-      displayName = "Walrus Memory MCP";
-    if (displayName.startsWith("oc-"))
-      displayName = displayName
-        .replace("oc-", "")
-        .replace("memwal", "OpenClaw");
+    const displayName = memwalDisplayName(parsed.package);
 
     results.push({
       title: `${displayName} v${parsed.version}`,
@@ -632,7 +697,9 @@ answer: Release notes for the Walrus decentralized storage platform.
     for (const rel of walrusReleases) {
       const vKey = versionKey(rel.version);
       const ed = editorial.walrus.get(vKey);
-      const changes = extractLinkedChanges(rel.body, "MystenLabs/walrus");
+      const changes = extractLinkedChanges(rel.body, "MystenLabs/walrus", {
+        fallbackUrl: ed?.body ? null : rel.url,
+      });
 
       walrusMdx += renderEntry({
         heading: ed?.title || rel.title,
@@ -701,7 +768,9 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
       for (const rel of cat.releases) {
         const ed = editorial.memwal.get(`${key}|${rel.version}`);
-        const changes = extractLinkedChanges(rel.body, "MystenLabs/MemWal");
+        const changes = extractLinkedChanges(rel.body, "MystenLabs/MemWal", {
+          fallbackUrl: ed?.body ? null : rel.url,
+        });
 
         memoryMdx += renderEntry({
           heading: ed?.title || rel.title,
@@ -742,7 +811,9 @@ answer: Release notes for Walrus Sites.
     for (const rel of sitesReleases) {
       const vKey = versionKey(rel.version);
       const ed = editorial.sites.get(vKey);
-      const changes = extractLinkedChanges(rel.body, "MystenLabs/walrus-sites");
+      const changes = extractLinkedChanges(rel.body, "MystenLabs/walrus-sites", {
+        fallbackUrl: ed?.body ? null : rel.url,
+      });
 
       sitesMdx += renderEntry({
         heading: ed?.title || rel.title,
@@ -775,7 +846,9 @@ answer: Release notes for Walrus Sites.
       description: ed?.body || extractSummary(rel.body),
       badge: rel.network,
       githubUrl: rel.url,
-      changes: extractLinkedChanges(rel.body, "MystenLabs/walrus"),
+      changes: extractLinkedChanges(rel.body, "MystenLabs/walrus", {
+        fallbackUrl: ed?.body ? null : rel.url,
+      }),
     });
   }
 
@@ -790,7 +863,9 @@ answer: Release notes for Walrus Sites.
       description: ed?.body || extractSummary(rel.body),
       badge: null,
       githubUrl: rel.url,
-      changes: extractLinkedChanges(rel.body, "MystenLabs/MemWal"),
+      changes: extractLinkedChanges(rel.body, "MystenLabs/MemWal", {
+        fallbackUrl: ed?.body ? null : rel.url,
+      }),
     });
   }
 
@@ -805,7 +880,9 @@ answer: Release notes for Walrus Sites.
       description: ed?.body || extractSummary(rel.body),
       badge: null,
       githubUrl: rel.url,
-      changes: extractLinkedChanges(rel.body, "MystenLabs/walrus-sites"),
+      changes: extractLinkedChanges(rel.body, "MystenLabs/walrus-sites", {
+        fallbackUrl: ed?.body ? null : rel.url,
+      }),
     });
   }
 
@@ -821,7 +898,15 @@ answer: Release notes for Walrus Sites.
   );
 }
 
-main().catch((err) => {
-  console.error("Error:", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error("Error:", err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  extractLinkedChanges,
+  extractPlainChanges,
+  memwalDisplayName,
+};
