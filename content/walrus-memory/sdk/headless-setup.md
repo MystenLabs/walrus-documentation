@@ -46,7 +46,7 @@ The SDK authenticates every request with an Ed25519 delegate key tied to a `MemW
 
 This is the only step that involves a browser. Your runtime never opens one.
 
-## How do you initialize the SDK from environment variables?
+## How do you initialize the SDK from environment variables? {#initialize-from-the-environment}
 
 Load the credentials from environment variables and construct the client at startup. Call `health()` to confirm the relayer is reachable before your service starts serving traffic:
 
@@ -94,9 +94,9 @@ The SDK reads the delegate key from the `key` config field, not from any specifi
 Recall is scoped per **account plus namespace**. Never hardcode an account ID copied from docs or another project, and never share one delegate key across tenants that should not read each other's memories. Load every credential from the environment.
 :::
 
-## When should you use the manual client?
+## When should you use the manual client? {#when-to-use-the-manual-client}
 
-The default `MemWal` client lets the relayer handle embedding and Seal encryption on your behalf, which is the right choice for most runtimes. Use `MemWalManual` only when the runtime must hold its own keys and keep plaintext entirely client-side. With the manual client, the runtime embeds and Seal-encrypts locally, then the relayer uploads the resulting ciphertext to Walrus and stores the vector row, so the relayer never sees plaintext. It requires a few more fields, including a Sui key. The two keys do different jobs: the delegate key authenticates every request to the relayer, and the Sui key authorizes Seal encryption and decryption:
+The default `MemWal` client lets the relayer handle embedding and Seal encryption on your behalf, which is the right choice for most runtimes. Use `MemWalManual` only when the runtime must hold its own keys and keep plaintext entirely client-side. With the manual client, the runtime embeds and Seal-encrypts locally, then the relayer uploads the resulting ciphertext to Walrus and stores the vector row, so the relayer never sees plaintext. It requires a few more fields, including a Sui key. The delegate key authenticates every request to the relayer. The Sui key signs the Seal session that decrypts your memories when you recall them:
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/headless-setup.md" target="_blank" className="code-source-link">Source: sdk/headless-setup.md</a>
 
@@ -127,11 +127,11 @@ For the complete client-managed flow, see [MemWalManual](/walrus-memory/sdk/usag
 - [Environment Variables](/walrus-memory/reference/environment-variables)
 - [API Reference](/walrus-memory/sdk/api-reference)
 
-## What happens if you omit `serverUrl`?
+## What happens if you omit `serverUrl`? {#default-relayer-url}
 
 If you omit `serverUrl`, the client connects to `https://relayer.memory.walrus.xyz`, the Mainnet relayer. A Testnet service that leaves `serverUrl` unset sends its requests to Mainnet, so always set `serverUrl` when you target Testnet.
 
-## Which delegate key formats does the SDK accept?
+## Which delegate key formats does the SDK accept? {#delegate-key-formats}
 
 The `key` field accepts the delegate private key in any of these forms:
 
