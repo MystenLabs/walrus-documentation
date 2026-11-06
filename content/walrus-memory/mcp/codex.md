@@ -64,6 +64,8 @@ Add Walrus Memory to Codex so it recalls context and saves durable facts as you 
 
 This registers the Walrus Memory plugin, which bundles the MCP server and the lifecycle hooks together as plugin-scoped resources. It does not write a `[mcp_servers.memwal]` block to `~/.codex/config.toml`.
 
+Lifecycle hooks are commands that Codex runs at set points in a session: when the session starts or resumes, when you submit a prompt, and after each Bash command. They remind the agent to use the Walrus Memory tools, and when a command's output looks like an error, they suggest recalling a prior fix. The agent saves memories on its own only when you turn on automatic memory with `memwal-mcp auto-save on`. See [Lifecycle hooks](#lifecycle-hooks-plugin-only) for details.
+
       ### Trust the plugin hooks
 
 Codex loads plugin-bundled hooks but does not run them until you trust the definition. Run `/hooks` (or follow the startup review prompt) and trust the Walrus Memory hook commands.
