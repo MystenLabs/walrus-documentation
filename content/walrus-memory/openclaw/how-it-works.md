@@ -167,7 +167,7 @@ The `before_prompt_build` hook fires before the prompt is assembled for the LLM:
 5. **HTML-escape**, prevent stored text containing `<system>` or similar tags from altering prompt structure
 6. **Inject into prompt**, return `prependContext` (the memories) and `appendSystemContext` (a note that memory tools are pinned to this agent)
 
-`memory_search` and `memory_store` are pinned to the calling agent's namespace inside the plugin. The note is not what enforces isolation. An omitted namespace uses that agent. A supplied namespace is rejected unless it is that namespace or the agent's legacy namespace.
+`memory_search` and `memory_store` are pinned to the calling agent's namespace inside the plugin. The plugin enforces this pinning, not the note in `appendSystemContext`. If a tool call omits the namespace, the plugin uses the calling agent's namespace. If a tool call supplies a namespace, the plugin rejects it unless it is that namespace or the agent's legacy namespace.
 
 ## How does auto-capture work?
 
@@ -230,4 +230,4 @@ Delegate keys are lightweight Ed25519 keys that are registered onchain in a `Mem
 
 ## Configure the auto-capture message count
 
-To change how many recent messages auto-capture analyzes, set `captureMaxMessages` in the `config` block of the `memory-memwal` entry under `plugins.entries`. The default is `10`. To turn off auto-capture, set `autoCapture` to `false`.
+To change how many recent messages auto-capture analyzes, set `captureMaxMessages` in the `config` block of the `memory-memwal` entry under `plugins.entries` in `~/.openclaw/openclaw.json`. The default is `10`. To turn off auto-capture, set `autoCapture` to `false`.
