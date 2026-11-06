@@ -55,7 +55,9 @@ Public surfaces include:
 
 | Relayer API | Relayer package | TypeScript SDK | Python SDK | MCP package | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `1.x` | `0.1.x` | `>=0.0.4` | `>=0.1.0` | `>=0.0.1` | Requires `x-nonce`; TypeScript and Python SDKs use `x-seal-session` for relayer-mode decrypt flows; MCP sends a bearer credential (a delegate key, or an OAuth access token that the relayer resolves to one) at SSE open; the legacy `x-delegate-key` header is deprecated |
+| `1.x` | `0.1.x` | `>=0.0.4` | `>=0.1.0` | `>=0.0.1` | Requires `x-nonce`; TypeScript and Python SDKs use `x-seal-session` for relayer-mode decrypt flows; MCP sends a bearer credential (a delegate key, or an OAuth access token that the relayer resolves to one) at SSE open; the legacy `x-delegate-key` header (not the MCP bearer credential) is deprecated |
+
+The `x-seal-session` header carries a base64-encoded Seal `SessionKey` that relayer-mode decrypt routes need. For details, see [Seal decrypt credentials](#seal-decrypt-credentials).
 
 SDKs and MCP clients read `/version` before protected requests and fail with an explicit compatibility error when the relayer API major or minimum SDK version is unsupported.
 
@@ -107,6 +109,13 @@ Breaking changes must follow this process unless there is an active security inc
 3. Keep the old surface working for the rest of the current API major.
 4. Add or update contract tests and docs in the same PR.
 5. Remove the surface only in the next API major.
+
+Each entry in `deprecations` has the following fields, as shown in the [runtime metadata example](#runtime-metadata):
+
+- `surface`: The deprecated surface. The example uses `header:x-delegate-key`.
+- `deprecatedSince`: The `apiVersion` that deprecated the surface.
+- `removalApiVersion`: The `apiVersion` that removes the surface.
+- `guidance`: The replacement path for clients.
 
 This process applies to headers, routes, environment variables, response fields, feature flags, and MCP transport behavior.
 
