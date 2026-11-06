@@ -49,7 +49,7 @@ To set up the Walrus Memory plugin for OpenClaw, install it with one command, co
 You also need a **delegate key**, **account ID**, and **relayer URL** from Walrus Memory. [Get your Walrus Memory credentials](#get-your-walrus-memory-credentials) explains how to get these.
 
 
-### How to install the plugin
+### Install the plugin
 
     ```bash
     openclaw plugins install @mysten-incubation/oc-memwal
@@ -158,7 +158,7 @@ If you see `health check failed`, check that your relayer URL is reachable and t
 :::
 
 
-### How to verify the plugin is connected
+### Check connectivity
 
 Run the stats command to confirm the plugin is connected:
 
@@ -170,7 +170,7 @@ $ openclaw memwal stats
 
 This shows the relayer status, your key (masked), account ID, active namespace, and whether auto-recall and auto-capture are enabled.
 
-### How to test the memory loop
+### Test the memory loop
 
 The core value of the plugin is the automatic recall and capture cycle. Test it end-to-end:
 
