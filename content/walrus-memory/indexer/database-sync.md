@@ -86,7 +86,7 @@ Populated by the indexer, maps owner addresses to their MemWalAccount object IDs
 
 ### `indexer_state`
 
-A legacy table from the event-polling indexer. The relayer's initial migration still creates it, but the current indexer does not write to it: it records its progress as a checkpoint watermark through the Sui checkpoint-ingestion framework.
+A legacy table from the event-polling indexer, which stored its position in this table as an event cursor. The relayer's initial migration still creates it, but the current indexer does not write to it. Instead, the current indexer processes Sui checkpoints through the Sui checkpoint-ingestion framework and records its progress as a checkpoint watermark: a marker of the last checkpoint it processed, so it resumes from that point after a restart.
 
 | Column | Type | Description |
 |--------|------|-------------|
