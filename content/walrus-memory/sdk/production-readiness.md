@@ -162,7 +162,7 @@ async function budgetedRemember(memwal: MemWal, text: string, eventId: string) {
 }
 ```
 
-## How to custody the agent's keys
+## How to protect the agent's keys {#how-to-custody-the-agents-keys}
 
 A headless agent holds secrets no human rotates by hand, so treat them with production discipline.
 
