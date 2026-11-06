@@ -80,7 +80,7 @@ Choose namespaces before you write at scale. Because recall and restore match a 
 
 ## How to renew memories
 
-A memory persists on Walrus for the number of epochs you paid for. An epoch is about 2 weeks on Mainnet and about 1 day on Testnet. When the epochs run out, Walrus drops the blob and the memory disappears. Renewal extends the memory's underlying Walrus `Blob` object for more epochs: the blob keeps its blob ID and its place in the relayer's index, and only its expiry epoch moves forward, so renewal never re-uploads the content.
+A memory persists on Walrus for the number of epochs you paid for. An epoch is about 2 weeks on Mainnet and about 1 day on Testnet. When the epochs run out, Walrus drops the blob and the memory disappears. Renewal extends the memory's underlying Walrus `Blob` object for more epochs: the blob keeps its blob ID and its place in the index on the [relayer](/walrus-memory/relayer/overview), and only its expiry epoch moves forward, so renewal never re-uploads the content.
 
 Renewal covers two cases:
 
@@ -104,7 +104,7 @@ Both deletion paths are permanent. Start with a preview in the dashboard or a dr
 
 ## How to rebuild the search index
 
-The search index lives in the relayer's database, not in your browser, so switching devices does not lose it. If recall does not return memories you know you stored, the relayer's index might lack rows for those blobs, for example after a database loss or reset, or when you point a fresh self-hosted relayer at your account. Walrus holds the permanent record, so restore rebuilds the index from it.
+The relayer is the service that keeps the search index that recall queries. The index lives in the relayer's database, not in your browser, so switching devices does not lose it. If recall does not return memories you know you stored, the relayer's index might lack rows for those blobs, for example after a database loss or reset, or when you point a fresh self-hosted relayer at your account. Walrus holds the permanent record, so restore rebuilds the index from it.
 
 Restore rediscovers the blobs your account owns in a namespace and re-indexes any the relayer does not already have:
 
