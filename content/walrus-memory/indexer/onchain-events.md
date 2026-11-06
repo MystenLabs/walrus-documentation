@@ -62,7 +62,7 @@ The indexer currently targets the `AccountCreated` event flow as its primary syn
 
 ## Account freeze and quarantine states
 
-Owner deactivation and admin quarantine use separate flags on the account. The owner controls deactivation. Quarantine is admin containment: an AdminCap holder applies it, and while it is active the owner cannot reactivate the account. `AccountDeactivated` reports that the `active` flag changed to false. Two calls emit it:
+Owner deactivation and admin quarantine use separate flags on the account. The `active` flag records whether the account is frozen. The `admin_quarantined` flag records admin containment, which only an AdminCap holder can apply or clear. While the account is quarantined, the owner cannot reactivate it. `AccountDeactivated` reports that the `active` flag changed to false. The following 2 calls emit it:
 
 - The owner calls `deactivate_account`. The call aborts if the account is already deactivated.
 - An AdminCap holder calls `admin_deactivate_account`. If the account is not already quarantined, this sets the `admin_quarantined` flag and emits `AccountQuarantined`, and also emits `AccountDeactivated` if the account was still active. A repeat call on a quarantined account returns without emitting events.
