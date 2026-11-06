@@ -123,7 +123,7 @@ Walrus and network fields:
 
 ## How do you configure a self-hosted relayer? {#relayer-configuration}
 
-The fields above configure the client SDKs. If you run your own relayer, its behavior is configured through environment variables rather than these config objects. One option to be aware of is the Sui RPC transport, `SUI_GRPC_URL`. Set this to a Sui gRPC fullnode URL to route the relayer's Sui calls through gRPC instead of JSON-RPC. It covers both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. It is empty by default, which keeps JSON-RPC. This option exists to migrate ahead of the Sui JSON-RPC sunset in July 2026.
+The fields above configure the client SDKs. If you run your own relayer, its behavior is configured through environment variables rather than these config objects. One option to be aware of is `SUI_GRPC_URL`, the Sui gRPC fullnode URL the relayer uses for its Sui calls, including the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. A self-hosted relayer requires it: release builds exit at startup when it is unset.
 
 For the full list of relayer settings, see the [Environment Variables](/walrus-memory/reference/environment-variables) reference and the [Self-Hosting](/walrus-memory/relayer/self-hosting) guide.
 

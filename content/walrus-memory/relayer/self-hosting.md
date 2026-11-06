@@ -153,16 +153,16 @@ By default, the relayer enforces rate limits and storage quotas through Redis to
 
 ### Sui RPC transport (gRPC)
 
-By default the relayer talks to Sui over JSON-RPC. Ahead of the **Sui JSON-RPC sunset in July 2026**, you can opt into gRPC using `SUI_GRPC_URL`. Set it to a Sui gRPC full node URL to route the relayer's Sui calls through gRPC. Leaving it empty keeps the existing JSON-RPC behavior, so setting it is opt-in and backward compatible.
+The relayer talks to Sui over gRPC. Set `SUI_GRPC_URL` to a Sui gRPC full node URL. Release builds of the relayer exit at startup when it is unset, because they verify the Seal policy package over gRPC before serving requests.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/relayer/self-hosting.md" target="_blank" className="code-source-link">Source: relayer/self-hosting.md</a>
 
 ```env
-# Opt the write path into gRPC (testnet example)
+# Sui gRPC full node (testnet example)
 SUI_GRPC_URL=https://fullnode.testnet.sui.io
 ```
 
-This one variable switches both paths. The write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path both move to gRPC. When you set `SUI_GRPC_URL`, the query and restore path uses gRPC `listOwnedObjects` and `getDynamicField`; when you leave it unset, that path falls back to the JSON-RPC `getOwnedObjects`, `getDynamicFieldObject`, and transaction-block queries. `SUI_RPC_URL` configures that JSON-RPC fallback client.
+This one variable covers both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path, which uses gRPC `listOwnedObjects` and `getDynamicField`. The sidecar reads the same variable and falls back to the network's public full node. `SUI_RPC_URL` is a legacy setting: the relayer still reads it, but only JSON-RPC fallback paths that release builds do not reach use it.
 
 :::info
 `SUI_GRPC_URL` must point at a gRPC endpoint. The relayer parses the URL at startup and exits if the URL is malformed. A well-formed URL that points at a host that does not serve gRPC passes startup, because the client connects lazily, and the failure surfaces on the first gRPC call. Verify the endpoint before you deploy.

@@ -90,7 +90,7 @@ The Rust server starts the sidecar automatically when it boots. By default, the 
 
 ### Sui RPC transport
 
-The relayer reaches Sui over JSON-RPC by default. Ahead of the Sui JSON-RPC sunset in July 2026, setting `SUI_GRPC_URL` to a Sui gRPC fullnode URL switches the relayer to gRPC. This is opt-in and off by default: with `SUI_GRPC_URL` empty, the relayer keeps using JSON-RPC. When set, both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path run on gRPC, so it is a single reversible switch. For configuration details, see [Self-Hosting](/walrus-memory/relayer/self-hosting) and the [Environment Variables](/walrus-memory/reference/environment-variables) reference.
+The relayer reaches Sui over gRPC. Set `SUI_GRPC_URL` to a Sui gRPC fullnode URL: release builds of the relayer exit at startup without it, because they verify the Seal policy package over gRPC before serving requests. The same setting covers the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. The sidecar also reads `SUI_GRPC_URL` and falls back to the network's public fullnode. For configuration details, see [Self-Hosting](/walrus-memory/relayer/self-hosting) and the [Environment Variables](/walrus-memory/reference/environment-variables) reference.
 
 ## Key pool
 
