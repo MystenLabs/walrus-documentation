@@ -40,7 +40,7 @@ The loop has four stages:
 3. **Confirm** each write reached a durable `done` state before the agent acts on it.
 4. **Recall** the stored context back into the agent.
 
-## How to set up in an agent runtime
+## How to set up Walrus Memory in an agent runtime
 
 An agent runtime has no human to click through a wallet or paste a key at a prompt. Generate the account ID and delegate key once at [dev.memwal.ai](https://dev.memwal.ai) for Testnet, store them as secrets, and load them from the environment at startup.
 
