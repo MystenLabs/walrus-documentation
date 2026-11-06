@@ -40,7 +40,7 @@ Aggregators support the HTTP `Range` header, which is what lets a browser seek w
 $ curl -H "Range: bytes=0-999" "$AGGREGATOR/v1/blobs/<BLOB_ID>"
 ```
 
-There is also a dedicated endpoint that takes the range as query parameters. The two paths return different status codes on success: a `Range` header request returns `206 Partial Content`, and this endpoint returns `200 OK`, so a CDN can cache it:
+There is also a dedicated endpoint that takes the range as query parameters. The two paths return different status codes on success: a `Range` header request returns `206 Partial Content`, and this endpoint returns `200 OK`, which a CDN can cache:
 
 ```sh
 $ curl "$AGGREGATOR/v1/blobs/<BLOB_ID>/byte-range?start=0&length=1024"
