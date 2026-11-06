@@ -68,8 +68,10 @@ Control the resulting blob through query parameters on the store call:
 
 The parser returns these fields from the store response:
 
+- `status`: `Newly created` when Walrus stored the blob for the first time, or `Already certified` when another user already stored and certified it.
 - `blobId`: Identifies the data on Walrus.
 - `endEpoch`: Tells you when the storage period ends.
+- `suiObjectId`: The ID of the created `Blob` object. The parser returns it only for newly created blobs.
 
 See [Understanding the response](/docs/http-api/storing-blobs#what-does-a-store-request-return) for the full format.
 
