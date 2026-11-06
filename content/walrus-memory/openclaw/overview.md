@@ -134,4 +134,4 @@ The following table summarizes the difference:
 |---|---|---|
 | Memory tools (`memwal_remember`, `memwal_recall`, and so on) | Yes | Yes |
 | Lifecycle hooks | No | Yes |
-| Agent prefers `memwal_*` tools over built-in memory | Best effort, varies by client and model | Yes, through the `SessionStart` hook |
+| Agent prefers `memwal_*` tools over built-in memory | Best effort, varies by client and model | Instructed by the `SessionStart` hook |
