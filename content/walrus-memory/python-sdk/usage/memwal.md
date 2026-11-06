@@ -131,7 +131,7 @@ To check a job once without polling, call `get_remember_status` with the `job_id
 
 ## Remember with or without waiting
 
-`remember` returns a `RememberAcceptedResult` (`job_id`, `status`) as soon as the relayer accepts the request. The Walrus upload and onchain commit continue in a background worker, so the memory is not searchable yet. To finish the write, choose one of these options:
+Until the background worker finishes the Walrus upload and onchain commit, the memory is not searchable. To finish the write, choose one of these options:
 
 - Call `remember_and_wait` to submit and poll to completion in one call. The result includes the `blob_id`.
 - Pass the `job_id` from `remember` to `wait_for_remember_job` later. It polls until the memory is searchable.
