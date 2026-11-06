@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.5
+title: "Walrus Memory TypeScript SDK v0.0.5"
 description: Adds relayer compatibility checks, RecallOptions for topK/namespace/maxDistance filtering, and prefers Sui gRPC for SEAL...
 keywords: ["walrus memory", "release notes", "changelog", "memwal"]
 ---

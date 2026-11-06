@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.5
+title: "Walrus Memory MCP v0.0.5"
 description: Adds the automatic memory plugin for Claude Code, Codex, Cursor, and Antigravity, along with new memwal_remember_bulk and...
 keywords: ["walrus memory", "release notes", "changelog", "memwal-mcp"]
 ---

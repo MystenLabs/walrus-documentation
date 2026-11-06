@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.3
+title: "Walrus Memory OpenClaw v0.0.3"
 description: Rebrands from MemWal to Walrus Memory across the OpenClaw memory plugin...
 keywords: ["walrus memory", "release notes", "changelog", "oc-memwal"]
 ---
