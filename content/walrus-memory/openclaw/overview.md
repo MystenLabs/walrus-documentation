@@ -127,3 +127,11 @@ Walrus Memory also runs in MCP-only mode on MCP clients. The difference between 
 
 - **MCP-only:** The agent gets the memory tools (`memwal_remember`, `memwal_recall`, and so on) on every MCP client. The tool descriptions encourage proactive use, so agents often save and recall on their own. This behavior is best effort: it varies by client and model, and on a client that ships its own memory feature, the built-in one commonly wins.
 - **Plugin:** Bundles the MCP server and lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and when to save without being asked.
+
+The following table summarizes the difference:
+
+| **Capability** | **MCP-only** | **Plugin** |
+|---|---|---|
+| Memory tools (`memwal_remember`, `memwal_recall`, and so on) | Yes | Yes |
+| Lifecycle hooks | No | Yes |
+| Agent prefers `memwal_*` tools over built-in memory | Best effort, varies by client and model | Instructed by the `SessionStart` hook |
