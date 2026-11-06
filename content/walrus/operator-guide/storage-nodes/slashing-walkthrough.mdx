@@ -109,14 +109,12 @@ The transaction does three things atomically:
 Verify the outcome:
 
 ```sh
-$ sui client object $CANDIDATE_NODE_ID --json | grep -A1 commission
+$ sui client object $CANDIDATE_NODE_ID --json | grep '"commission"'
 $ sui client object $TREASURY_OBJECT --json
 $ sui client object $SLASHING_MANAGER --json
 ```
 
 You see the candidate's `commission` field at zero, the WAL `total_supply` lower by the burned amount, and no entry for the candidate in `slashing_candidates`.
-
-The `grep -A1` filter prints only 1 line after each match, so it might cut off the `commission` value if the JSON output spreads it across several lines. To see the full field, run `sui client object $CANDIDATE_NODE_ID --json` without the filter.
 
 ## How to clean up dangling proposals from prior epochs
 
