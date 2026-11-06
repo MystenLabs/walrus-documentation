@@ -49,15 +49,16 @@ There are two ways to use Walrus Memory. The difference is whether you also get 
 | Walrus Memory MCP: memory tools (`memwal_remember`, `memwal_recall`, …) | ✓ | ✓ |
 | Lifecycle hooks: automatic recall and save reminders | ✓ | ✗ |
 
-- **Plugin:** Bundles the MCP server **and** lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and when to save without being asked. Available on **Claude Code**, **Codex**, **Antigravity**, and **Cursor**.
-- **MCP-only:** Gives the agent the memory tools on **every** MCP client. The tool descriptions encourage proactive use, so agents often do save and recall on their own. Treat that as best-effort: it varies by client and model, and on a client that ships its own memory feature the built-in one commonly wins.
+- **Plugin:** Bundles the MCP server **and** lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and whether automatic memory is on. Only when it is on does the hook tell the agent to save facts you did not ask it to save. Available on **Claude Code**, **Codex**, **Antigravity**, and **Cursor**.
+- **MCP-only:** Gives the agent the memory tools on **every** MCP client. The tool descriptions encourage proactive use, so agents often recall on their own, and save on their own when automatic memory is on. Treat that as best-effort: it varies by client and model, and on a client that ships its own memory feature the built-in one commonly wins.
 
 Saving **without being asked is on once you agree to it**: `memwal-mcp login`
 asks the question in your terminal the first time, and on a fresh install
 the agent saves nothing unprompted until you answer. Saved memories are permanent
 (Walrus is immutable storage), which is why the question comes first. Change the
-answer any time with `memwal-mcp auto-save on|off` (or `MEMWAL_AUTO_SAVE` in
-your client's `env` block). Recall, and anything you explicitly ask the agent to
+answer any time with `memwal-mcp auto-save on|off`. Setting `MEMWAL_AUTO_SAVE=0` in
+a client's `env` block turns automatic saving off for that client only. The server ignores a truthy
+value there, so a project's MCP config cannot turn it on. Recall, and anything you explicitly ask the agent to
 remember, work either way. Both modes exclude credentials, passwords, API keys, tokens, private keys, seed
 phrases, authorization headers, and URLs with an embedded `user:password`.
 Walrus Memory strips them before writing a memory, because Walrus
@@ -185,7 +186,7 @@ Ask the agent in any conversation:
 
 > What MCP tools do you have available?
 
-You should see the `memwal_*` tools. Then state a durable fact (for example, a preferred package manager) and confirm the agent saves it with `memwal_remember` and recalls it in a later session.
+You should see the `memwal_*` tools. Then ask the agent to remember a durable fact (for example, a preferred package manager) and confirm it saves the fact with `memwal_remember` and recalls it in a later session.
 
 ## Quick recovery
 

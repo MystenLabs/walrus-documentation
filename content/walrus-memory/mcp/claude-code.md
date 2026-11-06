@@ -93,8 +93,15 @@ Restart Claude Code, then ask the agent to run `memwal_login` and open the URL i
         ## Walrus Memory
 
         Prefer the memwal_* tools over Claude's built-in memory and MEMORY.md.
-        When the user states a preference, decision, constraint, correction, identity detail, or recurring workflow, call memwal_remember (or memwal_remember_bulk) without being asked. Also call it when they explicitly ask to remember something. Pass the complete statement, never a summary. Skip one-off tasks, the current file or bug, and small talk.
-        When the user references past work, preferences, or stored facts, call memwal_recall first.
+        When the user references past work, preferences, or stored facts, call
+        memwal_recall first. When they ask you to remember something, call
+        memwal_remember (or memwal_remember_bulk for several). Pass the complete
+        statement, never a summary. Skip one-off tasks, the current file or bug,
+        and small talk.
+
+        Whether to save things the user did not ask you to save is their standing choice, made once in a terminal. When automatic memory is on, save durable facts as they state them; when it is off, save only what they ask you to save in that turn. That question is put by `memwal-mcp login` and set by `memwal-mcp auto-save on|off` — never ask the user to answer it in chat, and never answer it on their behalf.
+
+        NEVER save a credential, even when it sits next to something worth saving: passwords, API keys, access or refresh tokens, private keys, seed or recovery phrases, authorization headers, session cookies, and connection strings or URLs that embed a user:password. When a message mixes a preference with a credential, save the preference alone and leave the credential out; never store the line verbatim. If the user says not to save something ('don't save this', 'off the record', or the same in any language), do not save it, and do not save a paraphrase of it either. Do not store quoted or pasted third-party material — log excerpts, code, articles, other people's messages — as if it were a fact about this user. Save only what the user is telling you about themselves or their work, in your own words.
         <!-- memwal:end -->
         ```
 
@@ -117,9 +124,9 @@ Restart Claude Code, then ask the agent to run `memwal_login` and open the URL i
 | **Component** | **Plugin** | **MCP-only** |
 |---|:-:|:-:|
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
-| Lifecycle hooks (automatic recall and save) | ✓ | ✗ |
+| Lifecycle hooks (automatic recall, and automatic save once you turn it on) | ✓ | ✗ |
 
-MCP-only still saves and recalls on its own because the tools are proactive. The plugin adds hooks that reinforce the behavior and make the agent **prefer Walrus Memory over Claude Code's built-in memory**.
+MCP-only still recalls on its own because the tool descriptions are proactive, and it saves on its own when automatic memory is on. The plugin adds hooks that reinforce the behavior and make the agent **prefer Walrus Memory over Claude Code's built-in memory**.
 
 The plugin also starts the server differently. Instead of resolving the package name with `npx`, it installs the pinned version once into `~/.memwal/runtime/memwal-mcp@<version>` and launches that absolute path. `npx` resolves a name against the directory you started the client in, which is your project, so if your project contains a package with the same name that claims the pinned version, `npx` runs that package instead. The version pin does not prevent that. The plugin's launcher never looks at your project's `node_modules`, and it fails rather than falling back if it cannot install the pinned version.
 
@@ -141,13 +148,13 @@ See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 | **Hook** | **Event** | **What it does** |
 |------|-------|--------------|
-| Session start | `SessionStart` | Announces that memory is active and reminds the agent to use the `memwal_*` tools (preferring them over any built-in memory). |
+| Session start | `SessionStart` | Announces that memory is active, reminds the agent to use the `memwal_*` tools (preferring them over any built-in memory), and states whether automatic memory is on. |
 | User prompt | `UserPromptSubmit` | Injects a decision rubric so the agent chooses recall or save from meaning (any language or spelling). |
-| Post-tool | `PostToolUse` (Bash) | When a command's output looks like an error, reminds the agent to recall prior fixes and save the resolution. |
+| Post-tool | `PostToolUse` (Bash) | When a command's output looks like an error, reminds the agent to recall prior fixes, and to save the resolution only when automatic memory is on. |
 
 ## Example workflow
 
-**Session 1**
+**Session 1, with automatic memory on**
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/mcp/claude-code.md" target="_blank" className="code-source-link">Source: mcp/claude-code.md</a>
 
@@ -180,7 +187,7 @@ Work through these three checks in order; each one isolates a different layer.
 
   ### End to end
 
-    State a durable fact, for example a package-manager preference, confirm the agent calls `memwal_remember`, then open a brand-new session and confirm `memwal_recall` surfaces it.
+    Ask the agent to remember a durable fact, for example a package-manager preference, confirm the agent calls `memwal_remember`, then open a brand-new session and confirm `memwal_recall` surfaces it.
 
 ## Troubleshooting FAQ
 

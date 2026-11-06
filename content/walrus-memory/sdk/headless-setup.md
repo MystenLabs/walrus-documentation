@@ -108,8 +108,9 @@ const manual = MemWalManual.create({
   accountId: requireEnv("MEMWAL_ACCOUNT_ID"),
   packageId: requireEnv("MEMWAL_PACKAGE_ID"),
   serverUrl: "https://relayer.memory.walrus.xyz",
-  // The Sui key authorizes Seal encryption and decryption. The relayer still
-  // handles the Walrus upload, registration, search, and restore.
+  // The Sui key signs the Seal session key used for decryption; Seal
+  // encryption needs no key. The relayer still handles the Walrus upload,
+  // registration, search, and restore.
   suiPrivateKey: requireEnv("SUI_PRIVATE_KEY"),
   embeddingApiKey: requireEnv("OPENAI_API_KEY"),
   suiNetwork: "mainnet",

@@ -94,7 +94,7 @@ The relayer reaches Sui over JSON-RPC by default. Ahead of the Sui JSON-RPC suns
 
 ## Key pool
 
-For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). With a single key, uploads signed by that key run one after another (per-signer serialization), which slows down requests that store many facts at once. Each concurrent Walrus upload uses a different key from the pool in round-robin order, bypassing per-signer serialization and enabling parallel uploads.
+For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). With a single key, uploads signed by that key run one after another (per-signer serialization), which slows down requests that store many facts at once. The relayer assigns each upload to the least-loaded key in the pool, breaking ties in round-robin order, so concurrent uploads spread across keys instead of queueing behind one signer.
 
 ## Rate limiting  and  abuse prevention
 

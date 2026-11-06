@@ -31,7 +31,7 @@ questions:
   - How do I install the Walrus Memory plugin on Cursor?
   - Does Cursor support Walrus Memory lifecycle hooks?
 answer: >-
-  To add Walrus Memory to Cursor, install the Walrus Memory plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall and save need no extra instructions. Cursor ships no plugin CLI, so the copy is the install. You can instead configure Walrus Memory as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
+  To add Walrus Memory to Cursor, install the Walrus Memory plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall needs no extra instructions. Automatic saving stays off on a new install until you turn it on at the memwal-mcp login prompt or with memwal-mcp auto-save on. Cursor ships no plugin CLI, so the copy is the install. You can instead configure Walrus Memory as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
 ---
 
 Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** or as **MCP-only** (just the tools). The plugin adds lifecycle hooks, scripts that run on Cursor's own events and prompt the agent to recall memories automatically. The hooks also prompt automatic saves after you turn on automatic saving, which a new install asks you to confirm at login or through `memwal-mcp auto-save on`.
@@ -59,7 +59,7 @@ Add Walrus Memory to Cursor so the agent recalls context and saves durable facts
     ```
     Append `--force` when you reinstall over an existing copy.
 
-    Fully quit and reopen Cursor (`Cmd+Q` on macOS; closing the window is not enough). The plugin then appears under **Customize** in the sidebar, and its hooks give proactive recall and save with no further instructions.
+    Fully quit and reopen Cursor (`Cmd+Q` on macOS; closing the window is not enough). The plugin then appears under **Customize** in the sidebar, and its hooks prompt recall with no further instructions. They prompt saves you did not ask for only after you turn on automatic memory, either by answering the question `memwal-mcp login` asks in your terminal or by running `memwal-mcp auto-save on`.
 
     If you already added a manual `memwal` entry to `~/.cursor/mcp.json`, remove it. The plugin ships its own server and the two entries duplicate it.
   </TabItem>
@@ -90,7 +90,7 @@ Cursor ships no plugin CLI. Do not look for a `cursor plugin` command, and do no
 | Component | Plugin | MCP-only |
 |---|:-:|:-:|
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
-| Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
+| Lifecycle hooks (automatic recall, and automatic save once you turn it on) | ✓ | ✗ |
 
 ## Lifecycle hooks (plugin)
 
@@ -98,9 +98,9 @@ The plugin runs **lifecycle hooks** on Cursor's own events:
 
 | Hook | Cursor event | What it does |
 |------|--------------|--------------|
-| Session start | `sessionStart` | Tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature. |
-| Before prompt | `beforeSubmitPrompt` | Detects recall/remember intent and reminds the agent. |
-| Post-tool | `postToolUse` (Bash) | On command errors, reminds the agent to recall prior fixes. |
+| Session start | `sessionStart` | Tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and whether automatic memory is on. |
+| Before prompt | `beforeSubmitPrompt` | Injects a decision rubric so the agent chooses recall or save from meaning. With automatic memory off, it saves only what you ask it to save. |
+| Post-tool | `postToolUse` (Bash) | On command errors, reminds the agent to recall prior fixes, and to save the resolution only when automatic memory is on. |
 
 The hook scripts ship inside the plugin bundle (`packages/mcp/plugin/`), so the copy above installs them alongside the MCP server. The MCP-only setup gives the tools without these hooks.
 
@@ -116,11 +116,11 @@ The hook scripts ship inside the plugin bundle (`packages/mcp/plugin/`), so the 
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
+The tool descriptions tell the agent to recall proactively, and to save proactively only when automatic memory is on. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## How to verify the setup
 
-Ask the agent what MCP tools it has available, for example with the prompt `What MCP tools do you have available?`. You should see the `memwal_*` tools. State a durable fact (for example, a preferred package manager) and confirm the agent saves it with `memwal_remember`.
+Ask the agent what MCP tools it has available, for example with the prompt `What MCP tools do you have available?`. You should see the `memwal_*` tools. Ask the agent to remember a durable fact (for example, a preferred package manager) and confirm it saves the fact with `memwal_remember`.
 
 Cursor has no plugin CLI to list what loaded, so confirm the plugin from its logs instead. The newest folder under `~/Library/Application Support/Cursor/logs/` on macOS gets an `mcp-server-plugin-memwal-memwal.log` once the plugin loads. The `plugin-` prefix is Cursor's own naming for a plugin-scoped server.
 

@@ -29,7 +29,7 @@ questions:
   - How do I install the Walrus Memory plugin on Codex?
   - Does Codex have a plugin marketplace for Walrus Memory?
 answer: >-
-  To add Walrus Memory to Codex, install the Walrus Memory plugin through the marketplace (codex plugin marketplace add MystenLabs/Walrus Memory, then codex plugin add memwal@memwal-plugins), or add it as MCP-only by editing ~/.codex/config.toml directly. The plugin includes lifecycle hooks that reinforce automatic recall and save behavior on top of the MCP tools.
+  To add Walrus Memory to Codex, install the Walrus Memory plugin through the marketplace (codex plugin marketplace add MystenLabs/MemWal, then codex plugin add memwal@memwal-plugins), or add it as MCP-only by editing ~/.codex/config.toml directly. The plugin includes lifecycle hooks that reinforce automatic recall on top of the MCP tools. Automatic saving stays off on a new install until you turn it on at the memwal-mcp login prompt or with memwal-mcp auto-save on.
 ---
 
 Add Walrus Memory to Codex so it recalls context and saves durable facts as you work. Install it as a **plugin** (recommended; adds automatic-memory hooks) or as **MCP-only** (just the tools).
@@ -64,7 +64,7 @@ Add Walrus Memory to Codex so it recalls context and saves durable facts as you 
 
 This registers the Walrus Memory plugin, which bundles the MCP server and the lifecycle hooks together as plugin-scoped resources. It does not write a `[mcp_servers.memwal]` block to `~/.codex/config.toml`.
 
-Lifecycle hooks are commands that Codex runs at set points in a session: when the session starts or resumes, when you submit a prompt, and after each Bash command. They remind the agent to use the Walrus Memory tools, and when a command's output looks like an error, they suggest recalling a prior fix. The agent saves memories on its own only when you turn on automatic memory with `memwal-mcp auto-save on`. See [Lifecycle hooks](#lifecycle-hooks-plugin-only) for details.
+Lifecycle hooks are commands that Codex runs at set points in a session: when the session starts or resumes, when you submit a prompt, and after each Bash command. They remind the agent to use the Walrus Memory tools, and when a command's output looks like an error, they suggest recalling a prior fix. The agent saves memories you did not ask it to save only after you turn on automatic memory, either by answering the question `memwal-mcp login` asks in your terminal or by running `memwal-mcp auto-save on`. See [Lifecycle hooks](#lifecycle-hooks-plugin-only) for details.
 
       ### Trust the plugin hooks
 
@@ -91,7 +91,8 @@ Older Codex CLI builds without `codex plugin` support can still get the hooks fr
     args = ["-y", "@mysten-incubation/memwal-mcp"]
     ```
     Restart Codex, then ask the agent to run `memwal_login` on first use. The
-    memory tools are proactive, so this is enough for automatic save and recall.
+    tool descriptions prompt recall on their own. They prompt saves you did not
+    ask for only after you turn on automatic memory.
   </TabItem>
 </Tabs>
 
@@ -104,9 +105,9 @@ Do not combine the plugin with a manual `[mcp_servers.memwal]` block. The plugin
 | Component | Plugin | MCP-only |
 |---|:-:|:-:|
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
-| Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
+| Lifecycle hooks (automatic recall, and automatic save once you turn it on) | ✓ | ✗ |
 
-MCP-only still saves and recalls on its own because the tools are proactive. The plugin adds hooks that reinforce the behavior and make the agent prefer Walrus Memory over any built-in memory.
+MCP-only still recalls on its own because the tool descriptions are proactive, and it saves on its own when automatic memory is on. The plugin adds hooks that reinforce the behavior and make the agent prefer Walrus Memory over any built-in memory.
 
 ## Available tools
 
@@ -126,9 +127,9 @@ See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 | Hook | Event | What it does |
 |------|-------|--------------|
-| Session start | `SessionStart` | Announces that memory is active and reminds the agent to use the `memwal_*` tools. |
+| Session start | `SessionStart` | Announces that memory is active, reminds the agent to use the `memwal_*` tools, and states whether automatic memory is on. |
 | User prompt | `UserPromptSubmit` | Injects a decision rubric so the agent chooses recall vs save from meaning (any language or spelling). |
-| Post-tool | `PostToolUse` (Bash) | When a command errors, reminds the agent to recall prior fixes and save the resolution. |
+| Post-tool | `PostToolUse` (Bash) | When a command errors, reminds the agent to recall prior fixes, and to save the resolution only when automatic memory is on. |
 
 ## How to verify the installation
 

@@ -116,7 +116,7 @@ Use Walrus Memory as my memory.
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
+The tool descriptions tell the agent to recall proactively, and to save proactively only when automatic memory is on. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## How to verify the installation
 
@@ -126,7 +126,7 @@ Ask the agent which MCP tools it has available. For example, send this prompt:
 What MCP tools do you have available?
 ```
 
-You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
+You should see the `memwal_*` tools. Ask the agent to remember a durable fact and confirm it saves the fact with `memwal_remember`.
 
 ## Troubleshooting
 
