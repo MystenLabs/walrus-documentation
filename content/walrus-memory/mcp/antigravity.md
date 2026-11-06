@@ -107,11 +107,11 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
+The tool descriptions tell the agent to recall proactively, and to save proactively only when automatic memory is on. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
 ## How to verify the connection
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`. To confirm that the fact persists, ask the agent to check the save with `memwal_remember_status`, then recall it and check that `memwal_recall` returns it. If the status never completes, ask the agent to run `memwal_health` to check connectivity.
+Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. Ask the agent to remember a durable fact and confirm it saves the fact with `memwal_remember`. To confirm that the fact persists, ask the agent to check the save with `memwal_remember_status`, then recall it and check that `memwal_recall` returns it. If the status never completes, ask the agent to run `memwal_health` to check connectivity.
 
 ## Troubleshooting
 
