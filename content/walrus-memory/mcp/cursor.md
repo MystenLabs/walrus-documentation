@@ -34,7 +34,7 @@ answer: >-
   To add Walrus Memory to Cursor, install the Walrus Memory plugin by copying it into ~/.cursor/plugins/local/memwal with npx degit. That copy brings the MCP server and the lifecycle hooks together, so automatic recall and save need no extra instructions. Cursor ships no plugin CLI, so the copy is the install. You can instead configure Walrus Memory as MCP-only by adding the server to ~/.cursor/mcp.json, which gives the memory tools without the hooks.
 ---
 
-Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** or as **MCP-only** (just the tools). The plugin adds lifecycle hooks, scripts that run on Cursor's own events and prompt the agent to recall and save memories automatically.
+Add Walrus Memory to Cursor so the agent recalls context and saves durable facts. Install it as a **plugin** or as **MCP-only** (just the tools). The plugin adds lifecycle hooks, scripts that run on Cursor's own events and prompt the agent to recall memories automatically. The hooks also prompt automatic saves after you turn on automatic saving, which a new install asks you to confirm at login or through `memwal-mcp auto-save on`.
 
 <div className="outlined-tabs">
 
