@@ -58,7 +58,7 @@ The TypeScript SDK (`MemWal.create()` and `withMemWal()`) and the Python SDK tak
 `MEMWAL_PRIVATE_KEY` and `MEMWAL_KEY` are two names for the same delegate key. The examples use both. Standardize on one in your own project.
 :::
 
-## MCP server
+## What variables does the MCP server read?
 
 The stdio MCP package reads these environment variables directly. A CLI flag takes precedence when both a flag and its variable are set.
 
@@ -70,7 +70,7 @@ The stdio MCP package reads these environment variables directly. A CLI flag tak
 | `MEMWAL_CLIENT_LABEL` | `--label <text>` | `MCP Client` / `Walrus Memory MCP` | Friendly delegate-key label shown in the dashboard |
 | `MEMWAL_MCP_DEBUG` | none | `0` | Set to `1` for verbose stderr logging |
 | `MEMWAL_CREDS_DIR` | none | `~/.memwal` | Directory holding `credentials.json` and the project-approval record. Overrides both project-local and `~/.memwal` credentials and needs no project approval. The package re-reads it on every access, so a test can redirect it after import. Must be an **absolute path outside the current project**. The package refuses a relative or in-project value with an error, because the variable skips the approval gate and could otherwise come from a checkout's MCP-config `env` block. An empty value means unset. Mainly for tests, which must not write into the real credential directory |
-| `MEMWAL_MCP_TRANSPORT` | none | `sse` | Which relayer transport the stdio bridge dials. `sse` uses the legacy split (`POST /api/mcp/messages` + `GET /api/mcp/sse`). `http` (aliases `streamable`, `streamable-http`) uses the Streamable HTTP endpoint `/api/mcp`, where the relayer answers a call on the same request rather than splitting it across a POST and an SSE stream, so there is no idle watchdog. Reconnect replay is **not** yet transport-aware: the bridge still replays its in-flight map on either transport, and on Streamable a disconnect mid-send can look sent, so a replayed write might duplicate. Opt in knowing that. The bridge ignores unrecognized values and falls back to `sse` |
+| `MEMWAL_MCP_TRANSPORT` | none | `sse` | Which relayer transport the stdio bridge dials. `sse` uses the legacy split (`POST /api/mcp/messages` + `GET /api/mcp/sse`). `http` (aliases `streamable`, `streamable-http`) uses the Streamable HTTP endpoint `/api/mcp`, where the relayer answers a call on the same request rather than splitting it across a POST and an SSE stream, so there is no idle watchdog. Reconnect replay is **not** yet transport-aware: after a reconnect, the bridge resends every request still waiting for a reply, on either transport. On Streamable, a disconnect mid-send can look sent, so the relayer might receive and apply the same write twice. Opt in knowing that. The bridge ignores unrecognized values and falls back to `sse` |
 | `MEMWAL_MCP_SSE_IDLE_MS` | none | `30000` | Maximum milliseconds of silence on the SSE stream before the bridge treats the session as dead and reconnects. The bridge ignores values below `500` and falls back to the default. Mainly for tests |
 | `MEMWAL_MCP_CALL_TIMEOUT_MS` | none | `240000` | Maximum milliseconds a single request might wait for its response before the bridge answers with a retryable error. Covers a reply lost while the stream itself stays healthy, which `MEMWAL_MCP_SSE_IDLE_MS` cannot detect. The code derives the default from the slowest server-side tool deadline plus headroom, so it moves with that tool rather than staying fixed here. The bridge ignores values below `1000` and falls back to the default |
 | `MEMWAL_MCP_THROTTLE_FLOOR_MS` | none | `5000` | Minimum milliseconds the bridge waits before retrying an SSE handshake the relayer refused with HTTP 429 and no `Retry-After`. A `Retry-After` on the response wins instead. Either way the bridge caps the wait at `60000`. The bridge ignores non-numeric or negative values and falls back to the default. Mainly for tests |
@@ -82,7 +82,7 @@ The stdio MCP package reads these environment variables directly. A CLI flag tak
 
 Use this section when you run your own relayer. For setup steps and deployment context, see [Self-Hosting](/walrus-memory/relayer/self-hosting). These variables are public relayer contract items. Renaming, removing, or changing their meaning follows the deprecation process in [Versioning and Compatibility](/walrus-memory/relayer/versioning-and-compatibility).
 
-### Required
+### Which variables does the relayer require?
 
 | Variable | Notes |
 | --- | --- |
@@ -111,8 +111,8 @@ The relayer does not enforce all of these at boot, but most real deployments nee
 | `LOG_FORMAT` | pretty text | Set to `json` for machine-parseable structured logs |
 | `ALERT_TO_SLACK` | none | Slack incoming webhook URL. When set, the relayer posts an alert after a Walrus upload job exhausts all 5 wallet attempts without producing a blob |
 | `SIDECAR_URL` | `http://localhost:9000` | Walrus upload sidecar. Recall does not use this port |
-| `SIDECAR_SEAL_URL` | `http://127.0.0.1:<upload port + 1>` | Seal encrypt and decrypt. The relayer rewrites `localhost` to `127.0.0.1` even when it forks no listener. The relayer dials a non-loopback value and forks no local process. An unparseable value refuses to boot |
-| `SIDECAR_SEAL_LISTENER` | on | Set to `0` to keep seal on the upload sidecar instead of forking a process |
+| `SIDECAR_SEAL_URL` | `http://127.0.0.1:<upload port + 1>` | Seal encrypt and decrypt. If you set a `localhost` value, the relayer rewrites it to `127.0.0.1`. This rewrite happens even when the relayer forks no listener. The relayer dials a non-loopback value and forks no local process. An unparseable value refuses to boot |
+| `SIDECAR_SEAL_LISTENER` | on | When on, the relayer forks a separate local process that serves Seal encrypt and decrypt at `SIDECAR_SEAL_URL`. Set to `0` to keep Seal on the upload sidecar (`SIDECAR_URL`) instead of forking a process |
 | `SIDECAR_WATCHDOG_INTERVAL_SECS` | `30` | Interval between relayer health checks against the local sidecar |
 | `SIDECAR_WATCHDOG_TIMEOUT_SECS` | `2` | Timeout for each sidecar watchdog health check |
 | `SIDECAR_WATCHDOG_MAX_FAILURES` | `6` | Consecutive failed sidecar health checks before the relayer exits so the platform restarts the container |
@@ -166,7 +166,7 @@ The relayer does not enforce all of these at boot, but most real deployments nee
 | `MCP_MAX_TOTAL_SESSIONS` | `1000` | Maximum active MCP sessions across SSE and Streamable HTTP transports |
 | `MCP_MAX_SESSIONS_PER_IP` | `16` | Maximum active MCP sessions from one source IP |
 | `MCP_MAX_NEW_SESSIONS_PER_IP_PER_MIN` | `30` | Maximum new MCP sessions opened by one source IP per minute |
-| `MEMWAL_MCP_REMEMBER_WAIT_MS` | `0` | How long `memwal_remember`, `memwal_remember_bulk`, and `memwal_analyze` wait after accept for the Walrus write to reach `done`. **Default `0` = return at accept (~1s) with `job_id`; the relayer has not saved the fact yet**, resolve with `memwal_remember_status`. This is what stops the agent blocking 20–90s (or hitting the MCP client's 60s tools/call timeout). `90000` (90 seconds, the clamp) restores the old wait-for-`blob_id` behavior; only use it on a client that raises that 60s ceiling (Claude Code does; many hosts do not). Values between 0 and ~75s usually wait **and** still return pending. Invalid values fall back to `0` |
+| `MEMWAL_MCP_REMEMBER_WAIT_MS` | `0` | How long `memwal_remember`, `memwal_remember_bulk`, and `memwal_analyze` wait after accept for the Walrus write to reach `done`. **Default `0` = return at accept (~1s) with `job_id`; the relayer has not saved the fact yet**, resolve with `memwal_remember_status`. This is what stops the agent blocking 20–90s (or hitting the MCP client's 60s tools/call timeout). `90000` (90 seconds, the clamp) restores the old wait-for-`blob_id` behavior; only use it on a client that raises that 60s ceiling (Claude Code does; many hosts do not). A value between 0 and about 75 seconds makes the tool wait up to that long, but because a Walrus write often takes 20–90 seconds, the tool usually still returns pending when the wait ends. Invalid values fall back to `0` |
 | `MEMWAL_MCP_ACCEPT_DEADLINE_MS` | `15000` | How long a single relayer request might stall before the MCP tool gives up on it. The SDK passes an abort signal only on `recall`, so `rememberAsync` and the job-status reads have no deadline of their own and `MEMWAL_MCP_REMEMBER_WAIT_MS` bounds only when the next poll starts, not how long one takes, without this a stalled socket keeps a tool running indefinitely. Raise it only if a slow link makes healthy accepts exceed it; invalid or non-positive values fall back to the default |
 | `MCP_TOOL_SLOW_WARN_MS` | `5000` | The relayer logs an MCP tool call still running at this duration as `tool.slow` (`settled: false`) at `warn`, which is what makes a hang visible, because a hang never settles. The relayer logs a call that finishes at or above it as `tool.slow` (`settled: true`) instead of `tool.done` |
 | `TRUSTED_PROXY_HOPS` | `0` | Number of trusted reverse-proxy hops to walk from the right of `X-Forwarded-For`; `0` ignores XFF and uses the TCP peer |
