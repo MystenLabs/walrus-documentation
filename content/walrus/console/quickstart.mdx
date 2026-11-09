@@ -29,7 +29,7 @@ The Walrus Console developer API is at `api.console.walrus.xyz`. All folder crea
 <TabItem value="prereq" label="Prerequisites">
 
 - [x] A Google or Apple account for sign-in.
-- [x] Node.js 22 or later, with [`@mysten/sui`](https://www.npmjs.com/package/@mysten/sui), [`@mysten/seal`](https://www.npmjs.com/package/@mysten/seal), and [`tsx`](https://www.npmjs.com/package/tsx) installed, for the signing and encryption steps.
+- [x] Node.js 22 or later, with [`@mysten/sui`](https://www.npmjs.com/package/@mysten/sui), [`@mysten/seal`](https://www.npmjs.com/package/@mysten/seal), and [`tsx`](https://www.npmjs.com/package/tsx) installed, for the signing and encryption steps. The `seal.ts` file in [the helper code](#the-helper-code) imports `SuiGrpcClient` from `@mysten/sui/grpc`, a subpath of the same `@mysten/sui` package, so you need no extra package for it.
 
 </TabItem>
 </Tabs>
@@ -375,7 +375,7 @@ Content-Type: multipart/form-data
 file=@<encryptedObject>
 ```
 
-Just after finalize, the onchain access grant needs a few seconds to propagate into Console's access index. Until it does, this endpoint returns `403` with code `mirror_missing_grant`. Retry every few seconds; usually 20 attempts is plenty in practice. Once the grant mirrors, the response is `202` with `data.id`.
+Just after finalize, the onchain access grant needs a few seconds to propagate into Console's access index. Until it does, this endpoint returns `403` with code `mirror_missing_grant`. Retry every few seconds; usually 20 attempts is plenty in practice. Once the grant mirrors into Console's access index, the response is `202` with `data.id`.
 
 ### Step 7: Poll status
 
@@ -391,7 +391,7 @@ Returns `data.state`, one of `queued`, `active`, `completed`, or `failed`. Poll 
 GET /api/v1/buckets/{bucketId}/files/{fileId}/download
 ```
 
-The response is a `307` redirect to a short-lived signed URL on the user-content host. Most HTTP clients follow it automatically, and `curl` needs `-L`. The bytes you receive are the raw Seal ciphertext. `decryptBytes` (in `seal.ts`) builds the `seal_approve` access-check transaction, signs it with a short-lived session key, and decrypts client-side. The Seal SDK fetches the decryption key through Console's [key-fetch proxy](./api-reference#fetch-a-seal-key) with your API key, so you need no aggregator credential. This script runs the ciphertext-to-plaintext round trip and compares the result against the original when you pass its path:
+The response is a `307` redirect to a short-lived signed URL on the user-content host. Most HTTP clients follow it automatically, and `curl` needs `-L`. If your client does not follow redirects automatically, fetch the redirect target yourself, because the bytes are at that URL and not in the `307` response. The bytes you receive are the raw Seal ciphertext. `decryptBytes` (in `seal.ts`) builds the `seal_approve` access-check transaction, signs it with a short-lived session key, and decrypts client-side. The Seal SDK fetches the decryption key through Console's [key-fetch proxy](./api-reference#fetch-a-seal-key) with your API key, so you need no aggregator credential. This script runs the ciphertext-to-plaintext round trip and compares the result against the original when you pass its path:
 
 ```ts title="github.com/MystenLabs/walrus-console-quickstart/app/src/scripts/decrypt-file.ts"
 import { readFile, writeFile } from 'node:fs/promises';
