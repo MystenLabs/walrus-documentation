@@ -117,7 +117,7 @@ Ask the agent what MCP tools it has available. You should see the `memwal_*` too
 
 - **Tools missing**: restart Antigravity after installation.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
-- **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+- **`memwal_recall` returns nothing although you saved before**: ask the agent to run `memwal_restore` with the `namespace` you saved to. The tool rebuilds the index from Walrus. If the call omits `namespace`, it uses the configured default namespace. See [Choose a memory namespace](#choose-a-memory-namespace).
 
 ## Choose a memory namespace
 
