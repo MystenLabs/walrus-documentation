@@ -10,6 +10,17 @@ questions:
 answer: Release notes for the Walrus decentralized storage platform.
 ---
 
+### Walrus v1.60.2
+
+`Mainnet` | November 11, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2)
+
+#### Changes
+
+- [A checkpoint tailing task that stops on its own, for example because the full node failed to serve a Move package, is now restarted after a backoff instead of leaving the node's event processing stalled.](https://github.com/MystenLabs/walrus/pull/3865)
+- [the node no longer hangs on shutdown or on its self-restart (for example after a TLS certificate renewal) while the background consistency check is running.](https://github.com/MystenLabs/walrus/pull/3966)
+
+---
+
 ### Walrus v1.60.1
 
 `Testnet` | November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.60.1)

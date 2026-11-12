@@ -1,5 +1,88 @@
 [
   {
+    "id": "walrus-mainnet-v1.60.2",
+    "date": "2026-11-11T18:44:27Z",
+    "category": "walrus",
+    "title": "Walrus v1.60.2",
+    "description": null,
+    "badge": "Mainnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2",
+    "changes": [
+      {
+        "text": "A checkpoint tailing task that stops on its own, for example because the full node failed to serve a Move package, is now restarted after a backoff instead of leaving the node's event processing stalled.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3865"
+      },
+      {
+        "text": "the node no longer hangs on shutdown or on its self-restart (for example after a TLS certificate renewal) while the background consistency check is running.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3966"
+      }
+    ]
+  },
+  {
+    "id": "memwal-@mysten-incubation/memwal-mcp@0.2.0",
+    "date": "2026-11-09T07:10:37Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory MCP v0.2.0",
+    "description": null,
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0",
+    "changes": [
+      {
+        "text": "Add `memwal_namespaces` with paginated account inventory and namespace suggestions for empty recall or restore results.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      },
+      {
+        "text": "Publish SEP-2127 MCP server discovery metadata at `/.well-known/mcp/server-card.json`, `/mcp/server-card`, and `/api/mcp/server-card` for compatible clients.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      },
+      {
+        "text": "Productize the one-time proactive-memory setup flow for Claude Desktop, Claude web, and other chat clients without plugin lifecycle hooks. Exposes the `memwal_enable_proactive` MCP prompt in both bridge and auth-required modes to supply standard consent instructions.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      },
+      {
+        "text": "Preserve exact legacy namespace names, including surrounding whitespace, when explaining empty recall results.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      },
+      {
+        "text": "Limit optional namespace diagnostics to one second so unavailable metadata does not delay an otherwise completed recall or restore.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      },
+      {
+        "text": "Restore focused proactive recall guidance in the opt-in setup instruction while keeping recalled entries explicitly untrusted.",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
+      }
+    ]
+  },
+  {
+    "id": "memwal-memwal-python@0.2.3",
+    "date": "2026-11-09T07:10:06Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory Python SDK v0.2.3",
+    "description": "Release memwal Python SDK v0.2.3",
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.3",
+    "changes": []
+  },
+  {
+    "id": "memwal-@mysten-incubation/memwal@0.1.14",
+    "date": "2026-11-09T07:10:02Z",
+    "category": "walrus-memory",
+    "title": "Walrus Memory TypeScript SDK v0.1.14",
+    "description": null,
+    "badge": null,
+    "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14",
+    "changes": [
+      {
+        "text": "`RecallResult` includes an optional `degraded?: boolean` flag set to `true` whenever one or more vector matches were dropped, and `recall()` returns the degraded result (`results: []`, `degraded: true`, `dropped_count`) by default when all matches fail to download or decrypt. (#1036, #1070, #1362)",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14"
+      },
+      {
+        "text": "`RecallOptions` accepts `onDropped?: \"ignore\" | \"throw\"` (defaulting to `\"ignore\"`). Passing `onDropped: \"throw\"` throws `MemWalRecallAllDroppedError` (`name = \"MemWalRecallAllDropped\"`, `code = \"RECALL_ALL_DROPPED\"`, exposing `total`, `droppedCount`, and `namespace`) when every vector search match is dropped during Walrus blob download or SEAL decryption. (#1036, #1070, #1362)",
+        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14"
+      }
+    ]
+  },
+  {
     "id": "walrus-testnet-v1.60.1",
     "date": "2026-11-04T17:57:20Z",
     "category": "walrus",
