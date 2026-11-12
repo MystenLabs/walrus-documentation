@@ -15,6 +15,8 @@ keywords:
   - storage epochs
   - personal space
   - encryption
+  - private folders
+  - decentralized storage
 ---
 
 Walrus Console is the developer-first interface for interacting with the Walrus network. It gives you a hosted place to store, manage, and serve data without running your own Walrus client or handling wallets and tokens directly. You sign in and upload your first file in minutes, then manage everything from one place; when you want programmatic access, you mint an API key.
@@ -43,7 +45,7 @@ On Walrus, anyone who has a blob ID can read the bytes of a stored blob. Do not 
 
 :::
 
-Console private folders solve this by encrypting every file client-side with [Seal](/docs/data-security) before upload. Console stores ciphertext only and never sees your plaintext or your decryption keys. Setting up a private folder uses a short reserve, sign, and finalize handshake that provisions the folder's Seal access policy onchain. Encryption on upload and decryption on download both happen on your machine.
+Console private folders solve this by encrypting every file client-side with [Seal](/docs/data-security) before upload. Console stores ciphertext only and never sees your plaintext or your decryption keys. Setting up a private folder uses a short reserve, sign, and finalize handshake that provisions the folder's Seal access policy onchain. You sign the transaction that finalizes the folder with your service private key, described in [API keys and roles](#api-keys-and-roles). Encryption on upload and decryption on download both happen on your machine.
 
 ### Can my application read files stored in Console?
 
@@ -66,6 +68,13 @@ Identities from different providers map to separate accounts, so the Google and 
 You own your data. Console does not migrate data you previously stored on Walrus outside the product; you re-upload it.
 
 ## API keys and roles
+
+To mint an API key:
+
+1. Open **Integrations** in the Console web app.
+2. Choose a `read_write` or `read_only` role for the key.
+3. Store the full key, prefixed `hbr_`. Console shows it once and cannot recover it afterward.
+4. Store the service private key, prefixed `suiprivkey1`, that Console shows next to the API key. Keep it locally.
 
 You mint API keys under **Integrations** in the Console web app, choosing a `read_write` or `read_only` role for each. A plain **API key** works with the MCP server and with any application you write against the API, but it cannot mint further keys. A **Management API key** mints keys programmatically instead, and cannot upload, download, or manage assets. The choice is not permanent, so you can create a Management API key at any time. Console shows the full key (prefixed `hbr_`) once, at creation, and cannot recover it afterward, so store it like a cloud secret access key. For what each role can do, see the [API reference](./api-reference).
 

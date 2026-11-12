@@ -134,14 +134,14 @@ The system then computes a Merkle tree over the sliver hashes to obtain a blob h
 
 To prove that a sliver is part of a blob, it is sufficient to provide the Merkle path to the root.
 
-Finally, the encoding type tag (representing the RedStuff version or alternative encoding), the length of the blob before encoding, and the Merkle root of the tree over the slivers hash together to produce the blob ID.
+Finally, the encoding type tag (representing the RedStuff version or alternative encoding), the length of the blob before encoding, and the blob hash (the Merkle root of the tree over the sliver hashes) are hashed together to produce the blob ID. The blob ID is therefore the digest of these three inputs, not the blob hash itself.
 
 ### Metadata overhead
 
 Each storage node stores the full metadata for the blob. The metadata consists of:
 
 - A `32 B` Merkle root hash for every one of the $2N$ slivers, that is, the primary and the secondary sliver of each of the $N$ sliver pairs.
-- The `32 B` blob ID, computed as above.
+- The `32 B` blob ID, computed as above by hashing the encoding type tag, the length of the blob before encoding, and the Merkle root of the tree over the slivers together.
 - The erasure code type (`1 B`).
 - The length of the unencoded blob size (`8 B`).
 

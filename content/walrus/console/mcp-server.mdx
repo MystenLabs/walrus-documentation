@@ -17,6 +17,8 @@ keywords:
   - CONSOLE_CREDENTIAL_BUNDLE
   - ping_console
   - antigravity
+  - Node.js
+  - npx
 questions:
   - How do I connect Walrus Console to Claude Code?
   - How do I connect Walrus Console to Claude Desktop?
@@ -41,9 +43,9 @@ Commands that fetch the package pin an exact version, `0.1.1`, the same version 
 
 ## Prerequisites
 
-- Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x). Version `0.1.1` exits at startup on any other Node version, including odd-numbered majors and prereleases, and names the version it found. This applies to the Node that your agent launches, which can differ from the one in your terminal. Update that one and restart the agent. If Claude Desktop supplies its own Node, update Claude Desktop.
+- Node.js 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ (26.x). Any patch at or above those minimums within the 22.x, 24.x, and 26.x lines works; version `0.1.1` exits at startup on any Node outside those ranges, including earlier patches, odd-numbered majors, and prereleases, and names the version it found. This applies to the Node that your agent launches, which can differ from the one in your terminal. Update that one and restart the agent. If Claude Desktop supplies its own Node, update Claude Desktop.
 - A Walrus Console account with an API key. Open [console.walrus.xyz](https://console.walrus.xyz), sign in, then click **Integrations** and **Create API Key** in the top-right corner. Name the key and give it the `read_write` role.
-- The values Console reveals. It shows them once: the `hbr_` API key, the `suiprivkey1` service private key, and a `CONSOLE_CREDENTIAL_BUNDLE` value that carries both keys plus two Sui addresses. Copy the bundle if you can. It is the installer's first prompt.
+- The values Console reveals. It shows them once: the `hbr_` API key, the `suiprivkey1` service private key, and a `CONSOLE_CREDENTIAL_BUNDLE` value that carries both keys plus two Sui addresses. Copy the bundle if you can. It is the installer's first prompt, and pasting it saves you from entering the keys and addresses one at a time.
 
 The API key authorizes calls to Console. The service private key signs onchain access grants and unwraps [Seal](#what-is-seal) keys locally, which is why the server needs both. The two addresses in the bundle are your Console account address and the address of the space's Management API key signer, if any. `create_bucket` checks the transaction it signs against them and refuses to run without the account address.
 
@@ -125,7 +127,7 @@ For any other client or a hand-written configuration, add a stdio server that ru
 
 The server name is a local label. The launcher it runs is what matters.
 
-Restart the client, run `/mcp`, and approve `walrus-console-mcp` when prompted.
+Restart the client. In Claude Code, run `/mcp` and approve `walrus-console-mcp` when prompted. In Cursor, open **Cursor Settings**, **MCP**, and check that Walrus Console is listed and switched on. In Claude Desktop, click **+** in the chat box, then **Connectors**, and check that Walrus Console is listed. In any client, confirm the connection with `ping_console` as described in [Verify](#verify).
 
 ## Verify
 

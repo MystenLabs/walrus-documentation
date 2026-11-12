@@ -80,7 +80,7 @@ What you should see:
 ### Manual registration
 
 Use `rememberManual()` when you already have an encrypted payload plus vector, and `recallManual()`
-when you already have a query vector. On the `MemWal` client, `recallManual()` returns hits that contain only `blob_id` and `distance`, with no decrypted text, so you fetch and decrypt the blobs yourself. For all options and return values, see [Manual remember and recall parameters](#manual-remember-and-recall-parameters).
+when you already have a query vector. For all options and return values, see [Manual remember and recall parameters](#manual-remember-and-recall-parameters).
 
 ### Extract facts from text
 

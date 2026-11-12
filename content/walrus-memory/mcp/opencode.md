@@ -64,7 +64,22 @@ Add the server to `~/.config/opencode/opencode.json` as a local (stdio) MCP serv
 }
 ```
 
-To pin a default namespace, add `"environment": { "MEMWAL_NAMESPACE": "<name>" }` to the server entry. Restart OpenCode, then ask the agent to run `memwal_login` on first use.
+To pin a default namespace, add an `environment` block with `MEMWAL_NAMESPACE` to the `memwal` server entry in `opencode.json`:
+
+```json
+{
+  "mcp": {
+    "memwal": {
+      "type": "local",
+      "command": ["npx", "-y", "@mysten-incubation/memwal-mcp"],
+      "enabled": true,
+      "environment": { "MEMWAL_NAMESPACE": "<name>" }
+    }
+  }
+}
+```
+
+Replace `<name>` with your namespace. Restart OpenCode, then ask the agent to run `memwal_login` on first use.
 
 ## Which memory tools are available?
 
@@ -82,7 +97,19 @@ The tool descriptions tell the agent to recall proactively, and to save proactiv
 
 ## How to verify the memory tools work
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. Ask the agent to remember a durable fact and confirm it saves the fact with `memwal_remember`.
+Ask the agent what MCP tools it has available. For example, send this prompt:
+
+```text
+List the MCP tools you have available.
+```
+
+You should see the `memwal_*` tools. Ask the agent to remember a durable fact, for example:
+
+```text
+Remember that I prefer TypeScript for new projects.
+```
+
+Confirm the agent saves the fact with `memwal_remember`.
 
 ## How to fix common problems
 
