@@ -14,6 +14,21 @@ answer: 'Release notes for Walrus Memory, MCP, TypeScript SDK, Python SDK, and O
 
 <TabItem value="mcp" label="MCP" default>
 
+### Walrus Memory MCP v0.2.0
+
+November 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+
+#### Changes
+
+- [Add `memwal_namespaces` with paginated account inventory and namespace suggestions for empty recall or restore results.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+- [Publish SEP-2127 MCP server discovery metadata at `/.well-known/mcp/server-card.json`, `/mcp/server-card`, and `/api/mcp/server-card` for compatible clients.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+- [Productize the one-time proactive-memory setup flow for Claude Desktop, Claude web, and other chat clients without plugin lifecycle hooks. Exposes the `memwal_enable_proactive` MCP prompt in both bridge and auth-required modes to supply standard consent instructions.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+- [Preserve exact legacy namespace names, including surrounding whitespace, when explaining empty recall results.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+- [Limit optional namespace diagnostics to one second so unavailable metadata does not delay an otherwise completed recall or restore.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+- [Restore focused proactive recall guidance in the opt-in setup instruction while keeping recalled entries explicitly untrusted.](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0)
+
+---
+
 ### Walrus Memory MCP v0.1.0
 
 November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.1.0)
@@ -294,6 +309,17 @@ tools. Includes memory tools for remember, recall, analyze, and restore.
 </TabItem>
 
 <TabItem value="sdk" label="TypeScript SDK">
+
+### Walrus Memory TypeScript SDK v0.1.14
+
+November 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14)
+
+#### Changes
+
+- [`RecallResult` includes an optional `degraded?: boolean` flag set to `true` whenever one or more vector matches were dropped, and `recall()` returns the degraded result (`results: []`, `degraded: true`, `dropped_count`) by default when all matches fail to download or decrypt. (#1036, #1070, #1362)](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14)
+- [`RecallOptions` accepts `onDropped?: "ignore" | "throw"` (defaulting to `"ignore"`). Passing `onDropped: "throw"` throws `MemWalRecallAllDroppedError` (`name = "MemWalRecallAllDropped"`, `code = "RECALL_ALL_DROPPED"`, exposing `total`, `droppedCount`, and `namespace`) when every vector search match is dropped during Walrus blob download or SEAL decryption. (#1036, #1070, #1362)](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14)
+
+---
 
 ### Walrus Memory TypeScript SDK v0.1.13
 
@@ -596,6 +622,14 @@ ephemeral SEAL sessions. SDK versions that do not include a nonce are rejected w
 </TabItem>
 
 <TabItem value="python" label="Python SDK">
+
+### Walrus Memory Python SDK v0.2.3
+
+November 9, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.3)
+
+Release memwal Python SDK v0.2.3
+
+---
 
 ### Walrus Memory Python SDK v0.2.2
 
