@@ -148,7 +148,7 @@ flowchart TD
 ```
 
 - **First run (no credentials):** the server still starts and exposes `memwal_login`, so the agent signs you in inline instead of failing with a vague startup error. The login tool returns a clickable URL (valid 5 minutes); after you approve in the browser, the next tool call picks up the credentials automatically.
-- **Credential file:** login writes `~/.memwal/credentials.json` (mode `0600`) containing your delegate key and account metadata. The delegate private key is a sensitive, long-lived credential; treat it like an API key.
+- **Credential file:** login writes `~/.memwal/credentials.json` (mode `0600`) containing your delegate key and account metadata. The delegate key is the credential that gives this machine access to your account, and you can revoke it from the dashboard. The delegate private key is a sensitive, long-lived credential; treat it like an API key.
 - **Local vs remote tools:** the package handles `memwal_login` and `memwal_logout` locally (they never reach the relayer) and forwards all memory tools (`memwal_remember`, `memwal_recall`, …) to the relayer over an authenticated session.
 - **Logout:** deletes only the local credential file. To fully revoke access, also remove the delegate key from the dashboard.
 
