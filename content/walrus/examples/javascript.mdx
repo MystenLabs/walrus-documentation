@@ -62,7 +62,7 @@ Control the resulting blob through query parameters on the store call:
 
 | **Parameter** | **Effect** |
 | --- | --- |
-| `epochs` | The number of storage epochs, which sets how long Walrus stores the blob. Defaults to 1 if you omit it. |
+| `epochs` | The number of storage epochs, which sets how long Walrus stores the blob. Defaults to 1 if you omit it, and because the value counts epochs ahead of the current one and the resulting end epoch is exclusive, the default stores the blob only until the end of the current epoch. |
 | `deletable=true` or `permanent=true` | Whether the owner can delete the blob before it expires. The publisher stores new blobs as deletable by default. |
 | `send_object_to` | A Sui address that receives the created `Blob` object. |
 

@@ -163,7 +163,7 @@ Remove all attributes from a blob using the following command:
 $ walrus remove-blob-attribute <BLOB_OBJECT_ID>
 ```
 
-Remove a specific key-value pair from a blob's attributes using the following command:
+Remove specific attributes from a blob by key using the following command. Because attributes are key-value pairs, removing a key also removes the value stored under it:
 
 ```sh
 $ walrus remove-blob-attribute-fields <BLOB_OBJECT_ID> --keys "key1"
