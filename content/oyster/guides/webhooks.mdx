@@ -1,7 +1,27 @@
 ---
 title: "Webhooks"
 description: "Oyster sends the account.funding_required webhook when an account's Pearl-derived wallet cannot cover the next storage pool extension. Covers the payload, signature headers, Ed25519 verification, retries, and the circuit breaker."
-keywords: [ webhooks, Oyster, account.funding_required, webhook signature, Ed25519, retry policy, circuit breaker, idempotency, event_id, pearl_address, WAL, FROST, X-Oyster-Signature, StoragePool, extend_storage_pool ]
+keywords:
+  - webhooks
+  - Oyster
+  - account.funding_required
+  - webhook signature
+  - Ed25519
+  - retry policy
+  - circuit breaker
+  - idempotency
+  - event_id
+  - pearl_address
+  - WAL
+  - FROST
+  - X-Oyster-Signature
+  - StoragePool
+  - extend_storage_pool
+  - MIST
+  - SUI
+  - X-Oyster-Public-Key-Fingerprint
+  - is_insufficient_funds_error
+  - decimal string
 ---
 
 Oyster posts a single webhook event: `account.funding_required`.
