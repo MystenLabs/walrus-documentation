@@ -33,7 +33,7 @@ answer: >-
 ---
 
 <AgentPrompt
-  prompt="Add the Walrus Memory MCP server to this client. On Claude Code run `claude mcp add --scope user memwal -- npx -y @mysten-incubation/memwal-mcp`; on other clients add the equivalent mcp.json entry. On first use, the agent calls memwal_login itself and returns a sign-in URL; open it and approve in the browser."
+  prompt="Add the Walrus Memory MCP server to this client. On Claude Code run `claude mcp add --scope user memwal -- npx -y @mysten-incubation/memwal-mcp`; on other clients add the equivalent mcp.json entry. With no credentials yet, the server still starts in auth-required mode and exposes `memwal_login`, so the agent signs you in inline through browser wallet sign-in."
 />
 
 The **Walrus Memory MCP server** exposes your portable Walrus Memory as Model Context Protocol tools, so an AI agent can decide when to save and recall memories on its own. It works with any MCP-aware client, and on **Claude Code**, **Codex**, **Cursor**, and **Antigravity** you can install it as a **plugin** that adds automatic memory through lifecycle hooks.

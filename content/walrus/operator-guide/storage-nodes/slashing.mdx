@@ -216,7 +216,7 @@ $ sui client ptb \
 
 ### Vote abort codes
 
-The vote transaction aborts cleanly when something is wrong with the request. The abort codes you might see are:
+The vote transaction aborts cleanly when something is wrong with the request. The abort codes you might see are listed below; code 2 is included only for reference, because it is what losing transactions abort with when multiple operators race to execute, after the first one succeeds.
 
 | Code | Name              | Meaning                                                                                                                              |
 |------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------|

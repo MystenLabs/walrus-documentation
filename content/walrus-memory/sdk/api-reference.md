@@ -105,7 +105,7 @@ Submit one memory and poll until the background job completes.
 
 ### `getRememberStatus(jobId): Promise<RememberJobStatus>`
 
-One `GET /api/remember/{jobId}`. Accepts 200 and 404 and returns the job state (`pending`, `running`, `uploaded`, `done`, `failed`, `not_found`) without polling. A job ID that is empty or does not match `[A-Za-z0-9_-]+` returns `not_found`, and the SDK sends no request. See [Remember job ID validation](#remember-job-id-validation).
+One `GET /api/remember/{jobId}`. Accepts HTTP 200 and HTTP 404 responses and returns the job state (`pending`, `running`, `uploaded`, `done`, `failed`, `not_found`) without polling. Those job states are not HTTP status codes: a job ID that is empty or does not match `[A-Za-z0-9_-]+` returns the `not_found` state locally, and the SDK sends no request to the relayer. See [Remember job ID validation](#remember-job-id-validation).
 
 ### `waitForRememberJob(jobId, opts?): Promise<RememberResult>`
 

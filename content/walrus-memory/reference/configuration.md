@@ -42,7 +42,7 @@ The Walrus Memory SDK uses three configuration shapes: `MemWalConfig` for the st
 Used by:
 
 - `MemWal.create(config)`
-- `withMemWal(model, options)`
+- `withMemWal(model, options)`: `options` is a `WithMemWalOptions` object, which includes all `MemWalConfig` fields alongside the middleware-only fields
 
 | Field | Required | Notes |
 | --- | --- | --- |
