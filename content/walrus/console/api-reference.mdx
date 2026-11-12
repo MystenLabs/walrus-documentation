@@ -347,7 +347,7 @@ A file that is being deleted returns `423` with code `file_deleting`.
 
 `POST /api/v1/buckets/{id}/files/{fileId}/download-url`
 
-Mints the same kind of signed URL directly, for when you need a link to hand to a browser or a third party. It works with `read_only` keys and the URL lasts 15 minutes. Returns `200` with `data.download_url`, a root-relative path to resolve against the base URL, and `data.expires_at`. A file that is not `active` returns `409`.
+Mints the same kind of signed URL directly, for when you need a link to hand to a browser or a third party. It works with `read_only` keys and the URL lasts 15 minutes. Returns `200` with `data.download_url`, a root-relative path to resolve against the base URL (`https://api.console.walrus.xyz`), and `data.expires_at`. A file that is not `active` returns `409`.
 
 ## Search
 
