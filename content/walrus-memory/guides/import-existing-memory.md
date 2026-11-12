@@ -340,7 +340,7 @@ if (!dialogue) {
 }
 ```
 
-The sample splits the accept from the wait. `rememberBulk` and `analyze` throw on HTTP 429, and the relayer did not store that call, so the sample sleeps for `Retry-After` and retries the same call. A 429 after job ids have come back, or a `timeout` while a congested upload is still running (about 25 minutes), polls those ids again. Sending them again pays for a second blob. `waitForRememberJobs` itself stops after 120 seconds, which is shorter than the hourly `Retry-After` of 300 seconds, so the sample sleeps that long on its own.
+The sample splits the accept from the wait. `rememberBulk` and `analyze` throw on HTTP 429, and the relayer did not store that call, so the sample sleeps for `Retry-After` and retries the same call. A 429 after job ids have come back, or a `timeout` while a congested upload is still running (about 25 minutes), polls those ids again. Sending them again pays for a second blob. `waitForRememberJobs` itself stops after a 120-second wait, which is shorter than the hourly `Retry-After` of 300 seconds, so the sample sleeps the full 300 seconds on its own and then keeps polling the same job ids.
 
 The Python SDK has the same split: `remember_bulk` or `analyze`, then `wait_for_remember_jobs`. Wrapping `remember_bulk_and_wait` or `analyze_and_wait` in a retry resubmits the batch when the 429 came after the relayer had already accepted it. `occurred_at` is the session time. See the [Python API reference](/walrus-memory/python-sdk/api-reference).
 
