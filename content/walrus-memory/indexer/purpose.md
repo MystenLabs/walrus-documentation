@@ -91,7 +91,7 @@ The indexer is recommended for production but optional for development. If the i
 
 Three places in the relayer read the `accounts` table, and all of them use the same `db.find_account_by_owner` helper:
 
-- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks registry presence only, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
+- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks only whether the indexed `accounts` table has a row for the owner, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
 - `POST /v1/owner-tokens`: Rejects the request with `400` when the owner has no indexed account, instead of minting a token for a nonexistent account.
 - Owner-token reads on `/v1/owners/{owner}/{namespaces,memories,agents}`: The read API's auth middleware, `auth::verify_read_api_auth`, resolves the token's owner to an account through the table and returns `401` when the account no longer resolves.
 

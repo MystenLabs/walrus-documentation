@@ -171,7 +171,7 @@ The `before_prompt_build` hook fires before the prompt is assembled for the LLM:
 
 ## How does auto-capture work?
 
-The `agent_end` hook fires after the LLM's response is delivered to the user:
+The `agent_end` hook fires after the LLM's response is delivered to the user, so none of the steps below sit in the user's response path:
 
 1. **Extract messages**, take the last N messages (configurable, default 10) from the conversation
 2. **Strip memory tags**, remove any `<memwal-memories>` blocks injected by auto-recall. Without this, recalled memories would get re-captured in an infinite feedback loop.

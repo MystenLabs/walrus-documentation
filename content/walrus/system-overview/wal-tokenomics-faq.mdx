@@ -84,7 +84,7 @@ See [Burn blobs](/docs/walrus-client/managing-blobs#how-to-burn-blobs) for the C
 
 ### Does the epoch burn include subsidies?
 
-The 3% epoch burn applies to the full rewards balance of the epoch, after subsidies join it. Subsidies from the subsidies contract join the same per-epoch rewards balance that holds user storage payments, so the burn base includes both. Measured against user payments alone, the burn is larger: when the usage-dependent subsidy is at 800%, burning 3% of total rewards equals roughly 25% of what users paid.
+The 3% epoch burn applies to the full rewards balance of the epoch, after subsidies join it. Subsidies from the subsidies contract join the same per-epoch rewards balance that holds user storage payments, so the burn base includes both. Measured against user payments alone, the burn is larger: as an illustration, if the usage-dependent subsidy is at 800%, burning 3% of total rewards equals roughly 25% of what users paid. This ratio is not fixed: only networks that configure an onchain storage subsidy have one at all, and the rate varies, so the share of user payments burned changes with it.
 
 ### Why is storage priced in dollars but paid in WAL?
 

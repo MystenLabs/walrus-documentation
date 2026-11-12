@@ -179,7 +179,7 @@ The publisher uses sub-wallets to store blobs in parallel. By default, the publi
 To operate a high-performance publisher with higher concurrency, use the following options:
 
 - `--n-clients NUM`: Creates a number of separate wallets that perform concurrent Sui chain operations. Increase this value to allow more parallel uploads. A higher number requires more SUI and WAL coins initially because the publisher distributes the funds to more wallets (see [Create and fund the publisher wallet](#fund-publisher)).
-- `--max-concurrent-requests NUM`: Determines how many concurrent requests the publisher can handle, including Sui operations (limited by the number of clients) and uploads. After requests exceed this limit, the publisher queues additional requests up to the `--max-buffer-size NUM` limit. After the buffer is full, the publisher rejects requests with an HTTP 429 code.
+- `--max-concurrent-requests NUM`: Determines how many concurrent requests the publisher can handle, including Sui operations (limited by the number of clients) and uploads. After requests exceed this limit, the publisher queues additional requests up to the `--max-buffer-size NUM` limit. After the buffer is full, the publisher rejects requests with an HTTP 429 code. Note that the flags `--max-concurrent-requests` and `--max-buffer-size` are deprecated aliases of `--publisher-max-concurrent-requests` and `--publisher-max-buffer-size`.
 
 When `--max-concurrent-requests` is larger than `--n-clients`, several requests share the same sub-wallet. To give each request its own sub-wallet, raise `--n-clients` to the same value. For details, see [How requests share sub-wallets](#how-requests-share-sub-wallets).
 
