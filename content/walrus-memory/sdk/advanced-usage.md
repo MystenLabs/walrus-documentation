@@ -50,7 +50,7 @@ Use:
 
 ## How does `analyze()` extract facts?
 
-Use `analyze()` for LLM-based fact extraction when you want the relayer to extract structured facts from longer text and store them as
+Use `analyze()` for LLM-based fact extraction when you want the relayer, which also uploads your encrypted payloads to Walrus, to extract structured facts from longer text and store them as
 memories.
 
 ## How to use the `withMemWal` middleware
@@ -58,7 +58,7 @@ memories.
 Wire up the `withMemWal` middleware for automatic recall in AI generation pipelines when you want:
 
 - recall before generation
-- optional auto-save after generation
+- auto-save after generation (on by default; set `autoSave: false` to turn it off)
 
 ## Read next
 

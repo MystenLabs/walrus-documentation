@@ -71,6 +71,6 @@ If you need full control over the trust boundary or your own dedicated instance,
 
 ## Where does encryption happen?
 
-With the default `MemWal` client, the managed relayer receives your plaintext, generates embeddings, and encrypts each item with Seal before storing it on Walrus. You do not manage keys in this flow.
+With the default `MemWal` client, the managed relayer receives your plaintext and performs the embedding and Seal encryption itself, server-side, before storing each item on Walrus; it also decrypts with Seal on every recall, so it sees your data in plaintext on both paths. You do not manage keys in this flow.
 
 To keep plaintext on the client, use `MemWalManual` from `@mysten-incubation/memwal/manual`. The client generates embeddings and performs Seal encryption locally, and the relayer only receives encrypted payloads and precomputed vectors. See [MemWalManual](/walrus-memory/sdk/usage/memwal-manual) for the client-managed flow.

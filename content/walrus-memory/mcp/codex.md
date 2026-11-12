@@ -150,7 +150,7 @@ Remember that I prefer TypeScript for new projects.
 - **Tools missing**: restart Codex.
 - **Duplicate `memwal` errors**: the plugin already bundles the MCP server; you likely also have a manual `[mcp_servers.memwal]` block. Remove it.
 - **Hooks not firing (plugin install)**: run `/hooks` and confirm the Walrus Memory hooks are trusted, not just installed.
-- **Hooks not firing (cloned-repo fallback)**: confirm `codex_hooks = true` under `[features]` in `~/.codex/config.toml`, and that you restarted Codex.
+- **Hooks not firing (cloned-repo fallback)**: confirm `codex_hooks = true` (or the modern equivalent `hooks = true`, already the default) under `[features]` in `~/.codex/config.toml`, and that you restarted Codex.
 - **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
 
 ## Choose a namespace for `memwal_restore`
