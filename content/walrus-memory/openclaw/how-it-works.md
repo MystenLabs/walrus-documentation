@@ -184,7 +184,7 @@ The `agent_end` hook fires after the LLM's response is delivered to the user, so
 4. **Send to server**, `analyze(conversation, namespace)` sends the filtered text to the Walrus Memory server
 5. **Server extracts facts**, the server-side LLM breaks the conversation into individual facts and stores each as an encrypted blob on Walrus
 
-Capture runs **after** the response is sent, the user never waits for it.
+Capture runs **after** the gateway delivers the response. In the [message flow](#message-flow) sequence, the auto-capture block starts only once `Gateway-->>User: response delivered` has happened, so the user never waits for it.
 
 ## How does multi-agent isolation work?
 
@@ -200,7 +200,7 @@ Session key: "main:uuid-123"             → namespace: "default"
 
 All recall and capture operations are scoped to the current namespace by the plugin and server. Namespaces organize data; they are not an onchain authorization boundary.
 
-Delegate keys are authorized for the whole Walrus Memory account, so assigning a different delegate to each agent does not prevent one delegate from requesting another namespace's Seal key. Use separate Walrus Memory accounts when agents require cryptographic isolation.
+Each [delegate key](#delegate-keys-and-seal-access), a lightweight Ed25519 key registered onchain in a `MemWalAccount`, has authority over the whole Walrus Memory account, so assigning a different delegate to each agent does not prevent one delegate from requesting another namespace's Seal key. Use separate Walrus Memory accounts when agents require cryptographic isolation.
 
 
 ### Prompt injection protection
