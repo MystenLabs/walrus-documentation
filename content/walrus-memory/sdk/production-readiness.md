@@ -95,7 +95,7 @@ Relayer requests have deadlines in SDK 0.1.8 and later; `requestTimeoutMs` defau
 
 - **No acceptance response:** a network failure or request timeout can occur after the relayer accepted the write. Retry the submission with the same explicit key and unchanged payload. Use bounded exponential backoff with jitter for transient failures, and stop when your overall retry budget expires.
 - **Accepted job ID:** persist it and poll that job. A wait timeout does not cancel the write or prove it failed. Keep the job ID and resume checking it rather than submitting the text under a new key.
-- **Rate limit (`429`):** respect the server's retry delay, exposed as `retryAfterSeconds` when available. Status reads also use the delegate-key request budget. Immediate repeated polling can exhaust that budget without speeding up uploads.
+- **Rate limit (`429`):** respect the server's retry delay, exposed as `retryAfterSeconds` when available. Status reads also use the request budget of the [delegate key](#how-to-custody-the-agents-keys), the key that authenticates the agent to the relayer. Immediate repeated polling can exhaust that budget without speeding up uploads.
 - **Authentication or validation failure:** fix the credentials or payload before retrying. A `401 AUTH_REJECTED` or `409` key-reuse conflict does not become valid through backoff.
 - **Terminal `failed` job:** inspect the job's error before deciding how to recover. Do not resubmit a failed upload indefinitely.
 
