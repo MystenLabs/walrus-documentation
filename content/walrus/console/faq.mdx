@@ -74,7 +74,7 @@ Everything programmatic. Both the MCP server and any application you write again
 
 ### What happens when you rotate an API key?
 
-Walrus Console revokes the old key first, then mints a replacement with the same role and name and a new service private key, and shows the new secrets once. There is no overlap: anything using the old key stops working when you rotate and works again once you paste in the new secrets, for example by running the MCP installer's `config` command. Rotate and Revoke are separate actions.
+Walrus Console revokes the old key first, then mints a replacement with the same role and name and a new service private key (the separate `suiprivkey1` value that Console shows alongside the `hbr_` API key), and shows the new secrets once. There is no overlap: anything using the old key stops working when you rotate and works again once you paste in the new secrets, for example by running the MCP installer's `config` command. Rotate and Revoke are separate actions.
 
 ### How do you use Walrus Console with Claude Code or Cursor?
 

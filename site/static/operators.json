@@ -19,7 +19,7 @@
       },
       "https://aggregator.walrus-mainnet.tududes.com": {
         "operator": "TuDudes",
-        "cache": false
+        "cache": true
       },
       "https://aggregator.walrus-mainnet.walrus.space": {
         "operator": "Mysten Labs",
@@ -79,7 +79,7 @@
       },
       "https://walrus-aggregator.brightlystake.com": {
         "operator": "Brightlystake",
-        "cache": true
+        "functional": false
       },
       "https://walrus-aggregator.chainbase.online": {
         "operator": "Chainbase Staking",
@@ -99,7 +99,7 @@
       },
       "https://walrus-aggregator.rubynodes.io": {
         "operator": "Ruby Nodes",
-        "cache": false
+        "cache": true
       },
       "https://walrus-aggregator.stakely.io": {
         "operator": "Stakely",
@@ -259,7 +259,7 @@
       },
       "https://aggregator.testnet.walrus.mirai.cloud": {
         "operator": "Studio Mirai",
-        "cache": false
+        "cache": true
       },
       "https://aggregator.walrus-01.tududes.com": {
         "operator": "TuDudes",
@@ -319,7 +319,7 @@
       },
       "https://walrus-agg.testnet.obelisk.sh": {
         "operator": "Obelisk",
-        "cache": false
+        "cache": true
       },
       "https://walrus-aggregator-testnet.cetus.zone": {
         "operator": "Cetus",
@@ -379,7 +379,7 @@
       },
       "https://walrus-testnet-aggregator.luckyresearch.org": {
         "operator": "LuckyResearch Labs",
-        "cache": false
+        "cache": true
       },
       "https://walrus-testnet-aggregator.natsai.xyz": {
         "operator": "Natsai",
@@ -391,7 +391,7 @@
       },
       "https://walrus-testnet-aggregator.nodes.guru": {
         "operator": "Nodes.Guru",
-        "cache": false
+        "cache": true
       },
       "https://walrus-testnet-aggregator.redundex.com": {
         "operator": "Redundex",
@@ -435,7 +435,7 @@
       },
       "https://walrus-testnet-aggregator.talentum.id": {
         "operator": "Talentum",
-        "cache": false
+        "cache": true
       },
       "https://walrus-testnet-aggregator.trusted-point.com": {
         "operator": "TrustedPoint",
@@ -459,7 +459,7 @@
       },
       "https://walrus-tn.juicystake.io:9443": {
         "operator": "ProStaking",
-        "functional": false
+        "cache": true
       },
       "https://walrus.testnet.aggregator.stakepool.dev.br": {
         "operator": "StakePool",

@@ -20,7 +20,7 @@ differ from a full AWS S3 deployment.
 | HeadObject | Supported | |
 | DeleteObject | Supported | |
 | ListObjectsV2 | Supported | Prefix, delimiter, pagination |
-| Conditional requests | Supported | If-Match, If-None-Match on PutObject, GetObject, and HeadObject; DeleteObject supports If-Match only |
+| Conditional requests | Supported | If-Match, If-None-Match on PutObject, GetObject, and HeadObject; DeleteObject supports If-Match only; `If-None-Match: *` on PutObject gives create-only semantics; time-based conditionals (`If-Modified-Since`, `If-Unmodified-Since`) are not supported |
 | Multipart upload | Not supported | Use single PutObject (max 1GB) |
 | CopyObject | Not supported | Download and re-upload instead |
 | DeleteObjects (batch) | Not supported | Delete one at a time |

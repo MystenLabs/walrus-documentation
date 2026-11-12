@@ -47,13 +47,13 @@ aws --profile oyster s3api head-bucket --bucket my-bucket
 ```
 
 Returns exit code 0 on success (HTTP 200). If the bucket doesn't exist or
-your account doesn't own it, the AWS CLI prints an error (HTTP 404).
+another account owns it, the AWS CLI prints an error (HTTP 404): Oyster doesn't use a separate status code for a bucket that another account owns.
 
 **Errors:**
 
 | HTTP status | Condition |
 |---------------|-----------|
-| 404 | Bucket doesn't exist or your account doesn't own it |
+| 404 | Bucket doesn't exist, or another account owns it (Oyster looks up the bucket by name and by your account together, so both cases return 404) |
 
 ## ListBuckets
 

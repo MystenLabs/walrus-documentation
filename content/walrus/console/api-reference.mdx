@@ -341,7 +341,7 @@ Clients drop the `Authorization` header on the redirect hop, which is correct. T
 
 For a private folder, the bytes are the Seal ciphertext, which you decrypt client-side. See the [Quick Start](./quickstart) for the decrypt flow.
 
-A file in `deleting` or `deleted` status returns `423`.
+A file that is being deleted returns `423` with code `file_deleting`.
 
 ### Mint a signed download URL
 

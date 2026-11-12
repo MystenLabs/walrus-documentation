@@ -141,7 +141,7 @@ This output shows the following:
 
 ## How to update the site
 
-When you update a site, the `site-builder` deletes all site resources and re-uploads them together as a single quilt, even resources that have not changed. 
+Because you cannot update a single file within a quilt, if any file changes you must re-upload the entire quilt: the `site-builder` deletes the existing site resources and re-uploads them, including resources that have not changed.
 
 To update the example `walrus-snake` site, like changing the title from `eat all the blobs!` to `Glob all the Blobs!`, make the edit in the `./walrus-snake/index.html` file.
 

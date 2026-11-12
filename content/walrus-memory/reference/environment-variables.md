@@ -111,7 +111,7 @@ The relayer does not enforce all of these at boot, but most real deployments nee
 | `LOG_FORMAT` | pretty text | Set to `json` for machine-parseable structured logs |
 | `ALERT_TO_SLACK` | none | Slack incoming webhook URL. When set, the relayer posts an alert after a Walrus upload job exhausts all 5 wallet attempts without producing a blob |
 | `SIDECAR_URL` | `http://localhost:9000` | Walrus upload sidecar. Recall does not use this port |
-| `SIDECAR_SEAL_URL` | `http://127.0.0.1:<upload port + 1>` | Seal encrypt and decrypt. The relayer rewrites `localhost` to `127.0.0.1` even when it forks no listener. The relayer dials a non-loopback value and forks no local process. An unparseable value refuses to boot |
+| `SIDECAR_SEAL_URL` | `http://127.0.0.1:<upload port + 1>` | Seal encrypt and decrypt. Two separate behaviors: when unset, the address defaults to loopback on the upload port plus one; and independently of that default, the relayer rewrites a `localhost` value you set to `127.0.0.1`, including when it forks no listener. The relayer dials a non-loopback value and forks no local process. An unparseable value refuses to boot |
 | `SIDECAR_SEAL_LISTENER` | on | Set to `0` to keep seal on the upload sidecar instead of forking a process |
 | `SIDECAR_WATCHDOG_INTERVAL_SECS` | `30` | Interval between relayer health checks against the local sidecar |
 | `SIDECAR_WATCHDOG_TIMEOUT_SECS` | `2` | Timeout for each sidecar watchdog health check |
