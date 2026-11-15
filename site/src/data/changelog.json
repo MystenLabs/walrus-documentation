@@ -4,7 +4,7 @@
     "date": "2026-11-11T18:44:27Z",
     "category": "walrus",
     "title": "Walrus v1.60.2",
-    "description": null,
+    "description": "This release contains two storage node fixes. If the checkpoint tailing task stops on its own, the\nnode now restarts it after a backoff. Previously, event processing stayed stalled. One cause of a\nstopped task is a full node that fails to serve a Move package.\n\nThe node also no longer hangs on shutdown or on self-restart while the background consistency check\nis running. A self-restart can happen, for example, after a TLS certificate renewal. The same\nchanges ship in the Testnet release of this version.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2",
     "changes": [
@@ -23,42 +23,17 @@
     "date": "2026-11-09T07:10:37Z",
     "category": "walrus-memory",
     "title": "Walrus Memory MCP v0.2.0",
-    "description": null,
+    "description": "This release adds `memwal_namespaces`, which returns a paginated inventory of account namespaces and\nsuggests namespaces when recall or restore returns nothing. Compatible clients can discover the\nserver through SEP-2127 metadata at `/.well-known/mcp/server-card.json`, `/mcp/server-card`, and\n`/api/mcp/server-card`. For Claude Desktop, Claude web, and other chat clients without plugin\nlifecycle hooks, the `memwal_enable_proactive` MCP prompt provides a one-time proactive-memory setup\nflow with standard consent instructions in both bridge and auth-required modes.\n\nExplanations of empty recall results now preserve exact legacy namespace names, including\nsurrounding whitespace. Optional namespace diagnostics stop after one second, so unavailable\nmetadata does not delay a completed recall or restore. The opt-in setup instruction again includes\nfocused proactive recall guidance and keeps recalled entries untrusted.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0",
-    "changes": [
-      {
-        "text": "Add `memwal_namespaces` with paginated account inventory and namespace suggestions for empty recall or restore results.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      },
-      {
-        "text": "Publish SEP-2127 MCP server discovery metadata at `/.well-known/mcp/server-card.json`, `/mcp/server-card`, and `/api/mcp/server-card` for compatible clients.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      },
-      {
-        "text": "Productize the one-time proactive-memory setup flow for Claude Desktop, Claude web, and other chat clients without plugin lifecycle hooks. Exposes the `memwal_enable_proactive` MCP prompt in both bridge and auth-required modes to supply standard consent instructions.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      },
-      {
-        "text": "Preserve exact legacy namespace names, including surrounding whitespace, when explaining empty recall results.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      },
-      {
-        "text": "Limit optional namespace diagnostics to one second so unavailable metadata does not delay an otherwise completed recall or restore.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      },
-      {
-        "text": "Restore focused proactive recall guidance in the opt-in setup instruction while keeping recalled entries explicitly untrusted.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.2.0"
-      }
-    ]
+    "changes": []
   },
   {
     "id": "memwal-memwal-python@0.2.3",
     "date": "2026-11-09T07:10:06Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.2.3",
-    "description": "Release memwal Python SDK v0.2.3",
+    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.3",
     "changes": []
@@ -68,26 +43,17 @@
     "date": "2026-11-09T07:10:02Z",
     "category": "walrus-memory",
     "title": "Walrus Memory TypeScript SDK v0.1.14",
-    "description": null,
+    "description": "`RecallResult` includes an optional `degraded?: boolean` flag. It is `true` whenever `recall()`\ndrops one or more vector matches. By default, when every match fails to download or decrypt,\n`recall()` returns a degraded result with `results: []`, `degraded: true`, and `dropped_count`.\n\n`RecallOptions` accepts a new `onDropped?: \"ignore\" | \"throw\"` setting, which defaults to\n`\"ignore\"`. If you pass `onDropped: \"throw\"`, `recall()` throws `MemWalRecallAllDroppedError` when\nevery vector search match is dropped during Walrus blob download or SEAL decryption. The error has\n`name = \"MemWalRecallAllDropped\"` and `code = \"RECALL_ALL_DROPPED\"`, and it exposes `total`,\n`droppedCount`, and `namespace`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14",
-    "changes": [
-      {
-        "text": "`RecallResult` includes an optional `degraded?: boolean` flag set to `true` whenever one or more vector matches were dropped, and `recall()` returns the degraded result (`results: []`, `degraded: true`, `dropped_count`) by default when all matches fail to download or decrypt. (#1036, #1070, #1362)",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14"
-      },
-      {
-        "text": "`RecallOptions` accepts `onDropped?: \"ignore\" | \"throw\"` (defaulting to `\"ignore\"`). Passing `onDropped: \"throw\"` throws `MemWalRecallAllDroppedError` (`name = \"MemWalRecallAllDropped\"`, `code = \"RECALL_ALL_DROPPED\"`, exposing `total`, `droppedCount`, and `namespace`) when every vector search match is dropped during Walrus blob download or SEAL decryption. (#1036, #1070, #1362)",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14"
-      }
-    ]
+    "changes": []
   },
   {
     "id": "walrus-testnet-v1.60.1",
     "date": "2026-11-04T17:57:20Z",
     "category": "walrus",
     "title": "Walrus v1.60.1",
-    "description": null,
+    "description": "This Testnet release fixes a storage node issue with checkpoint tailing. Previously, if the\ncheckpoint tailing task stopped on its own, the node's event processing stalled. This could happen,\nfor example, when the full node failed to serve a Move package. Storage nodes now restart the task\nafter a backoff, and event processing resumes.",
     "badge": "Testnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.60.1",
     "changes": [
@@ -102,7 +68,7 @@
     "date": "2026-11-04T07:28:36Z",
     "category": "walrus-memory",
     "title": "Walrus Memory MCP v0.1.0",
-    "description": null,
+    "description": "This release adds the `memwal-mcp status` and `whoami` CLI subcommands. You can use them to check\nhow your Walrus Memory MCP setup is configured, including the current account, delegate, label,\nrelayer, namespace, credentials file, and auto-save configuration.\n\nBoth subcommands run without interactive prompts. You can check your active configuration from the\ncommand line without stepping through the setup flow.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal-mcp%400.1.0",
     "changes": [
@@ -117,38 +83,20 @@
     "date": "2026-11-04T07:28:12Z",
     "category": "walrus-memory",
     "title": "Walrus Memory TypeScript SDK v0.1.13",
-    "description": null,
+    "description": "`MemWal` and `MemWalMock` apply the same input validation on `remember*`, `rememberBulk*`,\n`analyze*`, `embed`, `recall`, `restore`, and `listNamespaces`. Both reject invalid `idempotencyKey`\nvalues before signing, and both reject `limit: 0` consistently.\n\nOn read paths (`recall`, `recallManual`, `restore`, and `listMemories`), the SDK rejects an empty\nstring `\"\"` as a namespace. Namespaces that contain only whitespace remain readable, which matches\nthe server's namespace validation.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13",
-    "changes": [
-      {
-        "text": "`MemWal` and `MemWalMock` share input validation on `remember*`, `rememberBulk*`, `analyze*`, `embed`, `recall`, `restore`, and `listNamespaces`, rejecting invalid `idempotencyKey` values before signing and rejecting `limit: 0` consistently. On read paths (`recall`, `recallManual`, `restore`, and `listMemories`), empty string `\"\"` is rejected while whitespace namespaces remain readable to match the server's namespace validation. (Refs #978)",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.13"
-      }
-    ]
+    "changes": []
   },
   {
     "id": "memwal-@mysten-incubation/oc-memwal@0.0.9",
     "date": "2026-11-04T07:28:00Z",
     "category": "walrus-memory",
     "title": "Walrus Memory OpenClaw v0.0.9",
-    "description": null,
+    "description": "Sub-agent memory now stays separate from the main agent when the derived namespace or legacy alias\nwould collide with `defaultNamespace`. A colliding derived namespace is replaced with a\ndeterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject\nexplicit requests for the main namespace.\n\nIf a sub-agent's derived namespace previously equaled `defaultNamespace`, that sub-agent now uses\nthe hashed namespace. Memories already stored under `defaultNamespace` remain there, but that\nsub-agent no longer recalls them automatically. This release also updates the MemWal SDK dependency\nto `0.1.13`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9",
-    "changes": [
-      {
-        "text": "Keep sub-agent memory separate from the main agent when the derived namespace or legacy alias would collide with `defaultNamespace`. Colliding derived namespaces use a deterministic hashed namespace, and `memory_search` and `memory_store` reject explicit requests for the main namespace from sub-agent sessions.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
-      },
-      {
-        "text": "When a sub-agent's derived namespace previously equaled `defaultNamespace`, it now uses the hashed namespace. Memories already stored under `defaultNamespace` remain there and are no longer automatically recalled by that sub-agent.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
-      },
-      {
-        "text": "Update the MemWal SDK dependency to `0.1.13`.",
-        "url": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9"
-      }
-    ]
+    "changes": []
   },
   {
     "id": "memwal-@mysten-incubation/memwal-mcp@0.0.18",

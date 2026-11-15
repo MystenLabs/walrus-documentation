@@ -14,6 +14,14 @@ answer: Release notes for the Walrus decentralized storage platform.
 
 `Mainnet` | November 11, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2)
 
+This release contains two storage node fixes. If the checkpoint tailing task stops on its own, the
+node now restarts it after a backoff. Previously, event processing stayed stalled. One cause of a
+stopped task is a full node that fails to serve a Move package.
+
+The node also no longer hangs on shutdown or on self-restart while the background consistency check
+is running. A self-restart can happen, for example, after a TLS certificate renewal. The same
+changes ship in the Testnet release of this version.
+
 #### Changes
 
 - [A checkpoint tailing task that stops on its own, for example because the full node failed to serve a Move package, is now restarted after a backoff instead of leaving the node's event processing stalled.](https://github.com/MystenLabs/walrus/pull/3865)
@@ -24,6 +32,11 @@ answer: Release notes for the Walrus decentralized storage platform.
 ### Walrus v1.60.1
 
 `Testnet` | November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.60.1)
+
+This Testnet release fixes a storage node issue with checkpoint tailing. Previously, if the
+checkpoint tailing task stopped on its own, the node's event processing stalled. This could happen,
+for example, when the full node failed to serve a Move package. Storage nodes now restart the task
+after a backoff, and event processing resumes.
 
 #### Changes
 
