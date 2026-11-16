@@ -341,7 +341,25 @@ ClientError { kind: NoCompatiblePaymentCoin }
 $ sui client gas
 ```
 
-Add SUI or WAL to your wallet as needed. Use `walrus info` to check current storage costs per epoch. If you are using a publisher daemon, verify that the daemon wallet has sufficient funds for both SUI gas and WAL storage payments.
+Add SUI or WAL to your wallet as needed. On Testnet, get SUI from the [faucet](https://faucet.sui.io/) and swap some of it for WAL with `walrus get-wal --context testnet`; see [How do I get Testnet SUI and WAL tokens?](/docs/getting-started#fund-sui-account). Use `walrus info` to check current storage costs per epoch. If you are using a publisher daemon, verify that the daemon wallet has sufficient funds for both SUI gas and WAL storage payments.
+
+#### `could not find SUI coins with sufficient balance` although `sui client balance` shows SUI
+
+**Error:**
+
+```
+Error: could not find SUI coins with sufficient balance [requested_amount=Some(504295383)]
+```
+
+**Cause:** The SUI is held as an address balance, not as a coin object. The Testnet faucet credits address balances, and `sui client gas` lists no coins for a wallet funded only that way. The Walrus client through version 1.60 pays SUI and WAL from coin objects, so it finds nothing to spend. `walrus get-wal`, `walrus store`, and every other command that pays are affected.
+
+**Solution:** Split a coin object off the address balance with a programmable transaction block, then run the Walrus command again:
+
+```sh
+$ sui client ptb --split-coins gas "[600000000]" --assign coin --transfer-objects "[coin]" @$(sui client active-address) --gas-budget 20000000
+```
+
+Confirm with `sui client gas`, which now lists the coin. Later Walrus releases pay from address balances directly; see the [release notes](/docs/release-notes).
 
 #### `there is enough balance to cover the requested amount but cannot be achieved with less than the maximum number of coins allowed`
 
