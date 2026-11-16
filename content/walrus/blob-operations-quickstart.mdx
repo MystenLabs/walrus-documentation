@@ -26,7 +26,7 @@ export PUBLISHER=https://publisher.walrus-testnet.walrus.space
 ```
 
 - [x] Choose a surface and complete the necessary setup:
-  - **CLI:** Install and configure the `walrus` client. See [Getting Started](/docs/getting-started).
+  - **CLI:** Install and configure the `walrus` client, and fund its wallet. The CLI pays from your Sui account: SUI for transaction fees and WAL for storage. On Testnet, get SUI from the faucet and swap some of it for WAL with `walrus get-wal --context testnet`. See [Getting Started](/docs/getting-started) and [How do I get Testnet SUI and WAL tokens?](/docs/getting-started#fund-sui-account).
   - **HTTP API:** Any HTTP client, such as `curl`.
   - **Python:** Install the requests library with `pip install requests`.
 
@@ -51,6 +51,8 @@ Store a file for a number of epochs. The store returns a blob ID.
 ```sh
 $ walrus store ./report.pdf --epochs 5
 ```
+
+The CLI pays for the store from your wallet. If the command fails with `could not find WAL coins with sufficient balance`, the wallet holds no WAL yet: on Testnet, run `walrus get-wal --context testnet` and store again. See [How to fix insufficient funds errors](/docs/troubleshooting/network-errors#how-to-fix-insufficient-funds-errors).
 
 </TabItem>
 <TabItem label="HTTP API" value="http">
