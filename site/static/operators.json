@@ -19,7 +19,7 @@
       },
       "https://aggregator.walrus-mainnet.tududes.com": {
         "operator": "TuDudes",
-        "cache": true
+        "cache": false
       },
       "https://aggregator.walrus-mainnet.walrus.space": {
         "operator": "Mysten Labs",
@@ -99,7 +99,7 @@
       },
       "https://walrus-aggregator.rubynodes.io": {
         "operator": "Ruby Nodes",
-        "cache": true
+        "cache": false
       },
       "https://walrus-aggregator.stakely.io": {
         "operator": "Stakely",
@@ -159,7 +159,7 @@
       },
       "https://walrus-mainnet-aggregator.imperator.co": {
         "operator": "Imperator.co",
-        "cache": false
+        "cache": true
       },
       "https://walrus-mainnet-aggregator.luckyresearch.org": {
         "operator": "LuckyResearch Labs",
@@ -303,7 +303,7 @@
       },
       "https://testnet.aggregator.walrus.silentvalidator.com": {
         "operator": "Silent",
-        "cache": true
+        "cache": false
       },
       "https://wal-aggregator-testnet.staketab.org": {
         "operator": "Staketab",
@@ -319,7 +319,7 @@
       },
       "https://walrus-agg.testnet.obelisk.sh": {
         "operator": "Obelisk",
-        "cache": true
+        "cache": false
       },
       "https://walrus-aggregator-testnet.cetus.zone": {
         "operator": "Cetus",
@@ -379,7 +379,7 @@
       },
       "https://walrus-testnet-aggregator.luckyresearch.org": {
         "operator": "LuckyResearch Labs",
-        "cache": true
+        "cache": false
       },
       "https://walrus-testnet-aggregator.natsai.xyz": {
         "operator": "Natsai",
