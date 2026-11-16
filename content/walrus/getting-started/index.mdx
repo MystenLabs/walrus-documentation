@@ -243,6 +243,14 @@ $ sui client balance
 
 The Sui faucet is rate limited. If you encounter errors or have questions, you can request tokens from the Discord faucet or a third-party faucet. [Learn more about the Sui faucet.](https://docs.sui.io/guides/developer/getting-started/get-coins)
 
+The faucet credits the SUI to your address balance and does not create a coin object, so `sui client gas` lists no coins even though `sui client balance` shows the SUI. The Walrus client through version 1.60 pays from coin objects, so `walrus get-wal` fails with `could not find SUI coins with sufficient balance` until a coin object exists. Split one off your address balance first:
+
+```sh
+$ sui client ptb --split-coins gas "[600000000]" --assign coin --transfer-objects "[coin]" @$(sui client active-address) --gas-budget 20000000
+```
+
+This creates a `Coin<SUI>` object worth 0.6 SUI, enough for the default exchange of 0.5 SUI and its gas. Run `sui client gas` to confirm the coin is listed, then continue.
+
 Convert some of those SUI tokens into WAL with the following command:
 
 ```sh

@@ -52,7 +52,7 @@ Store a file for a number of epochs. The store returns a blob ID.
 $ walrus store ./report.pdf --epochs 5
 ```
 
-The CLI pays for the store from your wallet. If the command fails with `could not find WAL coins with sufficient balance`, the wallet holds no WAL yet: on Testnet, run `walrus get-wal --context testnet` and store again. See [How to fix insufficient funds errors](/docs/troubleshooting/network-errors#how-to-fix-insufficient-funds-errors).
+The CLI pays for the store from your wallet. If the command fails with `could not find WAL coins with sufficient balance`, the wallet holds no WAL yet: on Testnet, run `walrus get-wal --context testnet` and store again. If `walrus get-wal` itself reports `could not find SUI coins`, the SUI is an address balance with no coin object; split one off first. See [How to fix insufficient funds errors](/docs/troubleshooting/network-errors#how-to-fix-insufficient-funds-errors).
 
 </TabItem>
 <TabItem label="HTTP API" value="http">
