@@ -10,6 +10,17 @@ questions:
 answer: Release notes for the Walrus decentralized storage platform.
 ---
 
+### Walrus v1.61.0
+
+`Testnet` | November 18, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.61.0)
+
+#### Changes
+
+- [Fixed a race in garbage collection that could drop a blob registration or invalidation arriving while the blob's expired data was being deleted.](https://github.com/MystenLabs/walrus/pull/3874)
+- [The node no longer hangs on shutdown or on a self-restart (for example after a TLS certificate renewal) while the background consistency check is running; the check now stops when the node shuts down.](https://github.com/MystenLabs/walrus/pull/3964)
+
+---
+
 ### Walrus v1.60.2
 
 `Mainnet` | November 11, 2026 | [GitHub](https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2)
