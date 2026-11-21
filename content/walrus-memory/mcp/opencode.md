@@ -115,4 +115,4 @@ Confirm the agent saves the fact with `memwal_remember`.
 
 - **Tools missing**: restart OpenCode after editing `opencode.json`.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
-- **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+- **`memwal_recall` returns nothing although you saved before**: ask the agent to run the `memwal_restore` tool for your namespace to rebuild the search index from Walrus.
