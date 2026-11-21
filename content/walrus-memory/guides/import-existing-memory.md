@@ -131,7 +131,7 @@ On hosted Mainnet, requests per minute, requests per hour, and delegate-key requ
 | Call | Cost |
 | --- | --- |
 | `rememberBulk` | 10 |
-| `analyze` | 5, plus 1 per extracted fact |
+| `analyze` | 5, plus 1 per extracted fact, so at most 25 per call (the cap is 20 facts) |
 | Status poll | 1 |
 
 Send one chunk, wait until it settles, then send the next. On HTTP 429, wait for the `Retry-After` header before retrying the call the relayer refused. The hourly refusal asks for 300 seconds. The hourly account cap is what stops a long import.

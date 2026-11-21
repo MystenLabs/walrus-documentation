@@ -86,7 +86,7 @@ graph TB
 |-----------|-------|-------------|
 | **Auto-recall hook** | Gateway (Node.js) | Searches Walrus Memory before each turn, injects memories into prompt |
 | **Auto-capture hook** | Gateway (Node.js) | Extracts facts after each turn, stores through Walrus Memory |
-| **Tool execution** | Gateway (Node.js) | Runs `memory_search` / `memory_store` when the LLM calls them |
+| **Tool execution** | Gateway (Node.js) | Runs `memory_search` / `memory_store` when the LLM calls them, which in turn call `recall()` or `analyze()` on the server |
 | **Walrus Memory Relayer** | Remote | Handles vector search, LLM fact extraction, encrypted storage |
 | **Walrus** | Decentralized | Stores encrypted memory blobs |
 

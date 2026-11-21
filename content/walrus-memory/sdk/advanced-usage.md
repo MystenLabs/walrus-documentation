@@ -50,7 +50,7 @@ Use:
 
 ## How does `analyze()` extract facts?
 
-Use `analyze()` for LLM-based fact extraction when you want the relayer, which also uploads your encrypted payloads to Walrus, to extract structured facts from longer text and store them as
+Use `analyze()` for LLM-based fact extraction when you want the relayer, which also uploads your encrypted payloads to Walrus, to extract structured facts from longer text and store those facts as
 memories.
 
 ## How to use the `withMemWal` middleware
