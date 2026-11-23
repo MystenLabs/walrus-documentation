@@ -190,7 +190,7 @@ def read_status(blob_id: str) -> str:
 print(read_status(blob_id))  # "available", "retry", or "unavailable"
 ```
 
-This function has no guard for the two cases: it returns `"retry"` for every `404`, so call it only in the window right after you certify a blob. A `404` immediately after you certified the blob is usually transient on public, CDN-fronted aggregators, but a `404` for a blob you did not just write is final, and copying this function into other code paths will mask that.
+Call this function only in the window right after you certify a blob, where treating every `404` as `"retry"` is the correct behavior: a `404` immediately after you certified the blob is usually transient on public, CDN-fronted aggregators. For a blob you did not just write, a `404` is final, so check the onchain certification status and end epoch with the CLI `blob-status` command instead of reusing this function.
 
 </TabItem>
 </Tabs>
