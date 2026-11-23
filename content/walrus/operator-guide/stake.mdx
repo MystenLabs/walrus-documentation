@@ -43,9 +43,9 @@ Because moving shards from one storage node to another requires transferring a l
 
 ## When do staking and unstaking take effect?
 
-For stake to affect the shard distribution in epoch `e` and become active, it must be staked before the committee for the epoch has been selected. This means it has to be staked before the midpoint of epoch `e - 1`. If it is staked after that point in time, it only influences the committee selection for epoch `e + 1` and only becomes active and accrues rewards in that epoch.
+For stake to affect the shard distribution in epoch `e` and become active, it must be staked before the committee for the epoch has been selected. This means it has to be staked before the midpoint of epoch `e - 1`, when Walrus selects the committee for epoch `e`. If it is staked after that point in time, it only influences the committee selection for epoch `e + 1` and only becomes active and accrues rewards in that epoch.
 
-Unstaking has a similar delay. Because unstaking funds only has an effect on the committee in the next committee selection, the stake remains active until that committee takes over. This means that to unstake at the start of epoch `e`, you need to request withdrawal before the midpoint of epoch `e - 1`. Otherwise, if you unstake after this point, the stake remains active and continues to accrue rewards throughout epoch `e`, and the balance and rewards are available to withdraw at the start of epoch `e + 1`.
+Unstaking has a similar delay. Because unstaking funds only has an effect on the committee in the next committee selection, the stake remains active until that committee takes over. This means that for your stake to stop being active and become withdrawable at the start of epoch `e`, you need to request withdrawal before the midpoint of epoch `e - 1`, when Walrus selects the committee for epoch `e`. Otherwise, if you unstake after this point, the stake remains active and continues to accrue rewards throughout epoch `e`, and the balance and rewards are available to withdraw at the start of epoch `e + 1`.
 
 ## How to stake with the Walrus staking app
 
