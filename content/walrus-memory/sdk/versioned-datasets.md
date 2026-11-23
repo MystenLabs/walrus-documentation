@@ -130,9 +130,9 @@ Keep the lineage index wherever your agent already keeps durable state. Storing 
 - **Provenance and audit:** prove which exact input an agent acted on at a point in time.
 - **Reproducibility:** pin a workflow to a specific blob ID so a rerun reads the same bytes, not a mutated current copy.
 
-## Is the blob ID deterministic?
+## Is the blob ID deterministic? (for ciphertext bytes, not plaintext input)
 
-The blob ID is a function of the stored bytes alone. The same bytes always produce the same blob ID, and any change to the bytes produces a different one. Walrus stores the Seal ciphertext, so the blob ID is deterministic for a given ciphertext. When two writes of identical input produce different blob IDs, the difference comes from the encryption step that produces the ciphertext, not from how Walrus derives the blob ID. A blob ID proves that the encrypted bytes are intact and unchanged. Seal encryption provides confidentiality, and content-addressing provides integrity and immutability on top of it.
+The blob ID is a function of the stored bytes alone. The same stored ciphertext bytes always produce the same blob ID, and any change to those bytes produces a different one, but the same plaintext does not always map to the same blob ID, because encrypting identical input twice can produce different ciphertext. Walrus stores the Seal ciphertext, so the blob ID is deterministic for a given ciphertext. When two writes of identical input produce different blob IDs, the difference comes from the encryption step that produces the ciphertext, not from how Walrus derives the blob ID. A blob ID proves that the encrypted bytes are intact and unchanged. Seal encryption provides confidentiality, and content-addressing provides integrity and immutability on top of it.
 
 ## Next steps
 
