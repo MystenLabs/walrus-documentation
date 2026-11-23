@@ -76,7 +76,7 @@ To mint an API key:
 3. Store the full key, prefixed `hbr_`. Console shows it once and cannot recover it afterward.
 4. Store the service private key, prefixed `suiprivkey1`, that Console shows next to the API key. Keep it locally.
 
-Console offers two kinds of keys. A plain **API key** works with the MCP server and with any application you write against the API, but it cannot mint further keys. A **Management API key** mints keys programmatically instead, and cannot upload, download, or manage assets. The choice is not permanent, so you can create a Management API key at any time. Treat the full key like a cloud secret access key. For what each role can do, see the [API reference](./api-reference).
+Console offers 2 kinds of keys. A plain **API key** works with the MCP server and with any application you write against the API, but it cannot mint further keys. A **Management API key** mints keys programmatically instead, and cannot upload, download, or manage assets. The choice is not permanent, so you can create a Management API key at any time. Treat the full key like a cloud secret access key. For what each role can do, see the [API reference](./api-reference).
 
 Alongside the API key, Console generates a service private key (prefixed `suiprivkey1`) in your browser and shows it once next to the API key. Console stores only the derived public address. You keep the private key locally and use it to sign the transaction that finalizes a private folder and to authenticate decrypt sessions with Seal. It does not need a token balance.
 

@@ -24,7 +24,7 @@ When you buy storage, you pay your WAL into the **storage fund**, which holds WA
 
 ### What is the write fee?
 
-Registering a blob costs a WAL write fee in addition to the storage payment. You pay it at registration, whether or not you ever delete the blob, so write-heavy workloads pay for the work they create. Deleting a blob later does not refund the write fee or the storage payment.
+Registering a blob costs a WAL write fee in addition to the storage payment. You pay it at registration, whether or not you ever delete the blob. The fee keeps blob deletion and storage reuse sustainable, so write-heavy workloads pay for the work they create. Deleting a deletable blob returns its storage resource for reuse, but does not refund the write fee.
 
 ### What are subsidies?
 
