@@ -330,7 +330,7 @@ drops one or more vector matches. By default, when every match fails to download
 
 `RecallOptions` accepts a new `onDropped?: "ignore" | "throw"` setting, which defaults to
 `"ignore"`. If you pass `onDropped: "throw"`, `recall()` throws `MemWalRecallAllDroppedError` when
-every vector search match is dropped during Walrus blob download or SEAL decryption. The error has
+Walrus blob download or Seal decryption drops every vector search match. The error has
 `name = "MemWalRecallAllDropped"` and `code = "RECALL_ALL_DROPPED"`, and it exposes `total`,
 `droppedCount`, and `namespace`.
 
@@ -801,8 +801,8 @@ Initial release of the Walrus Memory Python SDK.
 November 4, 2026 | [GitHub](https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9)
 
 Sub-agent memory now stays separate from the main agent when the derived namespace or legacy alias
-would collide with `defaultNamespace`. A colliding derived namespace is replaced with a
-deterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject
+would collide with `defaultNamespace`. The plugin replaces a colliding derived namespace
+with a deterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject
 explicit requests for the main namespace.
 
 If a sub-agent's derived namespace previously equaled `defaultNamespace`, that sub-agent now uses

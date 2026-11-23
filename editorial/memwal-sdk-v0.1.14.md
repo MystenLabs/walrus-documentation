@@ -14,6 +14,6 @@ drops one or more vector matches. By default, when every match fails to download
 
 `RecallOptions` accepts a new `onDropped?: "ignore" | "throw"` setting, which defaults to
 `"ignore"`. If you pass `onDropped: "throw"`, `recall()` throws `MemWalRecallAllDroppedError` when
-every vector search match is dropped during Walrus blob download or SEAL decryption. The error has
+Walrus blob download or Seal decryption drops every vector search match. The error has
 `name = "MemWalRecallAllDropped"` and `code = "RECALL_ALL_DROPPED"`, and it exposes `total`,
 `droppedCount`, and `namespace`.

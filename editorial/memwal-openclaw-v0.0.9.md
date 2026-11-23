@@ -9,8 +9,8 @@ keywords: ["memwal-openclaw", "release notes", "changelog"]
 **November 4, 2026**
 
 Sub-agent memory now stays separate from the main agent when the derived namespace or legacy alias
-would collide with `defaultNamespace`. A colliding derived namespace is replaced with a
-deterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject
+would collide with `defaultNamespace`. The plugin replaces a colliding derived namespace
+with a deterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject
 explicit requests for the main namespace.
 
 If a sub-agent's derived namespace previously equaled `defaultNamespace`, that sub-agent now uses

@@ -4,7 +4,7 @@
     "date": "2026-11-11T18:44:27Z",
     "category": "walrus",
     "title": "Walrus v1.60.2",
-    "description": "This release contains two storage node fixes. If the checkpoint tailing task stops on its own, the\nnode now restarts it after a backoff. Previously, event processing stayed stalled. One cause of a\nstopped task is a full node that fails to serve a Move package.\n\nThe node also no longer hangs on shutdown or on self-restart while the background consistency check\nis running. A self-restart can happen, for example, after a TLS certificate renewal. The same\nchanges ship in the Testnet release of this version.",
+    "description": "This release contains 2 storage node fixes. If the checkpoint tailing task stops on its own, the\nnode now restarts it after a backoff. Previously, event processing stalled. One cause of a\nstopped task is a full node that fails to serve a Move package.\n\nThe node also no longer hangs on shutdown or on self-restart while the background consistency check\nis running. A self-restart can happen, for example, after a TLS certificate renewal. The same\nchanges ship in the Testnet release of this version.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.60.2",
     "changes": [
@@ -43,7 +43,7 @@
     "date": "2026-11-09T07:10:02Z",
     "category": "walrus-memory",
     "title": "Walrus Memory TypeScript SDK v0.1.14",
-    "description": "`RecallResult` includes an optional `degraded?: boolean` flag. It is `true` whenever `recall()`\ndrops one or more vector matches. By default, when every match fails to download or decrypt,\n`recall()` returns a degraded result with `results: []`, `degraded: true`, and `dropped_count`.\n\n`RecallOptions` accepts a new `onDropped?: \"ignore\" | \"throw\"` setting, which defaults to\n`\"ignore\"`. If you pass `onDropped: \"throw\"`, `recall()` throws `MemWalRecallAllDroppedError` when\nevery vector search match is dropped during Walrus blob download or SEAL decryption. The error has\n`name = \"MemWalRecallAllDropped\"` and `code = \"RECALL_ALL_DROPPED\"`, and it exposes `total`,\n`droppedCount`, and `namespace`.",
+    "description": "`RecallResult` includes an optional `degraded?: boolean` flag. It is `true` whenever `recall()`\ndrops one or more vector matches. By default, when every match fails to download or decrypt,\n`recall()` returns a degraded result with `results: []`, `degraded: true`, and `dropped_count`.\n\n`RecallOptions` accepts a new `onDropped?: \"ignore\" | \"throw\"` setting, which defaults to\n`\"ignore\"`. If you pass `onDropped: \"throw\"`, `recall()` throws `MemWalRecallAllDroppedError` when\nWalrus blob download or Seal decryption drops every vector search match. The error has\n`name = \"MemWalRecallAllDropped\"` and `code = \"RECALL_ALL_DROPPED\"`, and it exposes `total`,\n`droppedCount`, and `namespace`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/memwal%400.1.14",
     "changes": []
@@ -93,7 +93,7 @@
     "date": "2026-11-04T07:28:00Z",
     "category": "walrus-memory",
     "title": "Walrus Memory OpenClaw v0.0.9",
-    "description": "Sub-agent memory now stays separate from the main agent when the derived namespace or legacy alias\nwould collide with `defaultNamespace`. A colliding derived namespace is replaced with a\ndeterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject\nexplicit requests for the main namespace.\n\nIf a sub-agent's derived namespace previously equaled `defaultNamespace`, that sub-agent now uses\nthe hashed namespace. Memories already stored under `defaultNamespace` remain there, but that\nsub-agent no longer recalls them automatically. This release also updates the MemWal SDK dependency\nto `0.1.13`.",
+    "description": "Sub-agent memory now stays separate from the main agent when the derived namespace or legacy alias\nwould collide with `defaultNamespace`. The plugin replaces a colliding derived namespace\nwith a deterministic hashed namespace. In sub-agent sessions, `memory_search` and `memory_store` reject\nexplicit requests for the main namespace.\n\nIf a sub-agent's derived namespace previously equaled `defaultNamespace`, that sub-agent now uses\nthe hashed namespace. Memories already stored under `defaultNamespace` remain there, but that\nsub-agent no longer recalls them automatically. This release also updates the MemWal SDK dependency\nto `0.1.13`.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/%40mysten-incubation/oc-memwal%400.0.9",
     "changes": []

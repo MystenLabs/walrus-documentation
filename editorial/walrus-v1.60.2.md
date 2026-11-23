@@ -8,8 +8,8 @@ keywords: ["walrus", "release notes", "changelog", "mainnet"]
 
 **Mainnet** | November 11, 2026
 
-This release contains two storage node fixes. If the checkpoint tailing task stops on its own, the
-node now restarts it after a backoff. Previously, event processing stayed stalled. One cause of a
+This release contains 2 storage node fixes. If the checkpoint tailing task stops on its own, the
+node now restarts it after a backoff. Previously, event processing stalled. One cause of a
 stopped task is a full node that fails to serve a Move package.
 
 The node also no longer hangs on shutdown or on self-restart while the background consistency check
