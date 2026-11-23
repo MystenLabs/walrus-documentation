@@ -96,7 +96,7 @@ The rest of this guide uses the Walrus CLI on Testnet because it shows the full 
 
 ## How do I store my first blob on Testnet? {#before-you-begin}
 
-This walkthrough uses Testnet, so you spend free test tokens rather than real funds. You do not need to write any code, and you do not need to install Sui separately, because the `suiup` tool in the next step installs both `sui` and `walrus`.
+This walkthrough uses Testnet, so you spend free test tokens rather than real funds. You do not need to write any code, and you do not need to install Sui separately, because the `suiup` tool in the next step installs both `sui` and `walrus`. Installing the binaries is not the same as configuring them: a later step runs `sui client` to configure the Sui client to connect to Testnet, because the Sui client configuration is separate from the Walrus client configuration.
 
 If `sui` and `walrus` are already on your `$PATH`, skip to [Configure tooling for Walrus Testnet](#configure-tooling). To confirm, run `walrus --version` and `sui --version`. For alternative installation methods, such as building from source or installing a specific binary, see [Advanced Installation](/docs/getting-started/advanced-setup).
 
@@ -223,7 +223,7 @@ The argument `ed25519` specifies the key pair scheme to be of type ed25519.
 
 ##step How do I get Testnet SUI and WAL tokens? {#fund-sui-account}
 
-Before you can upload a file to Walrus and store it as a blob, you need SUI tokens to pay transaction fees and WAL tokens to pay for storage on the network. Walrus Testnet uses Testnet WAL tokens that have no value. You can exchange them at a 1:1 rate for Testnet SUI tokens. For more information about storage costs, see [Storage Costs](/docs/system-overview/storage-costs).
+Before you can upload a file to Walrus and store it as a blob, you need SUI tokens to pay transaction fees and WAL tokens to pay for storage on the network. Walrus Testnet uses Testnet WAL tokens that have no value. You get Testnet WAL by exchanging Testnet SUI for it at a fixed rate with `walrus get-wal`. See [How does the Testnet SUI-to-WAL exchange rate work?](#how-does-the-testnet-sui-to-wal-exchange-rate-work). For more information about storage costs, see [Storage Costs](/docs/system-overview/storage-costs).
 
 Navigate to the SUI Testnet faucet: https://faucet.sui.io/
 
@@ -242,6 +242,14 @@ $ sui client balance
 ```
 
 The Sui faucet is rate limited. If you encounter errors or have questions, you can request tokens from the Discord faucet or a third-party faucet. [Learn more about the Sui faucet.](https://docs.sui.io/guides/developer/getting-started/get-coins)
+
+The faucet credits the SUI to your address balance and does not create a coin object, so `sui client gas` lists no coins even though `sui client balance` shows the SUI. The Walrus client through version 1.60 pays from coin objects, so `walrus get-wal` fails with `could not find SUI coins with sufficient balance` until a coin object exists. Split one off your address balance first:
+
+```sh
+$ sui client ptb --split-coins gas "[600000000]" --assign coin --transfer-objects "[coin]" @$(sui client active-address) --gas-budget 20000000
+```
+
+This creates a `Coin<SUI>` object worth 0.6 SUI, enough for the default exchange of 0.5 SUI and its gas. Run `sui client gas` to confirm the coin is listed, then continue.
 
 Convert some of those SUI tokens into WAL with the following command:
 

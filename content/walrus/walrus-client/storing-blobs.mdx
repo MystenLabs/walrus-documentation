@@ -50,6 +50,8 @@ answer: >-
 
 All blobs stored in Walrus are public and discoverable by all. Do not store sensitive data on Walrus without additional protection.
 
+The client pays for storage from your active Sui wallet: SUI for the transaction fees and WAL for the storage itself. On Testnet, get SUI from the faucet and swap some of it for WAL with `walrus get-wal --context testnet` before you store. A wallet with no WAL fails with `could not find WAL coins with sufficient balance`. For the steps, see [How do I get Testnet SUI and WAL tokens?](/docs/getting-started#fund-sui-account); for the error, see [How to fix insufficient funds errors](/docs/troubleshooting/network-errors#how-to-fix-insufficient-funds-errors).
+
 Store blobs on Walrus with the following command:
 
 ```sh
@@ -100,7 +102,7 @@ You can specify whether a newly stored blob is deletable or permanent through th
 - **Permanent:** The blob remains available until its expiry epoch. Not even the uploader can delete it beforehand.
 - **Deletable:** The blob can be deleted at any point during its lifetime by the owner of the corresponding Sui object. See [deletable blobs](/docs/walrus-client/managing-blobs#how-to-delete-blobs) for more details.
 
-Newly stored blobs are deletable by default.
+Newly stored blobs are deletable by default. To make sure no one can delete a blob before its expiry epoch, pass the `--permanent` option.
 
 ## Automatic optimizations
 

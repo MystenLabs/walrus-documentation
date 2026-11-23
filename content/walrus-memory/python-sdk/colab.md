@@ -74,6 +74,6 @@ The notebook selects `staging` for test credentials. In your own project, pass `
 | `prod` | `https://relayer.memory.walrus.xyz` |
 | `staging` | `https://relayer.dev.memwal.ai` |
 
-An explicit `server_url` always takes precedence, including the hosted default. `env` applies only when you omit `server_url` (`None`), and an unknown preset raises `ValueError`.
+When you pass an explicit `server_url`, it always takes precedence over `env` and the hosted default. `env` applies only when you omit `server_url` (`None`), and an unknown preset raises `ValueError`.
 
 Accounts and delegate keys are specific to each network. A key you create on staging does not authenticate against the production relayer, and the reverse is also true. Match the relayer environment to where you created your account.

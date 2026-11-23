@@ -135,10 +135,12 @@ More managed UX options are coming soon.
 
 ## Validate data after re-upload
 
+For the syntax and options of each command in these steps, see the [Walrus CLI](/docs/walrus-client/storing-blobs) documentation.
+
 To validate a re-uploaded blob with the Walrus CLI:
 
 1. Compute the blob ID of your local file. The CLI encodes the file to obtain its blob ID without uploading it. Compare this value with the blob ID that the store operation returns.
 2. Check the blob status. The CLI queries storage nodes representing more than a third of the shards and returns the latest status that an onchain event verifies.
 3. Read the blob back with the `read` command and write it to a file with the `out` option. Compare the output with your original file. For a stricter check, enable the strict consistency check on the read.
 
-For quilts, use `walrus read-quilt` to fetch the patches into a directory and compare them with your source files.
+For quilts, use `walrus read-quilt` to fetch the patches into a directory and compare them with your source files. For more on quilts and patches, see [Walrus Quilt](/docs/system-overview/quilt).

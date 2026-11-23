@@ -43,13 +43,13 @@ answer: >-
   the Walrus Memory dashboard.
 ---
 
-Claude's built-in custom connector flow adds Walrus Memory over [OAuth 2.1](https://oauth.net/2.1/). You approve access in the browser with your [Sui wallet](https://docs.sui.io/guides/developer/wallets/what-is-a-wallet), and Claude never asks you for a delegate private key or a custom header.
+Claude's built-in custom connector flow adds Walrus Memory over [OAuth 2.1](https://oauth.net/2.1/). You approve access in the browser with your [Sui wallet](https://docs.sui.io/guides/developer/wallets/what-is-a-wallet), and Claude never asks you for a delegate private key or a custom header. A delegate key is a separate key that acts for your Walrus Memory account after your wallet authorizes it onchain.
 
 :::note
 The connector flow needs a relayer that has OAuth turned on. Confirm the endpoint you plan to use answers `GET /.well-known/oauth-authorization-server` before you hand the URL to someone else. A relayer without the OAuth configuration returns `404` on that route and works only with [header authentication](/walrus-memory/mcp/reference#streamable-http).
 :::
 
-## Pick the right flow
+## Which flow should you use?
 
 | **Client** | **Flow** | **Where to look** |
 | --- | --- | --- |
@@ -58,6 +58,8 @@ The connector flow needs a relayer that has OAuth turned on. Confirm the endpoin
 | Cursor, Codex, Antigravity, OpenCode | stdio MCP server | [Overview](/walrus-memory/mcp/overview) |
 
 The OAuth path and the header path reach the same tools through the same relayer. They differ in [who holds the delegate key](#what-you-approve).
+
+## How to add Walrus Memory to Claude
 
 <div className="outlined-tabs">
 
@@ -80,28 +82,28 @@ The OAuth path and the header path reach the same tools through the same relayer
 | Production (Mainnet) | `https://relayer.memory.walrus.xyz/api/mcp` | OAuth is live and the discovery routes serve traffic |
 
 
-### Paste the connector URL in claude
+### Paste the connector URL in Claude
 
-    Open Claude's connector settings, choose **Add custom connector**, and paste the MCP URL for your environment. Claude fetches the relayer's OAuth metadata and registers itself as a client. The relayer accepts that registration only for Anthropic's own callback domain or a loopback address, so a stranger cannot register a connector that redirects your grant somewhere else.
+Open Claude's connector settings, choose **Add custom connector**, and paste the MCP URL for your environment. Claude fetches the relayer's OAuth metadata and registers itself as a client. The relayer accepts that registration only for Anthropic's own callback domain or a loopback address, so a stranger cannot register a connector that redirects your grant somewhere else.
 
-  ### Review the consent screen
+### Review the consent screen
 
-    Claude opens the Walrus Memory consent screen in your browser. Everything the screen shows comes from the relayer, not from the link you arrived on, so the values reflect what the relayer validated:
+Claude opens the Walrus Memory consent screen in your browser. Everything the screen shows comes from the relayer, not from the link you arrived on, so the values reflect what the relayer validated:
 
-    - The name the connecting client gave for itself, which the screen labels as unverified.
-    - The redirect host the relayer checked against its allowlist.
-    - The scopes the client asked for.
-    - The Sui address of the delegate key that the grant authorizes.
+- The name the connecting client gave for itself, which the screen labels as unverified.
+- The redirect host the relayer checked against its allowlist.
+- The scopes the client asked for.
+- The Sui address of the delegate key that the grant authorizes.
 
-  ### Connect your wallet and authorize the delegate
+### Connect your wallet and authorize the delegate
 
-    Connect the Sui wallet that owns your Walrus Memory account. Approve the `add_delegate_key` transaction, which records onchain that this delegate can act for your account. Walrus Memory sponsors the transaction through Enoki, so you pay no gas.
+Connect the Sui wallet that owns your Walrus Memory account. Approve the `add_delegate_key` transaction, which records onchain that this delegate can act for your account. Walrus Memory sponsors the transaction through Enoki, so you pay no gas.
 
-    If your account already has an active OAuth delegate from an earlier grant, the relayer reuses it and skips the transaction. The reuse is per account, not per client, so a second connector can end up sharing a delegate with the first.
+If your account already has an active OAuth delegate from an earlier grant, the relayer reuses it and skips the transaction. The reuse is per account, not per client, so a second connector can end up sharing a delegate with the first.
 
-  ### Finish in Claude
+### Finish in Claude
 
-    The relayer verifies the transaction onchain and hands control back to Claude. The `memwal_*` tools appear in the session. Ask Claude what tools it has to confirm. To check that the grant reached your account, open the [Walrus Memory dashboard](https://memory.walrus.xyz) and look for a delegate at the address the consent screen showed.
+The relayer verifies the transaction onchain and hands control back to Claude. The `memwal_*` tools appear in the session. To confirm, ask Claude which tools it has. To check that the grant reached your account, open the [Walrus Memory dashboard](https://memory.walrus.xyz) and look for a delegate at the address the consent screen showed.
 
 ## What you approve
 
@@ -117,17 +119,17 @@ Access tokens last 1 hour and refresh tokens last 30 days by default. A self-hos
 The connector flow puts a delegate private key on the server. Claude cannot hold a Sui wallet key, so the relayer generates a delegate keypair, encrypts the private key with AES-256-GCM before it stores the key, and decrypts it in memory to sign your MCP calls. The [stdio client](/walrus-memory/mcp/overview) and the header flow keep the delegate key on your own machine instead. Choose the flow whose trust boundary you accept, and use the dashboard to remove a delegate you no longer want.
 :::
 
-## Disconnect
+## How to disconnect from Claude
 
 Disconnecting takes two steps, because removing the connector does not remove the onchain delegate.
 
-### Remove the connector in claude
+### Remove the connector in Claude
 
-    This stops Claude from using it. Claude's documentation does not say whether removal also calls the relayer's revoke endpoint, so do not rely on removal alone to end the grant. On the relayer side, revoking a refresh token ends the whole grant and every access token the relayer issued under it, while revoking an access token ends only that token.
+This stops Claude from using it. Claude's documentation does not say whether removal also calls the relayer's revoke endpoint, so do not rely on removal alone to end the grant. On the relayer side, revoking a refresh token ends the whole grant and every access token the relayer issued under it, while revoking an access token ends only that token.
 
-  ### Remove the delegate key in the dashboard
+### Remove the delegate key in the dashboard
 
-    Open [memory.walrus.xyz](https://memory.walrus.xyz), find the delegate that matches the address the consent screen showed, and remove it. Until you do, that delegate keeps its onchain authorization on your account.
+Open [memory.walrus.xyz](https://memory.walrus.xyz), find the delegate that matches the address the consent screen showed, and remove it. Until you do, that delegate keeps its onchain authorization on your account.
 
 :::note
 The same split applies to the [stdio client](/walrus-memory/mcp/overview): `memwal_logout` clears local credentials but leaves the onchain delegate in place. See [Logout semantics](/walrus-memory/mcp/reference#logout-semantics).

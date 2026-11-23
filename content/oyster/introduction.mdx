@@ -10,7 +10,7 @@ Oyster is a Web2-friendly object storage service backed by
 [Sui](https://sui.io/) (onchain state). It gives you familiar HTTP and S3
 APIs while a decentralized network stores your data.
 
-## Core concepts
+## What are Oyster's core concepts? {#core-concepts}
 
 ### Accounts
 
@@ -51,18 +51,19 @@ keys can reference it.
 Key properties of blobs:
 
 - **Public reads:** anyone can download a blob by bucket name and key, or
-  by its content-addressed blob ID. Reads need no authentication.
+  by its content-addressed blob ID. Reads need no authentication through the JSON API; the S3-compatible API requires AWS Signature Version 4 (SigV4) authentication for every operation, including reads.
 - **Authenticated writes:** uploading, deleting, and listing blobs require
   a valid API key or S3 credentials.
 - **Overwrite semantics:** uploading to an existing key replaces the blob.
 - **Reference-counted deletion:** deleting a key removes the reference;
   Oyster removes the underlying data only when no other keys point to it.
 - **Expiration:** blobs share their account's `StoragePool` lifetime
-  rather than expiring individually. A background extension service
+  rather than expiring individually. A `StoragePool` is a single onchain
+  Sui object that Oyster creates for each account on its first upload. A background extension service
   renews each pool before it expires; see
   [Blob Lifecycle](guides/blob-lifecycle.mdx) for details.
 
-## Two API surfaces
+## Which APIs does Oyster expose? {#two-api-surfaces}
 
 Oyster exposes two ways to interact with your data:
 
@@ -71,7 +72,8 @@ Oyster exposes two ways to interact with your data:
 A RESTful HTTP API under `/api/v1/`. Use it with `curl`, any HTTP client, or
 the `oyster-cli` command-line tool (see the [Guides](guides/index.mdx) for a CLI quick start). Responses are JSON. This API covers
 everything: account management, bucket and blob CRUD, S3 access key management,
-wallet information, and more.
+wallet information, and more. The [JSON API Reference](json-api/index.mdx)
+provides full endpoint documentation.
 
 ### S3-compatible API
 
@@ -79,6 +81,8 @@ An [AWS S3-compatible](https://docs.aws.amazon.com/s3/) interface that speaks
 the same protocol as Amazon S3. Use the AWS CLI, `boto3`, the AWS SDK for
 JavaScript, or any S3-compatible client. Authenticate with S3 access keys
 (which you create through the JSON API) using standard AWS Signature Version 4.
+The [S3 API Reference](s3-api/index.mdx) covers S3-compatible operations and
+AWS CLI setup.
 
 Both APIs share the same underlying storage and database. Changes you make
 through one are immediately visible in the other.

@@ -1,5 +1,5 @@
 ---
-title: Package v0.1.3
+title: "Walrus Memory Python SDK v0.1.3"
 description: A patch release for the Walrus Memory Python SDK...
 keywords: ["walrus memory", "release notes", "changelog", "memwal-python"]
 ---

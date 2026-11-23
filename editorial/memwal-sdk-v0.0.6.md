@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.6
+title: "Walrus Memory TypeScript SDK v0.0.6"
 description: Adds RecallParams for object-style recall calls, deprecates the positional recall overload, and documents restore() response...
 keywords: ["walrus memory", "release notes", "changelog", "memwal"]
 ---

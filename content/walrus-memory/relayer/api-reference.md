@@ -31,7 +31,7 @@ answer: >-
   The Walrus Memory relayer exposes public routes (health, version, config, metrics, sponsor) and protected routes (remember, recall, analyze, embed, ask, restore, forget, stats) that require Ed25519 signed headers, plus MCP transport endpoints that use bearer authentication. Signed authentication uses x-public-key, x-signature, x-timestamp, and x-nonce headers, with the signature covering the timestamp, method, path, body hash, nonce, and account ID.
 ---
 
-The Rust relayer exposes these routes. The route table lives in `services/server/src/main.rs`.
+The Rust relayer for Walrus Memory exposes public routes, protected routes that require Ed25519 signed headers, and Model Context Protocol (MCP) transport endpoints that use bearer authentication. The route table lives in `services/server/src/main.rs`.
 
 See also:
 
@@ -39,7 +39,7 @@ See also:
 - [Configuration](/walrus-memory/reference/configuration)
 - [Versioning and Compatibility](/walrus-memory/relayer/versioning-and-compatibility)
 
-## Authentication
+## How to authenticate requests {#authentication}
 
 The routes below require signed headers, except the [MCP transports](#mcp-transports), which use bearer authentication. The SDK handles the signing automatically.
 
@@ -62,7 +62,7 @@ Not every `/api/*` route works this way. Account existence checks and the quaran
 | `x-seal-session` | Base64-encoded Seal SessionKey for relayer-managed decrypt flows. The TypeScript and Python SDKs use it |
 | `x-delegate-key` | Legacy delegate private key credential for relayer-managed decrypt flows. Deprecated; use `x-seal-session` where supported |
 
-### Signature format
+### How to build the signature {#signature-format}
 
 The signed message is:
 
@@ -72,7 +72,7 @@ The signed message is:
 {timestamp}.{method}.{path_and_query}.{body_sha256}.{nonce}.{account_id}
 ```
 
-For `GET` requests, `body_sha256` is the SHA-256 of an empty byte string. If a raw client omits `x-account-id`, it must sign the empty string in the final `account_id` position. Official SDKs send `x-account-id`. The relayer returns `401` for a cold delegate key with no account ID. The relayer does not search `AccountRegistry`. A key already in the relayer's delegate-key cache, or a server with `MEMWAL_ACCOUNT_ID` set, can still authenticate without the header.
+For `GET` requests, `body_sha256` is the SHA-256 of an empty byte string. If a raw client omits `x-account-id`, it must sign the empty string in the final `account_id` position. The signed message then ends with the nonce and a trailing period: `{timestamp}.{method}.{path_and_query}.{body_sha256}.{nonce}.` Official SDKs send `x-account-id`. The relayer returns `401` for a cold delegate key with no account ID. The relayer does not search `AccountRegistry`. A key already in the relayer's delegate-key cache, or a server with `MEMWAL_ACCOUNT_ID` set, can still authenticate without the header.
 
 The relayer verifies the Ed25519 signature, then resolves the owner by looking up the public key in onchain `MemWalAccount.delegate_keys`.
 
@@ -82,7 +82,7 @@ These routes require no authentication.
 
 ### `GET /health`
 
-Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 200 means the process is running, not that the relayer accepts writes.
+Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 200 means the process is running, not that the relayer accepts writes. Use `writes`, not `write_ready`, for the pause or Walrus-outage signal. `write_ready` reports whether the encryption sidecar and Postgres can accept writes.
 
 `writes` is `"ok"`, `"degraded"`, or `"paused"`.
 
@@ -90,7 +90,7 @@ Service liveness check. `status` is `"ok"` when the relayer process is up. HTTP 
 - `"degraded"` when recent durable writes (last 15 minutes) have **failed at least three times and none have landed**. The relayer still accepts and queues a write (`write_ready` stays `true`; HTTP 200), but Walrus is not storing it, expect the job to fail rather than queue more. A single success in that window keeps `"ok"` even if other writes failed: this is a total-outage detector, not a per-request verdict. `memwal_health` prints `writes=degraded` when this is set.
 - `"ok"` otherwise (including a quiet window with no finished writes).
 
-`write_ready` is `true` when the encryption sidecar process answered its own `/health` **and** Postgres can accept writes (cached a few seconds). Postgres counts as not writable when Neon cluster size (`pg_cluster_size`, not `pg_database_size` of this database) is at or within 1MB of `neon.max_cluster_size`. If `pg_cluster_size()` is missing (no `neon` extension), the probe falls back to `sum(pg_database_size)` against that GUC. Self-hosted Postgres without the GUC keeps the sidecar-only check. Probe errors and timeouts fail open (`write_ready` stays true) so they do not block CI; timeouts log at warn. A sidecar outage or a disk or project-size write outage can still return HTTP 200 with `write_ready: false`. Use `writes`, not `write_ready`, for the pause or Walrus-outage signal. `write_ready: true` is not a guarantee that remember or analyze succeed.
+`write_ready` is `true` when the encryption sidecar process answered its own `/health` **and** Postgres can accept writes (cached a few seconds). Postgres counts as not writable when Neon cluster size (`pg_cluster_size`, not `pg_database_size` of this database) is at or within 1MB of `neon.max_cluster_size`. If `pg_cluster_size()` is missing (no `neon` extension), the probe falls back to `sum(pg_database_size)` against that GUC. Self-hosted Postgres without the GUC keeps the sidecar-only check. Probe errors and timeouts fail open (`write_ready` stays true) so they do not block CI; timeouts log at warn. A sidecar outage or a disk or project-size write outage can still return HTTP 200 with `write_ready: false`. `write_ready: true` is not a guarantee that remember or analyze succeed.
 
 **Response:**
 
@@ -251,7 +251,7 @@ Return the account identity the caller's delegate key resolves to. Takes no requ
 
 Authentication already resolves the account before any handler runs, so this route just hands back what the middleware computed. Returning `account_id` is safe here precisely because the route is authenticated. The caller has proven it holds a delegate key registered against this account, so it only ever learns about itself. The public `GET /api/accounts/:owner/exists` route deliberately withholds it.
 
-The motivating use is rebuilding local credentials: a client that holds a working delegate key but has lost the surrounding metadata (an interrupted sign-in, a wiped config file) needs `account_id`, `owner`, and `package_id` to write a usable credentials file, and the key alone proves entitlement to all three.
+The motivating use is rebuilding local credentials: a client that holds a working delegate key but has lost the surrounding metadata (an interrupted sign-in, a wiped config file) needs `account_id`, `owner`, and `package_id` to write a usable credentials file, and the key alone proves entitlement to all three once the request authenticates, which requires the `x-account-id` header unless the key is already in the relayer's delegate-key cache or the server has `MEMWAL_ACCOUNT_ID` set.
 
 **Response:**
 
@@ -265,7 +265,7 @@ The motivating use is rebuilding local credentials: a client that holds a workin
 }
 ```
 
-The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account ID returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account ID cannot recover it from this route.
+The caller sends `x-account-id` on every network. Authentication does not scan `AccountRegistry` to discover it. A request with no account ID returns `401` unless that delegate key is already in the relayer's cache or the server has `MEMWAL_ACCOUNT_ID` set. A client that has lost its account ID can recover it here only under those 2 conditions.
 
 ### `POST /api/remember`
 
@@ -643,6 +643,8 @@ Rebuild missing vector entries for one namespace. Queries onchain blobs by owner
 ```
 
 `skipped` is onchain blobs already in the local success index. `failed` is permanent decrypt or UTF-8 failures on this onchain page (negative-cache hits plus new permanent failures this call), so it never exceeds `total`. `failed` does not count transient download, decrypt, or embed errors; when a page yields only those, `truncated` is true so the caller retries.
+
+When `truncated` is true, call `POST /api/restore` again. If transient download or embed errors caused it, retry with the same `limit`. Otherwise, a larger `limit` (up to `100`) restores more missing blobs in each call.
 
 `truncated=true` means this restore is **known-retryable-incomplete**: more missing blobs than `limit` allowed this call to restore, **or** the sidecar's owner-wide candidate fetch hit its cap **and** raising `limit` can still expand that fetch (`limit < 20`). Once the sidecar cap is saturated (`limit >= 20`, cap pinned at 100), truncation follows this call's missing-blob page length, not onchain `total`. A fully restored namespace does not loop. `truncated=false` is **not** proof the sidecar saw every onchain blob; blobs beyond the owner-wide sidecar candidate cap can still be missing. WALM-451 tracks a `sourceCapped` field for that case ([WALM-451](https://linear.app/mysten-labs/issue/WALM-451)). Relayers older than WALM-319 omit `truncated`; SDKs default it to `false`.
 

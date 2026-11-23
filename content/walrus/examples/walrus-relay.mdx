@@ -38,7 +38,7 @@ answer: >-
   install and pnpm dev, or open the deployed instance at https://relay.wal.app.
 ---
 
-The Walrus upload relay lets browser apps store blobs without opening a connection to every storage node: the client sends a single request to the relay, and the relay encodes the blob, distributes the slivers to the storage node committee, and returns an availability certificate. The following example combines the relay with the Walrus TypeScript SDK into a complete React web application: users connect a Sui wallet, upload files through the public Testnet upload relay, and see each uploaded blob rendered on the page.
+The Walrus upload relay lets browser apps store blobs without opening a connection to every storage node: the client sends a single request to the relay, and the relay encodes the blob, distributes the slivers to the storage nodes, and returns an availability certificate. The following example combines the relay with the Walrus TypeScript SDK into a complete React web application: users connect a Sui wallet, upload files through the public Testnet upload relay, and see each uploaded blob rendered on the page.
 
 ## Prerequisites
 
@@ -82,7 +82,7 @@ Three files carry the Walrus-specific logic. The rest of the repository is stand
 
 ### Walrus client
 
-`src/lib/walrus.ts` creates a `SuiClient` for the Testnet full node and a `WalrusClient` with an `uploadRelay` configuration. The `host` points at the relay, `sendTip.max` caps the tip (in MIST) the client agrees to pay a paid relay, and the generous `timeout` accommodates large uploads. A relay advertises its required tip through its `/v1/tip-config` endpoint, and a free relay reports `no_tip`.
+`src/lib/walrus.ts` creates a `SuiClient` for the Testnet full node and a `WalrusClient` with an `uploadRelay` configuration. The `host` points at the relay, `sendTip.max` caps the tip (in MIST, the smallest unit of SUI) the client agrees to pay a paid relay, and the generous `timeout` accommodates large uploads. A relay advertises its required tip through its `/v1/tip-config` endpoint, and a free relay reports `no_tip`.
 
 <ImportContent source="src/lib/walrus.ts" mode="code" org="MystenLabs" repo="walrus-sdk-relay-example-app" />
 
@@ -121,7 +121,7 @@ Because the user's own wallet registers, pays for, and certifies the blob, the u
   },
   ```
 
-- **The relay rejects an upload:** A paid relay only accepts uploads whose registration transaction includes the advertised tip. Make sure the client's `sendTip.max` covers the tip that the relay reports through `/v1/tip-config`.
+- **The relay rejects an upload:** A paid relay rejects the upload request in step 3 unless the registration transaction from step 2, which sends the relay tip, includes the advertised amount. Make sure the client's `sendTip.max` covers the tip that the relay reports through `/v1/tip-config`.
 - **`Cannot read properties of undefined (reading 'buffer')`:** `WalrusFile.from` expects a `Uint8Array` for `contents`, not a `File`, `Blob`, or raw `ArrayBuffer`. Read the bytes first with `new Uint8Array(await file.arrayBuffer())`.
 
 ## What does the tip configuration endpoint return?

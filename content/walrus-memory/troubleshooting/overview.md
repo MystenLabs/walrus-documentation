@@ -38,7 +38,7 @@ Credential and authorization errors have the following symptoms, causes, and fix
 
 **Symptom:** You generated a delegate key, often from the dashboard, confirmed your account ID, and every authenticated call returns `AUTH_REJECTED` with HTTP status 401. A health check still succeeds, because the health endpoint needs no authentication, so the relayer is reachable but it does not accept your signed requests.
 
-**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. The following table orders the causes by how often they apply to a freshly generated key, and each row pairs the check with its fix:
+**Cause:** The relayer cannot match your signed request to an active, registered delegate key on the account you named. It verifies the Ed25519 signature, then resolves the owner by finding your public key in that account's onchain `delegate_keys`. Anything that breaks that lookup returns the same 401. Work through each row in order until the error clears. The following table orders the causes by how often they apply to a freshly generated key, and each row pairs the check with its fix:
 
 | **Cause** | **How to check** | **How to fix** |
 | --- | --- | --- |
@@ -135,7 +135,7 @@ A client-side timeout does not mean the save failed. The relayer accepts the wor
 
 ## Quick reference
 
-Use these values for quick configuration and triage:
+For full details, see the [relayer API reference](/walrus-memory/relayer/api-reference), the [SDK API reference](/walrus-memory/sdk/api-reference), and the [MCP reference](/walrus-memory/mcp/reference). Use these values for quick configuration and triage:
 
 | **Item** | **Value** |
 | --- | --- |

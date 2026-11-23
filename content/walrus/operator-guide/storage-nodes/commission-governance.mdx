@@ -98,7 +98,7 @@ Make sure that you configure `walrus` to use the authorized wallet and run the f
 
 ```sh
 $ NODE_ID=           # Set this to your node ID.
-$ walrus node-admin --node-id $NODE_ID collect-commission
+$ walrus node-admin collect-commission --node-id $NODE_ID
 ```
 
 ### Use the web interface
@@ -107,7 +107,7 @@ Go to the [operator panel on the staking app](https://stake-wal.wal.app/node-ope
 
 ## How to manage contract upgrades
 
-Walrus manages contract upgrades through a quorum-based voting system. This ensures that upgrades only apply after sufficient consensus among node operators. The process requires computing a digest of the proposed upgrade and voting on it.
+Walrus manages contract upgrades through a quorum-based voting system, so upgrades only apply after sufficient consensus among node operators. A proposal reaches quorum when the nodes that vote for it hold more than 2/3 of all shards. For details, see [Quorum threshold for contract upgrades](#quorum-threshold-for-contract-upgrades). The process requires computing a digest of the proposed upgrade and voting on it.
 
 When someone proposes a contract upgrade, the proposer generally shares the code of the proposed upgrade with other node operators. For example, if the Walrus Foundation proposes an upgrade, it shares a specific commit hash in a branch on the [Walrus GitHub Repository](https://github.com/MystenLabs/walrus). The branch contains the proposed change in either the `testnet-contracts/walrus` or the `mainnet-contracts/walrus` directory, depending on whether the upgrade targets Testnet or Mainnet contracts.
 

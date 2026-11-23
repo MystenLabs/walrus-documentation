@@ -35,10 +35,10 @@ The recommended default client. The relayer handles embeddings, Seal encryption,
 
 ## How it works
 
-1. The SDK signs each request with your delegate key
+1. The SDK signs each request with your delegate key, the Ed25519 private key you pass as `key` to `MemWal.create()`
 2. The relayer verifies delegate access
 3. `remember(text)` takes the memory text and returns an accepted job whose `job_id` you pass to `waitForRememberJob()`, while the relayer encrypts, uploads, and indexes in the background
-4. `recall({ query, limit })` takes the search `query` and an optional `limit` on the number of matches, searches the client's memory space (owner address, namespace, and app ID), and returns decrypted matches
+4. `recall({ query, limit })` takes the search `query` and an optional `limit` on the number of matches, searches the client's memory space (owner address, namespace, and app ID), and returns decrypted matches, each with a `distance` score where a smaller number means a closer match
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/memwal.md</a>
 

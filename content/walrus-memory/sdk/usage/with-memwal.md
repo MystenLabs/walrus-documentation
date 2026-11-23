@@ -10,7 +10,7 @@ keywords:
   - auto-save
   - Walrus Memory
 goal:
-  description: Wrap a Vercel AI SDK streamText or generateText call with withMemWal, configure the recall and save filters, and verify that relevant memories are injected and notable outputs are persisted.
+  description: Wrap a Vercel AI SDK generateText or streamText call with withMemWal, set maxMemories, minRelevance, and autoSave options to control recall and saving behavior, and understand when to use direct SDK methods instead for precise filtering control.
   requires:
     - has_frontmatter:
         - title
@@ -31,7 +31,7 @@ answer: >-
   withMemWal is drop-in memory middleware for Vercel AI SDK apps. Before generation it recalls relevant memories and injects them into the prompt. After generation it optionally runs analyze() to extract and save new facts. Use direct SDK calls instead when you need precise control over when memory is stored or how recall results are used.
 ---
 
-Drop-in memory middleware for Vercel AI SDK apps.
+`withMemWal` is drop-in memory middleware for Vercel AI SDK apps. It recalls relevant memories before generation and optionally saves new facts after generation.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/usage/with-memwal.md" target="_blank" className="code-source-link">Source: sdk/usage/with-memwal.md</a>
 
@@ -54,6 +54,8 @@ const result = await generateText({
   messages: [{ role: "user", content: "What do you know about me?" }],
 });
 ```
+
+The example sets `autoSave: true` explicitly, but `autoSave` is optional and defaults to `true`.
 
 ## What it does
 

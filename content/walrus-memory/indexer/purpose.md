@@ -38,7 +38,7 @@ The indexer keeps the backend in sync with onchain state so the relayer can serv
 
 ## Why it exists
 
-Delegate-key authentication does not walk `AccountRegistry`. A cold key is verified against the signed `x-account-id`, or against `MEMWAL_ACCOUNT_ID` when that env is set. The indexer is what fills the `accounts` table the existence check and owner-token lookup read.
+Delegate-key authentication does not walk `AccountRegistry`. A cold key is a delegate key that has no row in the relayer's `delegate_key_cache` table. A cold key is verified against the signed `x-account-id`, or against `MEMWAL_ACCOUNT_ID` when that env is set. The indexer is what fills the `accounts` table the existence check and owner-token lookup read.
 
 ## How it works
 
@@ -91,7 +91,7 @@ The indexer is recommended for production but optional for development. If the i
 
 Three places in the relayer read the `accounts` table, and all of them use the same `db.find_account_by_owner` helper:
 
-- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks registry presence only, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
+- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks only whether the indexed `accounts` table has a row for the owner, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
 - `POST /v1/owner-tokens`: Rejects the request with `400` when the owner has no indexed account, instead of minting a token for a nonexistent account.
 - Owner-token reads on `/v1/owners/{owner}/{namespaces,memories,agents}`: The read API's auth middleware, `auth::verify_read_api_auth`, resolves the token's owner to an account through the table and returns `401` when the account no longer resolves.
 

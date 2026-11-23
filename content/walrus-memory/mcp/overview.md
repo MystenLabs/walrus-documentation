@@ -33,7 +33,7 @@ answer: >-
 ---
 
 <AgentPrompt
-  prompt="Add the Walrus Memory MCP server to this client. On Claude Code run `claude mcp add --scope user memwal -- npx -y @mysten-incubation/memwal-mcp`; on other clients add the equivalent mcp.json entry. Then ask the agent to run memwal_login to sign in."
+  prompt="Add the Walrus Memory MCP server to this client. On Claude Code run `claude mcp add --scope user memwal -- npx -y @mysten-incubation/memwal-mcp`; on other clients add the equivalent mcp.json entry. With no credentials yet, the server still starts in auth-required mode and exposes `memwal_login`, so the agent signs you in inline through browser wallet sign-in."
 />
 
 The **Walrus Memory MCP server** exposes your portable Walrus Memory as Model Context Protocol tools, so an AI agent can decide when to save and recall memories on its own. It works with any MCP-aware client, and on **Claude Code**, **Codex**, **Cursor**, and **Antigravity** you can install it as a **plugin** that adds automatic memory through lifecycle hooks.
@@ -49,15 +49,16 @@ There are two ways to use Walrus Memory. The difference is whether you also get 
 | Walrus Memory MCP: memory tools (`memwal_remember`, `memwal_recall`, …) | ✓ | ✓ |
 | Lifecycle hooks: automatic recall and save reminders | ✓ | ✗ |
 
-- **Plugin:** Bundles the MCP server **and** lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and when to save without being asked. Available on **Claude Code**, **Codex**, **Antigravity**, and **Cursor**.
-- **MCP-only:** Gives the agent the memory tools on **every** MCP client. The tool descriptions encourage proactive use, so agents often do save and recall on their own. Treat that as best-effort: it varies by client and model, and on a client that ships its own memory feature the built-in one commonly wins.
+- **Plugin:** Bundles the MCP server **and** lifecycle hooks. The `SessionStart` hook tells the agent to prefer the `memwal_*` tools over any built-in or local memory feature, and whether automatic memory is on. Only when it is on does the hook tell the agent to save facts you did not ask it to save. Available on **Claude Code**, **Codex**, **Antigravity**, and **Cursor**.
+- **MCP-only:** Gives the agent the memory tools on **every** MCP client. The tool descriptions encourage proactive use, so agents often recall on their own, and save on their own when automatic memory is on. Treat that as best-effort: it varies by client and model, and on a client that ships its own memory feature the built-in one commonly wins.
 
 Saving **without being asked is on once you agree to it**: `memwal-mcp login`
 asks the question in your terminal the first time, and on a fresh install
 the agent saves nothing unprompted until you answer. Saved memories are permanent
 (Walrus is immutable storage), which is why the question comes first. Change the
-answer any time with `memwal-mcp auto-save on|off` (or `MEMWAL_AUTO_SAVE` in
-your client's `env` block). Recall, and anything you explicitly ask the agent to
+answer any time with `memwal-mcp auto-save on|off`. Setting `MEMWAL_AUTO_SAVE=0` in
+a client's `env` block turns automatic saving off for that client only. The server ignores a truthy
+value there, so a project's MCP config cannot turn it on. Recall, and anything you explicitly ask the agent to
 remember, work either way. Both modes exclude credentials, passwords, API keys, tokens, private keys, seed
 phrases, authorization headers, and URLs with an embedded `user:password`.
 Walrus Memory strips them before writing a memory, because Walrus
@@ -147,7 +148,7 @@ flowchart TD
 ```
 
 - **First run (no credentials):** the server still starts and exposes `memwal_login`, so the agent signs you in inline instead of failing with a vague startup error. The login tool returns a clickable URL (valid 5 minutes); after you approve in the browser, the next tool call picks up the credentials automatically.
-- **Credential file:** login writes `~/.memwal/credentials.json` (mode `0600`) containing your delegate key and account metadata. The delegate private key is a sensitive, long-lived credential; treat it like an API key.
+- **Credential file:** login writes `~/.memwal/credentials.json` (mode `0600`) containing your delegate key and account metadata. The delegate key is the credential that gives this machine access to your account, and you can revoke it from the dashboard. The delegate private key is a sensitive, long-lived credential; treat it like an API key.
 - **Local vs remote tools:** the package handles `memwal_login` and `memwal_logout` locally (they never reach the relayer) and forwards all memory tools (`memwal_remember`, `memwal_recall`, …) to the relayer over an authenticated session.
 - **Logout:** deletes only the local credential file. To fully revoke access, also remove the delegate key from the dashboard.
 
@@ -185,7 +186,7 @@ Ask the agent in any conversation:
 
 > What MCP tools do you have available?
 
-You should see the `memwal_*` tools. Then state a durable fact (for example, a preferred package manager) and confirm the agent saves it with `memwal_remember` and recalls it in a later session.
+You should see the `memwal_*` tools. Then ask the agent to remember a durable fact (for example, a preferred package manager) and confirm it saves the fact with `memwal_remember` and recalls it in a later session.
 
 ## Quick recovery
 

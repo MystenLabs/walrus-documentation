@@ -1,6 +1,6 @@
 ---
 title: "Repairing Uncertified Blobs"
-description: Repair Oyster blobs that Walrus registered but never certified by using the oysterd blobs repair command.
+description: Repair Oyster blobs that Walrus registered but never certified by using the oysterd blobs repair command, including dry-run mode, handling unrecoverable blobs with --delete-unrecoverable, and idempotent re-runs after failures.
 keywords: [ oyster, walrus, uncertified blobs, PooledBlob, certify, blob repair, oysterd ]
 ---
 
@@ -60,8 +60,9 @@ writing anything.
   the upload path no longer creates these blobs.
 - The same environment as `oysterd serve`: `DATABASE_URL`,
   `PEARL_GRPC_URL`, `PEARL_SERVICE_SECRET`, `SUI_RPC_URL`,
-  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Pearl signs certify
-  and delete transactions under each account's own key, and the
+  `WALRUS_SYSTEM_OBJECT`, `WALRUS_STAKING_OBJECT`. Pearl, the signing
+  service that Oyster reaches at `PEARL_GRPC_URL`, signs certify and
+  delete transactions under each account's own key, and the
   account's wallet pays for them (SUI gas only; no WAL).
 - The tool skips an account under `oysterd keys migrate` (`FAILED: signer:
   key migration in progress`); re-run after the rotation.
@@ -77,7 +78,9 @@ writing anything.
 
    Output is TSV: `ACCOUNT`, `BLOB_ID`, `POOLED_BLOB`, `REFERENCES`
    (`bucket/key,...`), `OUTCOME`. A summary line goes to stderr. The
-   `would-certify` count is what the real run recovers.
+   `would-certify` count is what the real run recovers. To parse lines
+   whose keys contain a comma or a tab, see
+   [Repair output format](#repair-output-format).
 
 2. Run it:
 
@@ -130,4 +133,4 @@ writing anything.
 
 ## Repair output format
 
-In the `oysterd blobs repair` output, a tab separates each column. The `REFERENCES` column lists every `bucket/key` pair for the blob, joined by a comma with no space. The tool writes bucket names and keys as stored, without quoting or escaping. A key that contains a comma or a tab therefore makes that line ambiguous when you split it automatically.
+In the `oysterd blobs repair` output, a tab separates each column. The `REFERENCES` column lists every `bucket/key` pair for the blob, joined by a comma with no space. The tool writes bucket names and keys as stored, without quoting or escaping. A key that contains a comma or a tab therefore makes that line ambiguous when you split it automatically. Because the column order is fixed, parse such lines positionally instead: take `ACCOUNT`, `BLOB_ID`, and `POOLED_BLOB` as the first three tab-separated fields and `OUTCOME` as the last field, and treat everything between them as `REFERENCES`. To act on one of those blobs, identify it by its `POOLED_BLOB` object ID, which `oysterd blobs repair --ids-file` accepts as a list of `PooledBlob` object IDs, rather than by its `bucket/key` text.

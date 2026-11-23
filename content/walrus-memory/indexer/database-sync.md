@@ -86,7 +86,7 @@ Populated by the indexer, maps owner addresses to their MemWalAccount object IDs
 
 ### `indexer_state`
 
-A legacy table from the event-polling indexer. The relayer's initial migration still creates it, but the current indexer does not write to it: it records its progress as a checkpoint watermark through the Sui checkpoint-ingestion framework.
+A legacy table from the event-polling indexer, which stored its position in this table as an event cursor. The relayer's initial migration still creates it, but the current indexer does not write to it. Instead, the current indexer processes Sui checkpoints through the Sui checkpoint-ingestion framework and records its progress as a checkpoint watermark: a marker of the last checkpoint it processed, so it resumes from that point after a restart.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -121,4 +121,4 @@ The relayer fills `$4` from the request `limit`. The limit defaults to `10`, and
 
 ## Where migrations live
 
-No migrations table and no manual `sqlx migrate` step exist. The SQL files live in `services/server/migrations`. `VectorDb::new()` in `services/server/src/storage/db.rs` lists each file explicitly and embeds it through `include_str!`. Every listed file re-runs in order on every server boot against `DATABASE_URL`, so restarting the server reapplies them. For this reason, each statement is idempotent and uses `IF NOT EXISTS`, `IF EXISTS`, or a guard query. When a file fails, the server reports `Failed to run migration` with the file name.
+No migrations table and no manual `sqlx migrate` step exist. The SQL files live in `services/server/migrations`. `VectorDb::new()` in `services/server/src/storage/db.rs` lists each file explicitly and embeds it through `include_str!`. Every listed file re-runs in order on every server boot against `DATABASE_URL`, so restarting the server reapplies them. Because each statement is idempotent and uses `IF NOT EXISTS`, `IF EXISTS`, or a guard query, reapplying a file leaves existing data unchanged. When a file fails, the server reports `Failed to run migration` with the file name.

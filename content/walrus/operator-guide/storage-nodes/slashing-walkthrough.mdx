@@ -109,7 +109,7 @@ The transaction does three things atomically:
 Verify the outcome:
 
 ```sh
-$ sui client object $CANDIDATE_NODE_ID --json | grep -A1 commission
+$ sui client object $CANDIDATE_NODE_ID --json | grep '"commission"'
 $ sui client object $TREASURY_OBJECT --json
 $ sui client object $SLASHING_MANAGER --json
 ```

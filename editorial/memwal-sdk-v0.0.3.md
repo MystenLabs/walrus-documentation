@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.3
+title: "Walrus Memory TypeScript SDK v0.0.3"
 description: Updates remember() for the async relayer flow and introduces rememberAsync, waitForRememberJob, rememberAndWait, bulk remember...
 keywords: ["walrus memory", "release notes", "changelog", "memwal"]
 ---

@@ -62,7 +62,7 @@ $ curl -X PUT "$PUBLISHER/v1/quilts?epochs=5" \
 
 Identifiers must be unique within a quilt and cannot start with `_`. Walrus reserves the field name `_metadata` for native metadata. Because identifiers cannot start with `_`, `_metadata` never conflicts with a user-defined identifier. See the [Quilt documentation](/docs/system-overview/quilt) for complete identifier restrictions.
 
-The following example stores 2 files with Walrus-native metadata tags:
+The following example stores 2 files and passes Walrus-native metadata tags in a separate `_metadata` field. The `_metadata` field holds JSON, not a file, so it does not count toward the 2 files:
 
 ```sh
 # Store 2 files with Walrus-native metadata. `_metadata` must be used as the field name for Walrus native metadata
@@ -157,12 +157,14 @@ $ curl "$AGGREGATOR/v1/blobs/by-quilt-id/6XUOE-Q5-nAXHRifN6n9nomVDtHZQbGuAkW3Pjl
 Both methods return the raw blob bytes in the response body. Metadata such as the blob ID and the tags supplied through the `_metadata` field at store time are returned as HTTP headers:
 
 - `X-Quilt-Patch-Identifier`: The identifier of the blob within the quilt
-- `ETag`: The patch ID or quilt ID for caching purposes
+- `ETag`: The quilt ID, for caching purposes. Both retrieval methods return the quilt ID, so every blob from the same quilt returns the same `ETag`
 - Additional custom headers from blob tags, if configured
 
 ## Which ETag does each retrieval method return?
 
-The `ETag` value depends on how you retrieve the blob:
+Both retrieval methods return the quilt ID as the `ETag`:
 
-- `/v1/blobs/by-quilt-patch-id/`: The `ETag` contains the quilt patch ID.
-- `/v1/blobs/by-quilt-id/`: The `ETag` contains the quilt ID, not a patch ID. Every blob you retrieve from the same quilt through this endpoint returns the same `ETag`.
+- `/v1/blobs/by-quilt-patch-id/`: The `ETag` contains the ID of the quilt that holds the patch, not the patch ID.
+- `/v1/blobs/by-quilt-id/`: The `ETag` contains the quilt ID.
+
+Every blob you retrieve from the same quilt returns the same `ETag`, whichever endpoint you use.

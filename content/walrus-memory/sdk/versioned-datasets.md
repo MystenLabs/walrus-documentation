@@ -43,7 +43,7 @@ Every write to Walrus produces a **blob ID derived from the stored bytes**. Two 
 Put together, you get an append-only version history without building one: each revision is a separate, permanent, independently addressable object, and the chain of blob IDs is the lineage.
 
 :::warning
-Memories are Seal-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Content-addressing guarantees that a blob ID pins down one exact set of ciphertext bytes. It does not guarantee that the same plaintext always maps to the same blob ID, because encrypting identical input twice can produce different ciphertext. Treat every write as a new immutable version. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
+Memories are Seal-encrypted before they reach Walrus, so the blob ID addresses the **ciphertext**, not the plaintext. Seal encryption keeps the memory contents confidential, and content-addressing lets you detect any change to the stored ciphertext bytes. Content-addressing guarantees that a blob ID pins down one exact set of ciphertext bytes. It does not guarantee that the same plaintext always maps to the same blob ID, because encrypting identical input twice can produce different ciphertext. Treat every write as a new immutable version. Automatic deduplication of identical content is a separate capability that is not available today, so the content-addressing here gives you version history and lineage, not free dedup.
 :::
 
 ## Capturing a version handle
@@ -66,7 +66,7 @@ for (const memory of result.results) {
 
 ## Worked example: a versioned agent dataset
 
-This agent revises a dataset over time and keeps an auditable lineage. Each revision is written as a new immutable blob, and the agent records a small lineage entry that links the new version to its parent. The dataset content lives in one namespace; the lineage records live in another, so the history is queryable on its own.
+This agent revises a dataset over time and keeps an auditable lineage. Each revision is written as a new immutable blob, and the agent records a small lineage entry that links the new version to its parent. The agent writes dataset content to the `dataset` namespace and lineage records to the `dataset-lineage` namespace, so you can query the history on its own.
 
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/sdk/versioned-datasets.md" target="_blank" className="code-source-link">Source: sdk/versioned-datasets.md</a>
 
@@ -130,12 +130,12 @@ Keep the lineage index wherever your agent already keeps durable state. Storing 
 - **Provenance and audit:** prove which exact input an agent acted on at a point in time.
 - **Reproducibility:** pin a workflow to a specific blob ID so a rerun reads the same bytes, not a mutated current copy.
 
+## Is the blob ID deterministic?
+
+The blob ID is a function of the stored bytes alone. The same bytes always produce the same blob ID, and any change to the bytes produces a different one. Walrus stores the Seal ciphertext, so the blob ID is deterministic for a given ciphertext. When two writes of identical input produce different blob IDs, the difference comes from the encryption step that produces the ciphertext, not from how Walrus derives the blob ID. A blob ID proves that the encrypted bytes are intact and unchanged. Seal encryption provides confidentiality, and content-addressing provides integrity and immutability on top of it.
+
 ## Next steps
 
 - [How storage works](/walrus-memory/fundamentals/architecture/how-storage-works): where blob IDs come from in the write path
 - [Walrus Memory client](/walrus-memory/sdk/usage/memwal): full signatures for `rememberAndWait` and `recall`
 - [API Reference](/walrus-memory/sdk/api-reference): return types, including the blob ID on every result
-
-## Is the blob ID deterministic?
-
-The blob ID is a function of the stored bytes alone. The same bytes always produce the same blob ID, and any change to the bytes produces a different one. Walrus stores the Seal ciphertext, so the blob ID is deterministic for a given ciphertext. When two writes of identical input produce different blob IDs, the difference comes from the encryption step that produces the ciphertext, not from how Walrus derives the blob ID. A blob ID proves that the encrypted bytes are intact and unchanged. Seal encryption provides confidentiality, and content-addressing provides integrity and immutability on top of it.

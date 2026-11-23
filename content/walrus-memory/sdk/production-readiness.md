@@ -39,7 +39,7 @@ The SDK gives you the storage primitives. Running them in a long-lived agent, wh
 
 The examples target the relayer-backed TypeScript client in SDK 0.1.9. See the [API reference](/walrus-memory/sdk/api-reference) for method signatures and the SDK changelog for version-specific behavior.
 
-## Make writes idempotent
+## How to make writes idempotent
 
 The SDK sends an idempotency key that lets the relayer return an existing job instead of creating another paid write. Automatic keys depend on the installed SDK version:
 
@@ -89,13 +89,13 @@ const acceptedBatch = await memwal.rememberBulk(
 // Persist acceptedBatch.job_ids before acknowledging the queue item.
 ```
 
-## Retry with backoff, but only retryable failures
+## Which failures to retry with backoff
 
 Relayer requests have deadlines in SDK 0.1.8 and later; `requestTimeoutMs` defaults to 30 seconds. Submission and polling need different retry handling:
 
 - **No acceptance response:** a network failure or request timeout can occur after the relayer accepted the write. Retry the submission with the same explicit key and unchanged payload. Use bounded exponential backoff with jitter for transient failures, and stop when your overall retry budget expires.
 - **Accepted job ID:** persist it and poll that job. A wait timeout does not cancel the write or prove it failed. Keep the job ID and resume checking it rather than submitting the text under a new key.
-- **Rate limit (`429`):** respect the server's retry delay, exposed as `retryAfterSeconds` when available. Status reads also use the delegate-key request budget. Immediate repeated polling can exhaust that budget without speeding up uploads.
+- **Rate limit (`429`):** respect the server's retry delay, exposed as `retryAfterSeconds` when available. Status reads also use the request budget of the [delegate key](#how-to-custody-the-agents-keys), the key that authenticates the agent to the relayer. Immediate repeated polling can exhaust that budget without speeding up uploads.
 - **Authentication or validation failure:** fix the credentials or payload before retrying. A `401 AUTH_REJECTED` or `409` key-reuse conflict does not become valid through backoff.
 - **Terminal `failed` job:** inspect the job's error before deciding how to recover. Do not resubmit a failed upload indefinitely.
 
@@ -108,7 +108,11 @@ Relayer requests have deadlines in SDK 0.1.8 and later; `requestTimeoutMs` defau
 
 The SDK retries polling only. It does not retry submissions or reads.
 
-## Confirm durability before acting on a memory
+## How to configure request timeouts
+
+Set `requestTimeoutMs` in the `MemWalConfig` object that you pass to `MemWal.create`, alongside `key`, `accountId`, and `serverUrl`. The client reads it once at construction. A non-positive or non-finite value does not disable the deadline: the client ignores it and uses the 30-second default instead. The same configuration object also accepts `recallTimeoutMs` and `preflightTimeoutMs`, which set separate deadlines for recall and preflight requests.
+
+## How to confirm durability before acting on a memory
 
 `remember` and `rememberBulk` return when the relayer accepts the jobs. Embedding, encryption, upload, and indexing continue in the background. Return the accepted job IDs to the application and check completion in a background worker when the chat turn does not depend on the result. Avoid holding every turn open until storage finishes.
 
@@ -135,7 +139,7 @@ A job reaches `done` after its vector row is inserted. This confirms storage and
 
 For the full write, confirm, and recall sequence in context, see [Agent Storage Loop](/walrus-memory/sdk/agent-storage-loop).
 
-## Bound cost
+## How to bound cost
 
 The managed relayer sponsors writes; see [Managed relayer costs](/walrus-memory/relayer/public-relayer#storage-costs). The managed service applies usage limits, so bound your writes even though it pays.
 
@@ -158,7 +162,7 @@ async function budgetedRemember(memwal: MemWal, text: string, eventId: string) {
 }
 ```
 
-## Custody the agent's keys
+## How to protect the agent's keys {#how-to-custody-the-agents-keys}
 
 A headless agent holds secrets no human rotates by hand, so treat them with production discipline.
 
@@ -169,7 +173,7 @@ Load keys from a secret manager, never from source or logs. Give each agent its 
 
 For client-managed encryption, losing the Sui key can make memories unrecoverable. Back it up securely; replacing a delegate key does not replace the lost encryption credentials.
 
-## Degrade gracefully when memory is unavailable
+## How to degrade gracefully when memory is unavailable
 
 A memory layer that is down should slow your agent, not stop it. Check reachability at startup and guard the memory paths so the agent keeps serving when the relayer is unreachable for a cycle.
 
@@ -198,7 +202,7 @@ if (memory) {
 
 This is the same defensive pattern the [Cloudflare Workers guide](/walrus-memory/sdk/cloudflare-workers) uses to keep a Worker healthy when the memory dependency has a bad moment.
 
-## Mind the recall result cap
+## How to handle the recall result cap
 
 `recall` returns up to `limit` results, defaulting to `10`. When more memories match than the cap, the relayer does not return the extra results, with no signal that it truncated the set. If a decision depends on seeing every match, set `limit` explicitly to a value above what you expect, and treat a result count equal to `limit` as a sign there might be more.
 
@@ -217,7 +221,3 @@ if (result.results.length === 50) {
 - [MemWalManual](/walrus-memory/sdk/usage/memwal-manual): client-managed encryption and key custody
 - [Troubleshooting](/walrus-memory/troubleshooting/overview): auth, timeout, and read-after-write symptoms
 - [Public relayer](/walrus-memory/relayer/public-relayer): managed Mainnet and Testnet endpoints
-
-## Configure request timeouts
-
-Set `requestTimeoutMs` in the `MemWalConfig` object that you pass to `MemWal.create`, alongside `key`, `accountId`, and `serverUrl`. The client reads it once at construction. A non-positive or non-finite value does not disable the deadline: the client ignores it and uses the default instead. The same configuration object also accepts `recallTimeoutMs` and `preflightTimeoutMs`, which set separate deadlines for recall and preflight requests.

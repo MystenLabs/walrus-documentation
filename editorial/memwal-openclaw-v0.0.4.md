@@ -1,5 +1,5 @@
 ---
-title: Package v0.0.4
+title: "Walrus Memory OpenClaw v0.0.4"
 description: Adds temporal anchoring through occurredAt to the memory_store tool, passes current timestamp from the auto-capture hook, and...
 keywords: ["walrus memory", "release notes", "changelog", "oc-memwal"]
 ---

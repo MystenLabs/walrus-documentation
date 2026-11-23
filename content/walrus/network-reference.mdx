@@ -241,7 +241,7 @@ Walrus uses WAL for storage and Sui uses SUI for gas. Each token has a smallest 
 | SUI | MIST | 1 SUI = 1,000,000,000 MIST |
 {/* GENERATED:END id=token-units */}
 
-You pay for storage in WAL, but Walrus prices it at a fixed rate of $0.023 per GB per month. The amount of WAL adjusts automatically as the WAL price changes. CLI options that take a raw amount, such as `--amount` on `walrus get-wal` and `--gas-budget`, use the smallest unit (FROST or MIST). For current prices and the per-write fee, run `walrus info`. For full cost details, see [Storage Costs](/docs/system-overview/storage-costs).
+You pay for storage in WAL. Walrus targets a USD-denominated storage price (see [Storage Costs](/docs/system-overview/storage-costs)), so the WAL amount is dynamic, as the [network parameters](#network-parameters) section notes. Do not hardcode it. CLI options that take a raw amount, such as `--amount` on `walrus get-wal` and `--gas-budget`, use the smallest unit (FROST or MIST). For current prices and the per-write fee, run `walrus info`. For full cost details, see [Storage Costs](/docs/system-overview/storage-costs).
 
 ## How to configure a client for each network {#configuration-snippets}
 
@@ -319,13 +319,13 @@ The relay operator sets the tip in the relay's tip configuration. Before uploadi
 - A constant amount for each upload
 - A base amount plus a fixed amount for each KiB of the encoded blob size
 
-The encoded size depends on the blob's unencoded size, the number of shards, and the encoding type, so the client computes the tip for each blob before it pays.
+The encoded blob size is the size of the blob after Walrus encodes it, not the size of the file you upload. It depends on the blob's unencoded size, the number of shards (listed in the [network parameters](#network-parameters) table), and the encoding type, so the client computes the tip for each blob before it pays.
 
 ## Which query parameters does a publisher store request accept?
 
 The publisher's blob store request takes only optional query parameters:
 
-- `epochs`: The number of epochs, ahead of the current one, to store the blob. The default is 1 epoch.
+- `epochs`: The number of epochs, ahead of the current one, to store the blob. The default is 1, which stores the blob only until the end of the current epoch.
 - `permanent`: If true, the publisher creates a permanent blob. Blobs are deletable by default since v1.33.
 - `force`: If true, the publisher stores the blob and creates a new Blob object even if the blob is already certified for the requested epochs.
 - `encoding_type`: The encoding type for the blob.

@@ -28,7 +28,7 @@ questions:
   - "How do I connect to the public Walrus Memory relayer?"
   - "What are the trade-offs of using the managed Walrus Memory relayer?"
 answer: >-
-  The Walrus Foundation hosts managed relayer endpoints for production (Mainnet) at relayer.memory.walrus.xyz and staging (Testnet) at relayer.dev.memwal.ai. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext during encryption, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
+  The Walrus Foundation hosts managed relayer endpoints for production (Mainnet) at relayer.memory.walrus.xyz and staging (Testnet) at relayer.dev.memwal.ai. The managed relayer provides the fastest integration path but involves trusting the hosted instance with plaintext on write and recall, sharing the deployment with other users, and accepting that the service carries no SLA guarantees.
 ---
 
 A managed relayer is a simpler experience for teams that want to get started without running infrastructure. If a managed relayer endpoint is available for your environment, it gives you the fastest path to integration.
@@ -58,7 +58,7 @@ const memwal = MemWal.create({
 ## What to know
 
 - **Shared App ID:** All users of the managed relayer share the same Walrus Memory package ID. Your own `owner + namespace` (Memory Space) isolates your data, but all users share the underlying deployment.
-- **Trust assumption:** The relayer sees plaintext during encryption and embedding. By using the managed relayer, you're trusting the Walrus Foundation-hosted instance with that data. See [Trust and Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model) for details.
+- **Trust assumption:** The relayer receives your plaintext to embed it and encrypt it with Seal on every write, and decrypts it with Seal on every recall, so it sees your data in plaintext on both paths. By using the managed relayer, you're trusting the Walrus Foundation-hosted instance with that data. See [Trust and Security Model](/walrus-memory/fundamentals/architecture/data-flow-security-model) for details.
 - **Availability:** The Walrus Foundation provides the managed relayer as a public good without SLA guarantees.
 
 ## Storage costs
@@ -71,6 +71,6 @@ If you need full control over the trust boundary or your own dedicated instance,
 
 ## Where does encryption happen?
 
-With the default `MemWal` client, the managed relayer receives your plaintext, generates embeddings, and encrypts each item with Seal before storing it on Walrus. You do not manage keys in this flow.
+With the default `MemWal` client, the managed relayer receives your plaintext and performs the embedding and Seal encryption itself, server-side, before storing each item on Walrus; it also decrypts with Seal on every recall, so it sees your data in plaintext on both paths. You do not manage keys in this flow.
 
 To keep plaintext on the client, use `MemWalManual` from `@mysten-incubation/memwal/manual`. The client generates embeddings and performs Seal encryption locally, and the relayer only receives encrypted payloads and precomputed vectors. See [MemWalManual](/walrus-memory/sdk/usage/memwal-manual) for the client-managed flow.

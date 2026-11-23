@@ -81,6 +81,31 @@ curl -s -X POST \
 | `400` | `max_unencoded_bytes` must be a positive integer, or `avg_blob_size` is negative |
 | `401` | Missing or invalid admin key |
 
+### List accounts
+
+```
+GET /api/v1/accounts
+```
+
+Lists the accounts your app owns, oldest first, with the number of active
+(non-revoked) API keys on each. Requires admin-key authentication. Use this
+endpoint to look up an `account_id` after you create an account.
+
+**Response** (`200 OK`): an array of objects with these fields.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Account ID |
+| `name` | string | Human-readable account name |
+| `created_at` | string | ISO 8601 creation timestamp |
+| `active_api_key_count` | integer | Number of active (non-revoked) API keys on the account |
+
+**Errors:**
+
+| Status | Condition |
+|--------|-----------|
+| `401` | Missing or invalid admin key |
+
 ### Update storage cap
 
 ```
@@ -155,7 +180,7 @@ and Oyster populates `pool` from the onchain read).
 
 `max_unencoded_bytes` measures unencoded bytes, but Walrus tracks
 usage in encoded bytes, and the encoding `f` carries a large fixed
-per-blob metadata overhead. By default (`avg_blob_size = 0`) the cap
+per-blob metadata overhead. With `avg_blob_size = 0` (the value Oyster backfilled for accounts that predate the `avg_blob_size` setting) the cap
 therefore acts as an **upper** bound: an account storing many small
 blobs pays that overhead per blob and hits the cap well below its
 stated unencoded budget.
@@ -551,7 +576,7 @@ fields nulled.
 `oysterd` is the server binary. Besides the `oysterd app` subcommands below
 (for managing apps and admin keys), it runs the service itself.
 
-### Running the server
+### How to run the server
 
 ```bash
 oysterd serve     # run the HTTP + S3 server (default when no subcommand given)
@@ -671,7 +696,10 @@ oysterd app revoke-admin-key b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e
 oysterd app list
 ```
 
-Lists all registered apps in tab-separated format.
+Lists all registered apps in tab-separated format. Unlike the
+`oysterd app list-admin-keys` output, this output starts with a header row
+that names the columns `ID`, `NAME`, and `CONTACT_EMAIL`. Skip the first line
+when you parse the output.
 
 **Example output:**
 
@@ -683,7 +711,3 @@ ID	NAME	CONTACT_EMAIL
 ## What is Pearl?
 
 Pearl is the custodial wallet service behind every Oyster account. References on this page to the Pearl-derived wallet or the Pearl-managed sender mean that per-account wallet. See [What is Pearl?](wallet.mdx#what-is-pearl) for how Pearl derives and protects the keys.
-
-## List accounts
-
-Use `GET /api/v1/accounts` with admin-key authentication to list the accounts your app manages, together with the number of active API keys on each account. Use this endpoint to look up an `account_id` after you create an account.

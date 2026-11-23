@@ -1,11 +1,13 @@
 ---
 title: "Infrastructure"
 description: Health, readiness, metrics, and API documentation endpoints for monitoring and observing the Oyster server.
-keywords: [ health check, readiness check, liveness probe, Prometheus, metrics, OpenAPI, observability, Kubernetes ]
+keywords: [ health check, readiness check, liveness probe, Prometheus, metrics, OpenAPI, observability, Kubernetes, Pearl, Scalar, Grafana ]
 ---
 
 Use these endpoints for health monitoring and observability. They do
 **not** require authentication and are **not** under the `/api/v1/` prefix.
+
+The examples use the `OYSTER_URL` environment variable to hold the base URL of your Oyster server.
 
 ## Health check (liveness)
 
@@ -73,7 +75,7 @@ curl -s "$OYSTER_URL/ready" | jq
 The `database` and `pearl` fields are only present when the corresponding
 service is unhealthy.
 
-## Prometheus metrics
+## How to scrape Prometheus metrics {#prometheus-metrics}
 
 ```
 GET /metrics
@@ -132,6 +134,6 @@ open "$OYSTER_URL/api/docs"
 
 Pearl is the custodial wallet service that derives each Oyster account's Sui wallet. When Pearl is not configured or is unreachable, `/ready` reports `pearl` as `"unreachable"`, and `GET /api/v1/account/wallet` returns `503`. See [What is Pearl?](wallet.mdx#what-is-pearl).
 
-## Additional Prometheus metrics
+## What other metrics does the server export? {#additional-prometheus-metrics}
 
 The metrics table lists only part of what the server exports. The server also records HTTP request metrics through its `track_http_metrics` middleware, and exports additional counters. One example is `oyster_delete_db_only_total`, a counter of `delete_blob` calls where the onchain Sui delete transaction failed with a non-`InsufficientBalance` error but Oyster still removed the database row to keep `DELETE` idempotent. Its `reason` label takes the values `upstream_error`, `internal_error`, or `other`. A nonzero rate means onchain `PooledBlob` orphans are accumulating. The server refreshes the `oyster_active_accounts` and `oyster_active_blobs` gauges from the database on each scrape.

@@ -125,6 +125,13 @@ Precedence: any explicit `server_url` wins, including the hosted default. `env` 
 
 `remember` returns as soon as the relayer accepts the job (~500ms); the upload + onchain commit run in the background. Use `remember_and_wait` to block until it is fully persisted. The following example calls `remember_and_wait` to block until the memory persists, then calls `recall`.
 
+Set your delegate private key and account ID as environment variables before you run the example. To get these values, see [How do you get an account ID and delegate key?](#how-do-you-get-an-account-id-and-delegate-key).
+
+```bash
+$ export MEMWAL_PRIVATE_KEY=YOUR_DELEGATE_PRIVATE_KEY
+$ export MEMWAL_ACCOUNT_ID=YOUR_ACCOUNT_ID
+```
+
 <a href="https://github.com/MystenLabs/MemWal/blob/dev/docs/python-sdk/quick-start.md" target="_blank" className="code-source-link">Source: python-sdk/quick-start.md</a>
 
 ```python
@@ -151,6 +158,8 @@ async def main():
 
 asyncio.run(main())
 ```
+
+A successful run prints 1 line for each recalled memory: the memory text, followed by its distance in parentheses. To confirm the run worked, look for the text you stored, `I live in Hanoi and prefer dark mode.`, in the output.
 
 Prefer a synchronous style? Swap `MemWal` for `MemWalSync` and drop the `await`s, see [Usage](/walrus-memory/python-sdk/usage).
 

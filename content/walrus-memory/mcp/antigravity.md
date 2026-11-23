@@ -12,6 +12,10 @@ keywords:
   - automatic memory
   - lifecycle hooks
   - memwal_login
+  - memwal_remember
+  - memwal_recall
+  - memwal_restore
+  - stdio
 goal:
   description: Add Walrus Memory to Antigravity as a plugin with lifecycle hooks or as a standalone MCP server, authenticate with your account credentials, and verify the connection with a test recall.
   requires:
@@ -49,7 +53,7 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 
 </div>
 
-## Installation
+## How to install Walrus Memory in Antigravity
 
 <Tabs groupId="code">
   <TabItem value="Plugin (recommended)" label="Plugin (recommended)">
@@ -83,7 +87,7 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 | Walrus Memory MCP (memory tools) | ✓ | ✓ |
 | Lifecycle hooks (automatic recall/save) | ✓ | ✗ |
 
-## Lifecycle hooks (plugin only)
+## What lifecycle hooks does the plugin provide?
 
 | Hook | Event | What it does |
 |------|-------|--------------|
@@ -103,17 +107,17 @@ Add Walrus Memory to Antigravity so the agent recalls context and saves durable 
 | `memwal_health` | Fast connectivity check. |
 | `memwal_login` / `memwal_logout` | Connect or disconnect this client. |
 
-The tool descriptions tell the agent to save and recall proactively. See [Reference](/walrus-memory/mcp/reference) for full parameters.
+The tool descriptions tell the agent to recall proactively, and to save proactively only when automatic memory is on. See [Reference](/walrus-memory/mcp/reference) for full parameters.
 
-## Verify
+## How to verify the connection
 
-Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. State a durable fact and confirm the agent saves it with `memwal_remember`.
+Ask the agent what MCP tools it has available. You should see the `memwal_*` tools. Ask the agent to remember a durable fact and confirm it saves the fact with `memwal_remember`. To confirm that the fact persists, ask the agent to check the save with `memwal_remember_status`, then recall it and check that `memwal_recall` returns it. If the status never completes, ask the agent to run `memwal_health` to check connectivity.
 
 ## Troubleshooting
 
 - **Tools missing**: restart Antigravity after installation.
 - **Not signed in**: ask the agent to run `memwal_login`, approve in the browser, then retry.
-- **`memwal_recall` returns nothing although you saved before**: run `memwal_restore <namespace>` to rebuild the index from Walrus.
+- **`memwal_recall` returns nothing although you saved before**: ask the agent to run `memwal_restore` with the `namespace` you saved to. The tool rebuilds the index from Walrus. If the call omits `namespace`, it uses the configured default namespace. See [Choose a memory namespace](#choose-a-memory-namespace).
 
 ## Choose a memory namespace
 

@@ -39,7 +39,7 @@ AI agent memory is a durable, searchable store of what an agent has learned, kep
 
 ## The context window is not memory
 
-A large language model reads and writes through its context window, the block of tokens it sees on each request. Everything the model knows in the moment lives there, and it disappears when the request ends. The next request starts fresh unless you resend the earlier text.
+A large language model reads and writes through its context window, the block of tokens it sees on each request. Everything the model knows in the moment lives there, and the model keeps none of it when the request ends. The next request starts fresh unless the earlier text goes back into the context window.
 
 That makes the context window a poor substitute for memory. It holds only a fixed token budget, so an agent's entire history cannot fit into it, and padding it with old turns crowds out room for the current task. It keeps nothing after the request ends, so you must provide persistence from somewhere the model does not control. And it costs tokens and latency to refill, because replaying a long history on every call spends both on material that mostly has no bearing on the current question. Long-term memory sidesteps all three problems by keeping the agent's knowledge outside the prompt and pulling only the relevant pieces back into the context window when the agent needs them.
 

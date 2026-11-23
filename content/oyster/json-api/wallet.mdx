@@ -1,11 +1,12 @@
 ---
 title: "Wallet"
 description: Get the Sui wallet address that the Pearl custodial wallet service associates with your Oyster account.
-keywords: [ wallet, Sui wallet address, Oyster, Pearl, custodial wallet, Walrus, API ]
+keywords: [ wallet, Sui wallet address, Oyster, Pearl, custodial wallet, Walrus, API, Ed25519, HKDF-SHA256, gRPC ]
 ---
 
 Each Oyster account has an associated **Sui wallet address**. The Pearl
 custodial wallet service derives this address from the account's identity.
+To learn how Pearl derives keys, see [What is Pearl?](#what-is-pearl).
 This wallet performs onchain operations for storing blobs on Walrus.
 
 ## Get wallet address
@@ -48,7 +49,7 @@ Pearl is the custodial wallet service that runs alongside Oyster as a separate g
 
 ## Set the Oyster server address
 
-Set `OYSTER_URL` to your Oyster server address, for example `http://localhost:3000`. The curl example appends the `/api/v1` prefix itself, so leave it out of the variable. Your operator provides the API key:
+Set `OYSTER_URL` to your Oyster server address, for example `http://localhost:3000`. The curl example already includes the `/api/v1` prefix in the request path, so leave it out of the variable. Your operator provides the API key:
 
 ```bash
 export OYSTER_URL="http://localhost:3000"

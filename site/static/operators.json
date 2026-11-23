@@ -39,7 +39,7 @@
       },
       "https://mainnet-aggregator.hoh.zone": {
         "operator": "hoh.zone",
-        "cache": true
+        "functional": false
       },
       "https://mainnet-aggregator.walrus.graphyte.dev": {
         "operator": "Graphyte Labs",
@@ -259,7 +259,7 @@
       },
       "https://aggregator.testnet.walrus.mirai.cloud": {
         "operator": "Studio Mirai",
-        "cache": false
+        "cache": true
       },
       "https://aggregator.walrus-01.tududes.com": {
         "operator": "TuDudes",
@@ -379,7 +379,7 @@
       },
       "https://walrus-testnet-aggregator.luckyresearch.org": {
         "operator": "LuckyResearch Labs",
-        "functional": false
+        "cache": true
       },
       "https://walrus-testnet-aggregator.natsai.xyz": {
         "operator": "Natsai",
@@ -459,7 +459,7 @@
       },
       "https://walrus-tn.juicystake.io:9443": {
         "operator": "ProStaking",
-        "functional": false
+        "cache": true
       },
       "https://walrus.testnet.aggregator.stakepool.dev.br": {
         "operator": "StakePool",

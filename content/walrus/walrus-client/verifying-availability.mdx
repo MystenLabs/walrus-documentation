@@ -129,7 +129,7 @@ $ walrus blob-status --blob-id <BLOB_ID>
 
 This reports whether the blob is stored and its availability period. When it reports a certified permanent blob, it also returns the related Sui event ID, a transaction ID and a sequence number. Read the current epoch with `walrus info`.
 
-To check programmatically after writing a blob, use the `Blob` object ID from the write result and re-read that object from Sui before depending on it. The TypeScript SDK's `getBlobObject` helper reads the object over gRPC and returns the parsed Move struct. For the client construction, see the [Network Reference](/docs/network-reference#typescript-sdk).
+To check programmatically after writing a blob, use the `Blob` object ID from the write result and re-read that object from Sui before depending on it. The TypeScript SDK's `getBlobObject` helper reads the object over gRPC and returns the parsed Move struct. The parsed struct represents the `certified_epoch` field, a Move `Option<u32>`, as `null` until the blob is certified, so `blob.certified_epoch != null` means the blob is certified. For the client construction, see the [Network Reference](/docs/network-reference#typescript-sdk).
 
 ```ts
 const blob = await walrusClient.getBlobObject(blobObjectId); // blobObject.id from the write result

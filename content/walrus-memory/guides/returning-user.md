@@ -38,7 +38,7 @@ Losing a delegate key does not lose your memories. The key is a credential for r
 
 ### Do you need to restore your memories?
 
-The search index lives in the relayer's database, not your browser, scoped to your account and namespace. Once you have a delegate key on the new device, recall reaches your existing memories straight away, with nothing to rebuild.
+The search index lives in the relayer's database, not your browser, scoped to your account and namespace. The relayer is the backend service that processes Walrus Memory requests: it encrypts and stores your memories on Walrus and keeps the search index that recall uses. You can use the managed relayer or run your own self-hosted relayer. Once you have a delegate key on the new device, recall reaches your existing memories straight away, with nothing to rebuild.
 
 You only run restore when the relayer's index lacks rows, for example after a database loss or reset, or when you point a fresh self-hosted relayer at your account. Restore rediscovers the blobs your account owns in a namespace and re-indexes any the relayer does not already have:
 
@@ -49,7 +49,7 @@ const result = await memwal.restore("personal");
 console.log(`restored=${result.restored} skipped=${result.skipped} total=${result.total}`);
 ```
 
-Restore inspects your onchain blobs newest-first, up to `limit` (default 10), so `total` is the number of blobs it inspected in that call, not a full count of your namespace. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call: because restore has no cursor, rerunning it only re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob has been covered. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
+Restore discovers onchain blobs for the namespace, up to a relayer cap, and restores at most `limit` (default 10) missing blobs per call. `total` is the number of onchain blobs the relayer found before `limit` was applied, not a full count of your namespace. When `truncated` is `true`, the restore is known to be incomplete; `truncated: false` is not proof that every blob was covered. Restore has no pagination cursor, so repeating a call at the same limit re-inspects the same newest blobs and returns nothing new. To rebuild a large namespace, set `limit` high enough to cover every blob in the namespace in a single call: because restore has no cursor, rerunning it only re-inspects the same newest blobs, and a `restored` count that stops increasing is not proof that every blob has been covered. For how restore works, see [How Storage Works](/walrus-memory/fundamentals/architecture/how-storage-works).
 
 ## Does Walrus Memory migrate existing Walrus data?
 

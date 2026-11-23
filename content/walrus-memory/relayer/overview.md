@@ -86,15 +86,15 @@ flowchart LR
     Sidecar --> Walrus  
 ```
 
-The sidecar is started automatically when the Rust server boots and communicates over HTTP on `localhost:9000` (configurable through `SIDECAR_URL`). If the sidecar fails to start, the relayer exits immediately.
+The Rust server starts the sidecar automatically when it boots. By default, the sidecar communicates over plain HTTP, not HTTPS, on `localhost:9000`. To change this, set `SIDECAR_URL` (see [Sidecar URL configuration](#sidecar-url-configuration)). If the sidecar fails to start, the relayer exits immediately.
 
 ### Sui RPC transport
 
-The relayer reaches Sui over JSON-RPC by default. Ahead of the Sui JSON-RPC sunset in July 2026, setting `SUI_GRPC_URL` to a Sui gRPC fullnode URL switches the relayer to gRPC. This is opt-in and off by default: with `SUI_GRPC_URL` empty, the relayer keeps using JSON-RPC. When set, both the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path run on gRPC, so it is a single reversible switch. For configuration details, see [Self-Hosting](/walrus-memory/relayer/self-hosting) and the [Environment Variables](/walrus-memory/reference/environment-variables) reference.
+The relayer reaches Sui over gRPC. Set `SUI_GRPC_URL` to a Sui gRPC fullnode URL: release builds of the relayer exit at startup without it, because they verify the Seal policy package over gRPC before serving requests. The same setting covers the write path (Walrus register and certify, Seal, and Enoki build) and the blob query and restore path. The sidecar also reads `SUI_GRPC_URL` and falls back to the network's public fullnode. For configuration details, see [Self-Hosting](/walrus-memory/relayer/self-hosting) and the [Environment Variables](/walrus-memory/reference/environment-variables) reference.
 
 ## Key pool
 
-For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). Each concurrent Walrus upload uses a different key from the pool in round-robin order, bypassing per-signer serialization and enabling parallel uploads.
+For the `analyze` endpoint (which stores multiple facts concurrently), the relayer supports a pool of Sui private keys (`SERVER_SUI_PRIVATE_KEYS`). With a single key, uploads signed by that key run one after another (per-signer serialization), which slows down requests that store many facts at once. The relayer assigns each upload to the least-loaded key in the pool, breaking ties in round-robin order, so concurrent uploads spread across keys instead of queueing behind one signer.
 
 ## Rate limiting  and  abuse prevention
 
