@@ -91,8 +91,8 @@ objects. There is no multipart ETag format, because Oyster does not support mult
 
 Oyster supports `If-Match` and `If-None-Match` headers on PutObject,
 GetObject, HeadObject, and DeleteObject (If-Match only). These enable
-cache validation (`If-None-Match` returns 304 on GET or HEAD) and safe
-concurrent writes (`If-Match` for optimistic locking, `If-None-Match: *`
+cache validation (`If-None-Match` on GetObject or HeadObject returns 304) and safe
+concurrent writes (`If-Match` for optimistic locking, `If-None-Match: *` on PutObject
 for create-only semantics). Oyster does not support time-based conditionals (`If-Modified-Since`,
 `If-Unmodified-Since`).
 
