@@ -1,3 +1,6 @@
+// Copyright (c) Walrus Foundation
+// SPDX-License-Identifier: Apache-2.0
+
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
