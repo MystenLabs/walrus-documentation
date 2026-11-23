@@ -449,7 +449,7 @@
     "date": "2026-10-26T10:55:12Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.2.1",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.1",
     "changes": []
@@ -459,7 +459,7 @@
     "date": "2026-10-23T10:31:32Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.2.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.0",
     "changes": []
@@ -604,7 +604,7 @@
     "date": "2026-10-21T07:50:26Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.12",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.12",
     "changes": []
@@ -639,7 +639,7 @@
     "date": "2026-09-30T18:02:56Z",
     "category": "walrus",
     "title": "Walrus v1.57.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.57.0",
     "changes": []
@@ -674,7 +674,7 @@
     "date": "2026-09-22T12:25:29Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.11",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.11",
     "changes": []
@@ -684,7 +684,7 @@
     "date": "2026-09-17T06:44:36Z",
     "category": "walrus",
     "title": "Walrus v1.56.1",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Testnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.56.1",
     "changes": []
@@ -694,7 +694,7 @@
     "date": "2026-09-16T17:31:26Z",
     "category": "walrus",
     "title": "Walrus v1.56.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.56.0",
     "changes": []
@@ -753,7 +753,7 @@
     "date": "2026-09-15T08:47:25Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.10",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.10",
     "changes": []
@@ -792,7 +792,7 @@
     "date": "2026-09-09T01:19:37Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.9",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.9",
     "changes": []
@@ -842,7 +842,7 @@
     "date": "2026-08-26T12:59:19Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.8",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.8",
     "changes": []
@@ -954,7 +954,7 @@
     "date": "2026-08-14T08:13:53Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.7",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.7",
     "changes": []
@@ -984,7 +984,7 @@
     "date": "2026-08-07T07:14:58Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.6",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.6",
     "changes": []
@@ -994,7 +994,7 @@
     "date": "2026-08-05T17:52:16Z",
     "category": "walrus",
     "title": "Walrus v1.53.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.53.0",
     "changes": []
@@ -1024,7 +1024,7 @@
     "date": "2026-07-31T13:57:09Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.1.5",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.1.5",
     "changes": []
@@ -1034,7 +1034,7 @@
     "date": "2026-07-22T17:24:03Z",
     "category": "walrus",
     "title": "Walrus v1.52.1",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.52.1",
     "changes": []
@@ -1044,7 +1044,7 @@
     "date": "2026-07-15T18:56:14Z",
     "category": "walrus",
     "title": "Walrus v1.52.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": "Testnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.52.0",
     "changes": []
@@ -1130,7 +1130,7 @@
     "date": "2026-06-24T17:08:09Z",
     "category": "walrus",
     "title": "Walrus v1.50.0",
-    "description": "A maintenance release on Testnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
+    "description": "A maintenance release on Testnet with no user-facing changes documented in the release notes. See\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.50.0",
     "changes": []
@@ -1259,7 +1259,7 @@
     "date": "2026-05-27T18:04:30Z",
     "category": "walrus",
     "title": "Walrus v1.49.1",
-    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
+    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes. See\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.49.1",
     "changes": []
@@ -1358,7 +1358,7 @@
     "date": "2026-05-13T17:23:09Z",
     "category": "walrus",
     "title": "Walrus v1.48.1",
-    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
+    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes. See\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.48.1",
     "changes": []
@@ -1780,7 +1780,7 @@
     "date": "2026-02-18T19:00:22Z",
     "category": "walrus",
     "title": "Walrus v1.42.1",
-    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes; see\nthe full commit log for internal updates.",
+    "description": "A maintenance release on Mainnet with no user-facing changes documented in the release notes. See\nthe full commit log for internal updates.",
     "badge": "Mainnet",
     "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/mainnet-v1.42.1",
     "changes": []
@@ -2596,7 +2596,7 @@
     "date": "2025-07-15T15:53:25Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v1.0.2",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/mainnet-v1.0.2",
     "changes": []
@@ -2641,7 +2641,7 @@
     "date": "2025-06-30T19:56:23Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v0.1.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/walrus_sites_v0.1.0_1751313026_mainnet_ci",
     "changes": [
@@ -2676,7 +2676,7 @@
     "date": "2025-06-16T12:28:03Z",
     "category": "walrus-sites",
     "title": "Walrus Sites v0.1.0",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-sites/releases/tag/walrus_sites_v0.1.0_1750076111_mainnet_ci",
     "changes": [

@@ -145,7 +145,7 @@ function renderFile(entry, description, summary) {
 }
 
 const MAINTENANCE_SUMMARY =
-  "A maintenance release with no user-facing changes documented in the release notes; see the " +
+  "A maintenance release with no user-facing changes documented in the release notes. See the " +
   "full commit log for internal updates.";
 
 // ── Drafting ───────────────────────────────────────────────────────
