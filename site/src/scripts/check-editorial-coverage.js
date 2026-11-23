@@ -296,11 +296,11 @@ function formatDate(isoDate) {
 function buildDraft(title, release, hasContent, productKeyword) {
   const summary = hasContent
     ? "TODO: one short paragraph summarizing the developer-facing changes below."
-    : "A maintenance release with no user-facing changes documented in the release notes; see\n" +
+    : "A maintenance release with no user-facing changes documented in the release notes. See\n" +
       "the full commit log for internal updates.";
   const description = hasContent
     ? "TODO: first sentence of the summary."
-    : "A maintenance release with no user-facing changes documented in the release notes; see the full commit log for...";
+    : "A maintenance release with no user-facing changes documented in the release notes. See the full commit log for...";
   const keywords = [productKeyword, "release notes", "changelog", release.network.toLowerCase()];
 
   return [
