@@ -91,11 +91,11 @@ The indexer is recommended for production but optional for development. If the i
 
 Three places in the relayer read the `accounts` table, and all of them use the same `db.find_account_by_owner` helper:
 
-- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks only whether the indexed `accounts` table has a row for the owner, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated.
+- `GET /api/accounts/{owner}/exists`: A public, unauthenticated endpoint that returns `{ "exists": bool }`. It checks only whether the indexed `accounts` table has a row for the owner, not onchain `active` status. The indexer only decodes `AccountCreated` events, so it never removes or updates a row after an account is deactivated. A deactivated account therefore still reports `{ "exists": true }`, so this endpoint confirms only that an account was created, not that it is still active.
 - `POST /v1/owner-tokens`: Rejects the request with `400` when the owner has no indexed account, instead of minting a token for a nonexistent account.
 - Owner-token reads on `/v1/owners/{owner}/{namespaces,memories,agents}`: The read API's auth middleware, `auth::verify_read_api_auth`, resolves the token's owner to an account through the table and returns `401` when the account no longer resolves.
 
-None of them takes part in delegate-key resolution for signed requests. Because the table never records deactivation, owner-token issuance and owner-token reads both verify onchain that the account is still `active`. The existence endpoint does not.
+None of them takes part in delegate-key resolution for signed requests. Because the table never records deactivation, owner-token issuance and owner-token reads both verify onchain that the account is still `active`. The existence endpoint does not, so it still reports a deactivated account. To confirm that an account is still active, read its `active` status onchain.
 
 ## When the owner-token flow checks the accounts table
 
