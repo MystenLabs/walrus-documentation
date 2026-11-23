@@ -8,8 +8,10 @@
 # walrus ref, then opens a pull request with the diff when there is one.
 #
 #   site/src/data/skills.json            from MystenLabs/walrus-skills (gen:skills)
-#   content/walrus/release-notes*.mdx           from GitHub releases of walrus, MemWal,
-#   site/src/data/changelog.json         and walrus-sites (gen:release-notes)
+#   content/walrus/release-notes*.mdx    from GitHub releases of walrus, MemWal,
+#   site/src/data/changelog.json         walrus-sites, and console (gen:release-notes;
+#                                        console is internal and read with the
+#                                        CONSOLE_GITHUB_TOKEN secret)
 #   site/upstream.json                   the walrus ref that <ImportContent>
 #                                        embeds are fetched from (gen:import)
 #   site/static/setup/*                  from MystenLabs/walrus at that ref, the
@@ -75,6 +77,7 @@ jobs:
       - name: Regenerate skills, release notes, and the setup downloads
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONSOLE_GITHUB_TOKEN: ${{ secrets.CONSOLE_GITHUB_TOKEN }}
         run: cd site && pnpm run gen:upstream
 
       - name: Check that the embedded sources resolve at the pinned ref

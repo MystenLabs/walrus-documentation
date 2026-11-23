@@ -192,6 +192,13 @@ function userPrompt(entry) {
     "",
     entry.body.trim(),
   ];
+  if (entry.product === "Walrus Console") {
+    parts.push(
+      "",
+      "This body is already filtered for publication. Where it lists \"Security strengthening\",",
+      "refer to security only in those general words; never describe what was hardened or how.",
+    );
+  }
   const paired = (entry.pairedBody || "").trim();
   if (paired && paired !== entry.body.trim()) {
     parts.push(
@@ -241,7 +248,7 @@ function skeletonDraft(entry) {
     description: "TODO: first sentence of the summary.",
     summary:
       "TODO: one short paragraph summarizing the developer-facing changes in the release body at " +
-      entry.url,
+      (entry.url ?? `${entry.repo} ${entry.tag}`),
   };
 }
 

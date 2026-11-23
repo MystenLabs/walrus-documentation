@@ -54,6 +54,7 @@ jobs:
       - name: Find releases without an editorial summary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONSOLE_GITHUB_TOKEN: ${{ secrets.CONSOLE_GITHUB_TOKEN }}
         run: cd site && node src/scripts/check-editorial-coverage.js --limit 50 --json "$RUNNER_TEMP/missing.json"
 
       - name: Draft the summaries
@@ -67,6 +68,7 @@ jobs:
       - name: Regenerate the release notes pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONSOLE_GITHUB_TOKEN: ${{ secrets.CONSOLE_GITHUB_TOKEN }}
         run: cd site && pnpm run gen:release-notes
 
       - name: Create pull request

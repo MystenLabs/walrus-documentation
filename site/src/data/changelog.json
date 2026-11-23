@@ -1,5 +1,185 @@
 [
   {
+    "id": "console-v0.2.4",
+    "date": "2026-11-09T09:37:23Z",
+    "category": "walrus-console",
+    "title": "Walrus Console v0.2.4",
+    "description": "This release makes uploading easier from anywhere in Walrus Console. The Assets home has an upload\nbutton, a drop zone, and page-wide drag hover, and a new destination step lets you choose an\nexisting folder or create one. Each folder also has its own upload button and drop zone.\n\nFolder handling is more reliable: deleting a folder no longer leaves it stuck in a deleting state,\nand the last folder stays listed after you delete the others. Walrus Memory keeps the open\nnamespace in the URL and starts a fresh sign-in after a disconnect. The release also includes\nsecurity strengthening.",
+    "badge": null,
+    "githubUrl": null,
+    "changes": [
+      {
+        "text": "Separate per-epoch budget for Oyster extension funding",
+        "url": null
+      },
+      {
+        "text": "In-folder upload button and drop zone; the review is titled with the folder",
+        "url": null
+      },
+      {
+        "text": "Home upload destination step: select a folder or create one",
+        "url": null
+      },
+      {
+        "text": "Upload button, drop zone and page-wide drag hover on the Assets home",
+        "url": null
+      },
+      {
+        "text": "The Claude Desktop .mcpb is served from the app origin, pinned",
+        "url": null
+      },
+      {
+        "text": "A reserve that fails after its insert releases the folder",
+        "url": null
+      },
+      {
+        "text": "A folder delete no longer strands the folder in deleting",
+        "url": null
+      },
+      {
+        "text": "A 502 from create means nothing was created",
+        "url": null
+      },
+      {
+        "text": "The open Memory namespace stays in the URL",
+        "url": null
+      },
+      {
+        "text": "A fresh Walrus Memory sign-in starts after a missing account or a disconnect",
+        "url": null
+      },
+      {
+        "text": "The last folder stays listed after the others are deleted",
+        "url": null
+      },
+      {
+        "text": "Security strengthening",
+        "url": null
+      }
+    ]
+  },
+  {
+    "id": "console-v0.2.2",
+    "date": "2026-11-03T14:13:20Z",
+    "category": "walrus-console",
+    "title": "Walrus Console v0.2.2",
+    "description": "Programmatic clients can now check upload policy before sending a file, receive a typed reason\nwhen an upload is refused, and read the deletion status of an account. When an upload takes a name\nthat is already in use, the reply says that a suffix was added.\n\nIn the web app, upload progress shows the current stage while the file is stored on Walrus, and the\nupload dock confirms when all uploads complete. The sign-in page has an updated design, an expired\nEnoki login no longer breaks Google sign-in, and deleting your account revokes its Walrus Memory\nlink. The release also includes security strengthening.",
+    "badge": null,
+    "githubUrl": null,
+    "changes": [
+      {
+        "text": "Policy preflight, typed upload refusal and deletion status for programmatic clients",
+        "url": null
+      },
+      {
+        "text": "The upload reply says when a taken name got a suffix",
+        "url": null
+      },
+      {
+        "text": "Account deletion revokes the Walrus Memory link",
+        "url": null
+      },
+      {
+        "text": "Sign-in page to the amended design, with current onboarding visuals",
+        "url": null
+      },
+      {
+        "text": "Upload progress shows the stage during the Walrus leg",
+        "url": null
+      },
+      {
+        "text": "Upload dock finished state: \"N uploads complete\" with a green check",
+        "url": null
+      },
+      {
+        "text": "Store every blob in Oyster as `application/octet-stream`",
+        "url": null
+      },
+      {
+        "text": "An expired Enoki login no longer fails Google sign-in",
+        "url": null
+      },
+      {
+        "text": "Agent column aligned with the navbar, footer pinned to the bottom",
+        "url": null
+      },
+      {
+        "text": "Security strengthening",
+        "url": null
+      }
+    ]
+  },
+  {
+    "id": "console-v0.2.1",
+    "date": "2026-11-03T14:13:19Z",
+    "category": "walrus-console",
+    "title": "Walrus Console v0.2.1",
+    "description": "This patch release refines two screens in Walrus Console. The Connect MCP stepper is centered on\nits form, and the Integrations status badges no longer show a white outline. The release also\nincludes security strengthening.",
+    "badge": null,
+    "githubUrl": null,
+    "changes": [
+      {
+        "text": "Center the Connect MCP stepper on the form",
+        "url": null
+      },
+      {
+        "text": "Remove the white outline from the Integrations status badges",
+        "url": null
+      },
+      {
+        "text": "Security strengthening",
+        "url": null
+      }
+    ]
+  },
+  {
+    "id": "console-v0.2.0",
+    "date": "2026-11-03T14:13:16Z",
+    "category": "walrus-console",
+    "title": "Walrus Console v0.2.0",
+    "description": "Walrus Console is generally available. Visiting the app takes you straight to the sign-in page,\nwhich now fits laptop screens. New welcome screens and a three-step tour introduce the console\nafter you sign in, and Walrus Memory offers to use an existing account on its first screen.\n\nConnecting an MCP client is simpler: you can download the Claude Desktop MCPB bundle with an\ninstall video, or use the Add to Cursor link, both pinned to `walrus-console-mcp` 0.1.0. The\nrelease also includes security strengthening.",
+    "badge": null,
+    "githubUrl": null,
+    "changes": [
+      {
+        "text": "The front door goes straight to the sign-in page",
+        "url": null
+      },
+      {
+        "text": "Open Graph and Twitter card preview",
+        "url": null
+      },
+      {
+        "text": "GA copy for the welcome screens and a three-step tour",
+        "url": null
+      },
+      {
+        "text": "Walrus Memory \"use existing account\" first screen",
+        "url": null
+      },
+      {
+        "text": "Partner logos back on the sign-in page",
+        "url": null
+      },
+      {
+        "text": "Fit the sign-in page to laptop viewports",
+        "url": null
+      },
+      {
+        "text": "Download the Claude Desktop MCPB bundle and show the install video",
+        "url": null
+      },
+      {
+        "text": "Pin `walrus-console-mcp` 0.1.0 and turn on the Add to Cursor link",
+        "url": null
+      },
+      {
+        "text": "Security strengthening",
+        "url": null
+      }
+    ]
+  },
+  {
     "id": "walrus-mainnet-v1.59.0",
     "date": "2026-10-28T17:29:53Z",
     "category": "walrus",

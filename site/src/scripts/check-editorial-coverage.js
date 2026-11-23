@@ -23,6 +23,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const { publicConsoleBody, parseConsoleTag } = require("./console-release-filter");
 
 const EDITORIAL_DIR = path.resolve(__dirname, "../../../editorial");
 
@@ -43,7 +44,7 @@ function parseArgs(argv) {
 
 // ── GitHub API helpers (same approach as generate-release-notes.js) ──
 
-function fetchJSON(urlPath) {
+function fetchJSON(urlPath, token = process.env.GITHUB_TOKEN) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: "api.github.com",
@@ -54,7 +55,6 @@ function fetchJSON(urlPath) {
         Accept: "application/vnd.github.v3+json",
       },
     };
-    const token = process.env.GITHUB_TOKEN;
     if (token) options.headers["Authorization"] = `token ${token}`;
 
     const req = https.request(options, (res) => {
@@ -64,7 +64,7 @@ function fetchJSON(urlPath) {
         if (res.statusCode === 200) resolve(JSON.parse(data));
         // A renamed repository answers 301 with the new location.
         else if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location)
-          resolve(fetchJSON(new URL(res.headers.location).pathname + new URL(res.headers.location).search));
+          resolve(fetchJSON(new URL(res.headers.location).pathname + new URL(res.headers.location).search, token));
         else reject(new Error(`GitHub API ${res.statusCode}: ${data.slice(0, 200)}`));
       });
     });
@@ -73,12 +73,13 @@ function fetchJSON(urlPath) {
   });
 }
 
-async function fetchAllPages(basePath) {
+async function fetchAllPages(basePath, token) {
   const results = [];
   let page = 1;
   while (true) {
     const data = await fetchJSON(
       `${basePath}${basePath.includes("?") ? "&" : "?"}per_page=100&page=${page}`,
+      token,
     );
     if (!Array.isArray(data) || data.length === 0) break;
     results.push(...data);
@@ -150,7 +151,7 @@ function groupReleases(releases) {
 function groupProductReleases(releases, parseTag) {
   const byKey = new Map();
   for (const r of releases) {
-    if (r.draft) continue;
+    if (r.draft || r.prerelease) continue;
     const parsed = parseTag(r.tag_name);
     if (!parsed) continue;
     if (byKey.has(parsed.key)) continue;
@@ -237,6 +238,29 @@ const SOURCES = [
       };
     },
   },
+  {
+    id: "console",
+    label: "Walrus Console",
+    // Internal repository: the default GITHUB_TOKEN cannot read it.
+    repo: "MystenLabs/console",
+    tokenEnv: "CONSOLE_GITHUB_TOKEN",
+    // The drafter sees only what the page may publish, never the raw body
+    // with its security, ops, and internal items.
+    publicBody: publicConsoleBody,
+    editorialPattern: /^console-v(\d+\.\d+\.\d+)\.md$/,
+    editorialKey: (match) => `console|${match[1]}`,
+    parseTag: (tag) => {
+      const v = parseConsoleTag(tag);
+      if (!v) return null;
+      const version = `${v.major}.${v.minor}.${v.patch}`;
+      return {
+        key: `console|${version}`,
+        version,
+        editorialSlug: `console-v${version}`,
+        label: "Walrus Console",
+      };
+    },
+  },
 ];
 
 // ── Editorial coverage ─────────────────────────────────────────────
@@ -301,7 +325,8 @@ async function checkSource(source, args, editorial) {
     // Testing seam: a single fixture stands in for the source under test.
     releases = JSON.parse(fs.readFileSync(args.releasesFile, "utf8"));
   } else {
-    releases = await fetchAllPages(`/repos/${source.repo}/releases`);
+    const token = (source.tokenEnv && process.env[source.tokenEnv]) || process.env.GITHUB_TOKEN;
+    releases = await fetchAllPages(`/repos/${source.repo}/releases`, token);
   }
 
   const missing = [];
@@ -349,6 +374,14 @@ async function checkSource(source, args, editorial) {
     for (const key of keys) {
       if (editorial.has(key)) continue;
       const entry = byKey.get(key);
+      if (source.publicBody) {
+        entry.release.body = source.publicBody(entry.release.body);
+        // Internal links stay out of the draft and the JSON.
+        entry.release.url = null;
+        // Nothing public, so generate-release-notes.js leaves it off the
+        // page; a maintenance summary would point at a log readers cannot see.
+        if (!entry.release.body) continue;
+      }
       const hasContent = substantiveBody(entry.release.body).length >= 20;
       const title = `${entry.label} v${entry.version}`;
       missing.push({
@@ -388,7 +421,16 @@ async function main() {
 
   const missing = [];
   for (const source of sources) {
-    const result = await checkSource(source, args, editorial);
+    let result;
+    try {
+      result = await checkSource(source, args, editorial);
+    } catch (err) {
+      // An internal repository without its token answers 404; skip it
+      // rather than fail coverage for every other product.
+      if (!source.tokenEnv) throw err;
+      console.warn(`Skipped ${source.label} (${source.repo}): ${err.message}`);
+      continue;
+    }
     console.log(
       `Checked newest ${result.checked} ${source.label} release version(s) from ${source.repo}.`,
     );
