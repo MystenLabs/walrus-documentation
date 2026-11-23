@@ -33,7 +33,7 @@
     "date": "2026-11-09T07:10:06Z",
     "category": "walrus-memory",
     "title": "Walrus Memory Python SDK v0.2.3",
-    "description": "A maintenance release with no user-facing changes documented in the release notes; see the full\ncommit log for internal updates.",
+    "description": "A maintenance release with no user-facing changes documented in the release notes. See the full\ncommit log for internal updates.",
     "badge": null,
     "githubUrl": "https://github.com/MystenLabs/walrus-memory/releases/tag/memwal-python%400.2.3",
     "changes": []
