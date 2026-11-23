@@ -1,5 +1,24 @@
 [
   {
+    "id": "walrus-testnet-v1.61.0",
+    "date": "2026-11-18T20:01:19Z",
+    "category": "walrus",
+    "title": "Walrus v1.61.0",
+    "description": null,
+    "badge": "Testnet",
+    "githubUrl": "https://github.com/MystenLabs/walrus/releases/tag/testnet-v1.61.0",
+    "changes": [
+      {
+        "text": "Fixed a race in garbage collection that could drop a blob registration or invalidation arriving while the blob's expired data was being deleted.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3874"
+      },
+      {
+        "text": "The node no longer hangs on shutdown or on a self-restart (for example after a TLS certificate renewal) while the background consistency check is running; the check now stops when the node shuts down.",
+        "url": "https://github.com/MystenLabs/walrus/pull/3964"
+      }
+    ]
+  },
+  {
     "id": "walrus-mainnet-v1.60.2",
     "date": "2026-11-11T18:44:27Z",
     "category": "walrus",
