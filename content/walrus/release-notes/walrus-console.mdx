@@ -1,0 +1,111 @@
+---
+title: Walrus Console release notes
+description: Release notes for Walrus Console.
+displayed_sidebar: null
+hide_table_of_contents: true
+questions:
+  - What changed in the latest Walrus Console release?
+  - Where can I find Walrus Console release history?
+answer: Release notes for Walrus Console.
+---
+
+### Walrus Console v0.2.4
+
+November 9, 2026
+
+This release makes uploading easier from anywhere in Walrus Console. The Assets home has an upload
+button, a drop zone, and page-wide drag hover, and a new destination step lets you choose an
+existing folder or create one. Each folder also has its own upload button and drop zone.
+
+Folder handling is more reliable: deleting a folder no longer leaves it stuck in a deleting state,
+and the last folder stays listed after you delete the others. Walrus Memory keeps the open
+namespace in the URL and starts a fresh sign-in after a disconnect. The release also includes
+security strengthening.
+
+#### Changes
+
+- Separate per-epoch budget for Oyster extension funding
+- In-folder upload button and drop zone; the review is titled with the folder
+- Home upload destination step: select a folder or create one
+- Upload button, drop zone and page-wide drag hover on the Assets home
+- The Claude Desktop .mcpb is served from the app origin, pinned
+- A reserve that fails after its insert releases the folder
+- A folder delete no longer strands the folder in deleting
+- A 502 from create means nothing was created
+- The open Memory namespace stays in the URL
+- A fresh Walrus Memory sign-in starts after a missing account or a disconnect
+- The last folder stays listed after the others are deleted
+- Security strengthening
+
+---
+
+### Walrus Console v0.2.2
+
+November 3, 2026
+
+Programmatic clients can now check upload policy before sending a file, receive a typed reason
+when an upload is refused, and read the deletion status of an account. When an upload takes a name
+that is already in use, the reply says that a suffix was added.
+
+In the web app, upload progress shows the current stage while the file is stored on Walrus, and the
+upload dock confirms when all uploads complete. The sign-in page has an updated design, an expired
+Enoki login no longer breaks Google sign-in, and deleting your account revokes its Walrus Memory
+link. The release also includes security strengthening.
+
+#### Changes
+
+- Policy preflight, typed upload refusal and deletion status for programmatic clients
+- The upload reply says when a taken name got a suffix
+- Account deletion revokes the Walrus Memory link
+- Sign-in page to the amended design, with current onboarding visuals
+- Upload progress shows the stage during the Walrus leg
+- Upload dock finished state: "N uploads complete" with a green check
+- Store every blob in Oyster as `application/octet-stream`
+- An expired Enoki login no longer fails Google sign-in
+- Agent column aligned with the navbar, footer pinned to the bottom
+- Security strengthening
+
+---
+
+### Walrus Console v0.2.1
+
+November 3, 2026
+
+This patch release refines two screens in Walrus Console. The Connect MCP stepper is centered on
+its form, and the Integrations status badges no longer show a white outline. The release also
+includes security strengthening.
+
+#### Changes
+
+- Center the Connect MCP stepper on the form
+- Remove the white outline from the Integrations status badges
+- Security strengthening
+
+---
+
+### Walrus Console v0.2.0
+
+November 3, 2026
+
+Walrus Console is generally available. Visiting the app takes you straight to the sign-in page,
+which now fits laptop screens. New welcome screens and a three-step tour introduce the console
+after you sign in, and Walrus Memory offers to use an existing account on its first screen.
+
+Connecting an MCP client is simpler: you can download the Claude Desktop MCPB bundle with an
+install video, or use the Add to Cursor link, both pinned to `walrus-console-mcp` 0.1.0. The
+release also includes security strengthening.
+
+#### Changes
+
+- The front door goes straight to the sign-in page
+- Open Graph and Twitter card preview
+- GA copy for the welcome screens and a three-step tour
+- Walrus Memory "use existing account" first screen
+- Partner logos back on the sign-in page
+- Fit the sign-in page to laptop viewports
+- Download the Claude Desktop MCPB bundle and show the install video
+- Pin `walrus-console-mcp` 0.1.0 and turn on the Add to Cursor link
+- Security strengthening
+
+---
+

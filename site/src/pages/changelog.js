@@ -13,12 +13,14 @@ const CATEGORIES = [
   { value: "walrus", label: "WALRUS" },
   { value: "walrus-memory", label: "WALRUS MEMORY" },
   { value: "walrus-sites", label: "WALRUS SITES" },
+  { value: "walrus-console", label: "WALRUS CONSOLE" },
 ];
 
 const CATEGORY_LABELS = {
   walrus: "WALRUS",
   "walrus-memory": "WALRUS MEMORY",
   "walrus-sites": "WALRUS SITES",
+  "walrus-console": "WALRUS CONSOLE",
 };
 
 function formatTimelineDate(isoDate) {
@@ -174,27 +176,33 @@ export default function Changelog() {
                     <ul className={styles.changesList}>
                       {entry.changes.map((change, i) => (
                         <li key={i}>
-                          <a
-                            href={change.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {change.text}
-                          </a>
+                          {change.url ? (
+                            <a
+                              href={change.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {change.text}
+                            </a>
+                          ) : (
+                            change.text
+                          )}
                         </li>
                       ))}
                     </ul>
                   </>
                 )}
 
-                <a
-                  className={styles.githubLink}
-                  href={entry.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View on GitHub &rarr;
-                </a>
+                {entry.githubUrl && (
+                  <a
+                    className={styles.githubLink}
+                    href={entry.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View on GitHub &rarr;
+                  </a>
+                )}
               </div>
             </div>
           ))}

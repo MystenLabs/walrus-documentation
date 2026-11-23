@@ -6,6 +6,8 @@
  *   1. Walrus GitHub releases (MystenLabs/walrus)
  *   2. Walrus Memory GitHub releases (MystenLabs/walrus-memory, formerly MemWal)
  *   3. Walrus Sites GitHub releases (MystenLabs/walrus-sites)
+ *   4. Walrus Console GitHub releases (MystenLabs/console, internal; read
+ *      with CONSOLE_GITHUB_TOKEN and filtered by console-release-filter.js)
  *
  * Each entry shows the editorial summary followed by linked
  * individual changes from the GitHub release body.
@@ -16,6 +18,10 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const {
+  extractConsoleChanges,
+  parseConsoleTag,
+} = require("./console-release-filter");
 
 const EDITORIAL_DIR = path.resolve(__dirname, "../../../editorial");
 const OUTPUT_DIR = path.resolve(__dirname, "../../../content/walrus/release-notes");
@@ -23,11 +29,12 @@ const OUTPUT_HUB = path.resolve(__dirname, "../../../content/walrus/release-note
 const OUTPUT_WALRUS = path.resolve(OUTPUT_DIR, "walrus-platform.mdx");
 const OUTPUT_MEMORY = path.resolve(OUTPUT_DIR, "walrus-memory.mdx");
 const OUTPUT_SITES = path.resolve(OUTPUT_DIR, "walrus-sites.mdx");
+const OUTPUT_CONSOLE = path.resolve(OUTPUT_DIR, "walrus-console.mdx");
 const OUTPUT_JSON = path.resolve(__dirname, "../data/changelog.json");
 
 // ── GitHub API helpers ─────────────────────────────────────────────
 
-function fetchJSON(urlPath) {
+function fetchJSON(urlPath, token = process.env.GITHUB_TOKEN) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: "api.github.com",
@@ -39,7 +46,6 @@ function fetchJSON(urlPath) {
       },
     };
 
-    const token = process.env.GITHUB_TOKEN;
     if (token) {
       options.headers["Authorization"] = `token ${token}`;
     }
@@ -55,7 +61,7 @@ function fetchJSON(urlPath) {
         } else if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
           // A renamed repository answers 301 with the new location.
           const next = new URL(res.headers.location);
-          resolve(fetchJSON(next.pathname + next.search));
+          resolve(fetchJSON(next.pathname + next.search, token));
         } else {
           reject(
             new Error(
@@ -70,12 +76,13 @@ function fetchJSON(urlPath) {
   });
 }
 
-async function fetchAllPages(basePath) {
+async function fetchAllPages(basePath, token) {
   const results = [];
   let page = 1;
   while (true) {
     const data = await fetchJSON(
       `${basePath}${basePath.includes("?") ? "&" : "?"}per_page=100&page=${page}`,
+      token,
     );
     if (!Array.isArray(data) || data.length === 0) break;
     results.push(...data);
@@ -316,7 +323,10 @@ function loadEditorialSummaries() {
   const walrus = new Map();
   const memwal = new Map();
   const sites = new Map();
-  if (!fs.existsSync(EDITORIAL_DIR)) return { walrus, memwal, sites };
+  const consoleSummaries = new Map();
+  if (!fs.existsSync(EDITORIAL_DIR)) {
+    return { walrus, memwal, sites, console: consoleSummaries };
+  }
 
   const files = fs
     .readdirSync(EDITORIAL_DIR)
@@ -358,10 +368,17 @@ function loadEditorialSummaries() {
     const sitesMatch = file.match(/^walrus-sites-v(\d+\.\d+\.\d+)\.md$/);
     if (sitesMatch) {
       sites.set(sitesMatch[1], { title, body });
+      continue;
+    }
+
+    // Walrus Console: console-v0.2.4.md → 0.2.4
+    const consoleMatch = file.match(/^console-v(\d+\.\d+\.\d+)\.md$/);
+    if (consoleMatch) {
+      consoleSummaries.set(consoleMatch[1], { title, body });
     }
   }
 
-  return { walrus, memwal, sites };
+  return { walrus, memwal, sites, console: consoleSummaries };
 }
 
 // ── Shared helpers ─────────────────────────────────────────────────
@@ -571,6 +588,51 @@ async function loadWalrusSitesReleases() {
   return results;
 }
 
+// ── Source 4: Walrus Console GitHub releases ───────────────────────
+//
+// MystenLabs/console is internal: the default GITHUB_TOKEN of this
+// repository cannot read it, and its pull request and release links 404 for
+// readers. Entries carry no links, and their changes come only through
+// console-release-filter.js, which drops internal items and collapses
+// security items into one generic line.
+
+async function loadConsoleReleases(editorialConsole = new Map()) {
+  console.log("  Fetching MystenLabs/console releases...");
+  const token = process.env.CONSOLE_GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+  const releases = await fetchAllPages("/repos/MystenLabs/console/releases", token);
+
+  const results = [];
+  for (const r of releases) {
+    if (r.draft || r.prerelease) continue;
+    const v = parseConsoleTag(r.tag_name);
+    if (!v) continue;
+
+    const changes = extractConsoleChanges(r.body);
+    // An ops-only release has nothing public to show unless an editorial
+    // summary covers it.
+    if (changes.length === 0 && !editorialConsole.has(versionKey(v))) continue;
+
+    results.push({
+      title: `Walrus Console ${r.tag_name}`,
+      date: r.published_at,
+      source: "console",
+      tag: r.tag_name,
+      version: v,
+      changes: changes.map((text) => ({ text: sanitizeForMDX(text), url: null })),
+    });
+  }
+
+  results.sort((a, b) => {
+    const va = a.version, vb = b.version;
+    if (va.major !== vb.major) return vb.major - va.major;
+    if (va.minor !== vb.minor) return vb.minor - va.minor;
+    return vb.patch - va.patch;
+  });
+
+  console.log(`  Found ${results.length} Walrus Console releases`);
+  return results;
+}
+
 // ── Render a single release entry ──────────────────────────────────
 
 function renderEntry({ heading, badge, date, url, editorial, changes }) {
@@ -579,7 +641,7 @@ function renderEntry({ heading, badge, date, url, editorial, changes }) {
   const parts = [];
   if (badge) parts.push(`\`${badge}\``);
   if (dateStr) parts.push(dateStr);
-  parts.push(`[GitHub](${url})`);
+  if (url) parts.push(`[GitHub](${url})`);
   out += parts.join(" | ") + "\n\n";
 
   if (editorial) {
@@ -589,7 +651,7 @@ function renderEntry({ heading, badge, date, url, editorial, changes }) {
   if (changes.length > 0) {
     out += `#### Changes\n\n`;
     for (const c of changes) {
-      out += `- [${c.text}](${c.url})\n`;
+      out += c.url ? `- [${c.text}](${c.url})\n` : `- ${c.text}\n`;
     }
     out += "\n";
   }
@@ -607,10 +669,12 @@ async function main() {
   console.log(`  Found ${editorial.walrus.size} Walrus editorial summaries`);
   console.log(`  Found ${editorial.memwal.size} Walrus Memory editorial summaries`);
   console.log(`  Found ${editorial.sites.size} Walrus Sites editorial summaries`);
+  console.log(`  Found ${editorial.console.size} Walrus Console editorial summaries`);
 
   let walrusReleases = [];
   let memwalReleases = [];
   let sitesReleases = [];
+  let consoleReleases = [];
 
   try {
     walrusReleases = await loadWalrusReleases(editorial.walrus);
@@ -644,6 +708,15 @@ async function main() {
     console.warn("  Warning: could not fetch Walrus Sites releases:", err.message);
   }
 
+  try {
+    consoleReleases = await loadConsoleReleases(editorial.console);
+  } catch (err) {
+    // Without CONSOLE_GITHUB_TOKEN the internal repository answers 404. Keep
+    // the tracked page as it is rather than emptying it.
+    console.warn("  Warning: could not fetch Walrus Console releases:", err.message);
+    consoleReleases = null;
+  }
+
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
@@ -651,15 +724,15 @@ async function main() {
   // ── Hub page ──
   const hub = `---
 title: Release Notes
-description: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
-keywords: [ walrus, release notes, walrus memory, walrus sites, changelog ]
+description: 'Release notes for Walrus, Walrus Memory, Walrus Sites, and Walrus Console.'
+keywords: [ walrus, release notes, walrus memory, walrus sites, walrus console, changelog ]
 displayed_sidebar: null
 hide_table_of_contents: true
 questions:
   - What changed in the latest Walrus release?
   - Where can I find Walrus release history?
   - What breaking changes should I be aware of?
-answer: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
+answer: 'Release notes for Walrus, Walrus Memory, Walrus Sites, and Walrus Console.'
 ---
 
 ## Release notes
@@ -670,6 +743,8 @@ answer: 'Release notes for Walrus, Walrus Memory, and Walrus Sites.'
   including the MCP server, TypeScript SDK, Python SDK, and OpenClaw.
 - **Walrus Sites:** [Release notes](release-notes/walrus-sites) from
   [Walrus Sites](https://github.com/MystenLabs/walrus-sites/releases).
+- **Walrus Console:** [Release notes](release-notes/walrus-console) for
+  [Walrus Console](https://console.walrus.xyz).
 `;
 
   fs.writeFileSync(OUTPUT_HUB, hub, "utf8");
@@ -831,6 +906,43 @@ answer: Release notes for Walrus Sites.
   fs.writeFileSync(OUTPUT_SITES, sitesMdx, "utf8");
   console.log(`Wrote ${OUTPUT_SITES}`);
 
+  // ── Walrus Console page ──
+  if (consoleReleases) {
+    let consoleMdx = `---
+title: Walrus Console release notes
+description: Release notes for Walrus Console.
+displayed_sidebar: null
+hide_table_of_contents: true
+questions:
+  - What changed in the latest Walrus Console release?
+  - Where can I find Walrus Console release history?
+answer: Release notes for Walrus Console.
+---
+
+`;
+
+    if (consoleReleases.length > 0) {
+      for (const rel of consoleReleases) {
+        const ed = editorial.console.get(versionKey(rel.version));
+        consoleMdx += renderEntry({
+          heading: ed?.title || rel.title,
+          badge: null,
+          date: rel.date,
+          url: null,
+          editorial: ed?.body || null,
+          changes: rel.changes,
+        });
+      }
+    } else {
+      consoleMdx += `No Walrus Console releases found.\n\n`;
+    }
+
+    fs.writeFileSync(OUTPUT_CONSOLE, consoleMdx, "utf8");
+    console.log(`Wrote ${OUTPUT_CONSOLE}`);
+  } else {
+    console.log(`Kept ${OUTPUT_CONSOLE} unchanged`);
+  }
+
   // ── Generate JSON for the changelog page component ──
 
   const allEntries = [];
@@ -886,6 +998,27 @@ answer: Release notes for Walrus Sites.
     });
   }
 
+  // When the Console fetch failed, carry its entries over from the last run
+  // so the changelog page keeps them.
+  if (consoleReleases) {
+    for (const rel of consoleReleases) {
+      const ed = editorial.console.get(versionKey(rel.version));
+      allEntries.push({
+        id: `console-${rel.tag}`,
+        date: rel.date,
+        category: "walrus-console",
+        title: ed?.title || rel.title,
+        description: ed?.body || null,
+        badge: null,
+        githubUrl: null,
+        changes: rel.changes,
+      });
+    }
+  } else if (fs.existsSync(OUTPUT_JSON)) {
+    const previous = JSON.parse(fs.readFileSync(OUTPUT_JSON, "utf8"));
+    allEntries.push(...previous.filter((e) => e.category === "walrus-console"));
+  }
+
   allEntries.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
@@ -894,7 +1027,8 @@ answer: Release notes for Walrus Sites.
   console.log(`Wrote ${OUTPUT_JSON} (${allEntries.length} entries)`);
 
   console.log(
-    `\n  ${walrusReleases.length} Walrus + ${memwalReleases.length} Memory + ${sitesReleases.length} Sites releases`,
+    `\n  ${walrusReleases.length} Walrus + ${memwalReleases.length} Memory + ` +
+      `${sitesReleases.length} Sites + ${consoleReleases ? consoleReleases.length : "kept"} Console releases`,
   );
 }
 
