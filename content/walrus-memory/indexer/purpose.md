@@ -95,7 +95,7 @@ Three places in the relayer read the `accounts` table, and all of them use the s
 - `POST /v1/owner-tokens`: Rejects the request with `400` when the owner has no indexed account, instead of minting a token for a nonexistent account.
 - Owner-token reads on `/v1/owners/{owner}/{namespaces,memories,agents}`: The read API's auth middleware, `auth::verify_read_api_auth`, resolves the token's owner to an account through the table and returns `401` when the account no longer resolves.
 
-None of them takes part in delegate-key resolution for signed requests. Because the table never records deactivation, owner-token issuance and owner-token reads both verify onchain that the account is still `active`. The existence endpoint does not, so it keeps reporting an account that has been deactivated, and callers that need active status must use a route that performs the onchain check.
+None of them takes part in delegate-key resolution for signed requests. Because the table never records deactivation, owner-token issuance and owner-token reads both verify onchain that the account is still `active`. The existence endpoint does not, so it still reports a deactivated account. To confirm that an account is still active, read its `active` status onchain.
 
 ## When the owner-token flow checks the accounts table
 
