@@ -45,7 +45,7 @@ Advanced Walrus Memory features include manual registration (`rememberManual()` 
 
 Use:
 
-- `rememberManual()` when you already have encrypted payload plus vector
+- `rememberManual()` when you already have encrypted payload plus vector: `encryptedData` is a base64-encoded string of Seal-encrypted bytes that the relayer uploads to Walrus, `vector` is your precomputed embedding, and `namespace` defaults to the config namespace or `default`; the result contains `id`, `blob_id`, `owner`, and `namespace`
 - `recallManual()` when you already have a query vector
 
 ## How does `analyze()` extract facts?
